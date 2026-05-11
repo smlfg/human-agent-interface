@@ -1,0 +1,1165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Human Agent Interface</title>
+    <meta
+      name="description"
+      content="Human Agent Interface turns messy AI work into a safe, scoped, agent-ready next action."
+    >
+    <meta property="og:title" content="Human Agent Interface">
+    <meta
+      property="og:description"
+      content="The next interface is not graphical. It is agentic."
+    >
+    <meta property="og:type" content="website">
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #f7f1df;
+        --muted: #b7ad97;
+        --dim: #756d5e;
+        --void: #090a08;
+        --panel: rgba(247, 241, 223, 0.065);
+        --panel-strong: rgba(247, 241, 223, 0.13);
+        --line: rgba(247, 241, 223, 0.18);
+        --line-soft: rgba(247, 241, 223, 0.1);
+        --signal: #a7ff4f;
+        --copper: #ff9f5f;
+        --red: #ff4d4d;
+        --cyan: #7dd8ff;
+        --max: 1160px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 20% 10%, rgba(167, 255, 79, 0.12), transparent 26rem),
+          radial-gradient(circle at 80% 18%, rgba(255, 159, 95, 0.1), transparent 22rem),
+          linear-gradient(180deg, #090a08 0%, #11100d 48%, #070806 100%);
+        font-family: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
+        line-height: 1.5;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 5;
+        opacity: 0.32;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+        background-size: 72px 72px;
+        mask-image: linear-gradient(180deg, black, transparent 72%);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .site-shell {
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero {
+        position: relative;
+        min-height: 100svh;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        align-items: center;
+        overflow: hidden;
+        padding: 32px clamp(18px, 4vw, 56px) 48px;
+      }
+
+      .hero-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.74;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(9, 10, 8, 0.88) 0%, rgba(9, 10, 8, 0.6) 52%, rgba(9, 10, 8, 0.18) 100%),
+          linear-gradient(180deg, rgba(9, 10, 8, 0.18) 0%, rgba(9, 10, 8, 0.92) 100%);
+      }
+
+      .nav {
+        position: absolute;
+        inset: 0 0 auto;
+        z-index: 12;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 24px clamp(18px, 4vw, 56px);
+      }
+
+      .nav-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .nav-link {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 14px;
+        color: var(--muted);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.72rem;
+        text-decoration: none;
+        text-transform: uppercase;
+        border: 1px solid transparent;
+        transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+      }
+
+      .nav-link:hover,
+      .nav-link:focus-visible {
+        color: var(--ink);
+        border-color: var(--line-soft);
+        background: rgba(247, 241, 223, 0.045);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        background: rgba(247, 241, 223, 0.04);
+        color: var(--signal);
+      }
+
+      .nav-cta {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 18px;
+        border: 1px solid rgba(167, 255, 79, 0.44);
+        background: rgba(167, 255, 79, 0.09);
+        color: var(--ink);
+        text-decoration: none;
+        font-size: 0.86rem;
+        font-weight: 700;
+        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+      }
+
+      .nav-cta:hover,
+      .nav-cta:focus-visible {
+        transform: translateY(-2px);
+        background: rgba(167, 255, 79, 0.16);
+        border-color: rgba(167, 255, 79, 0.8);
+      }
+
+      .mobile-samuel-link {
+        display: none;
+      }
+
+      .hero-inner {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: var(--max);
+        min-width: 0;
+        margin: 0 auto;
+        padding-top: 72px;
+      }
+
+      .lineage {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+        width: 100%;
+        max-width: 700px;
+        margin-bottom: clamp(36px, 6vw, 78px);
+      }
+
+      .epoch {
+        min-height: 92px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid var(--line-soft);
+        background: rgba(9, 10, 8, 0.54);
+        backdrop-filter: blur(12px);
+      }
+
+      .epoch strong {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(1.6rem, 4vw, 3.1rem);
+        line-height: 0.86;
+        font-weight: 500;
+      }
+
+      .epoch span {
+        color: var(--dim);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+      }
+
+      .epoch.is-current {
+        border-color: rgba(167, 255, 79, 0.72);
+        background:
+          linear-gradient(135deg, rgba(167, 255, 79, 0.18), rgba(125, 216, 255, 0.06)),
+          rgba(9, 10, 8, 0.7);
+        box-shadow: 0 0 46px rgba(167, 255, 79, 0.14);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        color: var(--signal);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.76rem;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 44px;
+        height: 1px;
+        background: var(--signal);
+      }
+
+      h1 {
+        width: 100%;
+        max-width: 1040px;
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 500;
+        font-size: clamp(3rem, 7.6vw, 7.2rem);
+        line-height: 0.94;
+        letter-spacing: 0;
+        overflow-wrap: break-word;
+      }
+
+      .hero-copy {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.48fr);
+        gap: clamp(24px, 6vw, 96px);
+        align-items: end;
+        margin-top: clamp(28px, 5vw, 56px);
+      }
+
+      .lead {
+        max-width: 720px;
+        margin: 0;
+        color: var(--muted);
+        font-size: clamp(1.12rem, 2vw, 1.62rem);
+        min-width: 0;
+      }
+
+      .mobile-break {
+        display: none;
+      }
+
+      .desktop-break {
+        display: block;
+      }
+
+      .lead strong {
+        color: var(--ink);
+        font-weight: 700;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: flex-start;
+      }
+
+      .button {
+        min-height: 52px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 0 22px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        color: var(--ink);
+        text-decoration: none;
+        font-weight: 800;
+        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+      }
+
+      .button.primary {
+        border-color: rgba(167, 255, 79, 0.68);
+        background: var(--signal);
+        color: #11150d;
+      }
+
+      .button:hover,
+      .button:focus-visible {
+        transform: translateY(-2px);
+        border-color: rgba(247, 241, 223, 0.42);
+        background: var(--panel-strong);
+      }
+
+      .button.primary:hover,
+      .button.primary:focus-visible {
+        border-color: var(--signal);
+        background: #c4ff86;
+      }
+
+      .section {
+        padding: clamp(70px, 10vw, 150px) clamp(18px, 4vw, 56px);
+      }
+
+      .section-inner {
+        width: 100%;
+        max-width: var(--max);
+        margin: 0 auto;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: minmax(0, 0.82fr) minmax(280px, 0.58fr);
+        gap: clamp(28px, 6vw, 90px);
+        align-items: start;
+      }
+
+      h2 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2.4rem, 6vw, 5.8rem);
+        line-height: 0.98;
+        font-weight: 500;
+        letter-spacing: 0;
+      }
+
+      .kicker {
+        margin: 0 0 16px;
+        color: var(--copper);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+      }
+
+      .body-copy {
+        margin: 0;
+        color: var(--muted);
+        font-size: clamp(1.02rem, 1.7vw, 1.28rem);
+      }
+
+      .body-copy + .body-copy {
+        margin-top: 20px;
+      }
+
+      .quote-rail {
+        display: grid;
+        gap: 12px;
+      }
+
+      .quote-tile {
+        min-height: 112px;
+        padding: 20px;
+        display: grid;
+        align-content: space-between;
+        gap: 18px;
+        border-left: 2px solid var(--line);
+        background: linear-gradient(90deg, rgba(247, 241, 223, 0.08), rgba(247, 241, 223, 0.025));
+      }
+
+      .quote-tile strong {
+        display: block;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(1.3rem, 2.7vw, 2.25rem);
+        line-height: 1;
+        font-weight: 500;
+      }
+
+      .quote-tile span {
+        color: var(--dim);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+      }
+
+      .quote-tile:nth-child(2) {
+        border-left-color: var(--red);
+      }
+
+      .quote-tile:nth-child(3) {
+        border-left-color: var(--signal);
+      }
+
+      .conversion {
+        background:
+          linear-gradient(180deg, rgba(247, 241, 223, 0.04), rgba(247, 241, 223, 0.01)),
+          #0c0d0a;
+        border-block: 1px solid var(--line-soft);
+      }
+
+      .conversion-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 36px;
+      }
+
+      .state {
+        min-height: 360px;
+        padding: clamp(20px, 4vw, 34px);
+        border: 1px solid var(--line-soft);
+        background: rgba(247, 241, 223, 0.045);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .state::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        opacity: 0.26;
+        background-image: linear-gradient(135deg, transparent 0 46%, currentColor 47% 48%, transparent 49% 100%);
+        background-size: 34px 34px;
+      }
+
+      .state.before {
+        color: rgba(255, 77, 77, 0.8);
+      }
+
+      .state.after {
+        color: rgba(167, 255, 79, 0.74);
+      }
+
+      .state-content {
+        position: relative;
+        z-index: 1;
+      }
+
+      .state-label {
+        color: var(--dim);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+      }
+
+      .state h3 {
+        margin: 18px 0 26px;
+        color: var(--ink);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2rem, 4.2vw, 4.2rem);
+        line-height: 0.98;
+        font-weight: 500;
+      }
+
+      .state ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 12px;
+        color: var(--muted);
+        font-size: 1rem;
+      }
+
+      .state li {
+        display: grid;
+        grid-template-columns: 18px 1fr;
+        gap: 10px;
+        align-items: start;
+      }
+
+      .state li::before {
+        content: "";
+        width: 9px;
+        height: 9px;
+        margin-top: 8px;
+        background: currentColor;
+      }
+
+      .method-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 46px;
+      }
+
+      .step {
+        min-height: 210px;
+        padding: 18px;
+        border: 1px solid var(--line-soft);
+        background: rgba(247, 241, 223, 0.04);
+      }
+
+      .step span {
+        color: var(--signal);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.75rem;
+      }
+
+      .step h3 {
+        margin: 54px 0 12px;
+        color: var(--ink);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 1.55rem;
+        line-height: 1.05;
+        font-weight: 500;
+      }
+
+      .step p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .wide-statement {
+        padding: clamp(70px, 10vw, 140px) clamp(18px, 4vw, 56px);
+        background: var(--ink);
+        color: #10110d;
+      }
+
+      .wide-statement .section-inner {
+        display: grid;
+        grid-template-columns: minmax(0, 0.78fr) minmax(280px, 0.42fr);
+        gap: clamp(26px, 5vw, 72px);
+        align-items: end;
+      }
+
+      .wide-statement p {
+        margin: 0;
+        color: rgba(16, 17, 13, 0.72);
+        font-size: clamp(1rem, 1.7vw, 1.32rem);
+      }
+
+      .tool-line {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2.5rem, 7vw, 6.8rem);
+        line-height: 0.96;
+        font-weight: 500;
+        letter-spacing: 0;
+      }
+
+      .authority-teaser {
+        border-block: 1px solid var(--line-soft);
+        background:
+          linear-gradient(180deg, rgba(247, 241, 223, 0.035), rgba(247, 241, 223, 0.01)),
+          #0d0e0b;
+      }
+
+      .authority-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.82fr) minmax(280px, 0.58fr);
+        gap: clamp(28px, 6vw, 90px);
+        align-items: end;
+      }
+
+      .authority-panel {
+        padding: 24px;
+        border-left: 1px solid var(--line);
+        background: linear-gradient(90deg, rgba(247, 241, 223, 0.07), transparent);
+      }
+
+      .authority-panel span {
+        display: block;
+        margin-bottom: 14px;
+        color: var(--signal);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+      }
+
+      .authority-panel p {
+        margin: 0 0 22px;
+        color: var(--muted);
+        font-size: 1.05rem;
+      }
+
+      .contact {
+        min-height: 72svh;
+        display: grid;
+        align-items: center;
+      }
+
+      .contact-panel {
+        display: grid;
+        grid-template-columns: minmax(0, 0.8fr) minmax(280px, 0.52fr);
+        gap: clamp(24px, 6vw, 88px);
+        align-items: center;
+      }
+
+      .contact-note {
+        border-top: 1px solid var(--line);
+        padding-top: 22px;
+      }
+
+      .contact-note p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 1.05rem;
+      }
+
+      footer {
+        padding: 28px clamp(18px, 4vw, 56px);
+        color: var(--dim);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        border-top: 1px solid var(--line-soft);
+      }
+
+      footer .section-inner {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 700ms ease, transform 700ms ease;
+      }
+
+      .js .reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 900px) {
+        .hero {
+          min-height: auto;
+          padding-top: 116px;
+        }
+
+        .hero-copy,
+        .split,
+        .authority-grid,
+        .wide-statement .section-inner,
+        .contact-panel {
+          grid-template-columns: 1fr;
+        }
+
+        .conversion-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .method-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 620px) {
+        .hero {
+          width: 100vw;
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+
+        .nav {
+          padding-top: 18px;
+          width: 100vw;
+          left: 0;
+          right: auto;
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+
+        .brand span:not(.brand-mark) {
+          display: none;
+        }
+
+        .nav-cta {
+          display: none;
+        }
+
+        .nav-actions {
+          display: inline-flex;
+          gap: 8px;
+          max-width: calc(100vw - 92px);
+        }
+
+        .desktop-nav-link {
+          display: none;
+        }
+
+        .nav-link {
+          min-height: 36px;
+          padding: 0 10px;
+          font-size: 0.62rem;
+        }
+
+        .mobile-samuel-link {
+          min-height: 36px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          margin-left: auto;
+          padding: 0 10px;
+          border: 1px solid var(--line-soft);
+          color: var(--muted);
+          font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+          font-size: 0.62rem;
+          text-decoration: none;
+          text-transform: uppercase;
+        }
+
+        .hero-inner,
+        .lineage,
+        h1,
+        .hero-copy,
+        .lead {
+          width: 350px;
+          max-width: calc(100vw - 40px);
+        }
+
+        .hero-inner {
+          margin-left: 0;
+          margin-right: 0;
+          padding-top: 0;
+        }
+
+        .lineage {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          margin-bottom: 24px;
+        }
+
+        .epoch {
+          min-height: 68px;
+        }
+
+        h1 {
+          font-size: clamp(2.35rem, 11.5vw, 3.1rem);
+          line-height: 0.98;
+        }
+
+        .lead {
+          font-size: 1rem;
+        }
+
+        .mobile-break {
+          display: block;
+        }
+
+        .desktop-break {
+          display: inline;
+        }
+
+        .method-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .step {
+          min-height: 170px;
+        }
+
+        .step h3 {
+          margin-top: 30px;
+        }
+
+        .button {
+          width: 100%;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.001ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="site-shell">
+      <section class="hero" aria-labelledby="hero-title">
+        <canvas class="hero-canvas" id="agentField" aria-hidden="true"></canvas>
+        <nav class="nav" aria-label="Main navigation">
+          <a class="brand" href="#top" aria-label="Human Agent Interface home">
+            <span class="brand-mark">HAI</span>
+            <span>Human Agent Interface</span>
+          </a>
+          <a class="mobile-samuel-link" href="./samuel/">Samuel's work</a>
+          <div class="nav-actions">
+            <a class="nav-link desktop-nav-link" href="./product/">Products</a>
+            <a class="nav-link desktop-nav-link" href="./what_it_is/">Where HAI comes from</a>
+            <a class="nav-link" href="./samuel/">Samuel's work</a>
+            <a class="nav-cta" href="#contact">Talk to Samuel</a>
+          </div>
+        </nav>
+
+        <div class="hero-inner" id="top">
+          <div class="lineage reveal" aria-label="Interface evolution">
+            <div class="epoch">
+              <strong>CLI</strong>
+              <span>commands</span>
+            </div>
+            <div class="epoch">
+              <strong>TUI</strong>
+              <span>terminal</span>
+            </div>
+            <div class="epoch">
+              <strong>GUI</strong>
+              <span>screens</span>
+            </div>
+            <div class="epoch is-current">
+              <strong>HAI</strong>
+              <span>agency</span>
+            </div>
+          </div>
+
+          <p class="eyebrow reveal">For people stuck inside agent threads</p>
+          <h1 class="reveal" id="hero-title">
+            AI work should create momentum.
+            <span class="desktop-break"></span>
+            For most people, it creates confusion.
+          </h1>
+
+          <div class="hero-copy">
+            <p class="lead reveal">
+              <strong>HAI</strong> turns messy AI work into a safe, scoped,
+              agent-ready next action.
+            </p>
+            <div class="hero-actions reveal">
+              <a class="button primary" href="#contact">Talk to Samuel</a>
+              <a class="button" href="./product/">See products</a>
+              <a class="button" href="./what_it_is/">Where HAI comes from</a>
+              <a class="button" href="./samuel/">Samuel's work</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="confusion-title">
+        <div class="section-inner split">
+          <div>
+            <p class="kicker reveal">The customer pain</p>
+            <h2 class="reveal" id="confusion-title">AI work creates more confusion than momentum.</h2>
+          </div>
+          <div>
+            <p class="body-copy reveal">
+              You start with an idea, open three chats, ask for a plan, launch an agent,
+              paste context into another tool, then lose the thread. The output is not
+              wrong. It is just not owned.
+            </p>
+            <p class="body-copy reveal">
+              HAI exists for that moment: when the human state is messy, the agents are
+              loud, and the next responsible action is not obvious.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="wide-statement" aria-label="Human tool statement">
+        <div class="section-inner">
+          <p class="tool-line reveal">Humans are tool-using animals. Agents are the most powerful tool we have ever built.</p>
+          <p class="reveal">
+            Voice, text, drawing, terminal, IDE, browser, or background process are only
+            surfaces. The real interface is how the human directs, scopes, verifies, and
+            stays aligned with a system that can act.
+          </p>
+        </div>
+      </section>
+
+      <section class="section authority-teaser" aria-labelledby="authority-title">
+        <div class="section-inner authority-grid">
+          <div>
+            <p class="kicker reveal">Why trust this work</p>
+            <h2 class="reveal" id="authority-title">HAI comes from lived agent practice, not branding.</h2>
+            <p class="body-copy reveal">
+              Samuel has worked inside agent systems long enough to hit the real failure mode:
+              more agents, more output, more dashboards, and less human ownership.
+            </p>
+          </div>
+          <aside class="authority-panel reveal" aria-label="Samuel proof of work">
+            <span>Proof of work</span>
+            <p>
+              The authority is in the artifact trail: Sidecar, HAI, harnesses, control surfaces,
+              Luis handoffs, and failed control-tower attempts turned into a stricter workflow.
+            </p>
+            <a class="button" href="./samuel/">See Samuel's work</a>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section conversion" id="conversion" aria-labelledby="conversion-title">
+        <div class="section-inner">
+          <p class="kicker reveal">The product unit is a conversion</p>
+          <h2 class="reveal" id="conversion-title">From scattered agent work to one concrete packet.</h2>
+          <div class="conversion-grid">
+            <article class="state before reveal">
+              <div class="state-content">
+                <span class="state-label">Before HAI</span>
+                <h3>Messy human state</h3>
+                <ul>
+                  <li>An idea with no shape.</li>
+                  <li>A stuck project with unclear ownership.</li>
+                  <li>Too many agent threads competing for attention.</li>
+                  <li>No trusted next step.</li>
+                </ul>
+              </div>
+            </article>
+            <article class="state after reveal">
+              <div class="state-content">
+                <span class="state-label">After HAI</span>
+                <h3>Agent-ready next action</h3>
+                <ul>
+                  <li>The problem type is named.</li>
+                  <li>Human decisions stay with the human.</li>
+                  <li>Agent work is bounded and verifiable.</li>
+                  <li>The next packet of work is concrete.</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="category-title">
+        <div class="section-inner split">
+          <div>
+            <p class="kicker reveal">The interface shift</p>
+            <h2 class="reveal" id="category-title">GUI gave us control over screens. HAI gives us control over agency.</h2>
+          </div>
+          <div class="quote-rail">
+            <div class="quote-tile reveal">
+              <span>CLI</span>
+              <strong>Tell the machine what to run.</strong>
+            </div>
+            <div class="quote-tile reveal">
+              <span>GUI</span>
+              <strong>Point at what the software exposes.</strong>
+            </div>
+            <div class="quote-tile reveal">
+              <span>HAI</span>
+              <strong>Shape what an agent should do next.</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="method-title">
+        <div class="section-inner">
+          <p class="kicker reveal">The minimum loop</p>
+          <h2 class="reveal" id="method-title">A human-owned path into agentic work.</h2>
+          <div class="method-grid" aria-label="HAI method">
+            <article class="step reveal">
+              <span>01</span>
+              <h3>Intake</h3>
+              <p>Capture the messy state without pretending it is already a task.</p>
+            </article>
+            <article class="step reveal">
+              <span>02</span>
+              <h3>Classify</h3>
+              <p>Name what this is: decision, research, build, repair, or human-only.</p>
+            </article>
+            <article class="step reveal">
+              <span>03</span>
+              <h3>Separate</h3>
+              <p>Keep judgment, risk, and irreversible choices with the human.</p>
+            </article>
+            <article class="step reveal">
+              <span>04</span>
+              <h3>Scope</h3>
+              <p>Bound the agent work so it can be executed and checked.</p>
+            </article>
+            <article class="step reveal">
+              <span>05</span>
+              <h3>Packet</h3>
+              <p>Produce the next concrete action the agent can actually take.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section contact" id="contact" aria-labelledby="contact-title">
+        <div class="section-inner contact-panel">
+          <div>
+            <p class="kicker reveal">Talk to Samuel</p>
+            <h2 class="reveal" id="contact-title">Bring one messy agent workflow.</h2>
+          </div>
+          <div class="contact-note reveal">
+            <p>
+              Show me one agent workflow that currently creates confusion. Leave with
+              the next concrete packet of work: what this is, what an agent should do,
+              what you must decide yourself, and what happens next.
+            </p>
+            <p style="margin-top: 24px;">
+              <a
+                class="button primary"
+                href="mailto:samuel@human-agent-interface.com?subject=Human%20Agent%20Interface%20conversation"
+              >Bring one messy agent workflow</a>
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="section-inner">
+        <span>Human Agent Interface</span>
+        <span>CLI -> TUI -> GUI -> HAI</span>
+      </div>
+    </footer>
+
+    <script>
+      document.documentElement.classList.add("js");
+
+      const canvas = document.getElementById("agentField");
+      const ctx = canvas.getContext("2d");
+      const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+      let width = 0;
+      let height = 0;
+      let ratio = 1;
+      let particles = [];
+      let pointer = { x: 0.72, y: 0.38 };
+
+      function resize() {
+        ratio = Math.min(window.devicePixelRatio || 1, 2);
+        width = canvas.clientWidth;
+        height = canvas.clientHeight;
+        canvas.width = Math.floor(width * ratio);
+        canvas.height = Math.floor(height * ratio);
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+        const count = Math.max(38, Math.min(86, Math.floor(width / 18)));
+        particles = Array.from({ length: count }, (_, index) => ({
+          x: (index * 193) % Math.max(width, 1),
+          y: (index * 317) % Math.max(height, 1),
+          vx: ((index % 7) - 3) * 0.08,
+          vy: (((index * 3) % 9) - 4) * 0.06,
+          r: 1.4 + (index % 4) * 0.65
+        }));
+      }
+
+      function drawGrid(time) {
+        ctx.clearRect(0, 0, width, height);
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = "#090a08";
+        ctx.fillRect(0, 0, width, height);
+
+        const spacing = Math.max(54, Math.min(92, width / 14));
+        ctx.lineWidth = 1;
+        for (let x = -spacing; x < width + spacing; x += spacing) {
+          const wave = Math.sin(time * 0.0004 + x * 0.01) * 16;
+          ctx.strokeStyle = "rgba(247, 241, 223, 0.055)";
+          ctx.beginPath();
+          ctx.moveTo(x + wave, 0);
+          ctx.lineTo(x - wave * 0.4, height);
+          ctx.stroke();
+        }
+        for (let y = -spacing; y < height + spacing; y += spacing) {
+          ctx.strokeStyle = "rgba(247, 241, 223, 0.045)";
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(width, y + Math.sin(time * 0.0005 + y * 0.01) * 18);
+          ctx.stroke();
+        }
+      }
+
+      function drawParticles(time) {
+        const focusX = pointer.x * width;
+        const focusY = pointer.y * height;
+
+        for (const point of particles) {
+          point.x += media.matches ? 0 : point.vx;
+          point.y += media.matches ? 0 : point.vy;
+
+          if (point.x < -20) point.x = width + 20;
+          if (point.x > width + 20) point.x = -20;
+          if (point.y < -20) point.y = height + 20;
+          if (point.y > height + 20) point.y = -20;
+
+          const dx = point.x - focusX;
+          const dy = point.y - focusY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 190) {
+            ctx.strokeStyle = `rgba(167, 255, 79, ${0.2 * (1 - distance / 190)})`;
+            ctx.beginPath();
+            ctx.moveTo(focusX, focusY);
+            ctx.lineTo(point.x, point.y);
+            ctx.stroke();
+          }
+
+          ctx.fillStyle = distance < 190 ? "rgba(167, 255, 79, 0.86)" : "rgba(247, 241, 223, 0.28)";
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, point.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        const pulse = 12 + Math.sin(time * 0.003) * 4;
+        ctx.strokeStyle = "rgba(167, 255, 79, 0.64)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(focusX, focusY, pulse, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillStyle = "rgba(167, 255, 79, 0.18)";
+        ctx.beginPath();
+        ctx.arc(focusX, focusY, pulse * 2.6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      function frame(time) {
+        drawGrid(time);
+        drawParticles(time);
+        if (!media.matches) requestAnimationFrame(frame);
+      }
+
+      window.addEventListener("resize", resize);
+      window.addEventListener("pointermove", (event) => {
+        pointer = {
+          x: event.clientX / Math.max(window.innerWidth, 1),
+          y: event.clientY / Math.max(window.innerHeight, 1)
+        };
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) entry.target.classList.add("is-visible");
+        }
+      }, { threshold: 0.14 });
+
+      document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+      resize();
+      requestAnimationFrame(frame);
+    </script>
+  </body>
+</html>

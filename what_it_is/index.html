@@ -1,0 +1,1320 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Where Human Agent Interface comes from: CLI, TUI, GUI, and the need for an interface for systems that can act.">
+  <title>Where HAI Comes From</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f4efe1;
+      --muted: #b8ad96;
+      --quiet: #716957;
+      --black: #080806;
+      --charcoal: #11100d;
+      --line: rgba(244, 239, 225, 0.16);
+      --line-strong: rgba(244, 239, 225, 0.32);
+      --gold: #e7a437;
+      --ember: #df5d3d;
+      --signal: #7ed6c5;
+      --violet: #9b88ff;
+      --max: 1180px;
+      --pad: clamp(18px, 4vw, 56px);
+      --display: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      --body: "Neue Haas Grotesk Text", "Aptos", "Segoe UI", sans-serif;
+      --mono: "Berkeley Mono", "Iosevka", "SFMono-Regular", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--black);
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      font-family: var(--body);
+      background:
+        radial-gradient(circle at 70% 8%, rgba(126, 214, 197, 0.12), transparent 28vw),
+        radial-gradient(circle at 20% 40%, rgba(223, 93, 61, 0.08), transparent 26vw),
+        linear-gradient(180deg, #080806 0%, #12100c 44%, #0b0a08 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 20;
+      opacity: 0.24;
+      background-image:
+        linear-gradient(rgba(244, 239, 225, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244, 239, 225, 0.035) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: linear-gradient(180deg, black, transparent 78%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .site-shell {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 30;
+      opacity: 0.16;
+      mix-blend-mode: overlay;
+      background-image:
+        repeating-radial-gradient(circle at 17% 23%, rgba(255,255,255,0.35) 0 1px, transparent 1px 5px);
+      background-size: 180px 180px;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+      padding: 14px var(--pad) 0;
+    }
+
+    .topbar-inner {
+      width: min(var(--max), 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(244, 239, 225, 0.12);
+      background: rgba(8, 8, 6, 0.62);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 70px rgba(0, 0, 0, 0.3);
+      pointer-events: auto;
+    }
+
+    .mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .mark-symbol {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      color: var(--gold);
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .nav {
+      display: flex;
+      gap: clamp(12px, 2.2vw, 30px);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .nav a {
+      opacity: 0.82;
+      transition: color 160ms ease, opacity 160ms ease;
+    }
+
+    .nav a:hover {
+      color: var(--ink);
+      opacity: 1;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 88svh;
+      display: grid;
+      align-items: end;
+      padding: 124px var(--pad) 8svh;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+    }
+
+    #signalCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: #080806;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(90deg, rgba(8, 8, 6, 0.98) 0%, rgba(8, 8, 6, 0.78) 39%, rgba(8, 8, 6, 0.2) 100%),
+        linear-gradient(180deg, rgba(8, 8, 6, 0.15), rgba(8, 8, 6, 0.86));
+    }
+
+    .hero-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 0.94fr) minmax(240px, 0.46fr);
+      gap: clamp(28px, 7vw, 92px);
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 24px;
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: clamp(11px, 1.4vw, 13px);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 38px;
+      height: 1px;
+      background: var(--gold);
+      box-shadow: 0 0 26px rgba(231, 164, 55, 0.9);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+      h1 {
+        max-width: 900px;
+        font-family: var(--display);
+        font-weight: 500;
+        font-size: clamp(58px, 11vw, 156px);
+        line-height: 0.86;
+        letter-spacing: 0;
+        text-wrap: balance;
+        overflow-wrap: break-word;
+      }
+
+    .hero-lede {
+      max-width: 710px;
+      margin-top: clamp(28px, 5vw, 48px);
+      color: var(--ink);
+      font-size: clamp(22px, 3.2vw, 42px);
+      line-height: 1.06;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .hero-copy {
+      max-width: 560px;
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: clamp(16px, 1.6vw, 19px);
+      line-height: 1.55;
+    }
+
+    .hero-aside {
+      display: grid;
+      gap: 18px;
+      justify-items: start;
+    }
+
+    .signal-label {
+      width: min(100%, 360px);
+      padding: 20px;
+      border-left: 1px solid var(--line-strong);
+      background: linear-gradient(90deg, rgba(244, 239, 225, 0.07), transparent);
+    }
+
+    .signal-label strong {
+      display: block;
+      margin-bottom: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--signal);
+    }
+
+    .signal-label span {
+      display: block;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .scroll-cue {
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .scroll-cue i {
+      width: 48px;
+      height: 1px;
+      background: var(--quiet);
+      display: inline-block;
+    }
+
+    section {
+      position: relative;
+      padding: clamp(76px, 11vw, 150px) var(--pad);
+    }
+
+    .section-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+    }
+
+    .kicker {
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      max-width: 860px;
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: clamp(42px, 7vw, 92px);
+      line-height: 0.94;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .section-copy {
+      max-width: 760px;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 23px);
+      line-height: 1.45;
+      text-wrap: balance;
+    }
+
+    .shift {
+      background: linear-gradient(180deg, rgba(21, 18, 12, 0.76), rgba(8, 8, 6, 0.96));
+      border-bottom: 1px solid var(--line);
+    }
+
+    .shift-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: clamp(38px, 7vw, 76px);
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .era {
+      min-height: 260px;
+      padding: clamp(20px, 3vw, 30px);
+      background: rgba(8, 8, 6, 0.84);
+      display: grid;
+      align-content: space-between;
+      gap: 28px;
+      transition: background 180ms ease, transform 180ms ease;
+    }
+
+    .era:hover {
+      transform: translateY(-4px);
+      background: rgba(244, 239, 225, 0.055);
+    }
+
+    .era .code {
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .era h3 {
+      font-family: var(--display);
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 0.9;
+      font-weight: 500;
+    }
+
+    .era p {
+      color: var(--muted);
+      font-size: clamp(16px, 1.6vw, 19px);
+      line-height: 1.35;
+    }
+
+    .era.current {
+      color: var(--black);
+      background: var(--gold);
+    }
+
+    .era.current .code,
+    .era.current p {
+      color: rgba(8, 8, 6, 0.72);
+    }
+
+    .when {
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .when::before {
+      content: "ACTING SYSTEMS";
+      position: absolute;
+      right: -0.05em;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(244, 239, 225, 0.035);
+      font-family: var(--mono);
+      font-size: clamp(80px, 16vw, 240px);
+      letter-spacing: 0;
+      white-space: nowrap;
+      z-index: -1;
+    }
+
+    .contrast {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: clamp(32px, 7vw, 90px);
+      align-items: start;
+      margin-top: clamp(44px, 7vw, 84px);
+    }
+
+    .problem-line {
+      display: grid;
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .problem-line div {
+      padding: 20px;
+      background: rgba(8, 8, 6, 0.76);
+    }
+
+    .problem-line span {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--ember);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .problem-line p {
+      color: var(--ink);
+      font-size: clamp(18px, 2vw, 24px);
+      line-height: 1.22;
+      text-wrap: balance;
+    }
+
+    .definition {
+      padding: clamp(28px, 5vw, 48px);
+      border: 1px solid var(--line-strong);
+      background:
+        linear-gradient(135deg, rgba(126, 214, 197, 0.12), transparent 42%),
+        rgba(244, 239, 225, 0.055);
+    }
+
+    .definition p {
+      font-family: var(--display);
+      font-size: clamp(32px, 5vw, 66px);
+      line-height: 1;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .definition small {
+      display: block;
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: clamp(16px, 1.7vw, 20px);
+      line-height: 1.45;
+    }
+
+    .mechanism {
+      background:
+        linear-gradient(180deg, rgba(8, 8, 6, 0.98), rgba(17, 16, 13, 0.98)),
+        radial-gradient(circle at 10% 90%, rgba(231, 164, 55, 0.12), transparent 30vw);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .flow {
+      margin-top: clamp(42px, 8vw, 86px);
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 0;
+      border: 1px solid var(--line);
+      background: rgba(244, 239, 225, 0.035);
+    }
+
+    .flow-step {
+      min-height: 190px;
+      padding: clamp(18px, 2.5vw, 26px);
+      border-right: 1px solid var(--line);
+      display: grid;
+      align-content: space-between;
+      gap: 24px;
+      position: relative;
+    }
+
+    .flow-step:last-child {
+      border-right: 0;
+    }
+
+    .flow-step::after {
+      content: "";
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      width: 14px;
+      height: 14px;
+      border-top: 1px solid var(--line-strong);
+      border-right: 1px solid var(--line-strong);
+      transform: rotate(45deg) translateY(-50%);
+      background: var(--charcoal);
+      z-index: 2;
+    }
+
+    .flow-step:last-child::after {
+      display: none;
+    }
+
+    .flow-step span {
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .flow-step strong {
+      font-size: clamp(19px, 2vw, 26px);
+      line-height: 1.05;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .flow-step p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .roles {
+      margin-top: clamp(38px, 6vw, 70px);
+      display: grid;
+      grid-template-columns: 0.75fr 1.25fr;
+      gap: clamp(28px, 5vw, 68px);
+      align-items: start;
+    }
+
+    .role-copy {
+      position: sticky;
+      top: 110px;
+    }
+
+    .role-copy h3 {
+      font-family: var(--display);
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 0.98;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .role-copy p {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.48;
+    }
+
+    .role-list {
+      display: grid;
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .role {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 22px;
+      padding: 22px;
+      background: rgba(8, 8, 6, 0.82);
+    }
+
+    .role b {
+      color: var(--signal);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .role p {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.42;
+    }
+
+    .ownership {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .owner-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1px;
+      margin-top: clamp(40px, 7vw, 78px);
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .owner-col {
+      padding: clamp(26px, 5vw, 48px);
+      background: rgba(8, 8, 6, 0.84);
+    }
+
+    .owner-col h3 {
+      font-family: var(--display);
+      font-size: clamp(34px, 5vw, 64px);
+      line-height: 0.95;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .owner-col ul {
+      display: grid;
+      gap: 16px;
+      margin: 30px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .owner-col li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      color: var(--muted);
+      font-size: clamp(17px, 1.8vw, 20px);
+      line-height: 1.35;
+    }
+
+    .owner-col li::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      margin-top: 9px;
+      flex: 0 0 auto;
+      background: var(--gold);
+    }
+
+    .owner-col.agent li::before {
+      background: var(--signal);
+    }
+
+    .closing {
+      min-height: 82svh;
+      display: grid;
+      align-items: center;
+      background:
+        linear-gradient(180deg, rgba(8, 8, 6, 0.92), rgba(8, 8, 6, 0.72)),
+        radial-gradient(circle at 50% 20%, rgba(231, 164, 55, 0.18), transparent 36vw);
+    }
+
+    .closing-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(240px, 0.45fr);
+      gap: clamp(32px, 7vw, 100px);
+      align-items: end;
+    }
+
+    .closing h2 {
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: clamp(48px, 8vw, 112px);
+      line-height: 0.92;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .closing p {
+      max-width: 720px;
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: clamp(18px, 2vw, 24px);
+      line-height: 1.42;
+    }
+
+    .contact-panel {
+      border-left: 1px solid var(--line-strong);
+      padding: 26px;
+      background: linear-gradient(90deg, rgba(244, 239, 225, 0.06), transparent);
+    }
+
+    .contact-panel span {
+      display: block;
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .contact-panel p {
+      margin: 0;
+      color: var(--ink);
+      font-size: 19px;
+      line-height: 1.38;
+    }
+
+    .contact-panel a {
+      display: inline-flex;
+      margin-top: 22px;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 12px 15px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: background 160ms ease, color 160ms ease;
+    }
+
+    .contact-panel a:hover {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    .footer {
+      padding: 24px var(--pad);
+      border-top: 1px solid var(--line);
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .footer-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 980px) {
+      .hero-inner,
+      .contrast,
+      .roles,
+      .closing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: 86svh;
+        align-items: center;
+      }
+
+      .hero-aside {
+        display: none;
+      }
+
+      .shift-grid,
+      .flow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .flow-step {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .flow-step:nth-child(2n) {
+        border-right: 0;
+      }
+
+      .flow-step::after {
+        display: none;
+      }
+
+      .role-copy {
+        position: static;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .topbar {
+        position: absolute;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav {
+        width: 100%;
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+
+      .nav::-webkit-scrollbar {
+        display: none;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 148px;
+        padding-bottom: 58px;
+        width: 100vw;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      h1 {
+        max-width: calc(100vw - 40px);
+        font-size: clamp(46px, 13.4vw, 64px);
+        line-height: 0.96;
+        text-wrap: wrap;
+      }
+
+      .hero-inner,
+      .hero-lede,
+      .hero-copy,
+      .section-inner,
+      .footer-inner {
+        width: 350px;
+        max-width: calc(100vw - 40px);
+      }
+
+      .hero-inner,
+      .section-inner,
+      .footer-inner {
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .shift-grid,
+      .flow,
+      .owner-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .era {
+        min-height: 210px;
+      }
+
+      .flow-step {
+        min-height: 150px;
+        border-right: 0;
+      }
+
+      .role {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .owner-col {
+        padding: 26px 22px;
+      }
+
+      .closing {
+        min-height: auto;
+      }
+
+      .contact-panel {
+        padding: 22px 0 0;
+        border-left: 0;
+        border-top: 1px solid var(--line-strong);
+        background: transparent;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="site-shell">
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="topbar" aria-label="Site navigation">
+      <div class="topbar-inner">
+        <a class="mark" href="../index.html" aria-label="Back to Human Agent Interface home">
+          <span class="mark-symbol">H</span>
+          <span>Where HAI comes from</span>
+        </a>
+        <nav class="nav" aria-label="Page sections">
+          <a href="../index.html">Home</a>
+          <a href="../product/">Products</a>
+          <a href="../samuel/">Samuel's work</a>
+          <a href="#shift">Interface Shift</a>
+          <a href="#definition">Definition</a>
+          <a href="#mechanism">Mechanism</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <canvas id="signalCanvas" aria-hidden="true"></canvas>
+        <div class="hero-inner">
+          <div>
+            <p class="eyebrow">The derivation</p>
+            <h1 id="hero-title">Where HAI comes from</h1>
+            <p class="hero-lede">CLI, TUI, GUI, HAI: every new tool class needs a new interface.</p>
+            <p class="hero-copy">
+              Agents can research, plan, build, verify, and coordinate. They do not only wait for input.
+              They act. That changes the interface problem from input to direction.
+            </p>
+          </div>
+          <aside class="hero-aside" aria-label="Positioning note">
+            <div class="signal-label">
+              <strong>Not the homepage pitch</strong>
+              <span>This page explains the lineage: why Human Agent Interface follows CLI, TUI, and GUI.</span>
+            </div>
+            <div class="scroll-cue"><i></i> Interface shift</div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="shift" id="shift" aria-labelledby="shift-title">
+        <div class="section-inner">
+          <p class="kicker">Interface Shift</p>
+          <h2 class="section-title" id="shift-title">Every new tool class needs a new interface.</h2>
+          <p class="section-copy">
+            Commanding software, navigating systems, controlling computers, and directing agents are not the same act.
+            HAI is the name for the fourth act.
+          </p>
+
+          <div class="shift-grid" aria-label="Interface evolution">
+            <article class="era">
+              <span class="code">01 / CLI</span>
+              <div>
+                <h3>CLI</h3>
+                <p>made software commandable.</p>
+              </div>
+            </article>
+            <article class="era">
+              <span class="code">02 / TUI</span>
+              <div>
+                <h3>TUI</h3>
+                <p>made systems navigable in text.</p>
+              </div>
+            </article>
+            <article class="era">
+              <span class="code">03 / GUI</span>
+              <div>
+                <h3>GUI</h3>
+                <p>made computers visually controllable.</p>
+              </div>
+            </article>
+            <article class="era current">
+              <span class="code">04 / HAI</span>
+              <div>
+                <h3>HAI</h3>
+                <p>is for directing systems that can act.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="when" id="definition" aria-labelledby="definition-title">
+        <div class="section-inner">
+          <p class="kicker">When systems can act</p>
+          <h2 class="section-title" id="definition-title">The interface has to hold intent, scope, risk, feedback, and control.</h2>
+          <p class="section-copy">
+            Raw agents amplify unclear intent into unclear work. Human-Agent Interface exists to make the work legible before the agent starts moving.
+          </p>
+
+          <div class="contrast">
+            <div class="problem-line" aria-label="Common failure modes">
+              <div>
+                <span>Messy input</span>
+                <p>An idea, a blocked project, a vague decision, ten open threads.</p>
+              </div>
+              <div>
+                <span>Raw delegation</span>
+                <p>The agent runs, expands scope, creates artifacts, and the human loses the thread.</p>
+              </div>
+              <div>
+                <span>Agentic headache</span>
+                <p>More output appears, but the next human action is still not clear.</p>
+              </div>
+            </div>
+
+            <blockquote class="definition">
+              <p>HAI is derived from the moment software stops being passive.</p>
+              <small>
+                It is not a single chatbot, dashboard, or auto-agent. It is the translation and control layer between human chaos and systems that can act.
+              </small>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <section class="mechanism" id="mechanism" aria-labelledby="mechanism-title">
+        <div class="section-inner">
+          <p class="kicker">Mechanism</p>
+          <h2 class="section-title" id="mechanism-title">The product kernel is a controlled work packet.</h2>
+          <p class="section-copy">
+            HAI takes a human state and turns it into a bounded assignment: role, scope, risk, artifact obligation, and next step.
+          </p>
+
+          <div class="flow" aria-label="HAI workflow">
+            <article class="flow-step">
+              <span>01</span>
+              <strong>Intake</strong>
+              <p>Capture the human problem state without pretending it is already structured.</p>
+            </article>
+            <article class="flow-step">
+              <span>02</span>
+              <strong>Classify</strong>
+              <p>Name what this actually is: idea, blockage, project state, decision, or risk.</p>
+            </article>
+            <article class="flow-step">
+              <span>03</span>
+              <strong>Scope</strong>
+              <p>Separate agent-capable work from what must remain human-owned.</p>
+            </article>
+            <article class="flow-step">
+              <span>04</span>
+              <strong>Assign Role</strong>
+              <p>Choose the right operating mode instead of handing everything to one generic assistant.</p>
+            </article>
+            <article class="flow-step">
+              <span>05</span>
+              <strong>Define Artifact</strong>
+              <p>Specify what must exist at the end so progress can be inspected.</p>
+            </article>
+            <article class="flow-step">
+              <span>06</span>
+              <strong>Next Action</strong>
+              <p>Produce a concrete packet the human can approve, run, reject, or revise.</p>
+            </article>
+          </div>
+
+          <div class="roles">
+            <div class="role-copy">
+              <h3>Agents are roles, not magic.</h3>
+              <p>
+                A useful interface routes work into a mode the human can supervise. Sometimes that means no agent at all.
+              </p>
+            </div>
+            <div class="role-list" aria-label="Agent roles">
+              <article class="role">
+                <b>Research</b>
+                <p>Collects evidence, maps options, and reduces uncertainty before action.</p>
+              </article>
+              <article class="role">
+                <b>Executor</b>
+                <p>Performs bounded implementation work against a clear definition of done.</p>
+              </article>
+              <article class="role">
+                <b>Verifier</b>
+                <p>Checks whether the promised outcome actually holds in reality.</p>
+              </article>
+              <article class="role">
+                <b>Orchestrator</b>
+                <p>Coordinates multiple agents while preserving state, ownership, and handoff clarity.</p>
+              </article>
+              <article class="role">
+                <b>Human-only</b>
+                <p>Marks work that depends on judgment, consent, taste, risk appetite, or irreversible decisions.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="ownership" aria-labelledby="ownership-title">
+        <div class="section-inner">
+          <p class="kicker">Control</p>
+          <h2 class="section-title" id="ownership-title">The human does not disappear from the system.</h2>
+          <p class="section-copy">
+            The point is not autonomy theater. The point is controlled working ability with agents.
+          </p>
+
+          <div class="owner-grid">
+            <article class="owner-col">
+              <h3>The human owns</h3>
+              <ul>
+                <li>Goal and meaning</li>
+                <li>Scope boundaries</li>
+                <li>Risk and approvals</li>
+                <li>Irreversible decisions</li>
+                <li>The final sense of whether the work matters</li>
+              </ul>
+            </article>
+            <article class="owner-col agent">
+              <h3>The agent works on</h3>
+              <ul>
+                <li>Research and synthesis</li>
+                <li>Implementation and iteration</li>
+                <li>Verification and critique</li>
+                <li>Documentation and handoff</li>
+                <li>Structured next actions</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing" id="contact" aria-labelledby="closing-title">
+        <div class="section-inner closing-grid">
+          <div>
+            <p class="kicker">Human tool use continues</p>
+            <h2 id="closing-title">The agent is not the product. The collaboration is.</h2>
+            <p>
+              Agents may be the most powerful tools humans have ever had. But power without an interface becomes noise.
+              Human-Agent Interface is the discipline of turning that power into clear, supervised, useful work.
+            </p>
+          </div>
+          <aside class="contact-panel" aria-label="Early conversation">
+            <span>Early conversations</span>
+            <p>
+              For the main pain-first pitch, return to the homepage. For one messy agent workflow, start a direct conversation.
+            </p>
+            <a href="../index.html">Back to homepage</a>
+            <a href="../samuel/">Samuel's work</a>
+            <a href="mailto:samuel@human-agent-interface.com?subject=Human%20Agent%20Interface%20conversation">Bring one messy agent workflow</a>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>Where HAI comes from</span>
+        <span>CLI / TUI / GUI / HAI</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("signalCanvas");
+    const ctx = canvas.getContext("2d");
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let width = 0;
+    let height = 0;
+    let pixelRatio = 1;
+    let packets = [];
+    let columns = [];
+    let frame = 0;
+
+    function resize() {
+      pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      const rect = canvas.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      canvas.width = Math.floor(width * pixelRatio);
+      canvas.height = Math.floor(height * pixelRatio);
+      ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+      columns = [
+        { x: width * 0.52, label: "CLI", color: "rgba(244,239,225,0.35)" },
+        { x: width * 0.64, label: "TUI", color: "rgba(244,239,225,0.35)" },
+        { x: width * 0.76, label: "GUI", color: "rgba(244,239,225,0.35)" },
+        { x: width * 0.89, label: "HAI", color: "rgba(231,164,55,0.95)" }
+      ];
+
+      packets = Array.from({ length: width < 720 ? 18 : 34 }, (_, index) => ({
+        progress: Math.random(),
+        row: 0.16 + Math.random() * 0.68,
+        speed: 0.0016 + Math.random() * 0.0028,
+        size: 1.2 + Math.random() * 2.8,
+        phase: Math.random() * Math.PI * 2,
+        lane: index % 5
+      }));
+    }
+
+    function drawGrid() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#080806";
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.strokeStyle = "rgba(244,239,225,0.055)";
+      ctx.lineWidth = 1;
+      const grid = width < 720 ? 58 : 86;
+      for (let x = 0; x < width; x += grid) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < height; y += grid) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+    }
+
+    function drawColumns() {
+      columns.forEach((column, index) => {
+        ctx.strokeStyle = column.color;
+        ctx.lineWidth = index === columns.length - 1 ? 2 : 1;
+        ctx.beginPath();
+        ctx.moveTo(column.x, height * 0.12);
+        ctx.lineTo(column.x, height * 0.86);
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(column.x + 12, height * 0.14);
+        ctx.fillStyle = index === columns.length - 1 ? "#e7a437" : "rgba(244,239,225,0.38)";
+        ctx.font = "12px Berkeley Mono, Iosevka, Consolas, monospace";
+        ctx.letterSpacing = "2px";
+        ctx.fillText(column.label, 0, 0);
+        ctx.restore();
+      });
+    }
+
+    function curvePoint(startX, startY, endX, endY, t, bend) {
+      const controlX = startX + (endX - startX) * 0.52;
+      const controlY = startY + bend;
+      const inverse = 1 - t;
+      return {
+        x: inverse * inverse * startX + 2 * inverse * t * controlX + t * t * endX,
+        y: inverse * inverse * startY + 2 * inverse * t * controlY + t * t * endY
+      };
+    }
+
+    function drawPacket(packet) {
+      const startX = width * 0.46;
+      const endX = width * 0.94;
+      const startY = height * packet.row;
+      const endY = height * (0.2 + packet.lane * 0.13);
+      const bend = Math.sin(packet.phase + frame * 0.018) * 70;
+      const t = packet.progress;
+      const point = curvePoint(startX, startY, endX, endY, t, bend);
+      const alpha = Math.sin(Math.PI * t);
+
+      ctx.strokeStyle = `rgba(126,214,197,${0.08 * alpha})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let i = 0; i <= 22; i += 1) {
+        const localT = i / 22;
+        const p = curvePoint(startX, startY, endX, endY, localT, bend);
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = `rgba(231,164,55,${0.72 * alpha})`;
+      ctx.shadowColor = "rgba(231,164,55,0.7)";
+      ctx.shadowBlur = 16;
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, packet.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      if (t > 0.78) {
+        ctx.strokeStyle = `rgba(231,164,55,${0.32 * alpha})`;
+        ctx.strokeRect(point.x - 10, point.y - 10, 20, 20);
+      }
+    }
+
+    function drawHumanSignal() {
+      const x = width * 0.42;
+      const y = height * 0.52;
+      const radius = Math.min(width, height) * 0.11;
+      const pulse = prefersReducedMotion.matches ? 0 : Math.sin(frame * 0.03) * 0.08;
+
+      ctx.strokeStyle = "rgba(244,239,225,0.12)";
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 4; i += 1) {
+        ctx.beginPath();
+        ctx.arc(x, y, radius * (0.42 + i * 0.28 + pulse), 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = "rgba(244,239,225,0.42)";
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function render() {
+      frame += 1;
+      drawGrid();
+      drawHumanSignal();
+      drawColumns();
+      packets.forEach((packet) => {
+        drawPacket(packet);
+        if (!prefersReducedMotion.matches) {
+          packet.progress += packet.speed;
+          if (packet.progress > 1.08) {
+            packet.progress = -0.08 - Math.random() * 0.4;
+            packet.row = 0.16 + Math.random() * 0.68;
+            packet.lane = Math.floor(Math.random() * 5);
+          }
+        }
+      });
+      requestAnimationFrame(render);
+    }
+
+    resize();
+    render();
+    window.addEventListener("resize", resize, { passive: true });
+  </script>
+</body>
+</html>

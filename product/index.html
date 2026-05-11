@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta
+    name="description"
+    content="Commercial Human Agent Interface offers: 4h HAI setup, agentic system setup, Sidecar-NG, and Adminspace / Userspace."
+  >
+  <title>Human Agent Interface Products</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f7f1df;
+      --muted: #b7ad97;
+      --quiet: #7a715f;
+      --void: #080806;
+      --charcoal: #11100d;
+      --panel: rgba(247, 241, 223, 0.065);
+      --panel-strong: rgba(247, 241, 223, 0.12);
+      --line: rgba(247, 241, 223, 0.18);
+      --line-strong: rgba(247, 241, 223, 0.32);
+      --signal: #a7ff4f;
+      --copper: #ff9f5f;
+      --cyan: #7dd8ff;
+      --red: #ff5b4f;
+      --max: 1180px;
+      --pad: clamp(18px, 4vw, 56px);
+      --display: Georgia, "Times New Roman", serif;
+      --body: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
+      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--void);
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 76% 12%, rgba(167, 255, 79, 0.13), transparent 28rem),
+        radial-gradient(circle at 18% 34%, rgba(255, 159, 95, 0.1), transparent 26rem),
+        linear-gradient(180deg, #080806 0%, #11100d 46%, #070806 100%);
+      font-family: var(--body);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      opacity: 0.24;
+      background-image:
+        linear-gradient(rgba(247, 241, 223, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(247, 241, 223, 0.03) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: linear-gradient(180deg, black, transparent 78%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 0;
+    }
+
+    .site-shell {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .topbar {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 30;
+      display: flex;
+      justify-content: center;
+      padding: 14px var(--pad) 0;
+      pointer-events: none;
+    }
+
+    .topbar-inner {
+      width: min(var(--max), 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(247, 241, 223, 0.13);
+      background: rgba(8, 8, 6, 0.72);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 70px rgba(0, 0, 0, 0.3);
+      pointer-events: auto;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      color: var(--signal);
+      font-size: 12px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(12px, 2vw, 24px);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .nav a {
+      opacity: 0.82;
+      transition: color 160ms ease, opacity 160ms ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      color: var(--ink);
+      opacity: 1;
+    }
+
+    .nav .nav-cta {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 12px;
+      border: 1px solid rgba(167, 255, 79, 0.48);
+      background: rgba(167, 255, 79, 0.1);
+      color: var(--ink);
+      opacity: 1;
+    }
+
+    .hero {
+      min-height: 96svh;
+      display: grid;
+      align-items: center;
+      padding: 126px var(--pad) 72px;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(90deg, rgba(247, 241, 223, 0.075), transparent 1px),
+        linear-gradient(180deg, rgba(247, 241, 223, 0.04), transparent 1px);
+      background-size: 84px 84px;
+    }
+
+    .hero-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 0.96fr) minmax(320px, 0.44fr);
+      gap: clamp(32px, 6vw, 88px);
+      align-items: end;
+    }
+
+    .eyebrow,
+    .kicker {
+      color: var(--copper);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 42px;
+      height: 1px;
+      background: var(--copper);
+    }
+
+    h1 {
+      max-width: 920px;
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: clamp(3.4rem, 8.2vw, 7.9rem);
+      line-height: 0.92;
+      letter-spacing: 0;
+      overflow-wrap: break-word;
+      text-wrap: balance;
+    }
+
+    .promise {
+      max-width: 760px;
+      margin-top: 28px;
+      color: var(--ink);
+      font-size: clamp(1.24rem, 2.25vw, 1.85rem);
+      line-height: 1.18;
+      text-wrap: balance;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+      align-items: center;
+    }
+
+    .button {
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 20px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      font-weight: 800;
+      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+    }
+
+    .button.primary {
+      border-color: rgba(167, 255, 79, 0.7);
+      background: var(--signal);
+      color: #11150d;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(247, 241, 223, 0.44);
+      background: var(--panel-strong);
+    }
+
+    .button.primary:hover,
+    .button.primary:focus-visible {
+      border-color: var(--signal);
+      background: #c4ff86;
+    }
+
+    .price-line {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .proof-panel {
+      border-left: 1px solid var(--line-strong);
+      background: linear-gradient(90deg, rgba(247, 241, 223, 0.075), transparent);
+      padding: 24px;
+    }
+
+    .proof-panel h2 {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .proof-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .proof-item {
+      display: grid;
+      gap: 4px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .proof-item:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .proof-item strong {
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: clamp(1.35rem, 2.5vw, 2rem);
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .proof-item span {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .section {
+      padding: clamp(70px, 10vw, 132px) var(--pad);
+    }
+
+    .section-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(280px, 0.46fr);
+      gap: clamp(24px, 6vw, 78px);
+      align-items: end;
+      margin-bottom: 36px;
+    }
+
+    h2 {
+      margin-top: 12px;
+      font-family: var(--display);
+      font-size: clamp(2.35rem, 5.8vw, 5.8rem);
+      font-weight: 500;
+      line-height: 0.98;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .section-copy {
+      color: var(--muted);
+      font-size: clamp(1rem, 1.55vw, 1.18rem);
+    }
+
+    .offers-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .offer {
+      min-height: 620px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 28px;
+      padding: clamp(22px, 3vw, 32px);
+      border: 1px solid var(--line);
+      background: rgba(247, 241, 223, 0.045);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .offer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.18;
+      background-image: linear-gradient(135deg, transparent 0 47%, currentColor 48% 49%, transparent 50% 100%);
+      background-size: 38px 38px;
+    }
+
+    .offer:nth-child(1) {
+      color: rgba(167, 255, 79, 0.72);
+    }
+
+    .offer:nth-child(2) {
+      color: rgba(125, 216, 255, 0.66);
+    }
+
+    .offer:nth-child(3) {
+      color: rgba(255, 159, 95, 0.68);
+    }
+
+    .offer:nth-child(4) {
+      color: rgba(255, 91, 79, 0.62);
+    }
+
+    .offer > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .offer-code {
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .offer h3 {
+      margin-top: 16px;
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: clamp(2rem, 3.7vw, 3.6rem);
+      font-weight: 500;
+      line-height: 0.98;
+      text-wrap: balance;
+    }
+
+    .offer-lede {
+      max-width: 560px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 1.04rem;
+    }
+
+    .offer-spec {
+      display: grid;
+      gap: 18px;
+    }
+
+    .spec-block {
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .spec-block h4 {
+      color: var(--copper);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .spec-block p {
+      margin-top: 7px;
+      color: var(--ink);
+      font-size: 0.98rem;
+    }
+
+    .spec-block ul {
+      display: grid;
+      gap: 7px;
+      margin: 9px 0 0;
+      padding: 0;
+      color: var(--ink);
+      list-style: none;
+      font-size: 0.98rem;
+    }
+
+    .spec-block li {
+      display: grid;
+      grid-template-columns: 16px 1fr;
+      gap: 8px;
+      align-items: start;
+    }
+
+    .spec-block li::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      margin-top: 8px;
+      background: currentColor;
+    }
+
+    .offer-footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+    }
+
+    .offer-note {
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .commercial {
+      border-block: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(247, 241, 223, 0.05), rgba(247, 241, 223, 0.015)),
+        #0c0d0a;
+    }
+
+    .commercial-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(280px, 0.48fr);
+      gap: clamp(24px, 6vw, 84px);
+      align-items: center;
+    }
+
+    .commercial h2 {
+      max-width: 760px;
+    }
+
+    .commercial-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .commercial-list p {
+      padding-left: 16px;
+      border-left: 2px solid var(--line-strong);
+    }
+
+    .booking-box {
+      border: 1px solid var(--line-strong);
+      background: rgba(8, 8, 6, 0.52);
+      padding: 24px;
+    }
+
+    .booking-box strong {
+      display: block;
+      color: var(--signal);
+      font-family: var(--display);
+      font-size: clamp(1.9rem, 4vw, 3.2rem);
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .booking-box p {
+      margin-top: 14px;
+      color: var(--muted);
+    }
+
+    .booking-box .button {
+      width: 100%;
+      margin-top: 22px;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .faq-item {
+      min-height: 190px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: rgba(247, 241, 223, 0.045);
+    }
+
+    .faq-item h3 {
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: clamp(1.45rem, 2.4vw, 2.1rem);
+      font-weight: 500;
+      line-height: 1.04;
+    }
+
+    .faq-item p {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    footer {
+      padding: 28px var(--pad);
+      border-top: 1px solid var(--line);
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .footer-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    @media (max-width: 940px) {
+      .hero-inner,
+      .section-head,
+      .commercial-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .offers-grid,
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .offer {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .topbar {
+        position: absolute;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .brand span:last-child {
+        display: none;
+      }
+
+      .nav {
+        width: 100%;
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+
+      .nav::-webkit-scrollbar {
+        display: none;
+      }
+
+      .nav .nav-cta {
+        display: none;
+      }
+
+      .hero {
+        width: 100vw;
+        padding: 148px 20px 58px;
+      }
+
+      .section {
+        width: 100vw;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .hero-inner,
+      .section-inner,
+      .footer-inner {
+        width: 350px;
+        max-width: calc(100vw - 40px);
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      h1 {
+        font-size: clamp(2.8rem, 13.8vw, 4.6rem);
+        line-height: 0.96;
+      }
+
+      h2 {
+        font-size: clamp(2.25rem, 11vw, 3.4rem);
+      }
+
+      .hero-actions,
+      .offer-footer {
+        display: grid;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .proof-panel,
+      .booking-box,
+      .faq-item,
+      .offer {
+        padding: 22px;
+      }
+
+      .footer-inner {
+        display: grid;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar" aria-label="Site navigation">
+      <div class="topbar-inner">
+        <a class="brand" href="../index.html" aria-label="Human Agent Interface home">
+          <span class="brand-mark">HAI</span>
+          <span>Human Agent Interface</span>
+        </a>
+        <nav class="nav" aria-label="Product navigation">
+          <a href="../index.html">Home</a>
+          <a href="../what_it_is/">Where HAI comes from</a>
+          <a href="../samuel/">Samuel's work</a>
+          <a href="#offers">Offers</a>
+          <a href="#faq">FAQ</a>
+          <a class="nav-cta" href="mailto:samuel@human-agent-interface.com?subject=Book%20the%204h%20HAI%20Setup&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20the%204h%20HAI%20Setup.%0D%0A%0D%0AMy%20current%20agentic%20workflow%20problem%3A%0D%0A%0D%0ARelevant%20tools%20or%20team%20context%3A%0D%0A%0D%0APreferred%20time%20windows%3A%0D%0A%0D%0AI%20understand%20the%20range%20is%20500-1%2C500%20EUR%20depending%20on%20scope.">Book setup</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-inner">
+          <div>
+            <p class="eyebrow">Commercial HAI offers</p>
+            <h1 id="hero-title">Human Agent Interface Products</h1>
+            <p class="promise">
+              I turn messy AI work into scoped, controllable systems humans can actually own.
+            </p>
+            <div class="hero-actions" aria-label="Primary booking actions">
+              <a
+                class="button primary"
+                href="mailto:samuel@human-agent-interface.com?subject=Book%20the%204h%20HAI%20Setup&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20the%204h%20HAI%20Setup.%0D%0A%0D%0AMy%20current%20agentic%20workflow%20problem%3A%0D%0A%0D%0ARelevant%20tools%20or%20team%20context%3A%0D%0A%0D%0APreferred%20time%20windows%3A%0D%0A%0D%0AI%20understand%20the%20range%20is%20500-1%2C500%20EUR%20depending%20on%20scope."
+              >Book the 4h HAI Setup</a>
+              <span class="price-line">500-1,500 EUR depending on scope</span>
+            </div>
+          </div>
+
+          <aside class="proof-panel" aria-label="Evidence">
+            <h2>Evidence behind the work</h2>
+            <div class="proof-list">
+              <div class="proof-item">
+                <strong>Lived practice</strong>
+                <span>Built from agentic work in real projects, local systems, and evaluation loops.</span>
+              </div>
+              <div class="proof-item">
+                <strong>Sidecar-NG / AgentArena</strong>
+                <span>Experience from building watcher, verifier, and agent-evaluation systems.</span>
+              </div>
+              <div class="proof-item">
+                <strong>97.3%</strong>
+                <span>Eval result in an internal Sidecar-NG V2 benchmark, not a third-party audited claim.</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="offers" aria-labelledby="offers-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <div>
+              <p class="kicker">Four real offers</p>
+              <h2 id="offers-title">Pick the product that matches the shape of your agentic problem.</h2>
+            </div>
+            <p class="section-copy">
+              The first commercial wedge is the 4h setup. The other offers are concrete directions
+              for deeper system work once the current workflow, risk, and ownership problem is visible.
+            </p>
+          </div>
+
+          <div class="offers-grid">
+            <article class="offer" aria-labelledby="audit-title">
+              <div>
+                <span class="offer-code">Offer 01 / Paid setup</span>
+                <h3 id="audit-title">Personal HAI Audit</h3>
+                <p class="offer-lede">
+                  A 4h teardown and rebuild of how you currently work with agents.
+                </p>
+              </div>
+              <div class="offer-spec">
+                <div class="spec-block">
+                  <h4>Who it is for</h4>
+                  <p>Founders, builders, developers, and operators already using Claude Code, Codex, Cursor, Cline, Aider, or similar agentic tools.</p>
+                </div>
+                <div class="spec-block">
+                  <h4>Problem it solves</h4>
+                  <p>You have momentum, but the work fragments into chats, half-plans, unclear decisions, and agent output you do not fully own.</p>
+                </div>
+                <div class="spec-block">
+                  <h4>What happens</h4>
+                  <p>We inspect the current workflow, identify failure points, separate human decisions from delegable work, and redesign the next agent loop.</p>
+                </div>
+                <div class="spec-block">
+                  <h4>Deliverables</h4>
+                  <ul>
+                    <li>Workflow diagnosis</li>
+                    <li>Rewritten next-action packet</li>
+                    <li>Tool/setup changes to make immediately</li>
+                    <li>Risks, limits, and stop rules</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="offer-footer">
+                <span class="offer-note">500-1,500 EUR depending on scope</span>
+                <a class="button primary" href="mailto:samuel@human-agent-interface.com?subject=Book%20Personal%20HAI%20Audit&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%204h%20Personal%20HAI%20Audit.%0D%0A%0D%0AMy%20current%20workflow%20problem%3A%0D%0A%0D%0ATools%20I%20use%3A%0D%0A%0D%0APreferred%20time%20windows%3A">Book this setup</a>
+              </div>
+            </article>
+
+            <article class="offer" aria-labelledby="system-title">
+              <div>
+                <span class="offer-code">Offer 02 / Build the system</span>
+                <h3 id="system-title">Agentic System Setup</h3>
+                <p class="offer-lede">
+                  A practical setup for people who need a working harness, not another AI strategy note.
+                </p>
+              </div>
+              <div class="offer-spec">
+                <div class="spec-block">
+                  <h4>Who it is for</h4>
+                  <p>Technical founders, small teams, and serious individual builders who want repeatable agentic work across projects.</p>
+                </div>
+                <div class="spec-block">
+                  <h4>Problem it solves</h4>
+                  <p>Your tools can run, but the operating system around them is missing: roles, permissions, artifacts, verification, and handoff.</p>
+                </div>
+                <div class="spec-block">
+                  <h4>What happens</h4>
+                  <p>We design the minimum agentic operating loop, configure role boundaries, and define how work moves from request to execution to verification.</p>
+                </div>
+                <div class="spec-block">
+                  <h4>Deliverables</h4>
+                  <ul>
+                    <li>Agent role map</li>
+                    <li>Bounded execution workflow</li>
+                    <li>Verifier path and definition of done</li>
+                    <li>Handoff packet for repeated use</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="offer-footer">
+                <span class="offer-note">Best after one audit or clear system pain</span>
+                <a class="button" href="mailto:samuel@human-agent-interface.com?subject=Agentic%20System%20Setup&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20am%20interested%20in%20an%20Agentic%20System%20Setup.%0D%0A%0D%0AWhat%20I%20want%20the%20system%20to%20do%3A%0D%0A%0D%0ACurrent%20tools%20and%20constraints%3A%0D%0A%0D%0ATeam%20or%20solo%20context%3A">Scope this setup</a>
+              </div>
+            </article>
+
+            <article class="offer" aria-labelledby="sidecar-title">
+              <div>
+                <span class="offer-code">Offer 03 / Prototype-backed layer</span>
+                <h3 id="sidecar-title">Sidecar / Sidecar-NG</h3>
+                <p class="offer-lede">
+                  A watcher and downscope layer for long, risky, or overloaded human-agent sessions.
+                </p>
+              </div>
+              <div class="offer-spec">
+                <div class="spec-block">
+                  <h4>Who it is for</h4>
+                  <p>Heavy agent users who lose focus, over-delegate, miss stop points, or need a second system watching the collaboration itself.</p>
+                </div>
+                <div class="spec-block">
+                  <h4>Problem it solves</h4>
+                  <p>The main agent optimizes for doing work. Sidecar watches the interaction: scope, overload, drift, verification gaps, and human decision points.</p>
+                </div>
+                <div class="spec-block">
+                  <h4>What happens</h4>
+                  <p>We map where your sessions fail and decide whether a Sidecar-style watcher, prompt layer, or workflow rule set is the right intervention.</p>
+                </div>
+                <div class="spec-block">
+                  <h4>Deliverables</h4>
+                  <ul>
+                    <li>Sidecar-fit assessment</li>
+                    <li>Watcher rules or prompt layer</li>
+                    <li>Downscope triggers and intervention points</li>
+                    <li>Prototype path if a custom layer is worth building</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="offer-footer">
+                <span class="offer-note">Prototype direction, not mature SaaS</span>
+                <a class="button" href="mailto:samuel@human-agent-interface.com?subject=Sidecar%20%2F%20Sidecar-NG%20fit&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20understand%20whether%20Sidecar%20%2F%20Sidecar-NG%20fits%20my%20workflow.%0D%0A%0D%0AWhere%20my%20agent%20sessions%20drift%20or%20overload%3A%0D%0A%0D%0ATools%20I%20use%3A">Check Sidecar fit</a>
+              </div>
+            </article>
+
+            <article class="offer" aria-labelledby="admin-title">
+              <div>
+                <span class="offer-code">Offer 04 / Team architecture</span>
+                <h3 id="admin-title">Adminspace / Userspace</h3>
+                <p class="offer-lede">
+                  Separate productive agent use from governance, review, permissions, and system evolution.
+                </p>
+              </div>
+              <div class="offer-spec">
+                <div class="spec-block">
+                  <h4>Who it is for</h4>
+                  <p>Companies and technical teams where multiple people or agents touch the same workflows, repositories, or operational decisions.</p>
+                </div>
+                <div class="spec-block">
+                  <h4>Problem it solves</h4>
+                  <p>Teams blur user work, admin work, security decisions, prompt changes, review, and tool access until no one owns the risk.</p>
+                </div>
+                <div class="spec-block">
+                  <h4>What happens</h4>
+                  <p>We draw the boundary between userspace and adminspace, then define who can change agents, approve work, inspect evidence, and stop runs.</p>
+                </div>
+                <div class="spec-block">
+                  <h4>Deliverables</h4>
+                  <ul>
+                    <li>Userspace/adminspace separation map</li>
+                    <li>Permission and review model</li>
+                    <li>Governance and escalation gates</li>
+                    <li>Next pilot slice for a real team workflow</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="offer-footer">
+                <span class="offer-note">Company/team discovery first</span>
+                <a class="button" href="mailto:samuel@human-agent-interface.com?subject=Adminspace%20%2F%20Userspace%20for%20a%20team&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20discuss%20Adminspace%20%2F%20Userspace%20for%20a%20company%20or%20team.%0D%0A%0D%0ATeam%20context%3A%0D%0A%0D%0AWhere%20agent%20control%2C%20permissions%2C%20or%20review%20are%20unclear%3A">Map team system</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section commercial" id="book" aria-labelledby="book-title">
+        <div class="section-inner commercial-grid">
+          <div>
+            <p class="kicker">First commercial step</p>
+            <h2 id="book-title">Start with one paid 4h setup. Not a vague AI chat.</h2>
+            <div class="commercial-list">
+              <p>You bring one real agentic workflow problem, not a hypothetical transformation program.</p>
+              <p>We leave with a concrete setup, packet, boundary model, or decision about what not to build.</p>
+              <p>The work is honest about limits: model quality, human ownership, and problem fit still matter.</p>
+            </div>
+          </div>
+          <aside class="booking-box" aria-label="Booking details">
+            <strong>4 hours</strong>
+            <p>500-1,500 EUR depending on scope. The exact scope is agreed before the session.</p>
+            <a
+              class="button primary"
+              href="mailto:samuel@human-agent-interface.com?subject=Book%20the%204h%20HAI%20Setup&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20the%204h%20HAI%20Setup.%0D%0A%0D%0AMy%20current%20agentic%20workflow%20problem%3A%0D%0A%0D%0ARelevant%20tools%20or%20team%20context%3A%0D%0A%0D%0APreferred%20time%20windows%3A%0D%0A%0D%0AI%20understand%20the%20range%20is%20500-1%2C500%20EUR%20depending%20on%20scope."
+            >Book the 4h HAI Setup</a>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="faq" aria-labelledby="faq-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <div>
+              <p class="kicker">FAQ</p>
+              <h2 id="faq-title">Commercially clear, technically honest.</h2>
+            </div>
+            <p class="section-copy">
+              HAI is early, but not vague. The first sale is a setup session. The deeper products grow from real workflow evidence.
+            </p>
+          </div>
+
+          <div class="faq-grid">
+            <article class="faq-item">
+              <h3>Is this consulting or software?</h3>
+              <p>Today, the first offer is a paid setup and audit. Some parts are software-backed, especially Sidecar-NG and evaluation work, but the sale starts with the human workflow.</p>
+            </article>
+            <article class="faq-item">
+              <h3>Who is this for?</h3>
+              <p>People already working with agents who feel the cost of unclear scope, context drift, weak verification, too many threads, or tool setups that do not fit how they think.</p>
+            </article>
+            <article class="faq-item">
+              <h3>What do I get after 4 hours?</h3>
+              <p>A diagnosis of the current setup, concrete workflow changes, a next-action packet, and a clearer boundary between human decisions and agent-executable work.</p>
+            </article>
+            <article class="faq-item">
+              <h3>Is Sidecar-NG a product or a prototype?</h3>
+              <p>It is prototype-backed product direction. The benchmark result is internal evidence, not an audited market claim. The setup decides whether a watcher layer fits your case.</p>
+            </article>
+            <article class="faq-item">
+              <h3>Can this work for a company/team?</h3>
+              <p>Yes, but the team version starts by mapping userspace, adminspace, ownership, review, permissions, and stop rules before any larger rollout.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <span>Human Agent Interface Products</span>
+        <span>Commercial HAI / Setup / Sidecar / Adminspace</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
