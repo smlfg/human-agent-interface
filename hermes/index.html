@@ -1,0 +1,1052 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta
+    name="description"
+    content="Hermes is Samuel Fleig's lived agent setup behind Human Agent Interface: profiles, gates, proof loops, and the failure history that shaped the method."
+  >
+  <title>Hermes System - Human Agent Interface</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f6f0df;
+      --muted: #b8ae98;
+      --quiet: #7a725f;
+      --black: #080907;
+      --charcoal: #11110d;
+      --panel: rgba(246, 240, 223, 0.065);
+      --panel-strong: rgba(246, 240, 223, 0.12);
+      --line: rgba(246, 240, 223, 0.16);
+      --line-strong: rgba(246, 240, 223, 0.34);
+      --green: #a7ff4f;
+      --cyan: #7edfd2;
+      --amber: #f1ae42;
+      --red: #ef6a4a;
+      --max: 1180px;
+      --pad: clamp(18px, 4vw, 56px);
+      --display: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      --body: "Neue Haas Grotesk Text", "Aptos", "Segoe UI", sans-serif;
+      --mono: "Berkeley Mono", "Iosevka", "SFMono-Regular", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--black);
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(8, 9, 7, 0.94) 0%, rgba(17, 17, 13, 0.97) 48%, #080907 100%),
+        repeating-linear-gradient(90deg, rgba(246, 240, 223, 0.03) 0 1px, transparent 1px 88px);
+      font-family: var(--body);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 30;
+      opacity: 0.18;
+      background-image:
+        linear-gradient(rgba(246, 240, 223, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(246, 240, 223, 0.035) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: linear-gradient(180deg, black, transparent 74%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    .site-shell {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: center;
+      padding: 14px var(--pad) 0;
+      pointer-events: none;
+    }
+
+    .topbar-inner {
+      width: min(var(--max), 100%);
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(246, 240, 223, 0.12);
+      background: rgba(8, 9, 7, 0.72);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 70px rgba(0, 0, 0, 0.3);
+      pointer-events: auto;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 1px solid var(--line-strong);
+      color: var(--green);
+      font-size: 13px;
+      line-height: 1;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .nav a {
+      opacity: 0.84;
+      transition: color 160ms ease, opacity 160ms ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      color: var(--ink);
+      opacity: 1;
+      outline: none;
+    }
+
+    .hero {
+      min-height: 92svh;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 132px var(--pad) 72px;
+      overflow: hidden;
+    }
+
+    .hero-media {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      gap: 12px;
+      opacity: 0.42;
+      transform: rotate(-2deg) scale(1.05);
+    }
+
+    .hero-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.76) contrast(1.08);
+      border: 1px solid rgba(246, 240, 223, 0.18);
+    }
+
+    .hero-media img:nth-child(1) {
+      grid-column: 7 / 13;
+      grid-row: 1 / 5;
+    }
+
+    .hero-media img:nth-child(2) {
+      grid-column: 2 / 8;
+      grid-row: 3 / 8;
+    }
+
+    .hero-media img:nth-child(3) {
+      grid-column: 8 / 12;
+      grid-row: 5 / 9;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(90deg, rgba(8, 9, 7, 0.96) 0%, rgba(8, 9, 7, 0.78) 48%, rgba(8, 9, 7, 0.46) 100%),
+        linear-gradient(180deg, rgba(8, 9, 7, 0.24) 0%, rgba(8, 9, 7, 0.94) 100%);
+    }
+
+    .hero-inner {
+      width: min(var(--max), 100%);
+      min-width: 0;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.55fr);
+      gap: clamp(32px, 6vw, 72px);
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 42px;
+      height: 1px;
+      background: var(--green);
+    }
+
+    h1 {
+      max-width: 900px;
+      font-family: var(--display);
+      font-size: 76px;
+      line-height: 0.94;
+      font-weight: 500;
+      text-wrap: balance;
+      text-shadow: 0 18px 64px rgba(0, 0, 0, 0.82);
+    }
+
+    .hero-lede {
+      max-width: 760px;
+      min-width: 0;
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 21px;
+      line-height: 1.52;
+      text-shadow: 0 12px 46px rgba(0, 0, 0, 0.86);
+      overflow-wrap: anywhere;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .button {
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      border: 1px solid var(--line-strong);
+      color: var(--ink);
+      background: rgba(246, 240, 223, 0.055);
+      font-weight: 700;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .button.primary {
+      border-color: rgba(167, 255, 79, 0.6);
+      background: rgba(167, 255, 79, 0.12);
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-2px);
+      border-color: var(--green);
+      background: rgba(167, 255, 79, 0.14);
+      outline: none;
+    }
+
+    .runtime {
+      display: grid;
+      min-width: 0;
+      gap: 10px;
+      border-left: 1px solid rgba(126, 223, 210, 0.38);
+      padding-left: 18px;
+      text-shadow: 0 12px 42px rgba(0, 0, 0, 0.82);
+    }
+
+    .runtime-line {
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr);
+      min-width: 0;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(246, 240, 223, 0.12);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .runtime-line strong {
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .runtime-line span,
+    .section-copy,
+    .arc-step p,
+    .profile-group p,
+    .proof-card p,
+    .loop-step p,
+    .repair p {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    section {
+      padding: 96px var(--pad);
+    }
+
+    .section-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(280px, 0.55fr);
+      gap: clamp(28px, 5vw, 72px);
+      align-items: end;
+      margin-bottom: 42px;
+    }
+
+    .kicker {
+      margin-bottom: 12px;
+      color: var(--amber);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      max-width: 820px;
+      font-family: var(--display);
+      font-size: 42px;
+      line-height: 1.03;
+      font-weight: 500;
+      text-wrap: balance;
+    }
+
+    .section-copy {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.62;
+    }
+
+    .failure-arc {
+      background:
+        linear-gradient(180deg, rgba(246, 240, 223, 0.035), rgba(246, 240, 223, 0.012)),
+        #0c0d0a;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .arc-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .arc-step {
+      min-height: 260px;
+      padding: 24px;
+      background: rgba(8, 9, 7, 0.92);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .arc-step span,
+    .profile-group span,
+    .proof-card span {
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .arc-step h3,
+    .profile-group h3,
+    .proof-card h3,
+    .loop-step h3 {
+      margin-top: 12px;
+      color: var(--ink);
+      font-size: 23px;
+      line-height: 1.15;
+      font-weight: 700;
+    }
+
+    .arc-step p,
+    .profile-group p,
+    .proof-card p,
+    .loop-step p {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.58;
+    }
+
+    .fleet-board {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .profile-group {
+      border: 1px solid var(--line);
+      background: rgba(246, 240, 223, 0.045);
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .profile-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .profile-list code {
+      padding: 6px 8px;
+      border: 1px solid rgba(246, 240, 223, 0.14);
+      background: rgba(8, 9, 7, 0.5);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 12px;
+      border-radius: 6px;
+    }
+
+    .loop {
+      background: #0c0d0a;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .loop-rail {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 1px;
+      background: rgba(126, 223, 210, 0.26);
+      border: 1px solid rgba(126, 223, 210, 0.26);
+    }
+
+    .loop-step {
+      min-height: 210px;
+      padding: 20px;
+      background: #0b0c09;
+    }
+
+    .loop-step b {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(126, 223, 210, 0.44);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .repair-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .repair {
+      display: grid;
+      grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
+      gap: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: rgba(246, 240, 223, 0.045);
+      border-radius: 8px;
+    }
+
+    .repair strong {
+      color: var(--red);
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    .repair p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .repair em {
+      display: block;
+      margin-top: 10px;
+      color: var(--green);
+      font-style: normal;
+    }
+
+    .proof-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .proof-card {
+      border: 1px solid var(--line);
+      background: rgba(246, 240, 223, 0.045);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .proof-card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .proof-card div {
+      padding: 18px;
+    }
+
+    .client-close {
+      padding-bottom: 72px;
+    }
+
+    .close-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.38fr);
+      gap: 32px;
+      align-items: center;
+      padding: 28px;
+      border: 1px solid rgba(167, 255, 79, 0.32);
+      background:
+        linear-gradient(135deg, rgba(167, 255, 79, 0.12), rgba(126, 223, 210, 0.06)),
+        rgba(8, 9, 7, 0.84);
+      border-radius: 8px;
+    }
+
+    .close-panel h2 {
+      font-size: 38px;
+    }
+
+    footer {
+      padding: 24px var(--pad) 34px;
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: opacity 520ms ease, transform 520ms ease;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1100px) {
+      h1 {
+        font-size: 58px;
+      }
+
+      .hero-inner,
+      .section-head,
+      .close-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .fleet-board,
+      .proof-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .loop-rail {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar {
+        position: absolute;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+      }
+
+      .nav {
+        max-width: 54vw;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+
+      .nav::-webkit-scrollbar {
+        display: none;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 124px;
+      }
+
+      .hero-media {
+        opacity: 0.2;
+        transform: rotate(-1deg) scale(1.12);
+      }
+
+      h1 {
+        font-size: 42px;
+      }
+
+      h2,
+      .close-panel h2 {
+        font-size: 32px;
+      }
+
+      .hero-lede,
+      .section-copy {
+        font-size: 17px;
+      }
+
+      .hero-lede {
+        max-width: 32ch;
+      }
+
+      .runtime {
+        max-width: 32ch;
+      }
+
+      section {
+        padding: 68px var(--pad);
+      }
+
+      .arc-grid,
+      .fleet-board,
+      .repair-grid,
+      .proof-strip,
+      .loop-rail {
+        grid-template-columns: 1fr;
+      }
+
+      .repair {
+        grid-template-columns: 1fr;
+      }
+
+      .runtime-line {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar" aria-label="Site navigation">
+      <div class="topbar-inner">
+        <a class="brand" href="../index.html" aria-label="Human Agent Interface home">
+          <span class="brand-mark">HAI</span>
+          <span>Human Agent Interface</span>
+        </a>
+        <nav class="nav" aria-label="Hermes System navigation">
+          <a href="../index.html">Home</a>
+          <a href="../samuel/">Samuel</a>
+          <a href="../proof/">Proof</a>
+          <a href="../product/">Products</a>
+          <a href="#fleet">Fleet</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-media" aria-hidden="true">
+          <img src="../samuel/assets/proof/project-intake-tower-consolidation--visual-explainer-kaskade.png" alt="">
+          <img src="../samuel/assets/proof/diagrams--sidecar-v7-visual-explainer.png" alt="">
+          <img src="../samuel/assets/proof/first-real-harness-evaluation--web-dashboard.png" alt="">
+        </div>
+
+        <div class="hero-inner">
+          <div>
+            <p class="eyebrow reveal">Hermes profile system</p>
+            <h1 class="reveal" id="hero-title">The agent setup Samuel built after the easy version failed.</h1>
+            <p class="hero-lede reveal">
+              HAI did not come from a clean slide deck. It came from agent threads that produced too much,
+              control surfaces that became heavy, handoffs that drifted, and completion claims that needed proof.
+              Hermes is the private working system where those failures turned into roles, gates, and verifiers.
+            </p>
+            <div class="hero-actions reveal">
+              <a class="button primary" href="#fleet">Map the system</a>
+              <a class="button" href="../proof/">See proof</a>
+            </div>
+          </div>
+
+          <aside class="runtime reveal" aria-label="Hermes runtime facts">
+            <div class="runtime-line"><strong>Owner</strong><span>Samuel remains the decision maker. Agents prepare work and evidence.</span></div>
+            <div class="runtime-line"><strong>Scale</strong><span>70+ specialized profiles, separated by purpose instead of one overloaded assistant.</span></div>
+            <div class="runtime-line"><strong>Method</strong><span>Human state -> bounded task -> artifact -> verification -> next decision.</span></div>
+            <div class="runtime-line"><strong>Claim</strong><span>The value is not more automation. It is safer agency under human control.</span></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="failure-arc" aria-labelledby="arc-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <div>
+              <p class="kicker">What had to be learned</p>
+              <h2 id="arc-title">The practice got serious only after the system made its weak points visible.</h2>
+            </div>
+            <p class="section-copy">
+              The hard lesson was not that agents are weak. It was that unmanaged agent work can make the human
+              less oriented while still looking productive. Hermes is the answer to that pressure.
+            </p>
+          </div>
+
+          <div class="arc-grid" aria-label="Hermes origin arc">
+            <article class="arc-step reveal">
+              <div>
+                <span>01 / volume</span>
+                <h3>More agents created more decisions.</h3>
+                <p>Threads, artifacts, and suggestions multiplied faster than the next responsible action could be named.</p>
+              </div>
+            </article>
+            <article class="arc-step reveal">
+              <div>
+                <span>02 / control</span>
+                <h3>Dashboards did not solve ownership.</h3>
+                <p>Raw logs and broad towers exposed activity, but they did not decide who owns risk, scope, or proof.</p>
+              </div>
+            </article>
+            <article class="arc-step reveal">
+              <div>
+                <span>03 / separation</span>
+                <h3>Profiles became operational roles.</h3>
+                <p>Operator, verifier, firewall, executor, validator, and meta profiles started doing distinct jobs.</p>
+              </div>
+            </article>
+            <article class="arc-step reveal">
+              <div>
+                <span>04 / HAI</span>
+                <h3>The loop became the product.</h3>
+                <p>HAI emerged as the discipline of turning messy human intent into one bounded, checkable next step.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="fleet" aria-labelledby="fleet-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <div>
+              <p class="kicker">Hermes fleet</p>
+              <h2 id="fleet-title">The important profiles are not personalities. They are control surfaces.</h2>
+            </div>
+            <p class="section-copy">
+              Samuel's setup is intentionally split. One profile keeps the main session responsive, another compresses
+              overload, another validates execution, and another guards project intake. The system got useful when the
+              roles stopped pretending to be one universal assistant.
+            </p>
+          </div>
+
+          <div class="fleet-board" aria-label="Important Hermes profile groups">
+            <article class="profile-group reveal">
+              <span>Control</span>
+              <h3>Keep Samuel oriented.</h3>
+              <p>These profiles stop uncontrolled expansion and turn noisy agent work back into owner decisions.</p>
+              <div class="profile-list" aria-label="Control profiles">
+                <code>operator</code>
+                <code>cognitive-firewall</code>
+                <code>project-admission-controller</code>
+                <code>decision-control</code>
+              </div>
+            </article>
+            <article class="profile-group reveal">
+              <span>HAI workflow</span>
+              <h3>Turn a project into a next step.</h3>
+              <p>The HAI chain reads project state, intent, and code reality before any execution is allowed.</p>
+              <div class="profile-list" aria-label="HAI profiles">
+                <code>hai-agent</code>
+                <code>hai-agent-idea</code>
+                <code>hai-agent-code</code>
+                <code>hai-agent-briefing</code>
+                <code>hai-executer</code>
+                <code>hai-validator</code>
+              </div>
+            </article>
+            <article class="profile-group reveal">
+              <span>Verification</span>
+              <h3>Make success harder to fake.</h3>
+              <p>These profiles check root cause, regression risk, permissions, and whether evidence actually proves the claim.</p>
+              <div class="profile-list" aria-label="Verification profiles">
+                <code>verifier</code>
+                <code>regression-guardian</code>
+                <code>security-permissions</code>
+              </div>
+            </article>
+            <article class="profile-group reveal">
+              <span>Meta and throughput</span>
+              <h3>Repair the system itself.</h3>
+              <p>Meta profiles keep the fleet legible. Worker profiles exist, but only become useful inside gates.</p>
+              <div class="profile-list" aria-label="Meta and worker profiles">
+                <code>meta</code>
+                <code>meta-new-agent</code>
+                <code>skill-curator</code>
+                <code>hermes-harness-expert</code>
+                <code>oktopus-*</code>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="loop" aria-labelledby="loop-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <div>
+              <p class="kicker">Working loop</p>
+              <h2 id="loop-title">The workflow is narrow by design: one project, one decision, one proof path.</h2>
+            </div>
+            <p class="section-copy">
+              This is the part clients can reuse. HAI does not ask a team to copy Samuel's private setup. It installs
+              the same operating discipline around one real workflow where agents currently create confusion.
+            </p>
+          </div>
+
+          <div class="loop-rail" aria-label="HAI working loop">
+            <article class="loop-step reveal">
+              <b>01</b>
+              <h3>Admission</h3>
+              <p>Is this actually active work, or another idea trying to become a project?</p>
+            </article>
+            <article class="loop-step reveal">
+              <b>02</b>
+              <h3>State</h3>
+              <p>Read the project, goal, local files, and current constraints before proposing work.</p>
+            </article>
+            <article class="loop-step reveal">
+              <b>03</b>
+              <h3>Briefing</h3>
+              <p>Compress options into a human-readable owner packet with scope and tradeoffs.</p>
+            </article>
+            <article class="loop-step reveal">
+              <b>04</b>
+              <h3>Next step</h3>
+              <p>Cut everything down to one bounded task with explicit allowed and forbidden changes.</p>
+            </article>
+            <article class="loop-step reveal">
+              <b>05</b>
+              <h3>Execution</h3>
+              <p>Let a worker act only inside the accepted contract and write an execution report.</p>
+            </article>
+            <article class="loop-step reveal">
+              <b>06</b>
+              <h3>Validation</h3>
+              <p>Separate the builder from the judge. Evidence decides whether the claim stands.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="repairs-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <div>
+              <p class="kicker">Friction turned into rules</p>
+              <h2 id="repairs-title">The story is credible because the system remembers where it broke.</h2>
+            </div>
+            <p class="section-copy">
+              Hermes is not presented as perfect. Its value is that repeated failures became explicit controls instead
+              of private habits inside Samuel's head.
+            </p>
+          </div>
+
+          <div class="repair-grid" aria-label="Failure to solution map">
+            <article class="repair reveal">
+              <strong>Agent output became cognitively expensive.</strong>
+              <p>Long reports, raw logs, and multiple options were converted into owner packets. <em>Solution: Cognitive Firewall and bounded briefings.</em></p>
+            </article>
+            <article class="repair reveal">
+              <strong>Workers could drift beyond the real task.</strong>
+              <p>Delegation moved behind explicit contracts with scope, artifacts, timeout, verifier, and rejoin rules. <em>Solution: Operator contract.</em></p>
+            </article>
+            <article class="repair reveal">
+              <strong>Green checks could still miss the original damage.</strong>
+              <p>Verification became root-cause oriented: prove the old failure cannot silently return. <em>Solution: Verifier and Regression Guardian.</em></p>
+            </article>
+            <article class="repair reveal">
+              <strong>Project ideas created uncontrolled parallel reality.</strong>
+              <p>New work must pass admission before agents, time, or code are spent. <em>Solution: Project Admission Controller.</em></p>
+            </article>
+            <article class="repair reveal">
+              <strong>Tool and profile drift made confidence unreliable.</strong>
+              <p>Dedicated profiles, registry checks, and smoke tests separated "configured" from "actually works." <em>Solution: Meta and Harness Expert profiles.</em></p>
+            </article>
+            <article class="repair reveal">
+              <strong>Execution and validation were too easy to collapse.</strong>
+              <p>The builder writes a report; the validator reads the diff and decides ACCEPT, REJECT, or UNCLEAR. <em>Solution: HAI Executer plus HAI Validator.</em></p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="proof-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <div>
+              <p class="kicker">Artifact trail</p>
+              <h2 id="proof-title">The public proof is not raw Hermes. It is the trail of systems built from it.</h2>
+            </div>
+            <p class="section-copy">
+              The private profile system stays private. The customer-facing evidence is the repeated artifact pattern:
+              Sidecar for overload, control-tower experiments for scope, harnesses for evaluation, and HAI for next-step discipline.
+            </p>
+          </div>
+
+          <div class="proof-strip" aria-label="Selected proof artifacts">
+            <article class="proof-card reveal">
+              <img src="../samuel/assets/proof/diagrams--sidecar-v7-visual-explainer.png" alt="Sidecar visual explainer screenshot">
+              <div>
+                <span>Sidecar</span>
+                <h3>Watching the collaboration itself.</h3>
+                <p>Sidecar made overload and drift visible as part of the human-agent loop, not as a personal weakness.</p>
+              </div>
+            </article>
+            <article class="proof-card reveal">
+              <img src="../samuel/assets/proof/project-intake-tower-consolidation--visual-explainer-kaskade.png" alt="Agent control tower cascade visual explainer screenshot">
+              <div>
+                <span>Control tower</span>
+                <h3>Scope explosion became evidence.</h3>
+                <p>The tower line proved that more orchestration can increase burden unless owner gates stay central.</p>
+              </div>
+            </article>
+            <article class="proof-card reveal">
+              <img src="../samuel/assets/proof/first-real-harness-evaluation--web-dashboard.png" alt="Harness evaluation dashboard screenshot">
+              <div>
+                <span>Evaluation</span>
+                <h3>Agent output needs falsification.</h3>
+                <p>Harness work turned model behavior into traces and verdicts that can be inspected instead of believed.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="client-close" id="client" aria-labelledby="client-title">
+        <div class="section-inner">
+          <div class="close-panel">
+            <div>
+              <p class="kicker">What a client gets</p>
+              <h2 id="client-title">Not Samuel's private machine. The operating discipline behind it.</h2>
+              <p class="section-copy">
+                Bring one agent workflow that currently creates confusion. The useful output is a smaller loop:
+                who owns the decision, what the agent may do, what artifact proves progress, and when work must stop.
+              </p>
+            </div>
+            <a
+              class="button primary"
+              href="mailto:samuel@human-agent-interface.com?subject=Hermes%20and%20HAI%20workflow%20conversation&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20talk%20about%20one%20agent%20workflow%20that%20currently%20creates%20confusion.%0D%0A%0D%0ACurrent%20workflow%3A%0D%0A%0D%0AWhere%20control%20breaks%3A%0D%0A%0D%0APreferred%20time%20windows%3A"
+            >Bring one messy workflow</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <span>Hermes System / Human Agent Interface</span>
+        <span>Failure -> role separation -> evidence -> owner decision</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      }
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+  </script>
+</body>
+</html>

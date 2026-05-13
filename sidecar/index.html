@@ -1,0 +1,1084 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta
+    name="description"
+    content="Sidecar is the prototype-backed Human Agent Interface control layer: watcher rules, drift detection, verification gates, and human-owned agent workflows."
+  >
+  <title>Sidecar - Human Agent Interface Control Layer</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f6f0df;
+      --muted: #b9ae99;
+      --quiet: #817662;
+      --black: #080806;
+      --charcoal: #11100d;
+      --panel: rgba(246, 240, 223, 0.06);
+      --panel-strong: rgba(246, 240, 223, 0.12);
+      --line: rgba(246, 240, 223, 0.16);
+      --line-strong: rgba(246, 240, 223, 0.32);
+      --signal: #a7ff4f;
+      --cyan: #7dd8ff;
+      --copper: #ff9f5f;
+      --red: #ff6a55;
+      --max: 1180px;
+      --pad: clamp(18px, 4vw, 56px);
+      --display: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      --body: "Neue Haas Grotesk Text", "Aptos", "Segoe UI", sans-serif;
+      --mono: "Berkeley Mono", "Iosevka", "SFMono-Regular", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--black);
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      font-family: var(--body);
+      line-height: 1.5;
+      background:
+        radial-gradient(circle at 84% 10%, rgba(167, 255, 79, 0.14), transparent 28rem),
+        radial-gradient(circle at 12% 42%, rgba(125, 216, 255, 0.1), transparent 26rem),
+        radial-gradient(circle at 76% 78%, rgba(255, 106, 85, 0.09), transparent 28rem),
+        linear-gradient(180deg, #080806 0%, #11100d 46%, #090a08 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      opacity: 0.22;
+      background-image:
+        linear-gradient(rgba(246, 240, 223, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(246, 240, 223, 0.03) 1px, transparent 1px);
+      background-size: 74px 74px;
+      mask-image: linear-gradient(180deg, black, transparent 78%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 0;
+    }
+
+    .site-shell {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .topbar {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 30;
+      display: flex;
+      justify-content: center;
+      padding: 14px var(--pad) 0;
+      pointer-events: none;
+    }
+
+    .topbar-inner {
+      width: min(var(--max), 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(246, 240, 223, 0.13);
+      background: rgba(8, 8, 6, 0.74);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 70px rgba(0, 0, 0, 0.3);
+      pointer-events: auto;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 1px solid var(--line-strong);
+      color: var(--signal);
+      font-size: 12px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(12px, 2vw, 24px);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .nav a {
+      opacity: 0.82;
+      transition: color 160ms ease, opacity 160ms ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible,
+    .nav a[aria-current="page"] {
+      color: var(--ink);
+      opacity: 1;
+    }
+
+    .nav .nav-cta {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 12px;
+      border: 1px solid rgba(167, 255, 79, 0.48);
+      background: rgba(167, 255, 79, 0.1);
+      color: var(--ink);
+      opacity: 1;
+    }
+
+    .hero {
+      min-height: 96svh;
+      display: grid;
+      align-items: center;
+      padding: 126px var(--pad) 70px;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(90deg, rgba(246, 240, 223, 0.07), transparent 1px),
+        linear-gradient(180deg, rgba(246, 240, 223, 0.04), transparent 1px);
+      background-size: 86px 86px;
+    }
+
+    .hero-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(300px, 0.46fr);
+      gap: clamp(32px, 6vw, 86px);
+      align-items: end;
+    }
+
+    .eyebrow,
+    .kicker {
+      color: var(--copper);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 42px;
+      height: 1px;
+      background: var(--copper);
+    }
+
+    h1 {
+      max-width: 920px;
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: clamp(3.2rem, 7.7vw, 7.4rem);
+      line-height: 0.93;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .promise {
+      max-width: 760px;
+      margin-top: 26px;
+      color: var(--ink);
+      font-size: clamp(1.22rem, 2.15vw, 1.78rem);
+      line-height: 1.18;
+      text-wrap: balance;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+      align-items: center;
+    }
+
+    .button {
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 20px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      font-weight: 800;
+      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+    }
+
+    .button.primary {
+      border-color: rgba(167, 255, 79, 0.7);
+      background: var(--signal);
+      color: #11150d;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(246, 240, 223, 0.44);
+      background: var(--panel-strong);
+    }
+
+    .button.primary:hover,
+    .button.primary:focus-visible {
+      border-color: var(--signal);
+      background: #c4ff86;
+    }
+
+    .thesis-panel {
+      display: grid;
+      gap: 18px;
+      padding: 24px;
+      border-left: 1px solid var(--line-strong);
+      background:
+        linear-gradient(90deg, rgba(167, 255, 79, 0.09), transparent),
+        rgba(8, 8, 6, 0.28);
+    }
+
+    .thesis-panel h2 {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .thesis-panel strong {
+      display: block;
+      font-family: var(--display);
+      font-size: clamp(1.55rem, 3vw, 2.4rem);
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .thesis-panel p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .proof-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .proof-tags span {
+      padding: 7px 9px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .section {
+      padding: clamp(72px, 10vw, 132px) var(--pad);
+    }
+
+    .section-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(280px, 0.48fr);
+      gap: clamp(24px, 6vw, 78px);
+      align-items: end;
+      margin-bottom: 36px;
+    }
+
+    h2 {
+      margin-top: 12px;
+      font-family: var(--display);
+      font-size: clamp(2.3rem, 5.6vw, 5.6rem);
+      font-weight: 500;
+      line-height: 0.98;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .section-copy {
+      color: var(--muted);
+      font-size: clamp(1rem, 1.55vw, 1.18rem);
+    }
+
+    .pain-grid,
+    .meaning-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .pain-card,
+    .meaning-card,
+    .lesson-card,
+    .mode-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 250px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: rgba(246, 240, 223, 0.045);
+    }
+
+    .pain-card::before,
+    .meaning-card::before,
+    .mode-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.16;
+      background-image: linear-gradient(135deg, transparent 0 47%, currentColor 48% 49%, transparent 50% 100%);
+      background-size: 34px 34px;
+    }
+
+    .pain-card:nth-child(1),
+    .mode-card:nth-child(1) {
+      color: rgba(167, 255, 79, 0.7);
+    }
+
+    .pain-card:nth-child(2),
+    .mode-card:nth-child(2) {
+      color: rgba(125, 216, 255, 0.68);
+    }
+
+    .pain-card:nth-child(3),
+    .mode-card:nth-child(3) {
+      color: rgba(255, 159, 95, 0.7);
+    }
+
+    .pain-card:nth-child(4),
+    .mode-card:nth-child(4) {
+      color: rgba(255, 106, 85, 0.66);
+    }
+
+    .pain-card > *,
+    .meaning-card > *,
+    .mode-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-code {
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .pain-card h3,
+    .meaning-card h3,
+    .lesson-card h3,
+    .mode-card h3 {
+      margin-top: 20px;
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: clamp(1.55rem, 3vw, 2.45rem);
+      font-weight: 500;
+      line-height: 1;
+      text-wrap: balance;
+    }
+
+    .pain-card p,
+    .meaning-card p,
+    .lesson-card p,
+    .mode-card p {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .v7 {
+      border-block: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(246, 240, 223, 0.05), rgba(246, 240, 223, 0.015)),
+        #0c0d0a;
+    }
+
+    .v7-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(300px, 0.55fr);
+      gap: clamp(28px, 6vw, 84px);
+      align-items: start;
+    }
+
+    .visual-frame {
+      padding: 10px;
+      border: 1px solid var(--line);
+      background: rgba(8, 8, 6, 0.5);
+    }
+
+    .visual-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid rgba(246, 240, 223, 0.1);
+      filter: saturate(1.05) contrast(1.02);
+    }
+
+    .caption {
+      margin-top: 10px;
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .mechanism-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .mechanism {
+      display: grid;
+      grid-template-columns: 106px 1fr;
+      gap: 16px;
+      padding: 16px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .mechanism strong {
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mechanism span {
+      color: var(--ink);
+    }
+
+    .lesson {
+      background:
+        linear-gradient(90deg, rgba(255, 106, 85, 0.11), transparent 58%),
+        #0a0a08;
+      border-block: 1px solid var(--line);
+    }
+
+    .lesson-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.72fr) minmax(320px, 0.58fr);
+      gap: clamp(24px, 6vw, 76px);
+      align-items: start;
+    }
+
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat {
+      min-height: 142px;
+      display: grid;
+      align-content: end;
+      padding: 20px;
+      border: 1px solid var(--line);
+      background: rgba(246, 240, 223, 0.045);
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--red);
+      font-family: var(--display);
+      font-size: clamp(2rem, 5vw, 4.6rem);
+      font-weight: 500;
+      line-height: 0.9;
+    }
+
+    .stat span {
+      margin-top: 10px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .lesson-card {
+      min-height: auto;
+      margin-top: 18px;
+      border-color: rgba(255, 106, 85, 0.38);
+      background: rgba(255, 106, 85, 0.075);
+    }
+
+    .ng-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.72fr) minmax(320px, 0.58fr);
+      gap: clamp(24px, 6vw, 76px);
+      align-items: start;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .mode-card {
+      min-height: 220px;
+    }
+
+    .flow {
+      display: grid;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .flow-step {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: rgba(246, 240, 223, 0.045);
+    }
+
+    .flow-step b {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      color: var(--signal);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .flow-step strong {
+      display: block;
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: 1.45rem;
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .flow-step span {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+    }
+
+    .cta {
+      border-top: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 20% 18%, rgba(167, 255, 79, 0.12), transparent 22rem),
+        radial-gradient(circle at 74% 64%, rgba(125, 216, 255, 0.1), transparent 26rem),
+        #080806;
+    }
+
+    .cta-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(280px, 0.45fr);
+      gap: clamp(24px, 6vw, 72px);
+      align-items: end;
+      padding: clamp(28px, 5vw, 54px);
+      border: 1px solid var(--line-strong);
+      background: rgba(246, 240, 223, 0.055);
+    }
+
+    .cta h2 {
+      max-width: 800px;
+    }
+
+    .cta p {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 1.6vw, 1.18rem);
+    }
+
+    footer {
+      padding: 28px var(--pad);
+      border-top: 1px solid var(--line);
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .footer-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    @media (max-width: 980px) {
+      .hero-inner,
+      .section-head,
+      .v7-grid,
+      .lesson-grid,
+      .ng-grid,
+      .cta-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .pain-grid,
+      .meaning-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 700px) {
+      .topbar {
+        position: absolute;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .brand span:last-child {
+        display: none;
+      }
+
+      .nav {
+        width: 100%;
+        gap: 14px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+
+      .nav::-webkit-scrollbar {
+        display: none;
+      }
+
+      .nav .nav-cta {
+        display: none;
+      }
+
+      .hero {
+        width: 100vw;
+        padding: 148px 20px 58px;
+      }
+
+      .section {
+        width: 100vw;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .hero-inner,
+      .section-inner,
+      .footer-inner {
+        width: 350px;
+        max-width: calc(100vw - 40px);
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      h1 {
+        font-size: clamp(2.8rem, 13.5vw, 4.5rem);
+        line-height: 0.96;
+      }
+
+      h2 {
+        font-size: clamp(2.2rem, 10.5vw, 3.4rem);
+      }
+
+      .hero-actions,
+      .stat-strip,
+      .mode-grid,
+      .pain-grid,
+      .meaning-grid,
+      .footer-inner {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .thesis-panel,
+      .pain-card,
+      .meaning-card,
+      .lesson-card,
+      .mode-card,
+      .cta-panel {
+        padding: 22px;
+      }
+
+      .mechanism {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar" aria-label="Site navigation">
+      <div class="topbar-inner">
+        <a class="brand" href="../index.html" aria-label="Human Agent Interface home">
+          <span class="brand-mark">HAI</span>
+          <span>Human Agent Interface</span>
+        </a>
+        <nav class="nav" aria-label="Sidecar navigation">
+          <a href="../index.html">Home</a>
+          <a href="../product/">Products</a>
+          <a href="../samuel/">Samuel's work</a>
+          <a href="../tripwire-map/">Tripwire Map</a>
+          <a aria-current="page" href="#top">Sidecar</a>
+          <a class="nav-cta" href="mailto:samuel@human-agent-interface.com?subject=Sidecar%20%2F%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20talk%20about%20a%20workflow%20where%20my%20agent%20loop%20feels%20out%20of%20control.%0D%0A%0D%0AWhere%20it%20drifts%20or%20overloads%3A%0D%0A%0D%0ATools%20I%20use%3A%0D%0A%0D%0APreferred%20time%20windows%3A">Book fit call</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-inner">
+          <div>
+            <p class="eyebrow">Prototype-backed HAI control layer</p>
+            <h1 id="hero-title">Sidecar: the agentic control layer behind HAI.</h1>
+            <p class="promise">
+              The main agent does the work. Sidecar asks the harder question:
+              is the human still oriented, in scope, and able to verify what just happened?
+            </p>
+            <div class="hero-actions" aria-label="Primary actions">
+              <a
+                class="button primary"
+                href="mailto:samuel@human-agent-interface.com?subject=Sidecar%20%2F%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20talk%20about%20a%20workflow%20where%20my%20agent%20loop%20feels%20out%20of%20control.%0D%0A%0D%0AWhere%20it%20drifts%20or%20overloads%3A%0D%0A%0D%0ATools%20I%20use%3A%0D%0A%0D%0APreferred%20time%20windows%3A"
+              >Bring one drifting workflow</a>
+              <a class="button" href="../product/">See the 4h HAI setup</a>
+            </div>
+          </div>
+
+          <aside class="thesis-panel" aria-label="Sidecar thesis">
+            <h2>Why this matters</h2>
+            <strong>Sidecar tried to solve the HAI problem agentically.</strong>
+            <p>
+              It explored a second system that watches overload, scope drift,
+              verification gaps, and human decision points while the main agent works.
+            </p>
+            <div class="proof-tags" aria-label="Sidecar proof tags">
+              <span>Watcher</span>
+              <span>Drift detection</span>
+              <span>Human gates</span>
+              <span>Verify mode</span>
+              <span>Prototype-backed</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="pain-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <div>
+              <p class="kicker">The control problem</p>
+              <h2 id="pain-title">Agent work can look productive while control gets weaker.</h2>
+            </div>
+            <p class="section-copy">
+              Sidecar exists for the moment where AI output is not obviously wrong,
+              but the human has lost the thread: too much context, too many open loops,
+              no clear stop point, and no proof that the work is actually done.
+            </p>
+          </div>
+
+          <div class="pain-grid" aria-label="Agent workflow failure modes">
+            <article class="pain-card">
+              <span class="card-code">01 / Overload</span>
+              <h3>The session keeps expanding.</h3>
+              <p>More files, more threads, more agent suggestions. Momentum becomes cognitive load.</p>
+            </article>
+            <article class="pain-card">
+              <span class="card-code">02 / Drift</span>
+              <h3>The goal quietly changes.</h3>
+              <p>Each step makes local sense, but the system moves away from the original human intent.</p>
+            </article>
+            <article class="pain-card">
+              <span class="card-code">03 / Delegation</span>
+              <h3>The agent owns too much.</h3>
+              <p>The model starts deciding scope, risk, and completion while the human only reacts.</p>
+            </article>
+            <article class="pain-card">
+              <span class="card-code">04 / False done</span>
+              <h3>Green checks replace evidence.</h3>
+              <p>Commits, logs, and tests can look like progress without proving the core requirement.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section v7" aria-labelledby="v7-title">
+        <div class="section-inner v7-grid">
+          <div>
+            <p class="kicker">Sidecar V7</p>
+            <h2 id="v7-title">The big attempt: a second agentic layer watching the work.</h2>
+            <p class="section-copy">
+              V7 wrapped Claude Code with hooks, a daemon, safety gates, observation,
+              context injection, slow analysis, and a dashboard. It was not just a tool.
+              It was a serious experiment in making agent collaboration observable.
+            </p>
+
+            <div class="mechanism-list" aria-label="Sidecar V7 mechanisms">
+              <div class="mechanism">
+                <strong>Hooks</strong>
+                <span>User prompts, tool calls, edits, errors, and phase changes became observable events.</span>
+              </div>
+              <div class="mechanism">
+                <strong>Gates</strong>
+                <span>Risky actions could be blocked or slowed: destructive commands, edit-before-read, weak context.</span>
+              </div>
+              <div class="mechanism">
+                <strong>Signals</strong>
+                <span>Overload, scope creep, planning drift, missing tests, and review gaps became named patterns.</span>
+              </div>
+              <div class="mechanism">
+                <strong>Human</strong>
+                <span>The point was not to automate more. It was to keep the human able to decide, stop, and verify.</span>
+              </div>
+            </div>
+          </div>
+
+          <aside class="visual-frame" aria-label="Sidecar observer diagram">
+            <img src="assets/sidecar-observer-diagram.svg" alt="Diagram: Sidecar observes the human-agent interaction loop and watches overload, drift, verification gaps, and human gates">
+            <p class="caption">Concept image: Sidecar observes the human-agent interaction loop</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section lesson" aria-labelledby="lesson-title">
+        <div class="section-inner lesson-grid">
+          <div>
+            <p class="kicker">The hard lesson</p>
+            <h2 id="lesson-title">V7 itself became the proof that soft rules are not enough.</h2>
+            <p class="section-copy">
+              Sidecar V7 was powerful, but it also drifted. It grew from a consolidation
+              into a large mechanism-heavy system. That failure is the trust signal:
+              Samuel has already seen how agent-control systems break from the inside.
+            </p>
+            <article class="lesson-card">
+              <span class="card-code">What changed the method</span>
+              <h3>Agent control needs hard scope anchors, visible state, and independent verification.</h3>
+              <p>
+                A prompt rule is advice. A gate changes behavior. A benchmark is useful only when it checks
+                the thing that actually matters. HAI grew from that distinction.
+              </p>
+            </article>
+          </div>
+
+          <aside class="stat-strip" aria-label="Sidecar V7 postmortem figures">
+            <div class="stat">
+              <strong>83</strong>
+              <span>commits in three days</span>
+            </div>
+            <div class="stat">
+              <strong>45k+</strong>
+              <span>lines at peak</span>
+            </div>
+            <div class="stat">
+              <strong>49</strong>
+              <span>mechanisms</span>
+            </div>
+            <div class="stat">
+              <strong>1</strong>
+              <span>clear lesson: control must be designed</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="ng-title">
+        <div class="section-inner ng-grid">
+          <div>
+            <p class="kicker">Sidecar-NG</p>
+            <h2 id="ng-title">The answer got smaller and sharper.</h2>
+            <p class="section-copy">
+              Sidecar-NG moved away from a giant daemon toward a local Claude Code control hook:
+              inject one relevant rule at the point of action, and use deterministic gates where
+              risk must not be left to vibes.
+            </p>
+
+            <div class="flow" aria-label="Sidecar-NG runtime flow">
+              <div class="flow-step">
+                <b>01</b>
+                <div>
+                  <strong>Read the prompt.</strong>
+                  <span>The hook sees what the human is asking before the agent starts moving.</span>
+                </div>
+              </div>
+              <div class="flow-step">
+                <b>02</b>
+                <div>
+                  <strong>Choose one control rule.</strong>
+                  <span>Scope, delegation, baseline, verification, or skill routing becomes situational context.</span>
+                </div>
+              </div>
+              <div class="flow-step">
+                <b>03</b>
+                <div>
+                  <strong>Block dangerous tool use.</strong>
+                  <span>Destructive commands, force push, secrets, edit-before-read, and weak git flow get hard gates.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="mode-grid" aria-label="Sidecar-NG control modes">
+            <article class="mode-card">
+              <span class="card-code">PlanMode</span>
+              <h3>No code before the shape is clear.</h3>
+              <p>Useful when the human needs orientation before execution.</p>
+            </article>
+            <article class="mode-card">
+              <span class="card-code">ReviewMode</span>
+              <h3>Analysis without accidental fixing.</h3>
+              <p>Useful when bugs and risks matter more than momentum.</p>
+            </article>
+            <article class="mode-card">
+              <span class="card-code">EvalMode</span>
+              <h3>Measure before changing.</h3>
+              <p>Useful when “better” needs evidence, not optimism.</p>
+            </article>
+            <article class="mode-card">
+              <span class="card-code">VerifyMode</span>
+              <h3>Every requirement needs proof.</h3>
+              <p>Useful when completion claims need to survive contact with reality.</p>
+            </article>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="customer-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <div>
+              <p class="kicker">What this means for your workflow</p>
+              <h2 id="customer-title">You may not need Sidecar. You need the control thinking behind it.</h2>
+            </div>
+            <p class="section-copy">
+              The 4h HAI setup looks at your real agent loop and decides what kind of control
+              belongs there: a watcher rule, a prompt layer, a verifier path, a stop rule,
+              or a simpler human-owned workflow.
+            </p>
+          </div>
+
+          <div class="meaning-grid" aria-label="HAI Sidecar customer outcomes">
+            <article class="meaning-card">
+              <span class="card-code">Map</span>
+              <h3>Where control breaks.</h3>
+              <p>We locate the point where useful agent work turns into ambiguity or overload.</p>
+            </article>
+            <article class="meaning-card">
+              <span class="card-code">Separate</span>
+              <h3>What stays human.</h3>
+              <p>Judgment, risk, irreversible choices, and acceptance criteria stop being implicit.</p>
+            </article>
+            <article class="meaning-card">
+              <span class="card-code">Design</span>
+              <h3>The smallest control layer.</h3>
+              <p>Not a dashboard by default. A rule, gate, verifier, or packet may be enough.</p>
+            </article>
+            <article class="meaning-card">
+              <span class="card-code">Verify</span>
+              <h3>What proves it helped.</h3>
+              <p>The workflow gets a concrete follow-up signal instead of another pile of artifacts.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section cta" id="contact" aria-labelledby="contact-title">
+        <div class="section-inner cta-panel">
+          <div>
+            <p class="kicker">4h HAI setup / Sidecar-fit assessment</p>
+            <h2 id="contact-title">Bring one agent workflow where the loop feels out of control.</h2>
+            <p>
+              Leave with a clearer control map: where the agent may act, where the human must decide,
+              what needs verification, and whether a Sidecar-style watcher belongs in the system.
+            </p>
+          </div>
+          <div class="hero-actions">
+            <a
+              class="button primary"
+              href="mailto:samuel@human-agent-interface.com?subject=Sidecar%20%2F%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20talk%20about%20a%20workflow%20where%20my%20agent%20loop%20feels%20out%20of%20control.%0D%0A%0D%0AWhere%20it%20drifts%20or%20overloads%3A%0D%0A%0D%0ATools%20I%20use%3A%0D%0A%0D%0APreferred%20time%20windows%3A"
+            >Book a fit call</a>
+            <a class="button" href="../product/">See commercial offers</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <span>Sidecar / Human Agent Interface</span>
+        <span>Prototype-backed control thinking, not mature SaaS</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

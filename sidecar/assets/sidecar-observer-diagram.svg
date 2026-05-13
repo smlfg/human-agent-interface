@@ -1,0 +1,127 @@
+<svg width="1280" height="800" viewBox="0 0 1280 800" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Sidecar observer layer for human-agent interaction</title>
+  <desc id="desc">A clean control-rail diagram: Human, Agent, and Work are connected in the center while Sidecar watches the loop from the outside and triggers pause, downscope, verify, and owner decision signals.</desc>
+  <defs>
+    <linearGradient id="rail" x1="235" y1="154" x2="1045" y2="646" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7dd8ff"/>
+      <stop offset="0.52" stop-color="#a7ff4f"/>
+      <stop offset="1" stop-color="#ff9f5f"/>
+    </linearGradient>
+    <linearGradient id="surface" x1="0" y1="0" x2="1280" y2="800" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#080806"/>
+      <stop offset="0.52" stop-color="#11100d"/>
+      <stop offset="1" stop-color="#090a08"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.48 0 0 0 0 0.85 0 0 0 0 1 0 0 0 0.45 0"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M80 0H0V80" stroke="#f6f0df" stroke-opacity="0.055" stroke-width="1"/>
+    </pattern>
+    <marker id="creamArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10Z" fill="#f6f0df"/>
+    </marker>
+    <marker id="signalArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10Z" fill="#a7ff4f"/>
+    </marker>
+    <style>
+      .mono { font-family: "Berkeley Mono", "Iosevka", "SFMono-Regular", Consolas, monospace; }
+      .body { font-family: "Neue Haas Grotesk Text", "Aptos", "Segoe UI", sans-serif; }
+      .display { font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif; }
+      .cream { fill: #f6f0df; }
+      .muted { fill: #b9ae99; }
+      .quiet { fill: #817662; }
+      .signal { fill: #a7ff4f; }
+      .cyan { fill: #7dd8ff; }
+      .copper { fill: #ff9f5f; }
+    </style>
+  </defs>
+
+  <rect width="1280" height="800" fill="url(#surface)"/>
+  <rect width="1280" height="800" fill="url(#grid)"/>
+  <path d="M0 400H1280M640 0V800" stroke="#f6f0df" stroke-opacity="0.055"/>
+  <circle cx="640" cy="400" r="318" stroke="#f6f0df" stroke-opacity="0.08" stroke-dasharray="6 14"/>
+
+  <text x="74" y="72" class="mono signal" font-size="14" letter-spacing="3">SIDECAR // OBSERVATION LAYER</text>
+  <text x="74" y="122" class="display cream" font-size="52">An observer around the human-agent loop.</text>
+  <text x="76" y="160" class="body muted" font-size="22">It watches the interaction, not just the output.</text>
+
+  <path d="M244 276C244 198 402 158 640 158C878 158 1036 198 1036 276" stroke="url(#rail)" stroke-opacity="0.78" stroke-width="3" filter="url(#glow)"/>
+  <path d="M244 524C244 602 402 642 640 642C878 642 1036 602 1036 524" stroke="url(#rail)" stroke-opacity="0.78" stroke-width="3" filter="url(#glow)"/>
+  <path d="M244 276C214 352 214 448 244 524" stroke="#7dd8ff" stroke-opacity="0.52" stroke-width="2"/>
+  <path d="M1036 276C1066 352 1066 448 1036 524" stroke="#ff9f5f" stroke-opacity="0.52" stroke-width="2"/>
+
+  <g transform="translate(312 402)">
+    <circle r="54" fill="#080806" stroke="#f6f0df" stroke-opacity="0.48" stroke-width="2"/>
+    <circle r="19" stroke="#f6f0df" stroke-width="2"/>
+    <path d="M0 -34V34M-34 0H34" stroke="#f6f0df" stroke-opacity="0.32"/>
+    <text y="86" text-anchor="middle" class="mono cream" font-size="15" letter-spacing="3">HUMAN</text>
+    <text y="112" text-anchor="middle" class="body muted" font-size="16">intent / risk</text>
+  </g>
+
+  <g transform="translate(640 402)">
+    <rect x="-58" y="-58" width="116" height="116" fill="#080806" stroke="#7dd8ff" stroke-opacity="0.68" stroke-width="2"/>
+    <path d="M-22 -22H22V22H-22Z" fill="#7dd8ff" fill-opacity="0.12"/>
+    <path d="M-11 -11H11V11H-11Z" stroke="#7dd8ff" stroke-width="2"/>
+    <circle cx="-28" cy="-28" r="4" fill="#7dd8ff"/>
+    <circle cx="28" cy="-28" r="4" fill="#7dd8ff"/>
+    <circle cx="-28" cy="28" r="4" fill="#7dd8ff"/>
+    <circle cx="28" cy="28" r="4" fill="#7dd8ff"/>
+    <text y="86" text-anchor="middle" class="mono cyan" font-size="15" letter-spacing="3">AGENT</text>
+    <text y="112" text-anchor="middle" class="body muted" font-size="16">plans / acts</text>
+  </g>
+
+  <g transform="translate(968 402)">
+    <rect x="-52" y="-52" width="104" height="104" fill="#080806" stroke="#a7ff4f" stroke-opacity="0.68" stroke-width="2"/>
+    <path d="M-26 -18H26M-26 -6H26M-26 6H26M-26 18H26" stroke="#a7ff4f" stroke-opacity="0.72" stroke-width="3"/>
+    <text y="86" text-anchor="middle" class="mono signal" font-size="15" letter-spacing="3">WORK</text>
+    <text y="112" text-anchor="middle" class="body muted" font-size="16">output / change</text>
+  </g>
+
+  <path d="M374 402H574" stroke="#f6f0df" stroke-opacity="0.5" stroke-width="2" stroke-dasharray="8 8" marker-end="url(#creamArrow)"/>
+  <path d="M706 402H906" stroke="#a7ff4f" stroke-opacity="0.72" stroke-width="2" marker-end="url(#signalArrow)"/>
+  <path d="M902 442C790 510 486 510 378 442" stroke="#f6f0df" stroke-opacity="0.3" stroke-width="2" stroke-dasharray="8 8" marker-end="url(#creamArrow)"/>
+
+  <g transform="translate(420 224)">
+    <circle cx="0" cy="0" r="6" fill="#ff9f5f"/>
+    <text x="18" y="5" class="mono copper" font-size="14" letter-spacing="2">OVERLOAD</text>
+  </g>
+  <g transform="translate(762 224)">
+    <circle cx="0" cy="0" r="6" fill="#7dd8ff"/>
+    <text x="18" y="5" class="mono cyan" font-size="14" letter-spacing="2">SCOPE DRIFT</text>
+  </g>
+  <g transform="translate(818 592)">
+    <circle cx="0" cy="0" r="6" fill="#a7ff4f"/>
+    <text x="18" y="5" class="mono signal" font-size="14" letter-spacing="2">VERIFY GAP</text>
+  </g>
+  <g transform="translate(420 592)">
+    <circle cx="0" cy="0" r="6" fill="#ff9f5f"/>
+    <text x="18" y="5" class="mono copper" font-size="14" letter-spacing="2">HUMAN GATE</text>
+  </g>
+
+  <g transform="translate(468 300)">
+    <rect x="0" y="0" width="344" height="76" fill="#080806" fill-opacity="0.86" stroke="#a7ff4f" stroke-opacity="0.46"/>
+    <text x="24" y="30" class="mono signal" font-size="12" letter-spacing="2">SIDECAR DOES NOT DO THE WORK</text>
+    <text x="24" y="56" class="body cream" font-size="22" font-weight="700">it watches when control slips</text>
+  </g>
+
+  <path d="M468 338C414 330 374 350 346 376" stroke="#a7ff4f" stroke-opacity="0.55" stroke-width="2" marker-end="url(#signalArrow)"/>
+  <path d="M812 338C866 330 906 350 934 376" stroke="#a7ff4f" stroke-opacity="0.55" stroke-width="2" marker-end="url(#signalArrow)"/>
+  <path d="M640 376V336" stroke="#a7ff4f" stroke-opacity="0.55" stroke-width="2" marker-end="url(#signalArrow)"/>
+
+  <g transform="translate(82 686)">
+    <text class="mono quiet" font-size="12" letter-spacing="2">INTERVENTIONS</text>
+    <text y="36" class="body muted" font-size="22">pause -> downscope -> ask owner -> verify -> continue</text>
+  </g>
+
+  <g transform="translate(870 678)">
+    <rect x="0" y="0" width="318" height="80" fill="#f6f0df" fill-opacity="0.055" stroke="#f6f0df" stroke-opacity="0.18"/>
+    <text x="24" y="31" class="mono signal" font-size="12" letter-spacing="2">HAI TRANSLATION</text>
+    <text x="24" y="58" class="body cream" font-size="21">agency stays human-owned</text>
+  </g>
+</svg>
