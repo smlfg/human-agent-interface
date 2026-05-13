@@ -1,0 +1,42 @@
+# --- Persönliche Notizen / private Reflexion (nicht in den Repo) ---
+what_it_is/MyThoughts
+what_it_is/spark
+antropic
+claude
+idea
+Idee_greifbar.md
+
+# --- Customer-Discovery-Material (lokal vorbereiten, nicht teilen) ---
+interviews/
+non-agentic-friends-feedback/
+WAS_ICH_MIT_MENSCHEN_BESPRECHEN_MUSS.md
+
+# --- Project Management / Planning (lokal) ---
+Projek-Managment/
+HAI_AUDIT_OFFER_V0.md
+HAI_DEVELOPMENT_PACKET.md
+HAI_HANDOFF_TRIPWIRE_MAP.md
+HAI_HANDOFF_TRIPWIRE_MAP_PROMPT.md
+
+# --- Codex/Subagent-Working-Files (lokal) ---
+**/.drafts/
+**/VALIDATION.md
+
+# --- Downloaded Reference-Material (Chat-Exports etc., evtl. Drittquellen) ---
+downloads/
+
+# --- Generated deploy output ---
+_deploy/
+
+# --- Verwaiste / Arbeitsdateien ---
+86ef15d3-*.png
+
+# --- Editor / OS junk ---
+.DS_Store
+*.swp
+*.swo
+*~
+.env
+.env.*
+node_modules/
+__pycache__/

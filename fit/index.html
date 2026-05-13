@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Human Fit | Human Agent Interface</title>
+    <meta
+      name="description"
+      content="Human Fit explains why Human Agent Interface adapts the agentic workflow to the human, the problem, and the agent system."
+    >
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #f7f1df;
+        --muted: #b9af99;
+        --dim: #746d5e;
+        --void: #080906;
+        --field: #10100c;
+        --panel: rgba(247, 241, 223, 0.065);
+        --panel-strong: rgba(247, 241, 223, 0.13);
+        --line: rgba(247, 241, 223, 0.17);
+        --line-soft: rgba(247, 241, 223, 0.1);
+        --signal: #a7ff4f;
+        --copper: #ff9f5f;
+        --cyan: #7dd8ff;
+        --max: 1160px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        background: var(--void);
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 18% 10%, rgba(167, 255, 79, 0.14), transparent 27rem),
+          radial-gradient(circle at 88% 20%, rgba(125, 216, 255, 0.1), transparent 24rem),
+          radial-gradient(circle at 40% 78%, rgba(255, 159, 95, 0.08), transparent 28rem),
+          linear-gradient(180deg, #080906 0%, #12110d 52%, #070806 100%);
+        font-family: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
+        line-height: 1.5;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 2;
+        opacity: 0.28;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+        background-size: 74px 74px;
+        mask-image: linear-gradient(180deg, black, transparent 76%);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .site-shell {
+        position: relative;
+        z-index: 3;
+      }
+
+      .nav {
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 20px clamp(18px, 4vw, 56px);
+        background: linear-gradient(180deg, rgba(8, 9, 6, 0.82), rgba(8, 9, 6, 0));
+      }
+
+      .brand,
+      .nav-links {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand {
+        color: var(--muted);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+        text-decoration: none;
+        text-transform: uppercase;
+      }
+
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        color: var(--signal);
+        background: rgba(247, 241, 223, 0.04);
+      }
+
+      .nav-links a {
+        color: var(--muted);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.74rem;
+        text-decoration: none;
+        text-transform: uppercase;
+        transition: color 160ms ease;
+      }
+
+      .nav-links a:hover,
+      .nav-links a:focus-visible {
+        color: var(--ink);
+      }
+
+      .hero {
+        min-height: 94svh;
+        display: grid;
+        align-items: center;
+        padding: 120px clamp(18px, 4vw, 56px) 70px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::after {
+        content: "FIT";
+        position: absolute;
+        right: -0.12em;
+        bottom: -0.26em;
+        color: rgba(247, 241, 223, 0.035);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(12rem, 35vw, 34rem);
+        line-height: 0.8;
+        pointer-events: none;
+      }
+
+      .hero-inner,
+      .section-inner {
+        width: 100%;
+        max-width: var(--max);
+        margin: 0 auto;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.94fr) minmax(320px, 0.58fr);
+        gap: clamp(32px, 7vw, 104px);
+        align-items: end;
+      }
+
+      .kicker {
+        margin: 0 0 18px;
+        color: var(--signal);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.76rem;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 500;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        max-width: 980px;
+        font-size: clamp(4rem, 10vw, 9.5rem);
+        line-height: 0.88;
+      }
+
+      .lead {
+        max-width: 780px;
+        margin-top: clamp(28px, 4vw, 44px);
+        color: var(--muted);
+        font-size: clamp(1.25rem, 2.1vw, 1.76rem);
+        line-height: 1.34;
+      }
+
+      .lead strong {
+        color: var(--ink);
+        font-weight: 700;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 34px;
+      }
+
+      .button {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 17px;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        background: rgba(247, 241, 223, 0.045);
+        font-size: 0.86rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+      }
+
+      .button.primary {
+        border-color: rgba(167, 255, 79, 0.76);
+        background: var(--signal);
+        color: #071006;
+      }
+
+      .button:hover,
+      .button:focus-visible {
+        transform: translateY(-2px);
+        border-color: rgba(167, 255, 79, 0.65);
+        background: rgba(167, 255, 79, 0.1);
+      }
+
+      .button.primary:hover,
+      .button.primary:focus-visible {
+        background: var(--ink);
+      }
+
+      .fit-instrument {
+        position: relative;
+        min-height: 430px;
+        border: 1px solid var(--line);
+        background:
+          linear-gradient(135deg, rgba(167, 255, 79, 0.08), transparent 42%),
+          rgba(247, 241, 223, 0.045);
+        overflow: hidden;
+      }
+
+      .fit-instrument::before {
+        content: "";
+        position: absolute;
+        inset: 34px;
+        border: 1px solid var(--line-soft);
+      }
+
+      .node {
+        position: absolute;
+        display: grid;
+        place-items: center;
+        min-width: 112px;
+        min-height: 54px;
+        padding: 12px 16px;
+        border: 1px solid var(--line);
+        color: var(--muted);
+        background: rgba(8, 9, 6, 0.82);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.76rem;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .node.human {
+        left: 50%;
+        top: 50%;
+        min-width: 132px;
+        min-height: 132px;
+        color: var(--void);
+        background: var(--signal);
+        border-radius: 999px;
+        transform: translate(-50%, -50%);
+        font-weight: 800;
+      }
+
+      .node.problem {
+        left: 8%;
+        top: 14%;
+      }
+
+      .node.tools {
+        right: 8%;
+        top: 14%;
+      }
+
+      .node.risk {
+        left: 9%;
+        bottom: 13%;
+      }
+
+      .node.packet {
+        right: 8%;
+        bottom: 13%;
+        color: var(--ink);
+        border-color: rgba(125, 216, 255, 0.5);
+      }
+
+      .calibration-line {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 46%;
+        height: 1px;
+        transform-origin: left center;
+        background: linear-gradient(90deg, rgba(167, 255, 79, 0.9), rgba(125, 216, 255, 0.08));
+      }
+
+      .line-a {
+        transform: rotate(-148deg);
+      }
+
+      .line-b {
+        transform: rotate(-32deg);
+      }
+
+      .line-c {
+        transform: rotate(148deg);
+      }
+
+      .line-d {
+        transform: rotate(32deg);
+      }
+
+      .pulse {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 190px;
+        height: 190px;
+        border: 1px solid rgba(167, 255, 79, 0.28);
+        border-radius: 999px;
+        transform: translate(-50%, -50%);
+        animation: breathe 4200ms ease-in-out infinite;
+      }
+
+      @keyframes breathe {
+        0%,
+        100% {
+          opacity: 0.32;
+          transform: translate(-50%, -50%) scale(0.82);
+        }
+        50% {
+          opacity: 0.72;
+          transform: translate(-50%, -50%) scale(1.12);
+        }
+      }
+
+      .section {
+        padding: clamp(72px, 10vw, 136px) clamp(18px, 4vw, 56px);
+        border-top: 1px solid var(--line-soft);
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+        gap: clamp(30px, 6vw, 82px);
+        align-items: start;
+      }
+
+      h2 {
+        font-size: clamp(2.4rem, 6vw, 6rem);
+        line-height: 0.95;
+      }
+
+      .body-copy {
+        color: var(--muted);
+        font-size: clamp(1.04rem, 1.7vw, 1.28rem);
+        line-height: 1.6;
+      }
+
+      .body-copy + .body-copy {
+        margin-top: 22px;
+      }
+
+      .rule {
+        margin-top: 34px;
+        padding: 22px;
+        border-left: 3px solid var(--signal);
+        background: rgba(167, 255, 79, 0.07);
+        color: var(--ink);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(1.5rem, 3.5vw, 3rem);
+        line-height: 1.06;
+      }
+
+      .difference-grid,
+      .example-grid,
+      .stable-grid {
+        display: grid;
+        gap: 1px;
+        margin-top: clamp(34px, 5vw, 62px);
+        border: 1px solid var(--line);
+        background: var(--line);
+      }
+
+      .difference-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .example-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .stable-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .tile,
+      .example,
+      .stable-col {
+        min-width: 0;
+        padding: clamp(22px, 3vw, 32px);
+        background: rgba(8, 9, 6, 0.82);
+      }
+
+      .tile span,
+      .example span,
+      .stable-col span {
+        display: block;
+        margin-bottom: 16px;
+        color: var(--signal);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .tile h3,
+      .example h3,
+      .stable-col h3 {
+        margin-bottom: 14px;
+        font-size: clamp(1.7rem, 3vw, 2.55rem);
+        line-height: 0.96;
+      }
+
+      .tile p,
+      .example p,
+      .stable-col li {
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.48;
+      }
+
+      .stable-col ul {
+        display: grid;
+        gap: 13px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .stable-col li {
+        display: flex;
+        gap: 10px;
+      }
+
+      .stable-col li::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        margin-top: 8px;
+        flex: 0 0 auto;
+        background: var(--signal);
+      }
+
+      .stable-col.adapts li::before {
+        background: var(--copper);
+      }
+
+      .contact-panel {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(260px, 0.52fr);
+        gap: clamp(30px, 6vw, 80px);
+        align-items: end;
+        padding: clamp(28px, 5vw, 54px);
+        border: 1px solid rgba(167, 255, 79, 0.36);
+        background:
+          linear-gradient(135deg, rgba(167, 255, 79, 0.12), transparent 48%),
+          rgba(247, 241, 223, 0.045);
+      }
+
+      .contact-panel h2 {
+        max-width: 760px;
+      }
+
+      .contact-panel p {
+        color: var(--muted);
+        font-size: 1.12rem;
+      }
+
+      footer {
+        padding: 24px clamp(18px, 4vw, 56px);
+        color: var(--dim);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+      }
+
+      footer .section-inner {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+
+      @media (max-width: 980px) {
+        .hero-grid,
+        .split,
+        .contact-panel {
+          grid-template-columns: 1fr;
+        }
+
+        .difference-grid,
+        .example-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .fit-instrument {
+          min-height: 390px;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .nav {
+          position: absolute;
+          align-items: flex-start;
+        }
+
+        .brand span:last-child {
+          max-width: 150px;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .hero {
+          min-height: auto;
+          padding-top: 108px;
+        }
+
+        .hero-actions,
+        .button {
+          width: 100%;
+        }
+
+        .button {
+          min-height: 48px;
+        }
+
+        .difference-grid,
+        .example-grid,
+        .stable-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .fit-instrument {
+          min-height: 500px;
+        }
+
+        .node {
+          min-width: 102px;
+          padding: 10px 12px;
+          font-size: 0.68rem;
+        }
+
+        .node.human {
+          min-width: 118px;
+          min-height: 118px;
+        }
+
+        .node.problem,
+        .node.risk {
+          left: 6%;
+        }
+
+        .node.tools,
+        .node.packet {
+          right: 6%;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.001ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="site-shell">
+      <nav class="nav" aria-label="Main navigation">
+        <a class="brand" href="../index.html" aria-label="Human Agent Interface home">
+          <span class="brand-mark">HAI</span>
+          <span>Human Fit</span>
+        </a>
+        <div class="nav-links">
+          <a href="../index.html">Home</a>
+          <a href="../product/">Products</a>
+          <a href="../what_it_is/">Where HAI comes from</a>
+          <a href="../samuel/">Samuel's work</a>
+        </div>
+      </nav>
+
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-inner hero-grid">
+          <div>
+            <p class="kicker">The missing fit</p>
+            <h1 id="hero-title">The interface must fit the human.</h1>
+            <p class="lead">
+              There is no universal agent workflow. Different people think, decide, trust,
+              lose focus, and get overwhelmed differently. <strong>HAI adapts the agentic
+              system to the human using it.</strong>
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#examples">See human fits</a>
+              <a class="button" href="../index.html">Back to homepage</a>
+            </div>
+          </div>
+
+          <div class="fit-instrument" aria-label="Human fit diagram">
+            <div class="pulse" aria-hidden="true"></div>
+            <div class="calibration-line line-a" aria-hidden="true"></div>
+            <div class="calibration-line line-b" aria-hidden="true"></div>
+            <div class="calibration-line line-c" aria-hidden="true"></div>
+            <div class="calibration-line line-d" aria-hidden="true"></div>
+            <div class="node human">Human</div>
+            <div class="node problem">Problem</div>
+            <div class="node tools">Tools</div>
+            <div class="node risk">Risk</div>
+            <div class="node packet">Work Packet</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="standard-title">
+        <div class="section-inner split">
+          <div>
+            <p class="kicker">Why templates fail</p>
+            <h2 id="standard-title">A standard workflow can still overwhelm the wrong human.</h2>
+          </div>
+          <div>
+            <p class="body-copy">
+              The problem is not only messy work. The problem is mismatch. A powerful agent
+              system can produce the wrong tempo, the wrong amount of context, the wrong
+              confidence level, or the wrong handoff for the person using it.
+            </p>
+            <p class="body-copy">
+              HAI keeps the loop controlled, but calibrates how the loop feels and behaves
+              for the person, the problem, and the tools already in use.
+            </p>
+            <p class="rule">The model matters. The fit matters more.</p>
+          </div>
+        </div>
+
+        <div class="section-inner difference-grid">
+          <article class="tile">
+            <span>Mismatch 01</span>
+            <h3>Too much output</h3>
+            <p>The agent is productive, but the human cannot absorb or choose from the flood.</p>
+          </article>
+          <article class="tile">
+            <span>Mismatch 02</span>
+            <h3>Wrong trust level</h3>
+            <p>The agent moves before the human has enough evidence, confidence, or consent.</p>
+          </article>
+          <article class="tile">
+            <span>Mismatch 03</span>
+            <h3>Lost ownership</h3>
+            <p>The work exists, but the human no longer knows what they approve, reject, or do next.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="examples" aria-labelledby="examples-title">
+        <div class="section-inner">
+          <p class="kicker">Different humans need different interfaces</p>
+          <h2 id="examples-title">HAI adapts the agentic setup to the person in front of it.</h2>
+
+          <div class="example-grid">
+            <article class="example">
+              <span>Builder</span>
+              <h3>Separate doing from checking.</h3>
+              <p>Use Executor and Verifier roles so implementation does not outrun judgment.</p>
+            </article>
+            <article class="example">
+              <span>Founder</span>
+              <h3>Compress scattered ideas.</h3>
+              <p>Turn loose ambition into one customer-facing, investor-facing, or team-facing packet.</p>
+            </article>
+            <article class="example">
+              <span>Team lead</span>
+              <h3>Keep risk human-owned.</h3>
+              <p>Agents prepare options and artifacts; approvals and irreversible decisions stay with the lead.</p>
+            </article>
+            <article class="example">
+              <span>Overloaded operator</span>
+              <h3>Reduce agent noise.</h3>
+              <p>Stop parallel drift and restore one next action the human can actually hold.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="stable-title">
+        <div class="section-inner split">
+          <div>
+            <p class="kicker">Stable loop, personal fit</p>
+            <h2 id="stable-title">HAI has a stable kernel. The interface adapts around it.</h2>
+          </div>
+          <div>
+            <p class="body-copy">
+              The kernel prevents chaos: intake, classification, scope, role, artifact,
+              and next action. The fit changes how much explanation, verification,
+              pacing, and context the human needs before the work becomes useful.
+            </p>
+          </div>
+        </div>
+
+        <div class="section-inner stable-grid">
+          <article class="stable-col">
+            <span>What stays stable</span>
+            <h3>The work packet</h3>
+            <ul>
+              <li>Problem type is named.</li>
+              <li>Agent-capable work is separated from human-owned decisions.</li>
+              <li>Scope, role, risk, artifact, and next action are explicit.</li>
+            </ul>
+          </article>
+          <article class="stable-col adapts">
+            <span>What adapts</span>
+            <h3>The human interface</h3>
+            <ul>
+              <li>How much context the human receives.</li>
+              <li>How strictly agents are split into roles.</li>
+              <li>How often the system pauses for approval, explanation, or verification.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="contact-title">
+        <div class="section-inner contact-panel">
+          <div>
+            <p class="kicker">Human Fit in practice</p>
+            <h2 id="contact-title">Bring one workflow that does not fit you.</h2>
+          </div>
+          <div>
+            <p>
+              The useful question is not only what the agent can do. It is what the human
+              can understand, approve, supervise, and continue.
+            </p>
+            <div class="hero-actions">
+              <a
+                class="button primary"
+                href="mailto:samuel@human-agent-interface.com?subject=Human%20Fit%20conversation"
+              >Talk to Samuel</a>
+              <a class="button" href="../what_it_is/">Where HAI comes from</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="section-inner">
+        <span>Human Fit</span>
+        <span>The interface must fit the human.</span>
+      </div>
+    </footer>
+  </body>
+</html>

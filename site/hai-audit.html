@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HAI Audit — Human-Agent-Workflow-Audit</title>
+  <meta name="description" content="Ein 4h Human-Agent-Workflow-Audit: aus diffusem Problem wird kontrollierbare agentische Arbeit." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #14201f;
+      --paper: #f7f3e8;
+      --paper-deep: #efe6d2;
+      --line: rgba(20, 32, 31, 0.16);
+      --line-strong: rgba(20, 32, 31, 0.28);
+      --muted: #5f6d69;
+      --teal: #326b5f;
+      --rust: #b84f37;
+      --steel: #3e5f7c;
+      --white: #fffaf0;
+      --shadow: 0 22px 70px rgba(20, 32, 31, 0.14);
+      --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --sans: "IBM Plex Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: "Crimson Pro", Georgia, serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--sans);
+      background:
+        linear-gradient(rgba(20,32,31,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(20,32,31,.045) 1px, transparent 1px),
+        radial-gradient(circle at 12% 8%, rgba(184,79,55,.13), transparent 30%),
+        radial-gradient(circle at 86% 4%, rgba(50,107,95,.14), transparent 34%),
+        var(--paper);
+      background-size: 34px 34px, 34px 34px, auto, auto, auto;
+    }
+
+    a { color: inherit; }
+
+    .shell {
+      width: min(1180px, calc(100% - 34px));
+      margin: 0 auto;
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 22px 0 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: rgba(20,32,31,.72);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--line-strong);
+      background: linear-gradient(135deg, var(--ink), var(--teal));
+      box-shadow: inset 0 0 0 5px rgba(255,250,240,.12);
+      transform: rotate(-7deg);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+
+    .nav-links a:hover { border-color: var(--ink); }
+
+    .hero-stage {
+      position: relative;
+      min-height: 650px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      margin: 14px 0 42px;
+      padding: clamp(28px, 5vw, 64px);
+      overflow: hidden;
+      background:
+        linear-gradient(120deg, rgba(255,250,240,.78), rgba(247,243,232,.42)),
+        repeating-linear-gradient(90deg, transparent 0 80px, rgba(20,32,31,.035) 80px 81px);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-stage::before {
+      content: "";
+      position: absolute;
+      inset: 22px;
+      border: 1px solid rgba(20,32,31,.10);
+      pointer-events: none;
+      border-radius: 8px;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(310px, .92fr);
+      gap: clamp(28px, 5vw, 66px);
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 18px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 42px;
+      height: 1px;
+      background: var(--teal);
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(58px, 9vw, 116px);
+      line-height: .88;
+      letter-spacing: -.06em;
+      margin: 0;
+      max-width: 820px;
+    }
+
+    .lede {
+      font-size: clamp(19px, 2.3vw, 25px);
+      line-height: 1.36;
+      max-width: 660px;
+      color: rgba(20,32,31,.78);
+      margin: 26px 0 0;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+
+    .btn {
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 13px 16px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(20,32,31,.18);
+    }
+
+    .btn.secondary {
+      color: var(--ink);
+      background: rgba(255,250,240,.52);
+      backdrop-filter: blur(14px);
+    }
+
+    .runtime-card {
+      position: relative;
+      padding: 24px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: rgba(255,250,240,.64);
+      backdrop-filter: blur(22px);
+      box-shadow: 0 18px 55px rgba(20,32,31,.12);
+    }
+
+    .runtime-card::before {
+      content: "";
+      position: absolute;
+      top: -12px;
+      right: 22px;
+      width: 94px;
+      height: 24px;
+      border-radius: 0 0 8px 8px;
+      background: var(--teal);
+      opacity: .88;
+    }
+
+    .runtime-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .state-line {
+      display: grid;
+      grid-template-columns: 124px 1fr;
+      gap: 13px;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+      font-size: 15px;
+    }
+
+    .state-line:first-of-type { border-top: 0; }
+
+    .state-key {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .state-val strong { color: var(--rust); }
+
+    .meter {
+      height: 9px;
+      border: 1px solid var(--line);
+      background: rgba(20,32,31,.06);
+      overflow: hidden;
+      border-radius: 999px;
+      margin-top: 8px;
+    }
+
+    .meter span {
+      display: block;
+      height: 100%;
+      width: 76%;
+      background: linear-gradient(90deg, var(--rust), var(--teal));
+      border-radius: inherit;
+    }
+
+    section { margin: 64px 0; }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 28px;
+      align-items: start;
+      border-top: 1px solid var(--line-strong);
+      padding-top: 22px;
+      margin-bottom: 26px;
+    }
+
+    .kicker {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--teal);
+      font-weight: 600;
+    }
+
+    h2 {
+      font-family: var(--serif);
+      font-size: clamp(38px, 5vw, 62px);
+      line-height: .95;
+      letter-spacing: -.04em;
+      margin: 0;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .glass-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255,250,240,.58);
+      backdrop-filter: blur(18px);
+      padding: 22px;
+      min-height: 214px;
+      box-shadow: 0 12px 36px rgba(20,32,31,.08);
+    }
+
+    .card-number {
+      font-family: var(--mono);
+      color: var(--rust);
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 34px;
+    }
+
+    .glass-card h3 {
+      font-size: 20px;
+      margin: 0 0 10px;
+      letter-spacing: -.02em;
+    }
+
+    .glass-card p,
+    .glass-card li {
+      color: rgba(20,32,31,.74);
+      line-height: 1.5;
+      font-size: 15px;
+    }
+
+    .glass-card ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .process-board {
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .trace-panel {
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      padding: 28px;
+      background: rgba(239,230,210,.62);
+      min-height: 100%;
+    }
+
+    .trace-title {
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--rust);
+      font-size: 12px;
+      margin-bottom: 26px;
+    }
+
+    .big-quote {
+      font-family: var(--serif);
+      font-size: clamp(31px, 4vw, 48px);
+      line-height: 1.02;
+      letter-spacing: -.035em;
+      margin: 0;
+    }
+
+    .steps {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      background: rgba(255,250,240,.56);
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 14px;
+      padding: 16px 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .step:first-child { border-top: 0; }
+
+    .step-num {
+      font-family: var(--mono);
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    .step strong { display: block; margin-bottom: 4px; }
+    .step span { color: var(--muted); font-size: 14px; line-height: 1.45; }
+
+    .insight-band {
+      color: var(--white);
+      background:
+        radial-gradient(circle at 8% 12%, rgba(184,79,55,.36), transparent 32%),
+        radial-gradient(circle at 92% 72%, rgba(50,107,95,.34), transparent 38%),
+        var(--ink);
+      border-radius: 10px;
+      padding: clamp(32px, 6vw, 74px);
+      box-shadow: var(--shadow);
+    }
+
+    .insight-band .kicker { color: rgba(255,250,240,.72); }
+
+    .insight-band h2 {
+      max-width: 900px;
+      margin-top: 14px;
+      color: var(--white);
+    }
+
+    .insight-band p {
+      max-width: 680px;
+      color: rgba(255,250,240,.72);
+      font-size: 18px;
+      line-height: 1.55;
+      margin: 20px 0 0;
+    }
+
+    .offer-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, .56fr);
+      gap: 18px;
+    }
+
+    .price-card {
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--white);
+      padding: 24px;
+    }
+
+    .price {
+      font-family: var(--serif);
+      font-size: 64px;
+      line-height: .9;
+      letter-spacing: -.05em;
+      margin: 12px 0;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .badge {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--muted);
+      background: rgba(255,250,240,.6);
+    }
+
+    .message-box {
+      position: relative;
+      border: 1px solid var(--line-strong);
+      background: rgba(255,250,240,.76);
+      border-radius: 10px;
+      padding: 22px;
+      box-shadow: 0 12px 36px rgba(20,32,31,.08);
+    }
+
+    .message-box pre {
+      white-space: pre-wrap;
+      margin: 0;
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.55;
+      color: rgba(20,32,31,.80);
+    }
+
+    .copy-btn {
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: var(--white);
+      border-radius: 7px;
+      padding: 9px 11px;
+      font-family: var(--mono);
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .evidence {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 50px;
+    }
+
+    .evidence-item {
+      border-top: 1px solid var(--line-strong);
+      padding-top: 12px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .evidence-item strong {
+      display: block;
+      font-family: var(--mono);
+      color: var(--ink);
+      margin-bottom: 5px;
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    footer {
+      padding: 28px 0 46px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .process-board,
+      .offer-grid,
+      .section-head {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-stage { min-height: unset; }
+      .card-grid { grid-template-columns: 1fr; }
+      .evidence { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+      h1 { font-size: clamp(52px, 16vw, 86px); }
+    }
+
+    @media (max-width: 560px) {
+      .shell { width: min(100% - 22px, 1180px); }
+      .hero-stage { padding: 24px; }
+      .evidence { grid-template-columns: 1fr; }
+      .state-line { grid-template-columns: 1fr; }
+      .price { font-size: 52px; }
+      footer { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="shell top-nav" aria-label="Seitennavigation">
+    <div class="brand"><span class="brand-mark" aria-hidden="true"></span> Human-Agent-Interface</div>
+    <div class="nav-links">
+      <a href="#problem">Problem</a>
+      <a href="#ablauf">Ablauf</a>
+      <a href="#angebot">Angebot</a>
+      <a href="#nachricht">Nachricht</a>
+    </div>
+  </nav>
+
+  <main class="shell">
+    <header class="hero-stage">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">Pilotangebot / HAI Audit</div>
+          <h1>Aus Agenten-Chaos wird Arbeitsform.</h1>
+          <p class="lede">Ein 4h Human-Agent-Workflow-Audit für Menschen, die mit KI arbeiten — aber mehr Kontrolle, bessere Übergaben und weniger agentisches Kopfweh brauchen.</p>
+          <div class="hero-actions">
+            <a class="btn" href="#angebot">Audit ansehen</a>
+            <a class="btn secondary" href="#nachricht">Nachricht kopieren</a>
+          </div>
+        </div>
+
+        <aside class="runtime-card" aria-label="HAI Kurzdiagnose">
+          <div class="runtime-label">Owner Packet / Kurzdiagnose</div>
+          <div class="state-line">
+            <div class="state-key">Vorher</div>
+            <div class="state-val">„Ich habe ein Problem, eine Idee, Chaos — und zu viele mögliche Agentenwege.“</div>
+          </div>
+          <div class="state-line">
+            <div class="state-key">Nachher</div>
+            <div class="state-val"><strong>Problemtyp</strong>, Grenzen, Human Gates, Verifier-Regel und ein Next Action Packet.</div>
+          </div>
+          <div class="state-line">
+            <div class="state-key">Erfolg</div>
+            <div class="state-val">Nicht magische Autonomie. Sondern entscheidbare Agentenarbeit.<div class="meter"><span></span></div></div>
+          </div>
+          <div class="state-line">
+            <div class="state-key">Prinzip</div>
+            <div class="state-val">Samuel entscheidet. Agenten arbeiten. Kein stilles „done“.</div>
+          </div>
+        </aside>
+      </div>
+    </header>
+
+    <section id="problem">
+      <div class="section-head">
+        <div class="kicker">Warum das existiert</div>
+        <h2>Das Problem ist nicht: „Welches Modell?“ Das Problem ist: „Welche Arbeit darf der Agent überhaupt anfassen?“</h2>
+      </div>
+
+      <div class="card-grid">
+        <article class="glass-card">
+          <div class="card-number">Problem 01</div>
+          <h3>Agenten produzieren Output, aber keine Entscheidungsebene.</h3>
+          <p>Viele Workflows sehen produktiv aus, erzeugen aber neue Review-Arbeit, offene Schleifen und unklare Verantwortung.</p>
+        </article>
+        <article class="glass-card">
+          <div class="card-number">Problem 02</div>
+          <h3>Der Mensch gibt entweder zu wenig oder zu viel ab.</h3>
+          <p>HAI trennt: Was bleibt Owner-Entscheidung? Was wird Delegationsauftrag? Was braucht Verifikation?</p>
+        </article>
+        <article class="glass-card">
+          <div class="card-number">Problem 03</div>
+          <h3>„Done“ ist keine Evidenz.</h3>
+          <p>Ein gutes Agenten-Setup braucht Artefakte, Checks und klare Stop-Regeln — nicht nur eine überzeugende Erfolgsmeldung.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="ablauf">
+      <div class="section-head">
+        <div class="kicker">4 Stunden / ein klarer Schnitt</div>
+        <h2>Das Audit macht dein Problem agentisch bearbeitbar — ohne dir die Ownership wegzunehmen.</h2>
+      </div>
+
+      <div class="process-board">
+        <div class="trace-panel">
+          <div class="trace-title">Kerntransformation</div>
+          <p class="big-quote">„HAI löst nicht direkt dein Problem. HAI verändert die Form, in der du deinem Problem mit Agenten begegnest.“</p>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="step-num">01</div><div><strong>Workflow-Intake</strong><span>Was willst du erreichen, wo wird es chaotisch, was ist der echte Arbeitszustand?</span></div></div>
+          <div class="step"><div class="step-num">02</div><div><strong>Agenten-Inventar</strong><span>Welche Tools nutzt du, wofür, und wo entstehen Reibung, Tokenburn oder Scope Creep?</span></div></div>
+          <div class="step"><div class="step-num">03</div><div><strong>Human Gates</strong><span>Welche Entscheidungen dürfen nicht beim Agenten landen: Ziel, Risiko, Freigabe, Abbruch?</span></div></div>
+          <div class="step"><div class="step-num">04</div><div><strong>Delegationsschnitt</strong><span>Welche Teilaufgabe eignet sich für Research, Executor, Verifier, Orchestrator — oder Human-only?</span></div></div>
+          <div class="step"><div class="step-num">05</div><div><strong>Next Action Packet</strong><span>Ein kleiner, begrenzter Auftrag, mit Artefaktpflicht und überprüfbarem Erfolg.</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="insight-band" aria-label="These">
+      <div class="kicker">Die HAI-These</div>
+      <h2>Ein gutes Agent Interface macht Agenten nicht sichtbarer. Es macht ihre Arbeit entscheidbarer.</h2>
+      <p>Deshalb ist der erste HAI-Build kein Dashboard. Der erste Build ist ein bezahlbares Audit, das an einer echten Person beweist: weniger Chaos rein, klarerer Agentenprozess raus.</p>
+    </section>
+
+    <section id="angebot">
+      <div class="section-head">
+        <div class="kicker">Pilotangebot v0</div>
+        <h2>4h Human-Agent-Workflow-Audit</h2>
+      </div>
+
+      <div class="offer-grid">
+        <div class="card-grid" style="grid-template-columns: 1fr 1fr;">
+          <article class="glass-card">
+            <div class="card-number">Für wen</div>
+            <h3>Menschen mit agentischem Kopfweh.</h3>
+            <ul>
+              <li>Claude Code, Codex, Cursor, ChatGPT, Hermes oder eigene Automationen</li>
+              <li>viel Output, aber wenig klare Entscheidung</li>
+              <li>unsichere Übergaben, Scope Creep, falsche Done-Meldungen</li>
+            </ul>
+          </article>
+          <article class="glass-card">
+            <div class="card-number">Output</div>
+            <h3>Ein kompaktes Owner-Packet.</h3>
+            <ul>
+              <li>3 Hauptprobleme</li>
+              <li>3 konkrete Änderungen</li>
+              <li>Human Gates und Verifier-Regel</li>
+              <li>ein Next Action Packet</li>
+            </ul>
+          </article>
+        </div>
+
+        <aside class="price-card">
+          <div class="runtime-label">Pilotpreis</div>
+          <div class="price">500 €</div>
+          <p>Für 4 Stunden Audit plus kurzes 7-Tage-Follow-up.</p>
+          <div class="badge-row">
+            <span class="badge">keine Magie</span>
+            <span class="badge">kein Dashboard</span>
+            <span class="badge">Owner bleibt Mensch</span>
+            <span class="badge">Verifier statt Vertrauen</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div class="kicker">Nicht versprochen</div>
+        <h2>Kein Autonomie-Bullshit. Kein „danach löst AI alles“.</h2>
+      </div>
+      <div class="card-grid">
+        <article class="glass-card">
+          <div class="card-number">Grenze 01</div>
+          <h3>Ich verspreche kein besseres Modell.</h3>
+          <p>Modelle bleiben Modelle. HAI verbessert den Rahmen, die Übergabe, die Verifikation und die menschliche Entscheidungsebene.</p>
+        </article>
+        <article class="glass-card">
+          <div class="card-number">Grenze 02</div>
+          <h3>Ich baue nicht dein komplettes Produkt.</h3>
+          <p>Das Audit erzeugt einen besseren Arbeitsmodus und einen nächsten begrenzten Schritt — keinen Full-Service-Build.</p>
+        </article>
+        <article class="glass-card">
+          <div class="card-number">Grenze 03</div>
+          <h3>Du bleibst Owner.</h3>
+          <p>Keine agentische Arbeit ohne menschliche Ziel-, Risiko-, Freigabe- und Abbruchentscheidung.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="nachricht">
+      <div class="section-head">
+        <div class="kicker">Sendbar</div>
+        <h2>Eine konkrete Nachricht für den ersten Pilotkontakt.</h2>
+      </div>
+      <div class="message-box">
+        <button class="copy-btn" type="button" data-copy>kopieren</button>
+        <pre id="pilot-message">Hey [Name], ich teste gerade ein neues Angebot: ein 4h Human-Agent-Workflow-Audit.
+
+Die Idee: Ich schaue mir an, wie du aktuell mit KI/Agenten arbeitest — Claude, Cursor, Codex, ChatGPT, eigene Tools, egal — und wir finden gemeinsam raus, wo dein Workflow unklar, zu groß, unkontrolliert oder ineffizient wird.
+
+Am Ende bekommst du kein generisches Tutorial, sondern ein kleines Owner-Packet: deine 3 größten Reibungspunkte, konkrete Änderungen, Human-Gates, eine Verifikationsregel und ein Next Action Packet, mit dem ein Agent wirklich begrenzt weiterarbeiten kann.
+
+Ich teste das gerade als Pilot. Normaler Pilotpreis wäre 500 € für 4 Stunden plus kurzes Follow-up nach 7 Tagen. Bei den ersten Leuten aus meinem engen Netzwerk geht es mir vor allem um echtes Feedback und darum, das Angebot zu schärfen.
+
+Wenn du gerade irgendwo agentisches Kopfweh hast oder jemanden kennst, für den das relevant wäre: Hättest du Lust, das mit mir zu testen?</pre>
+      </div>
+    </section>
+
+    <section aria-label="Arbeitsgrundlage">
+      <div class="evidence">
+        <div class="evidence-item"><strong>D01 / HAI Packet</strong>Ernsthaft entwickeln, aber als kleines überprüfbares Angebot statt Weltbau.</div>
+        <div class="evidence-item"><strong>D02 / Meta-Hermes</strong>HAI als Work Protocol: raw human problem → bounded delegation → artifact → validation → next action.</div>
+        <div class="evidence-item"><strong>D03 / Samuel Pattern</strong>Owner Interface, Cognitive Firewall, Verifier-Owned Success, Anti-Wildwuchs.</div>
+        <div class="evidence-item"><strong>D04 / Design</strong>Paper/ink/editorial statt generischer SaaS-Slop; Entscheidbarkeit vor Agenteninventar.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell">
+    <span>Human-Agent-Interface / Audit Offer v0</span>
+    <span>No silent success. Mensch bleibt Owner.</span>
+  </footer>
+
+  <script>
+    const btn = document.querySelector('[data-copy]');
+    const msg = document.getElementById('pilot-message');
+    btn?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(msg.innerText.trim());
+        const old = btn.textContent;
+        btn.textContent = 'kopiert';
+        setTimeout(() => { btn.textContent = old; }, 1400);
+      } catch (error) {
+        btn.textContent = 'manuell kopieren';
+      }
+    });
+  </script>
+</body>
+</html>

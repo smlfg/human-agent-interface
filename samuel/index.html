@@ -1,0 +1,1243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta
+    name="description"
+    content="Samuel Fleig's trust page for Human Agent Interface: lived agentic practice, Sidecar, HAI, harnesses, control surfaces, and human-owned workflows."
+  >
+  <title>Samuel Fleig - Human Agent Interface Trust</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f5efdf;
+      --muted: #b9ad95;
+      --quiet: #766d5e;
+      --black: #080806;
+      --charcoal: #11100d;
+      --panel: rgba(245, 239, 223, 0.06);
+      --panel-strong: rgba(245, 239, 223, 0.11);
+      --line: rgba(245, 239, 223, 0.16);
+      --line-strong: rgba(245, 239, 223, 0.32);
+      --gold: #e6a83a;
+      --signal: #83dbc8;
+      --ember: #df6242;
+      --green: #a7ff4f;
+      --max: 1180px;
+      --pad: clamp(18px, 4vw, 56px);
+      --display: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      --body: "Neue Haas Grotesk Text", "Aptos", "Segoe UI", sans-serif;
+      --mono: "Berkeley Mono", "Iosevka", "SFMono-Regular", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--black);
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      font-family: var(--body);
+      background:
+        radial-gradient(circle at 76% 10%, rgba(131, 219, 200, 0.11), transparent 30vw),
+        radial-gradient(circle at 15% 42%, rgba(223, 98, 66, 0.08), transparent 26vw),
+        linear-gradient(180deg, #080806 0%, #12100d 48%, #090a08 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 20;
+      opacity: 0.22;
+      background-image:
+        linear-gradient(rgba(245, 239, 223, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245, 239, 223, 0.032) 1px, transparent 1px);
+      background-size: 78px 78px;
+      mask-image: linear-gradient(180deg, black, transparent 78%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    .site-shell {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 30;
+      opacity: 0.13;
+      mix-blend-mode: overlay;
+      background-image:
+        repeating-radial-gradient(circle at 17% 23%, rgba(255, 255, 255, 0.35) 0 1px, transparent 1px 5px);
+      background-size: 180px 180px;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+      padding: 14px var(--pad) 0;
+    }
+
+    .topbar-inner {
+      width: min(var(--max), 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(245, 239, 223, 0.12);
+      background: rgba(8, 8, 6, 0.7);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 70px rgba(0, 0, 0, 0.3);
+      pointer-events: auto;
+    }
+
+    .mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mark-symbol {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 1px solid var(--line-strong);
+      color: var(--gold);
+      font-size: 13px;
+      line-height: 1;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(12px, 2vw, 28px);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .nav a {
+      opacity: 0.82;
+      transition: color 160ms ease, opacity 160ms ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      color: var(--ink);
+      opacity: 1;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 94svh;
+      display: grid;
+      align-items: end;
+      padding: 126px var(--pad) 8svh;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+    }
+
+    #authorityCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: #080806;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(90deg, rgba(8, 8, 6, 0.98) 0%, rgba(8, 8, 6, 0.78) 45%, rgba(8, 8, 6, 0.28) 100%),
+        linear-gradient(180deg, rgba(8, 8, 6, 0.1), rgba(8, 8, 6, 0.88));
+    }
+
+    .hero-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(260px, 0.48fr);
+      gap: clamp(30px, 7vw, 96px);
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: clamp(11px, 1.35vw, 13px);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 38px;
+      height: 1px;
+      background: var(--gold);
+      box-shadow: 0 0 26px rgba(230, 168, 58, 0.9);
+    }
+
+    h1 {
+      max-width: 980px;
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: clamp(56px, 10.5vw, 148px);
+      line-height: 0.88;
+      letter-spacing: 0;
+      text-wrap: balance;
+      overflow-wrap: break-word;
+    }
+
+    .hero-lede {
+      max-width: 760px;
+      margin-top: clamp(28px, 5vw, 48px);
+      color: var(--ink);
+      font-size: clamp(22px, 3vw, 38px);
+      line-height: 1.08;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .hero-copy {
+      max-width: 650px;
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: clamp(16px, 1.55vw, 19px);
+      line-height: 1.55;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .button {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      border: 1px solid var(--line);
+      background: rgba(245, 239, 223, 0.055);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .button.primary {
+      border-color: rgba(167, 255, 79, 0.7);
+      background: rgba(167, 255, 79, 0.16);
+      color: var(--green);
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      background: rgba(245, 239, 223, 0.095);
+    }
+
+    .hero-aside {
+      display: grid;
+      gap: 16px;
+    }
+
+    .aside-note {
+      padding: 22px;
+      border-left: 1px solid var(--line-strong);
+      background: linear-gradient(90deg, rgba(245, 239, 223, 0.07), transparent);
+    }
+
+    .aside-note strong {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--signal);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .aside-note span {
+      display: block;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.48;
+    }
+
+    section {
+      position: relative;
+      padding: clamp(76px, 11vw, 148px) var(--pad);
+    }
+
+    .section-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(280px, 0.58fr);
+      gap: clamp(30px, 7vw, 92px);
+      align-items: start;
+    }
+
+    .kicker {
+      margin-bottom: 18px;
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      max-width: 900px;
+      font-family: var(--display);
+      font-size: clamp(42px, 7vw, 94px);
+      font-weight: 500;
+      line-height: 0.94;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .section-copy {
+      max-width: 780px;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 23px);
+      line-height: 1.45;
+      text-wrap: balance;
+    }
+
+    .body-copy {
+      color: var(--muted);
+      font-size: clamp(17px, 1.65vw, 20px);
+      line-height: 1.55;
+    }
+
+    .body-copy + .body-copy {
+      margin-top: 20px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: clamp(38px, 6vw, 68px);
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .metric {
+      min-height: 170px;
+      padding: 22px;
+      display: grid;
+      align-content: space-between;
+      gap: 28px;
+      background: rgba(8, 8, 6, 0.84);
+    }
+
+    .metric strong {
+      font-family: var(--display);
+      font-size: clamp(32px, 4.8vw, 60px);
+      line-height: 0.9;
+      font-weight: 500;
+    }
+
+    .metric span {
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+
+    .metric.highlight {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    .metric.highlight span {
+      color: rgba(8, 8, 6, 0.72);
+    }
+
+    .systems {
+      border-block: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(245, 239, 223, 0.035), rgba(245, 239, 223, 0.01)),
+        rgba(10, 10, 8, 0.72);
+    }
+
+    .system-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: clamp(40px, 7vw, 76px);
+    }
+
+    .system-card {
+      min-height: 230px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      background: rgba(245, 239, 223, 0.045);
+    }
+
+    .system-card b {
+      color: var(--signal);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .system-card h3 {
+      margin-top: 40px;
+      font-family: var(--display);
+      font-size: clamp(26px, 3vw, 38px);
+      font-weight: 500;
+      line-height: 0.98;
+    }
+
+    .system-card p {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .origin {
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .origin::before {
+      content: "SCOPE EXPLOSION";
+      position: absolute;
+      right: -0.05em;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(245, 239, 223, 0.035);
+      font-family: var(--mono);
+      font-size: clamp(82px, 15vw, 220px);
+      letter-spacing: 0;
+      white-space: nowrap;
+      z-index: -1;
+    }
+
+    .origin-steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: clamp(42px, 7vw, 82px);
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .origin-step {
+      min-height: 265px;
+      padding: clamp(22px, 3vw, 30px);
+      display: grid;
+      align-content: space-between;
+      background: rgba(8, 8, 6, 0.84);
+    }
+
+    .origin-step span {
+      color: var(--ember);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .origin-step h3 {
+      font-family: var(--display);
+      font-size: clamp(30px, 4vw, 52px);
+      font-weight: 500;
+      line-height: 0.95;
+    }
+
+    .origin-step p {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.42;
+    }
+
+    .proof-lines {
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(8, 8, 6, 0.98), rgba(17, 16, 13, 0.98)),
+        radial-gradient(circle at 10% 90%, rgba(230, 168, 58, 0.12), transparent 30vw);
+    }
+
+    .line-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: clamp(40px, 7vw, 78px);
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .line-item {
+      min-height: 250px;
+      padding: clamp(24px, 4vw, 38px);
+      background: rgba(8, 8, 6, 0.84);
+    }
+
+    .line-item span {
+      color: var(--signal);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .line-item h3 {
+      margin-top: 36px;
+      font-family: var(--display);
+      font-size: clamp(31px, 4.4vw, 56px);
+      font-weight: 500;
+      line-height: 0.96;
+    }
+
+    .line-item p {
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.46;
+    }
+
+    .portfolio {
+      background: var(--ink);
+      color: #10110d;
+    }
+
+    .portfolio .kicker {
+      color: rgba(16, 17, 13, 0.64);
+    }
+
+    .portfolio .section-copy {
+      color: rgba(16, 17, 13, 0.68);
+    }
+
+    .proof-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: clamp(40px, 7vw, 76px);
+    }
+
+    .proof-card {
+      min-height: 390px;
+      display: grid;
+      grid-template-rows: 190px 1fr;
+      border: 1px solid rgba(16, 17, 13, 0.18);
+      background: rgba(16, 17, 13, 0.045);
+      overflow: hidden;
+    }
+
+    .proof-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(0.82) contrast(1.08);
+      border-bottom: 1px solid rgba(16, 17, 13, 0.16);
+    }
+
+    .proof-card div {
+      padding: 20px;
+    }
+
+    .proof-card span {
+      display: block;
+      margin-bottom: 16px;
+      color: rgba(16, 17, 13, 0.58);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .proof-card h3 {
+      font-family: var(--display);
+      font-size: clamp(25px, 3vw, 36px);
+      font-weight: 500;
+      line-height: 0.98;
+    }
+
+    .proof-card p {
+      margin-top: 14px;
+      color: rgba(16, 17, 13, 0.72);
+      font-size: 15px;
+      line-height: 1.44;
+    }
+
+    .mirror-note {
+      margin-top: 20px;
+      color: rgba(16, 17, 13, 0.6);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      line-height: 1.45;
+      text-transform: uppercase;
+    }
+
+    .client {
+      min-height: 84svh;
+      display: grid;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .client-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(260px, 0.54fr);
+      gap: clamp(30px, 7vw, 92px);
+      align-items: end;
+    }
+
+    .client h2 {
+      font-family: var(--display);
+      font-size: clamp(46px, 8vw, 108px);
+      font-weight: 500;
+      line-height: 0.92;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .client p {
+      max-width: 720px;
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: clamp(18px, 2vw, 24px);
+      line-height: 1.42;
+    }
+
+    .client-panel {
+      padding: 28px;
+      border-left: 1px solid var(--line-strong);
+      background: linear-gradient(90deg, rgba(245, 239, 223, 0.065), transparent);
+    }
+
+    .client-panel span {
+      display: block;
+      margin-bottom: 16px;
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .client-panel p {
+      margin: 0;
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1.35;
+    }
+
+    .client-panel .button {
+      margin-top: 24px;
+    }
+
+    .footer {
+      padding: 24px var(--pad);
+      border-top: 1px solid var(--line);
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .footer-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 1060px) {
+      .metrics,
+      .system-grid,
+      .origin-steps,
+      .proof-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero-inner,
+      .split,
+      .client-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-aside {
+        max-width: 620px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        position: absolute;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav {
+        width: 100%;
+        gap: 14px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+
+      .nav::-webkit-scrollbar {
+        display: none;
+      }
+
+      .hero {
+        min-height: auto;
+        width: 100vw;
+        padding: 148px 20px 62px;
+      }
+
+      h1 {
+        max-width: calc(100vw - 40px);
+        font-size: clamp(48px, 13.2vw, 68px);
+        line-height: 0.96;
+        text-wrap: wrap;
+      }
+
+      .hero-inner,
+      .hero-lede,
+      .hero-copy,
+      .section-inner,
+      .footer-inner {
+        width: 350px;
+        max-width: calc(100vw - 40px);
+      }
+
+      .hero-inner,
+      .section-inner,
+      .footer-inner {
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .hero-aside {
+        display: none;
+      }
+
+      .metrics,
+      .system-grid,
+      .origin-steps,
+      .line-grid,
+      .proof-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .metric,
+      .system-card,
+      .origin-step,
+      .line-item {
+        min-height: auto;
+      }
+
+      .proof-card {
+        min-height: auto;
+        grid-template-rows: 165px 1fr;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .client {
+        min-height: auto;
+      }
+
+      .client-panel {
+        padding: 22px 0 0;
+        border-left: 0;
+        border-top: 1px solid var(--line-strong);
+        background: transparent;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="site-shell">
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="topbar" aria-label="Site navigation">
+      <div class="topbar-inner">
+        <a class="mark" href="../index.html" aria-label="Back to Human Agent Interface home">
+          <span class="mark-symbol">SF</span>
+          <span>Samuel's work</span>
+        </a>
+        <nav class="nav" aria-label="Page sections">
+          <a href="../index.html">Home</a>
+          <a href="../what_it_is/">Where HAI comes from</a>
+          <a href="../tripwire-map/">Proof</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <canvas id="authorityCanvas" aria-hidden="true"></canvas>
+        <div class="hero-inner">
+          <div>
+            <p class="eyebrow">Trust / lived authority</p>
+            <h1 id="hero-title">Why Samuel can talk about agentic work.</h1>
+            <p class="hero-lede">
+              HAI did not start as branding. It came from long-running agent practice, broken control surfaces,
+              overloaded threads, and the need to turn agent chaos into one supervised next action.
+            </p>
+            <p class="hero-copy">
+              Samuel works inside agent systems: terminal agents, IDE agents, custom profiles, Sidecar experiments,
+              harnesses, and human-owned workflows. The point is not more automation. The point is work that remains
+              understandable, scoped, and owned by the human.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#contact">Bring one messy agent workflow</a>
+              <a class="button" href="../tripwire-map/">See control proof</a>
+            </div>
+          </div>
+
+          <aside class="hero-aside" aria-label="Positioning note">
+            <div class="aside-note">
+              <strong>Not an about page</strong>
+              <span>
+                This page is about trust: the systems tried, the failures absorbed, the artifacts created,
+                and the working discipline that became Human Agent Interface.
+              </span>
+            </div>
+            <div class="aside-note">
+              <strong>Strong, but clean</strong>
+              <span>
+                No founder mythology. The claim is simple: HAI comes from real agentic work, not from a slide deck.
+              </span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section aria-labelledby="missing-title">
+        <div class="section-inner">
+          <p class="kicker">The missing trust layer</p>
+          <h2 class="section-title" id="missing-title">The concept makes sense because the failure mode was lived first.</h2>
+          <p class="section-copy">
+            Raw agent work can look productive while making the human less oriented. Threads multiply, tools disagree,
+            scope expands, and the next responsible action gets harder to name. HAI is a response to that lived failure mode.
+          </p>
+          <div class="metrics" aria-label="Practice signals">
+            <article class="metric highlight">
+              <strong>Years</strong>
+              <span>of hands-on agent practice</span>
+            </article>
+            <article class="metric">
+              <strong>Hours</strong>
+              <span>thousands across agent systems</span>
+            </article>
+            <article class="metric">
+              <strong>~197</strong>
+              <span>HTML artifacts over 24 days in the local timeline source</span>
+            </article>
+            <article class="metric">
+              <strong>Many</strong>
+              <span>agent setups, profiles, dashboards, harnesses, and failed control surfaces</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="systems" id="systems" aria-labelledby="systems-title">
+        <div class="section-inner">
+          <p class="kicker">Systems operated</p>
+          <h2 class="section-title" id="systems-title">This is not generic AI training. It is operational agent work.</h2>
+          <p class="section-copy">
+            The work spans tools, surfaces, and roles. The recurring lesson is that model quality alone is not enough;
+            the agent system has to fit how the human thinks, decides, checks, and stops.
+          </p>
+
+          <div class="system-grid" aria-label="Agent system experience">
+            <article class="system-card">
+              <b>Terminal and IDE agents</b>
+              <h3>Claude Code, Codex, OpenCode, Gemini.</h3>
+              <p>Daily work inside code agents, CLI workflows, project state, patches, verification, and handoffs.</p>
+            </article>
+            <article class="system-card">
+              <b>Profile systems</b>
+              <h3>Hermes, OpenClaude, custom agents.</h3>
+              <p>Agent behavior shaped through profiles, skills, modes, memory, review gates, and role separation.</p>
+            </article>
+            <article class="system-card">
+              <b>Control surfaces</b>
+              <h3>Sidecar, dashboards, owner views.</h3>
+              <p>Interfaces for overload, focus, project state, human decisions, and controlled next actions.</p>
+            </article>
+            <article class="system-card">
+              <b>Evaluation work</b>
+              <h3>Harnesses, traces, comparisons.</h3>
+              <p>Agent output treated as something to inspect and falsify, not just something to accept.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="origin" aria-labelledby="origin-title">
+        <div class="section-inner">
+          <p class="kicker">Origin of HAI</p>
+          <h2 class="section-title" id="origin-title">The first answer was not another tower. It was a stricter working loop.</h2>
+          <p class="section-copy">
+            The Agent Control Tower idea kept running into the same pressure: too much orchestration, too much state,
+            too much output. Working with Luis shifted the question from "how do we coordinate more agents?" to
+            "how do we keep the human oriented while agents work?"
+          </p>
+
+          <div class="origin-steps" aria-label="HAI origin steps">
+            <article class="origin-step">
+              <span>01 / lived problem</span>
+              <h3>Threads multiplied.</h3>
+              <p>Agent work created artifacts, ideas, and partial decisions faster than the human could safely absorb.</p>
+            </article>
+            <article class="origin-step">
+              <span>02 / failed control</span>
+              <h3>The tower got too large.</h3>
+              <p>Attempts to control everything from above repeatedly pushed the system toward scope explosion.</p>
+            </article>
+            <article class="origin-step">
+              <span>03 / Luis reframing</span>
+              <h3>The workflow had to change.</h3>
+              <p>The useful intervention was not more dashboards. It was downscoping the next human-owned step.</p>
+            </article>
+            <article class="origin-step">
+              <span>04 / HAI kernel</span>
+              <h3>One packet at a time.</h3>
+              <p>HAI became the discipline of turning messy human state into bounded, checkable agent work.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="proof-lines" aria-labelledby="lines-title">
+        <div class="section-inner">
+          <p class="kicker">What exists already</p>
+          <h2 class="section-title" id="lines-title">Four lines of work make the authority concrete.</h2>
+          <div class="line-grid">
+            <article class="line-item">
+              <span>Personal agent systems</span>
+              <h3>Setups that fit the human.</h3>
+              <p>Agent configuration, profile design, modes, skills, and operating rules tuned to the actual person and task.</p>
+            </article>
+            <article class="line-item">
+              <span>HAI / downscope workflow</span>
+              <h3>Chaos into a next packet.</h3>
+              <p>Messy project state becomes a named problem, a scoped assignment, and a next action the human can approve.</p>
+            </article>
+            <article class="line-item">
+              <span>Sidecar experiments</span>
+              <h3>The agent watches the work.</h3>
+              <p>Sidecar explores a second system that notices overload, drift, and loss of alignment in the human-agent loop.</p>
+            </article>
+            <article class="line-item">
+              <span>Admin/User-space work</span>
+              <h3>Agents built from inside.</h3>
+              <p>Agent profiles can be operated, repaired, and improved from an admin layer without pretending the user layer is the whole system.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="portfolio" id="proof" aria-labelledby="proof-title">
+        <div class="section-inner">
+          <p class="kicker">Artifact trail</p>
+          <h2 class="section-title" id="proof-title">A local work trail, compressed into public-safe evidence.</h2>
+          <p class="section-copy">
+            PortfolioTimeline is currently used here as proof strip only. The full public mirror comes later, because the
+            complete local timeline still needs hosting-safe links before it should be presented as a public archive.
+          </p>
+
+          <div class="proof-strip" aria-label="Selected agentic work artifacts">
+            <article class="proof-card">
+              <img src="assets/proof/portfolio-timeline--index.png" alt="PortfolioTimeline screenshot with AI builder timeline">
+              <div>
+                <span>Timeline evidence</span>
+                <h3>~197 artifacts over 24 days.</h3>
+                <p>The local timeline source documents a compressed build period across HTML artifacts, apps, diagrams, analyses, and explainers.</p>
+              </div>
+            </article>
+            <article class="proof-card">
+              <img src="assets/proof/diagrams--sidecar-v7-visual-explainer.png" alt="Sidecar visual explainer screenshot">
+              <div>
+                <span>Sidecar</span>
+                <h3>Overload as a system problem.</h3>
+                <p>Sidecar explored how a second agent layer can watch the collaboration itself instead of only doing more tasks.</p>
+              </div>
+            </article>
+            <article class="proof-card">
+              <img src="assets/proof/project-intake-tower-consolidation--visual-explainer-kaskade.png" alt="Agent control tower cascade visual explainer screenshot">
+              <div>
+                <span>Control tower learning</span>
+                <h3>Scope explosion made visible.</h3>
+                <p>The control-tower line became evidence for why HAI must protect the human from agent cascades, not celebrate them.</p>
+              </div>
+            </article>
+            <article class="proof-card">
+              <img src="assets/proof/first-real-harness-evaluation--web-dashboard.png" alt="Harness evaluation dashboard screenshot">
+              <div>
+                <span>Evaluation</span>
+                <h3>Agent output needs checking.</h3>
+                <p>Harness work turns agent behavior into traces, comparisons, and verdicts that can be inspected instead of guessed.</p>
+              </div>
+            </article>
+            <article class="proof-card">
+              <img src="assets/proof/luis-handoff--luis-agentisches-arbeiten.png" alt="Luis handoff page screenshot for agentic work">
+              <div>
+                <span>Luis handoff</span>
+                <h3>Agentic work made legible.</h3>
+                <p>The collaboration with Luis forced the work into human-readable maps, roles, bottlenecks, and concrete next steps.</p>
+              </div>
+            </article>
+            <article class="proof-card">
+              <img src="assets/proof/hai-v1-3--luis-v1-3-site.png" alt="HAI V1.3 Luis briefing screenshot">
+              <div>
+                <span>HAI iteration</span>
+                <h3>From project state to next step.</h3>
+                <p>HAI matured into a filter for intent, human payoff, project state, and controlled execution.</p>
+              </div>
+            </article>
+          </div>
+
+          <p class="mirror-note">Full PortfolioTimeline public mirror: later hosting step.</p>
+
+          <p class="mirror-note">
+            For the buyer-facing control proof, see the <a href="../tripwire-map/">Proof page</a>.
+          </p>
+        </div>
+      </section>
+
+      <section class="client" id="contact" aria-labelledby="contact-title">
+        <div class="section-inner client-grid">
+          <div>
+            <p class="kicker">What this means for a client</p>
+            <h2 id="contact-title">Show me one agent workflow that currently creates confusion.</h2>
+            <p>
+              The useful entry point is one real workflow: where context gets lost, where agents overproduce,
+              where decisions stop being owned, or where the next step never becomes safe enough to run.
+            </p>
+          </div>
+          <aside class="client-panel" aria-label="Start a conversation">
+            <span>Concrete first conversation</span>
+            <p>
+              Bring the current workflow. Leave with a smaller, clearer, human-owned agent working loop.
+            </p>
+            <a
+              class="button primary"
+              href="mailto:samuel@human-agent-interface.com?subject=Human%20Agent%20Interface%20conversation"
+            >Bring one messy agent workflow</a>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>Samuel Fleig / Human Agent Interface trust</span>
+        <span>HAI comes from practice, not branding</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("authorityCanvas");
+    const ctx = canvas.getContext("2d");
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let width = 0;
+    let height = 0;
+    let pixelRatio = 1;
+    let nodes = [];
+    let frame = 0;
+
+    function resize() {
+      pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      const rect = canvas.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      canvas.width = Math.floor(width * pixelRatio);
+      canvas.height = Math.floor(height * pixelRatio);
+      ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+      const count = width < 720 ? 28 : 54;
+      nodes = Array.from({ length: count }, (_, index) => ({
+        x: (index * 197) % Math.max(width, 1),
+        y: (index * 311) % Math.max(height, 1),
+        vx: ((index % 5) - 2) * 0.08,
+        vy: (((index * 3) % 7) - 3) * 0.06,
+        size: 1.5 + (index % 4) * 0.6
+      }));
+    }
+
+    function drawGrid() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#080806";
+      ctx.fillRect(0, 0, width, height);
+
+      const grid = width < 720 ? 58 : 82;
+      ctx.strokeStyle = "rgba(245,239,223,0.052)";
+      ctx.lineWidth = 1;
+      for (let x = -grid; x < width + grid; x += grid) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x + Math.sin(frame * 0.008 + x * 0.01) * 18, height);
+        ctx.stroke();
+      }
+      for (let y = -grid; y < height + grid; y += grid) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y + Math.cos(frame * 0.007 + y * 0.01) * 16);
+        ctx.stroke();
+      }
+    }
+
+    function drawHumanBoundary() {
+      const x = width * 0.38;
+      const y = height * 0.56;
+      const radius = Math.min(width, height) * 0.12;
+
+      ctx.strokeStyle = "rgba(230,168,58,0.18)";
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 4; i += 1) {
+        ctx.beginPath();
+        ctx.arc(x, y, radius * (0.5 + i * 0.32), 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = "rgba(230,168,58,0.82)";
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function drawNodes() {
+      const focusX = width * 0.38;
+      const focusY = height * 0.56;
+      for (const node of nodes) {
+        if (!prefersReducedMotion.matches) {
+          node.x += node.vx;
+          node.y += node.vy;
+        }
+
+        if (node.x < -20) node.x = width + 20;
+        if (node.x > width + 20) node.x = -20;
+        if (node.y < -20) node.y = height + 20;
+        if (node.y > height + 20) node.y = -20;
+
+        const dx = node.x - focusX;
+        const dy = node.y - focusY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const linked = distance < 230;
+
+        if (linked) {
+          ctx.strokeStyle = `rgba(131,219,200,${0.18 * (1 - distance / 230)})`;
+          ctx.beginPath();
+          ctx.moveTo(focusX, focusY);
+          ctx.lineTo(node.x, node.y);
+          ctx.stroke();
+        }
+
+        ctx.fillStyle = linked ? "rgba(131,219,200,0.82)" : "rgba(245,239,223,0.25)";
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function render() {
+      frame += 1;
+      drawGrid();
+      drawHumanBoundary();
+      drawNodes();
+      requestAnimationFrame(render);
+    }
+
+    resize();
+    render();
+    window.addEventListener("resize", resize, { passive: true });
+  </script>
+</body>
+</html>

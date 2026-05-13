@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta
+    name="description"
+    content="A source-backed Tripwire Map for Human Agent Interface: trigger, action, actor, and the moments where agentic work must change state."
+  >
+  <title>Tripwire Map | Human Agent Interface</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f7f1df;
+      --muted: #b7ad97;
+      --quiet: #7a715f;
+      --void: #080806;
+      --charcoal: #11100d;
+      --panel: rgba(247, 241, 223, 0.065);
+      --panel-strong: rgba(247, 241, 223, 0.12);
+      --line: rgba(247, 241, 223, 0.18);
+      --line-strong: rgba(247, 241, 223, 0.32);
+      --signal: #a7ff4f;
+      --copper: #ff9f5f;
+      --cyan: #7dd8ff;
+      --red: #ff5b4f;
+      --max: 1180px;
+      --pad: clamp(18px, 4vw, 56px);
+      --display: Georgia, "Times New Roman", serif;
+      --body: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
+      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--void);
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 76% 12%, rgba(167, 255, 79, 0.13), transparent 28rem),
+        radial-gradient(circle at 18% 34%, rgba(255, 159, 95, 0.1), transparent 26rem),
+        linear-gradient(180deg, #080806 0%, #11100d 46%, #070806 100%);
+      font-family: var(--body);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      opacity: 0.24;
+      background-image:
+        linear-gradient(rgba(247, 241, 223, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(247, 241, 223, 0.03) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: linear-gradient(180deg, black, transparent 78%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 0;
+    }
+
+    code {
+      color: var(--signal);
+      font-family: var(--mono);
+      font-size: 0.92em;
+    }
+
+    .site-shell {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .topbar {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 30;
+      display: flex;
+      justify-content: center;
+      padding: 14px var(--pad) 0;
+      pointer-events: none;
+    }
+
+    .topbar-inner {
+      width: min(var(--max), 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(247, 241, 223, 0.13);
+      background: rgba(8, 8, 6, 0.72);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 70px rgba(0, 0, 0, 0.3);
+      pointer-events: auto;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      color: var(--signal);
+      font-size: 12px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(12px, 2vw, 24px);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .nav a {
+      opacity: 0.82;
+      transition: color 160ms ease, opacity 160ms ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      color: var(--ink);
+      opacity: 1;
+    }
+
+    .hero {
+      min-height: 92svh;
+      display: grid;
+      align-items: end;
+      padding: 126px var(--pad) 72px;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(90deg, rgba(247, 241, 223, 0.075), transparent 1px),
+        linear-gradient(180deg, rgba(247, 241, 223, 0.04), transparent 1px);
+      background-size: 84px 84px;
+    }
+
+    .hero-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(300px, 0.42fr);
+      gap: clamp(32px, 6vw, 88px);
+      align-items: end;
+    }
+
+    .eyebrow,
+    .kicker,
+    .label {
+      color: var(--copper);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 42px;
+      height: 1px;
+      background: var(--copper);
+    }
+
+    h1 {
+      max-width: 940px;
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: clamp(3.4rem, 8.2vw, 7.8rem);
+      line-height: 0.92;
+      letter-spacing: 0;
+      overflow-wrap: break-word;
+      text-wrap: balance;
+    }
+
+    .promise {
+      max-width: 760px;
+      margin-top: 28px;
+      color: var(--ink);
+      font-size: clamp(1.22rem, 2.25vw, 1.78rem);
+      line-height: 1.2;
+      text-wrap: balance;
+    }
+
+    .draft-note {
+      border-left: 1px solid var(--line-strong);
+      background: linear-gradient(90deg, rgba(247, 241, 223, 0.075), transparent);
+      padding: 24px;
+    }
+
+    .draft-note h2 {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .draft-note p {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .section {
+      padding: clamp(70px, 10vw, 132px) var(--pad);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.78fr) minmax(280px, 0.46fr);
+      gap: clamp(24px, 6vw, 78px);
+      align-items: end;
+      margin-bottom: 36px;
+    }
+
+    h2 {
+      margin-top: 12px;
+      font-family: var(--display);
+      font-size: clamp(2.35rem, 5.8vw, 5.8rem);
+      font-weight: 500;
+      line-height: 0.98;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .section-copy,
+    .prose {
+      max-width: 65ch;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.55vw, 1.18rem);
+    }
+
+    .prose {
+      display: grid;
+      gap: 18px;
+    }
+
+    .definition-box {
+      margin-top: 34px;
+      padding: clamp(22px, 4vw, 34px);
+      border: 1px solid var(--line-strong);
+      background:
+        linear-gradient(135deg, rgba(167, 255, 79, 0.12), transparent 48%),
+        rgba(247, 241, 223, 0.055);
+    }
+
+    .definition-box strong {
+      display: block;
+      font-family: var(--display);
+      font-size: clamp(2rem, 5vw, 4.4rem);
+      line-height: 1;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .definition-box span {
+      display: block;
+      max-width: 62ch;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .taxonomy-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 38px;
+    }
+
+    .taxon {
+      min-height: 250px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      display: grid;
+      align-content: space-between;
+      gap: 22px;
+    }
+
+    .taxon h3 {
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: clamp(1.45rem, 2.3vw, 2.1rem);
+      font-weight: 500;
+      line-height: 1.02;
+    }
+
+    .taxon p {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .taxon small {
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .map-section {
+      background:
+        linear-gradient(180deg, rgba(247, 241, 223, 0.05), rgba(247, 241, 223, 0.015)),
+        #0c0d0a;
+    }
+
+    .profile-note {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 28px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: rgba(8, 8, 6, 0.48);
+    }
+
+    .profile-note p {
+      color: var(--muted);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      background: rgba(8, 8, 6, 0.46);
+    }
+
+    table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    th,
+    td {
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+      overflow-wrap: anywhere;
+    }
+
+    th:last-child,
+    td:last-child {
+      border-right: 0;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    th {
+      color: var(--copper);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(247, 241, 223, 0.06);
+    }
+
+    td {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    td strong {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .category {
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .onboarding {
+      background: var(--ink);
+      color: #10110d;
+    }
+
+    .onboarding .kicker {
+      color: rgba(16, 17, 13, 0.58);
+    }
+
+    .onboarding h2 {
+      color: #10110d;
+    }
+
+    .onboarding .section-copy,
+    .onboarding .prose {
+      color: rgba(16, 17, 13, 0.74);
+    }
+
+    .cta-panel {
+      max-width: 760px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line-strong);
+    }
+
+    .cta-panel a {
+      color: var(--signal);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+    }
+
+    footer {
+      padding: 28px var(--pad);
+      border-top: 1px solid var(--line);
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .footer-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    @media (max-width: 1040px) {
+      .taxonomy-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 940px) {
+      .hero-inner,
+      .section-head {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .topbar {
+        position: absolute;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .brand span:last-child {
+        display: none;
+      }
+
+      .nav {
+        width: 100%;
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+
+      .nav::-webkit-scrollbar {
+        display: none;
+      }
+
+      .hero {
+        width: 100vw;
+        padding: 148px 20px 58px;
+      }
+
+      .section {
+        width: 100vw;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .hero-inner,
+      .section-inner,
+      .footer-inner {
+        width: 350px;
+        max-width: calc(100vw - 40px);
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      h1 {
+        font-size: clamp(2.8rem, 13.8vw, 4.6rem);
+        line-height: 0.96;
+      }
+
+      h2 {
+        font-size: clamp(2.25rem, 11vw, 3.4rem);
+      }
+
+      .draft-note,
+      .definition-box,
+      .taxon,
+      .profile-note {
+        padding: 22px;
+      }
+
+      .taxonomy-grid,
+      .profile-note {
+        grid-template-columns: 1fr;
+      }
+
+      .table-wrap {
+        overflow-x: visible;
+        border: 0;
+        background: transparent;
+      }
+
+      table,
+      thead,
+      tbody,
+      tr,
+      th,
+      td {
+        display: block;
+        min-width: 0;
+        width: 100%;
+      }
+
+      thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+      }
+
+      tr {
+        margin-bottom: 12px;
+        border: 1px solid var(--line);
+        background: rgba(247, 241, 223, 0.045);
+      }
+
+      td {
+        display: grid;
+        grid-template-columns: 112px 1fr;
+        gap: 14px;
+        border-right: 0;
+        padding: 13px 14px;
+      }
+
+      td::before {
+        content: attr(data-label);
+        color: var(--copper);
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .footer-inner {
+        display: grid;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar" aria-label="Site navigation">
+      <div class="topbar-inner">
+        <a class="brand" href="../index.html" aria-label="Human Agent Interface home">
+          <span class="brand-mark">HAI</span>
+          <span>Human Agent Interface</span>
+        </a>
+        <nav class="nav" aria-label="Tripwire Map navigation">
+          <a href="../index.html">Home</a>
+          <a href="../product/">Products</a>
+          <a href="../what_it_is/">Where HAI comes from</a>
+          <a href="../samuel/">Samuel's work</a>
+          <a href="#map">Map</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" id="opener" aria-labelledby="hero-title">
+        <div class="hero-inner">
+          <div>
+            <p class="eyebrow">Tripwire profile 01</p>
+            <h1 id="hero-title">A control map for agentic work that can bite back.</h1>
+            <!-- PROSE: Samuel writes the personal failure story here.
+                 Anchor deferred. Expected length: 150-250 words.
+                 Must show what failed, why missing tripwires mattered,
+                 and transition into the concept section. -->
+            <p class="promise">
+              This opener is reserved for Samuel's own failure story. The page structure below is already built around the method: make every risky moment explicit as a trigger, an action, and an actor.
+            </p>
+          </div>
+
+          <aside class="draft-note" aria-label="Opener status">
+            <h2>Opener status</h2>
+            <p>
+              Samuel writes this section. The anchor is intentionally deferred so the public page does not invent a failure story.
+            </p>
+            <p>
+              The first profile is source-backed from Samuel's current Claude, Sidecar, and Codex control surface. More <code>.claude</code> profiles can be appended later.
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="concept" aria-labelledby="concept-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <div>
+              <p class="kicker">Concept</p>
+              <h2 id="concept-title">A tripwire is not topology. It is a control-transfer rule.</h2>
+            </div>
+            <p class="section-copy">
+              A topology map says what exists. A tripwire map says when normal continuation must change.
+            </p>
+          </div>
+
+          <div class="prose">
+            <p>
+              This page does not map every tool in the HAI stack. A topology view asks what exists, where it lives, and how components connect. The tripwire map asks a narrower control question: when must work change state? A tripwire has three parts: Trigger + Action + Actor. The trigger is the observable condition that makes normal continuation unsafe, unclear, or wasteful. The action is the required shift, such as stopping, escalating, switching mode, requesting review, or handing work back to the owner. The actor is the responsible party that must perform or authorize that shift. Without all three parts, a tripwire is only advice. With all three, it becomes an operating boundary: this happened, therefore this change is required, and this person or system owns the next move.
+            </p>
+          </div>
+
+          <div class="definition-box" aria-label="Tripwire definition">
+            <strong>Tripwire = Trigger + Action + Actor</strong>
+            <span>If one of those three is missing, the rule is still only advice. It becomes operational when the signal, response, and owner are all explicit.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="taxonomy" aria-labelledby="taxonomy-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <div>
+              <p class="kicker">Taxonomy</p>
+              <h2 id="taxonomy-title">Five categories keep the map readable.</h2>
+            </div>
+            <p class="section-copy">
+              The categories are not abstract governance labels. Each one names a concrete failure mode in Samuel's current profile and becomes an audit question, not a universal claim.
+            </p>
+          </div>
+
+          <div class="taxonomy-grid" aria-label="Tripwire categories">
+            <article class="taxon">
+              <div>
+                <h3>Permission Tripwires</h3>
+                <p>Stops an agent from silently becoming an uncontrolled actor; background work must be explicit before it leaves the main session.</p>
+              </div>
+              <small>Example: Background-Agent-Gate</small>
+            </article>
+            <article class="taxon">
+              <div>
+                <h3>Resource Tripwires</h3>
+                <p>Protects the expensive thinking layer from bulk file reading; Opus stays on strategy, orchestration, and short prompts.</p>
+              </div>
+              <small>Example: Opus-Token-Regel</small>
+            </article>
+            <article class="taxon">
+              <div>
+                <h3>Scope Tripwires</h3>
+                <p>Blocks automatic fanout by making Conserve the default and requiring one explicit mode when deeper work is justified.</p>
+              </div>
+              <small>Example: Conserve-Default</small>
+            </article>
+            <article class="taxon">
+              <div>
+                <h3>Verification Tripwires</h3>
+                <p>Keeps completion claims tied to evidence while preserving Samuel's separate authority over commits.</p>
+              </div>
+              <small>Example: no commit without approval</small>
+            </article>
+            <article class="taxon">
+              <div>
+                <h3>Communication Tripwires</h3>
+                <p>Converts ambiguity about target, component, or approach into a direct question before files are touched.</p>
+              </div>
+              <small>Example: ask when ambiguous</small>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section map-section" id="map" aria-labelledby="map-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <div>
+              <p class="kicker">The map</p>
+              <h2 id="map-title">Source-backed tripwires from Samuel's current setup.</h2>
+            </div>
+            <p class="section-copy">
+              This is profile 01, not the final universe. Additional <code>.claude</code> systems can become additional profiles using the same trigger-action-actor contract.
+            </p>
+          </div>
+
+          <div class="profile-note">
+            <span class="label">Profile 01</span>
+            <p>
+              Samuel's current Claude, Sidecar-NG, and Codex control surface. Draft sources include user-level Claude rules, hooks, skills, commands, Sidecar modes, Sidecar knowledge, Sidecar evolution notes, and Codex memory rules.
+            </p>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Category</th>
+                  <th scope="col">Tripwire</th>
+                  <th scope="col">Trigger</th>
+                  <th scope="col">Action</th>
+                  <th scope="col">Actor</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-label="Category"><span class="category">Permission</span></td>
+                  <td data-label="Tripwire"><strong>Read-before-edit gate</strong></td>
+                  <td data-label="Trigger">Editing or overwriting an existing file.</td>
+                  <td data-label="Action">Read the exact target file first; block edits when no prior read exists in recent history.</td>
+                  <td data-label="Actor">Claude/Codex plus Sidecar safety gate</td>
+                </tr>
+                <tr>
+                  <td data-label="Category"><span class="category">Permission</span></td>
+                  <td data-label="Tripwire"><strong>Config-schema gate</strong></td>
+                  <td data-label="Trigger">Changing a config file or adding a config key.</td>
+                  <td data-label="Action">Inspect the existing config format and do not invent keys that are not already represented or documented.</td>
+                  <td data-label="Actor">Implementer</td>
+                </tr>
+                <tr>
+                  <td data-label="Category"><span class="category">Communication</span></td>
+                  <td data-label="Tripwire"><strong>Ambiguity gate</strong></td>
+                  <td data-label="Trigger">Goal, project, component, or approach is ambiguous.</td>
+                  <td data-label="Action">Ask Samuel instead of guessing; do not continue on a hidden assumption.</td>
+                  <td data-label="Actor">Main agent</td>
+                </tr>
+                <tr>
+                  <td data-label="Category"><span class="category">Verification</span></td>
+                  <td data-label="Tripwire"><strong>Done-means-evidence gate</strong></td>
+                  <td data-label="Trigger">Reporting that a change is complete.</td>
+                  <td data-label="Action">Verify with tests, smoke checks, live evidence, or concrete proof before saying done.</td>
+                  <td data-label="Actor">Builder or verifier</td>
+                </tr>
+                <tr>
+                  <td data-label="Category"><span class="category">Permission</span></td>
+                  <td data-label="Tripwire"><strong>Commit-approval gate</strong></td>
+                  <td data-label="Trigger">Staging, committing, or pushing changes.</td>
+                  <td data-label="Action">Scan for sensitive artifacts, group atomic changes, run tests, show staged files and message, then wait for Samuel's explicit approval.</td>
+                  <td data-label="Actor">Commit skill/main agent</td>
+                </tr>
+                <tr>
+                  <td data-label="Category"><span class="category">Permission</span></td>
+                  <td data-label="Tripwire"><strong>Destructive-command gate</strong></td>
+                  <td data-label="Trigger"><code>rm -r</code>, force-push, apt install/remove, or secret-like content in sensitive files.</td>
+                  <td data-label="Action">Block or require explicit confirmation; do not expose or write secrets.</td>
+                  <td data-label="Actor">Safety gate and main agent</td>
+                </tr>
+                <tr>
+                  <td data-label="Category"><span class="category">Resource</span></td>
+                  <td data-label="Tripwire"><strong>Conserve default gate</strong></td>
+                  <td data-label="Trigger">Broad research, fanout, or deeper mode is not explicitly required.</td>
+                  <td data-label="Action">Stay narrow; activate deeper modes only explicitly and keep only one active mode.</td>
+                  <td data-label="Actor">Main agent</td>
+                </tr>
+                <tr>
+                  <td data-label="Category"><span class="category">Resource</span></td>
+                  <td data-label="Tripwire"><strong>Opus-token gate</strong></td>
+                  <td data-label="Trigger">Large code context, bulk exploration, or implementation is needed while Opus is orchestrating.</td>
+                  <td data-label="Action">Use targeted reads or a Sonnet scout/builder instead of making Opus bulk-read or bulk-code.</td>
+                  <td data-label="Actor">Main agent, Sonnet scout, Sonnet builder</td>
+                </tr>
+                <tr>
+                  <td data-label="Category"><span class="category">Resource</span></td>
+                  <td data-label="Tripwire"><strong>Background-agent gate</strong></td>
+                  <td data-label="Trigger">An Agent/Subagent is spawned.</td>
+                  <td data-label="Action">Require <code>run_in_background: true</code>; block non-background agent calls so the main session stays responsive.</td>
+                  <td data-label="Actor">PreToolUse hook and main agent</td>
+                </tr>
+                <tr>
+                  <td data-label="Category"><span class="category">Scope</span></td>
+                  <td data-label="Tripwire"><strong>BuildMode scope-lock gate</strong></td>
+                  <td data-label="Trigger"><code>buildmode</code> is active.</td>
+                  <td data-label="Action">Perform only actions directly serving the task/DoD; no research, meta-analysis, or side tasks; stop drift and return to task.</td>
+                  <td data-label="Actor">Claude in BuildMode</td>
+                </tr>
+                <tr>
+                  <td data-label="Category"><span class="category">Scope</span></td>
+                  <td data-label="Tripwire"><strong>ReviewMode no-edit gate</strong></td>
+                  <td data-label="Trigger"><code>reviewmode</code> is active.</td>
+                  <td data-label="Action">Read, analyze, and report findings only; no code edits, refactors, or fixes.</td>
+                  <td data-label="Actor">Claude in ReviewMode</td>
+                </tr>
+                <tr>
+                  <td data-label="Category"><span class="category">Verification</span></td>
+                  <td data-label="Tripwire"><strong>VerifyMode requirement gate</strong></td>
+                  <td data-label="Trigger">A build is complete or a commit proposal is near.</td>
+                  <td data-label="Action">Check every requirement one by one; produce evidence or explicit FAIL; do not write new code or fix during verification.</td>
+                  <td data-label="Actor">Claude in VerifyMode</td>
+                </tr>
+                <tr>
+                  <td data-label="Category"><span class="category">Verification</span></td>
+                  <td data-label="Tripwire"><strong>Independent-verifier gate</strong></td>
+                  <td data-label="Trigger">The same agent that built something is also declaring it correct.</td>
+                  <td data-label="Action">Route to a separate verifier/mode because the builder is structurally biased toward completion.</td>
+                  <td data-label="Actor">VerifyMode or <code>sonnet-pruefer</code></td>
+                </tr>
+                <tr>
+                  <td data-label="Category"><span class="category">Verification</span></td>
+                  <td data-label="Tripwire"><strong>Green-tests-are-not-proof gate</strong></td>
+                  <td data-label="Trigger">Tests pass, commits exist, or todos are checked, but the core requirement has not been proven.</td>
+                  <td data-label="Action">Ask for requirement-level evidence such as a real API call, live input, integration run, or direct grep target.</td>
+                  <td data-label="Actor">Verifier</td>
+                </tr>
+                <tr>
+                  <td data-label="Category"><span class="category">Communication</span></td>
+                  <td data-label="Tripwire"><strong>ResearchMode source gate</strong></td>
+                  <td data-label="Trigger"><code>researchmode</code> is active or a research claim is being made.</td>
+                  <td data-label="Action">Use research tools, document sources, summarize structure, and do not edit code.</td>
+                  <td data-label="Actor">Claude in ResearchMode</td>
+                </tr>
+                <tr>
+                  <td data-label="Category"><span class="category">Scope</span></td>
+                  <td data-label="Tripwire"><strong>HAI GoalBinding owner gate</strong></td>
+                  <td data-label="Trigger">HAI workflow, UI, or control surface risks mutating goals or becoming a dashboard.</td>
+                  <td data-label="Action">Keep the surface human-owned, narrow, repo-native, and decision-focused; keep L0/L1 read-only in normal sessions and route drift to requirement review.</td>
+                  <td data-label="Actor">HAI/Codex owner surface</td>
+                </tr>
+                <tr>
+                  <td data-label="Category"><span class="category">Verification</span></td>
+                  <td data-label="Tripwire"><strong>Runtime-source-of-truth gate</strong></td>
+                  <td data-label="Trigger">Docs and runtime text disagree, or exact mode wording is requested.</td>
+                  <td data-label="Action">Check runtime sources such as <code>hook_inject.py</code> and mode files before trusting stale command docs.</td>
+                  <td data-label="Actor">Main agent</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section onboarding" id="onboarding-test" aria-labelledby="onboarding-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <div>
+              <p class="kicker">The onboarding test</p>
+              <h2 id="onboarding-title">Could a new hire operate the control surface in a day?</h2>
+            </div>
+            <p class="section-copy">
+              This is the completeness test for the map: transfer, not confidence.
+            </p>
+          </div>
+
+          <div class="prose">
+            <p>
+              Could a new hire onboard onto this system in a day? Use that as a hard completeness check, not a morale check. "Under control" can mean the current owner has habits, private context, and recovery moves that nobody else can see. A one-day onboarding test exposes whether the control surface is legible outside the builder's head. The map passes only if someone new can answer three questions without folklore: what trigger matters, what action follows, and which actor owns it. That makes completeness observable instead of reassuring.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="next" aria-labelledby="next-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <div>
+              <p class="kicker">Soft next step</p>
+              <h2 id="next-title">Make weak points discussable before they compound.</h2>
+            </div>
+          </div>
+
+          <div class="cta-panel">
+            <p class="section-copy">
+              The map is meant to make weak points discussable, not to sell a tool. If the pattern feels familiar, <a href="../product/">/product/</a> describes how we close gaps together: a practical sequence for surfacing failure modes, protecting human decisions, and installing lightweight controls around the moments where agents usually drift.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <span>Human Agent Interface Tripwire Map</span>
+        <span>Trigger / Action / Actor</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
