@@ -446,7 +446,7 @@
 
     .v7-grid {
       display: grid;
-      grid-template-columns: minmax(0, 0.8fr) minmax(300px, 0.55fr);
+      grid-template-columns: minmax(0, 0.72fr) minmax(420px, 0.68fr);
       gap: clamp(28px, 6vw, 84px);
       align-items: start;
     }
@@ -672,6 +672,10 @@
         min-height: auto;
       }
 
+      .v7 .visual-frame {
+        order: -1;
+      }
+
       .pain-grid,
       .meaning-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -873,7 +877,7 @@
         </div>
       </section>
 
-      <section class="section v7" aria-labelledby="v7-title">
+      <section class="section v7" id="sidecar-v7" aria-labelledby="v7-title">
         <div class="section-inner v7-grid">
           <div>
             <p class="kicker">Sidecar V7</p>
@@ -904,9 +908,9 @@
             </div>
           </div>
 
-          <aside class="visual-frame" aria-label="Sidecar observer diagram">
-            <img src="assets/sidecar-observer-diagram.svg" alt="Diagram: Sidecar observes the human-agent interaction loop and watches overload, drift, verification gaps, and human gates">
-            <p class="caption">Concept image: Sidecar observes the human-agent interaction loop</p>
+          <aside class="visual-frame" aria-label="HAI observer concept image">
+            <img src="assets/hai-agent-chaos-owner-packet.webp" width="1800" height="1005" loading="lazy" decoding="async" alt="Illustration: Human Agent Interface turns agent chaos into structured work a human can still own">
+            <p class="caption">Concept image: HAI turns agent chaos into one human-owned work packet</p>
           </aside>
         </div>
       </section>

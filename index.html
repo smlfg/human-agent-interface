@@ -86,12 +86,23 @@
         padding: 32px clamp(18px, 4vw, 56px) 48px;
       }
 
+      .hero-image,
       .hero-canvas {
         position: absolute;
         inset: 0;
         width: 100%;
         height: 100%;
-        opacity: 0.74;
+      }
+
+      .hero-image {
+        object-fit: cover;
+        object-position: center center;
+        opacity: 0.86;
+      }
+
+      .hero-canvas {
+        opacity: 0.18;
+        mix-blend-mode: screen;
       }
 
       .hero::after {
@@ -99,8 +110,9 @@
         position: absolute;
         inset: 0;
         background:
-          linear-gradient(90deg, rgba(9, 10, 8, 0.88) 0%, rgba(9, 10, 8, 0.6) 52%, rgba(9, 10, 8, 0.18) 100%),
-          linear-gradient(180deg, rgba(9, 10, 8, 0.18) 0%, rgba(9, 10, 8, 0.92) 100%);
+          linear-gradient(90deg, rgba(9, 10, 8, 0.96) 0%, rgba(9, 10, 8, 0.86) 34%, rgba(9, 10, 8, 0.42) 68%, rgba(9, 10, 8, 0.2) 100%),
+          linear-gradient(180deg, rgba(9, 10, 8, 0.46) 0%, rgba(9, 10, 8, 0.2) 48%, rgba(9, 10, 8, 0.94) 100%);
+        pointer-events: none;
       }
 
       .nav {
@@ -785,6 +797,17 @@
           padding-top: 116px;
         }
 
+        .hero-image {
+          object-position: 58% center;
+          opacity: 0.72;
+        }
+
+        .hero::after {
+          background:
+            linear-gradient(90deg, rgba(9, 10, 8, 0.95) 0%, rgba(9, 10, 8, 0.76) 72%, rgba(9, 10, 8, 0.52) 100%),
+            linear-gradient(180deg, rgba(9, 10, 8, 0.56) 0%, rgba(9, 10, 8, 0.36) 38%, rgba(9, 10, 8, 0.96) 100%);
+        }
+
         .hero-copy,
         .split,
         .fit-call-grid,
@@ -936,6 +959,7 @@
   <body>
     <main class="site-shell">
       <section class="hero" aria-labelledby="hero-title">
+        <img class="hero-image" src="assets/hai-interface-background.webp" width="1672" height="941" alt="" aria-hidden="true">
         <canvas class="hero-canvas" id="agentField" aria-hidden="true"></canvas>
         <nav class="nav" aria-label="Main navigation">
           <a class="brand" href="#top" aria-label="Human Agent Interface home">
@@ -950,7 +974,7 @@
             <a class="nav-link desktop-nav-link" href="./hermes/">Hermes System</a>
             <a class="nav-link desktop-nav-link" href="./fit/">Human Fit</a>
             <a class="nav-link desktop-nav-link" href="./what_it_is/">Where HAI comes from</a>
-            <a class="nav-link" href="./samuel/">Samuel's work</a>
+            <a class="nav-link desktop-nav-link" href="./samuel/">Samuel's work</a>
             <a
               class="nav-cta"
               href="mailto:samuel@human-agent-interface.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A"
