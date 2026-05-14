@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HAI Setup Inflow</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #090a08;
+      --panel: #11120f;
+      --ink: #f7f1df;
+      --muted: #b7ad97;
+      --quiet: #7a715f;
+      --line: rgba(247, 241, 223, 0.16);
+      --line-strong: rgba(247, 241, 223, 0.3);
+      --signal: #a7ff4f;
+      --copper: #ff9f5f;
+      --red: #ff6a5f;
+      --max: 1360px;
+      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+      --body: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
+      --display: Georgia, "Times New Roman", serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      color: var(--ink);
+      background: #090a08;
+      font-family: var(--body);
+      line-height: 1.45;
+    }
+
+    main {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      padding: 34px 0 58px;
+    }
+
+    header {
+      padding: 18px 0 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow,
+    .step-count,
+    .limit,
+    .tiny {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      color: var(--copper);
+    }
+
+    h1,
+    h2,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 1040px;
+      margin-top: 12px;
+      font-family: var(--display);
+      font-size: clamp(2.8rem, 7vw, 5.8rem);
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .lead {
+      max-width: 920px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2vw, 1.3rem);
+    }
+
+    .back-link {
+      display: inline-flex;
+      margin-top: 22px;
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .step-count {
+      margin: 20px 0 14px;
+      color: var(--muted);
+    }
+
+    form {
+      display: block;
+    }
+
+    .step {
+      display: none;
+      min-height: 520px;
+      border: 1px solid var(--line);
+      background: rgba(17, 18, 15, 0.84);
+      padding: clamp(18px, 4vw, 34px);
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    .step h2 {
+      max-width: 980px;
+      font-family: var(--display);
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .hint {
+      max-width: 860px;
+      margin-top: 10px;
+      color: var(--muted);
+    }
+
+    .field {
+      margin-top: 20px;
+    }
+
+    .field + .field {
+      margin-top: 18px;
+    }
+
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    label,
+    .label {
+      display: block;
+      color: var(--ink);
+      font-weight: 750;
+    }
+
+    .limit,
+    .tiny {
+      color: var(--quiet);
+      white-space: nowrap;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid var(--line);
+      background: #090a08;
+      color: var(--ink);
+      padding: 11px 12px;
+      font: inherit;
+      border-radius: 0;
+    }
+
+    textarea {
+      min-height: 82px;
+      resize: vertical;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .choice {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: rgba(247, 241, 223, 0.04);
+      padding: 9px 10px;
+      color: var(--muted);
+      font-size: 0.94rem;
+      font-weight: 650;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .choice input {
+      flex: 0 0 auto;
+      accent-color: var(--signal);
+    }
+
+    .choice:has(input:checked) {
+      border-color: rgba(167, 255, 79, 0.68);
+      background: rgba(167, 255, 79, 0.1);
+      color: var(--ink);
+    }
+
+    .more-wrap {
+      margin-top: 10px;
+    }
+
+    .more-panel {
+      display: none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .more-panel.open {
+      display: block;
+    }
+
+    .inline-note {
+      margin-top: 10px;
+      color: var(--quiet);
+      font-size: 0.94rem;
+    }
+
+    .warning {
+      display: none;
+      margin-top: 8px;
+      color: var(--red);
+      font-size: 0.95rem;
+    }
+
+    .warning.visible {
+      display: block;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .left-actions,
+    .right-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      min-height: 44px;
+      border: 1px solid var(--line-strong);
+      background: rgba(247, 241, 223, 0.07);
+      color: var(--ink);
+      padding: 0 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    button.primary {
+      border-color: rgba(167, 255, 79, 0.72);
+      background: var(--signal);
+      color: #11150d;
+    }
+
+    button.text-button {
+      min-height: 34px;
+      border-color: transparent;
+      background: transparent;
+      color: var(--muted);
+      padding: 0;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    button:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+    }
+
+    .packet-step {
+      min-height: unset;
+    }
+
+    pre {
+      max-height: 56vh;
+      overflow: auto;
+      white-space: pre-wrap;
+      margin: 20px 0 0;
+      border: 1px solid var(--line);
+      background: #090a08;
+      color: var(--muted);
+      padding: 14px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 760px) {
+      main {
+        width: min(100% - 22px, var(--max));
+        padding-top: 20px;
+      }
+
+      .step {
+        min-height: auto;
+      }
+
+      .choice-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-actions {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .left-actions,
+      .right-actions {
+        width: 100%;
+      }
+
+      button:not(.text-button) {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">Human Agent Interface / Setup Inflow</p>
+      <h1>Where does your agent workflow break?</h1>
+      <p class="lead">A short setup intake for one real workflow. One block at a time. Mostly choices, a few short answers, no account, no backend.</p>
+      <a class="back-link" href="../product/">Back to products</a>
+    </header>
+
+    <div class="step-count" id="stepCount">Step 1 of 6 / Current Work</div>
+
+    <form id="intakeForm">
+      <section class="step active" data-title="Current Work">
+        <p class="eyebrow">01 / Current Work</p>
+        <h2>What are you working on?</h2>
+        <p class="hint">Start with the actual task or workflow. One field is enough for this first screen.</p>
+
+        <div class="field">
+          <div class="label-row">
+            <label for="currentWork">What are you working on right now?</label>
+            <span class="limit">short context</span>
+          </div>
+          <textarea id="currentWork" name="currentWork" required placeholder="Example: too much output, missing connection between tools, no voice input for the loop."></textarea>
+        </div>
+      </section>
+
+      <section class="step" data-title="Tools">
+        <p class="eyebrow">02 / Tools And Agent Stack</p>
+        <h2>Which agents are already in the loop?</h2>
+        <p class="hint">Top choices first. Open the rest only if needed.</p>
+
+        <div class="field">
+          <span class="label">Which tools or agents do you currently use?</span>
+          <div class="choice-grid">
+            <label class="choice"><input type="checkbox" name="tools" value="ChatGPT"> ChatGPT</label>
+            <label class="choice"><input type="checkbox" name="tools" value="Claude"> Claude</label>
+            <label class="choice"><input type="checkbox" name="tools" value="Claude Code"> Claude Code</label>
+            <label class="choice"><input type="checkbox" name="tools" value="Codex"> Codex</label>
+            <label class="choice"><input type="checkbox" name="tools" value="Cursor"> Cursor</label>
+            <label class="choice"><input type="checkbox" name="tools" value="GitHub Copilot"> GitHub Copilot</label>
+          </div>
+          <div class="more-wrap">
+            <button type="button" class="text-button" data-toggle="more-tools">More tools</button>
+            <div class="more-panel" id="more-tools">
+              <div class="choice-grid">
+                <label class="choice"><input type="checkbox" name="tools" value="Cline"> Cline</label>
+                <label class="choice"><input type="checkbox" name="tools" value="Aider"> Aider</label>
+                <label class="choice"><input type="checkbox" name="tools" value="Devin"> Devin</label>
+                <label class="choice"><input type="checkbox" name="tools" value="OpenHands"> OpenHands</label>
+                <label class="choice"><input type="checkbox" name="tools" value="Hermes"> Hermes</label>
+                <label class="choice"><input type="checkbox" name="tools" value="custom harness"> custom harness</label>
+                <label class="choice"><input type="checkbox" name="tools" value="automation tools"> automation tools</label>
+                <label class="choice"><input type="checkbox" name="tools" value="other"> other</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="label-row">
+            <label for="frequency">How often do you use agents?</label>
+            <span class="limit">required</span>
+          </div>
+          <select id="frequency" name="frequency" required>
+            <option value="">Select frequency</option>
+            <option>experimenting</option>
+            <option>weekly</option>
+            <option>daily</option>
+            <option>core workflow</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <div class="label-row">
+            <label for="customSetup">Custom setup name</label>
+            <span class="limit">optional</span>
+          </div>
+          <input id="customSetup" name="customSetup" type="text">
+        </div>
+      </section>
+
+      <section class="step" data-title="Failure">
+        <p class="eyebrow">03 / Failure Pattern</p>
+        <h2>What currently breaks?</h2>
+        <p class="hint">Pick the top three. This should stay diagnostic, not exhausting.</p>
+
+        <div class="field">
+          <span class="label">Failure pattern</span>
+          <div class="choice-grid">
+            <label class="choice"><input type="checkbox" name="failure" value="too much output"> too much output</label>
+            <label class="choice"><input type="checkbox" name="failure" value="scope creep"> scope creep</label>
+            <label class="choice"><input type="checkbox" name="failure" value="missing connection/control layer"> missing connection/control layer</label>
+            <label class="choice"><input type="checkbox" name="failure" value="no voice/input flow"> no voice/input flow</label>
+            <label class="choice"><input type="checkbox" name="failure" value="weak verification"> weak verification</label>
+            <label class="choice"><input type="checkbox" name="failure" value="too many threads"> too many threads</label>
+            <label class="choice"><input type="checkbox" name="failure" value="context drift"> context drift</label>
+          </div>
+          <div class="more-wrap">
+            <button type="button" class="text-button" data-toggle="more-failures">More failure patterns</button>
+            <div class="more-panel" id="more-failures">
+              <div class="choice-grid">
+                <label class="choice"><input type="checkbox" name="failure" value="token/cost burn"> token/cost burn</label>
+                <label class="choice"><input type="checkbox" name="failure" value="bad code"> bad code</label>
+                <label class="choice"><input type="checkbox" name="failure" value="false done"> false done</label>
+                <label class="choice"><input type="checkbox" name="failure" value="unclear handoff"> unclear handoff</label>
+                <label class="choice"><input type="checkbox" name="failure" value="agent overload"> agent overload</label>
+                <label class="choice"><input type="checkbox" name="failure" value="permission/security concern"> permission/security concern</label>
+                <label class="choice"><input type="checkbox" name="failure" value="I do not know what to delegate"> I do not know what to delegate</label>
+              </div>
+            </div>
+          </div>
+          <p class="warning" id="failureWarning">Pick max 3 failure patterns.</p>
+        </div>
+
+        <div class="field">
+          <div class="label-row">
+            <label for="breakPoint">Where exactly does the workflow break?</label>
+            <span class="limit">optional</span>
+          </div>
+          <textarea id="breakPoint" name="breakPoint"></textarea>
+        </div>
+      </section>
+
+      <section class="step" data-title="Ownership">
+        <p class="eyebrow">04 / Human vs Agent Ownership</p>
+        <h2>Who owns which part of the work?</h2>
+        <p class="hint">Start with the obvious work types. Reveal advanced ones only if they matter.</p>
+
+        <div class="field">
+          <span class="label">Which parts do you currently keep yourself?</span>
+          <div class="choice-grid">
+            <label class="choice"><input type="checkbox" name="humanOwned" value="goal"> goal</label>
+            <label class="choice"><input type="checkbox" name="humanOwned" value="scope"> scope</label>
+            <label class="choice"><input type="checkbox" name="humanOwned" value="risk"> risk</label>
+            <label class="choice"><input type="checkbox" name="humanOwned" value="planning"> planning</label>
+            <label class="choice"><input type="checkbox" name="humanOwned" value="coding"> coding</label>
+            <label class="choice"><input type="checkbox" name="humanOwned" value="review"> review</label>
+          </div>
+          <div class="more-wrap">
+            <button type="button" class="text-button" data-toggle="more-human-owned">More work types</button>
+            <div class="more-panel" id="more-human-owned">
+              <div class="choice-grid">
+                <label class="choice"><input type="checkbox" name="humanOwned" value="research"> research</label>
+                <label class="choice"><input type="checkbox" name="humanOwned" value="testing"> testing</label>
+                <label class="choice"><input type="checkbox" name="humanOwned" value="merge/deploy"> merge/deploy</label>
+                <label class="choice"><input type="checkbox" name="humanOwned" value="documentation"> documentation</label>
+                <label class="choice"><input type="checkbox" name="humanOwned" value="client communication"> client communication</label>
+                <label class="choice"><input type="checkbox" name="humanOwned" value="other"> other</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Which parts do agents currently do?</span>
+          <div class="choice-grid">
+            <label class="choice"><input type="checkbox" name="agentOwned" value="planning"> planning</label>
+            <label class="choice"><input type="checkbox" name="agentOwned" value="research"> research</label>
+            <label class="choice"><input type="checkbox" name="agentOwned" value="coding"> coding</label>
+            <label class="choice"><input type="checkbox" name="agentOwned" value="testing"> testing</label>
+            <label class="choice"><input type="checkbox" name="agentOwned" value="review"> review</label>
+            <label class="choice"><input type="checkbox" name="agentOwned" value="documentation"> documentation</label>
+          </div>
+          <div class="more-wrap">
+            <button type="button" class="text-button" data-toggle="more-agent-owned">More work types</button>
+            <div class="more-panel" id="more-agent-owned">
+              <div class="choice-grid">
+                <label class="choice"><input type="checkbox" name="agentOwned" value="goal"> goal</label>
+                <label class="choice"><input type="checkbox" name="agentOwned" value="scope"> scope</label>
+                <label class="choice"><input type="checkbox" name="agentOwned" value="risk"> risk</label>
+                <label class="choice"><input type="checkbox" name="agentOwned" value="merge/deploy"> merge/deploy</label>
+                <label class="choice"><input type="checkbox" name="agentOwned" value="client communication"> client communication</label>
+                <label class="choice"><input type="checkbox" name="agentOwned" value="other"> other</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">What is missing between you and the agents?</span>
+          <div class="choice-grid">
+            <label class="choice"><input type="checkbox" name="missingLayer" value="shared state"> shared state</label>
+            <label class="choice"><input type="checkbox" name="missingLayer" value="routing/control layer"> routing/control layer</label>
+            <label class="choice"><input type="checkbox" name="missingLayer" value="voice/input layer"> voice/input layer</label>
+            <label class="choice"><input type="checkbox" name="missingLayer" value="verification gate"> verification gate</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="label-row">
+            <label for="handoff">Is the handoff clear?</label>
+            <span class="limit">optional</span>
+          </div>
+          <select id="handoff" name="handoff">
+            <option value="">Select handoff clarity</option>
+            <option>clear</option>
+            <option>partly unclear</option>
+            <option>unclear</option>
+            <option>changes every session</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="step" data-title="Autonomy">
+        <p class="eyebrow">05 / Autonomy Boundary</p>
+        <h2>How much control should move to agents?</h2>
+        <p class="hint">More autonomy is only useful when the boundary is explicit.</p>
+
+        <div class="field">
+          <div class="label-row">
+            <label for="autonomy">Desired autonomy</label>
+            <span class="limit">required</span>
+          </div>
+          <select id="autonomy" name="autonomy" required>
+            <option value="">Select autonomy level</option>
+            <option>L0: advice only</option>
+            <option>L1: draft options</option>
+            <option>L2: execute bounded tasks</option>
+            <option>L3: execute with approval gates</option>
+            <option>L4: background work with veto</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <div class="label-row">
+            <label for="never">What should an agent never do without you?</label>
+            <span class="limit">1 sentence</span>
+          </div>
+          <input id="never" name="never" type="text" required>
+        </div>
+
+        <div class="field">
+          <span class="label">What would you like to stop approving manually if safer?</span>
+          <div class="choice-grid">
+            <label class="choice"><input type="checkbox" name="stopApproving" value="research"> research</label>
+            <label class="choice"><input type="checkbox" name="stopApproving" value="drafting"> drafting</label>
+            <label class="choice"><input type="checkbox" name="stopApproving" value="small code changes"> small code changes</label>
+            <label class="choice"><input type="checkbox" name="stopApproving" value="test runs"> test runs</label>
+            <label class="choice"><input type="checkbox" name="stopApproving" value="documentation"> documentation</label>
+            <label class="choice"><input type="checkbox" name="stopApproving" value="none yet"> none yet</label>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-title="Verification">
+        <p class="eyebrow">06 / Verification Maturity</p>
+        <h2>How do you know the result is real?</h2>
+        <p class="hint">If there is no verifier rule yet, that is useful signal.</p>
+
+        <div class="field">
+          <span class="label">How do you currently check agent work?</span>
+          <div class="choice-grid">
+            <label class="choice"><input type="checkbox" name="verification" value="no clear rule"> no clear rule</label>
+            <label class="choice"><input type="checkbox" name="verification" value="manual review"> manual review</label>
+            <label class="choice"><input type="checkbox" name="verification" value="tests"> tests</label>
+            <label class="choice"><input type="checkbox" name="verification" value="CI"> CI</label>
+            <label class="choice"><input type="checkbox" name="verification" value="second agent review"> second agent review</label>
+            <label class="choice"><input type="checkbox" name="verification" value="artifact/proof requirement"> artifact/proof requirement</label>
+          </div>
+          <div class="more-wrap">
+            <button type="button" class="text-button" data-toggle="more-verification">More verification options</button>
+            <div class="more-panel" id="more-verification">
+              <div class="choice-grid">
+                <label class="choice"><input type="checkbox" name="verification" value="checklist"> checklist</label>
+                <label class="choice"><input type="checkbox" name="verification" value="human approval gate"> human approval gate</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="label-row">
+            <label for="reliability">How reliable does this feel?</label>
+            <span class="limit">required</span>
+          </div>
+          <select id="reliability" name="reliability" required>
+            <option value="">Select reliability</option>
+            <option>not reliable</option>
+            <option>sometimes reliable</option>
+            <option>mostly reliable</option>
+            <option>reliable for bounded tasks only</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <span class="label">What evidence would make you trust the result?</span>
+          <div class="choice-grid">
+            <label class="choice"><input type="checkbox" name="evidence" value="passing tests"> passing tests</label>
+            <label class="choice"><input type="checkbox" name="evidence" value="diff I can inspect"> diff I can inspect</label>
+            <label class="choice"><input type="checkbox" name="evidence" value="second-agent verification"> second-agent verification</label>
+            <label class="choice"><input type="checkbox" name="evidence" value="live run or screenshot"> live run or screenshot</label>
+            <label class="choice"><input type="checkbox" name="evidence" value="clear before/after"> clear before/after</label>
+            <label class="choice"><input type="checkbox" name="evidence" value="I do not know yet"> I do not know yet</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="label-row">
+            <label for="evidenceNote">Evidence note</label>
+            <span class="limit">optional</span>
+          </div>
+          <input id="evidenceNote" name="evidenceNote" type="text">
+        </div>
+      </section>
+
+      <section class="step packet-step" data-title="Packet">
+        <p class="eyebrow">Output / Copyable</p>
+        <h2>Owner Intake Packet</h2>
+        <p class="hint">Nothing is submitted. This is the copyable context for Samuel or the first call.</p>
+        <pre id="packet">Generate the packet after finishing the intake.</pre>
+      </section>
+
+      <div class="nav-actions">
+        <div class="left-actions">
+          <button type="button" id="back">Back</button>
+          <span class="tiny" id="screenNote">One block visible</span>
+        </div>
+        <div class="right-actions">
+          <button type="button" id="copy" style="display:none;">Copy packet</button>
+          <button type="button" class="primary" id="next">Next</button>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    const form = document.getElementById("intakeForm");
+    const steps = [...document.querySelectorAll(".step")];
+    const stepCount = document.getElementById("stepCount");
+    const backButton = document.getElementById("back");
+    const nextButton = document.getElementById("next");
+    const copyButton = document.getElementById("copy");
+    const packet = document.getElementById("packet");
+    const failureWarning = document.getElementById("failureWarning");
+    let currentStep = 0;
+
+    function checkedValues(name) {
+      return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map((item) => item.value);
+    }
+
+    function value(id) {
+      return document.getElementById(id)?.value.trim() || "";
+    }
+
+    function updateStep() {
+      steps.forEach((step, index) => step.classList.toggle("active", index === currentStep));
+      stepCount.textContent = currentStep >= 6
+        ? "Owner Intake Packet"
+        : `Step ${currentStep + 1} of 6 / ${steps[currentStep].dataset.title}`;
+      backButton.disabled = currentStep === 0;
+      nextButton.textContent = currentStep === 5 ? "Generate packet" : currentStep >= 6 ? "Edit intake" : "Next";
+      copyButton.style.display = currentStep >= 6 ? "inline-flex" : "none";
+      window.scrollTo(0, 0);
+    }
+
+    function stepIsValid() {
+      const required = [...steps[currentStep].querySelectorAll("[required]")];
+      return required.every((field) => field.reportValidity());
+    }
+
+    function classifyLevel(tools, frequency) {
+      const toolSet = new Set(tools);
+      if (toolSet.has("custom harness") || toolSet.has("Hermes") || frequency === "core workflow") return "workflow operator";
+      if (["Claude Code", "Codex", "Cursor", "Cline", "Aider"].some((tool) => toolSet.has(tool))) return "agentic builder";
+      return "tool user";
+    }
+
+    function fitNote(failure, humanOwned, agentOwned, verification) {
+      const weakVerification = verification.includes("no clear rule") || verification.includes("manual review") || failure.includes("weak verification") || failure.includes("false done");
+      const ownershipRisk = agentOwned.includes("goal") || agentOwned.includes("scope") || agentOwned.includes("risk") || humanOwned.length === 0;
+      if (failure.length > 0 && agentOwned.length > 0 && (weakVerification || ownershipRisk)) {
+        return "Strong fit: real agent work, visible failure pattern, and a control or verification gap.";
+      }
+      if (failure.length > 0) {
+        return "Medium fit: real task and pain are visible; the first HAI step should narrow delegation and evidence.";
+      }
+      return "Weak fit until the workflow pain is made concrete.";
+    }
+
+    function generatePacket() {
+      const tools = checkedValues("tools");
+      const failure = checkedValues("failure");
+      const humanOwned = checkedValues("humanOwned");
+      const agentOwned = checkedValues("agentOwned");
+      const verification = checkedValues("verification");
+      const evidence = checkedValues("evidence");
+      const level = classifyLevel(tools, value("frequency"));
+      const fit = fitNote(failure, humanOwned, agentOwned, verification);
+
+      packet.textContent = `# HAI Owner Intake Packet
+
+Current workflow:
+${value("currentWork")}
+
+Tools in use:
+${tools.join(", ") || "not specified"}${value("customSetup") ? `\nCustom setup: ${value("customSetup")}` : ""}
+
+Usage frequency:
+${value("frequency")}
+
+Primary failure pattern:
+${failure.join(", ") || "not specified"}${value("breakPoint") ? `\nBreak point: ${value("breakPoint")}` : ""}
+
+Customer level:
+${level}
+
+Human-owned decisions/work:
+${humanOwned.join(", ") || "not specified"}
+
+Agent-owned work:
+${agentOwned.join(", ") || "not specified"}
+
+Handoff clarity:
+${value("handoff") || "not specified"}
+
+Missing layer:
+${checkedValues("missingLayer").join(", ") || "not specified"}
+
+Desired autonomy level:
+${value("autonomy")}
+
+Hard autonomy boundary:
+${value("never")}
+
+Manual approvals to reduce:
+${checkedValues("stopApproving").join(", ") || "not specified"}
+
+Existing verification rules:
+${verification.join(", ") || "not specified"}
+
+Verification reliability:
+${value("reliability")}
+
+Trusted evidence:
+${evidence.join(", ") || "not specified"}${value("evidenceNote") ? `\nEvidence note: ${value("evidenceNote")}` : ""}
+
+Audit fit note:
+${fit}`;
+    }
+
+    document.querySelectorAll("[data-toggle]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const panel = document.getElementById(button.dataset.toggle);
+        const open = panel.classList.toggle("open");
+        button.textContent = open
+          ? button.textContent.replace("More", "Hide")
+          : button.textContent.replace("Hide", "More");
+      });
+    });
+
+    document.querySelectorAll('input[name="failure"]').forEach((box) => {
+      box.addEventListener("change", () => {
+        if (checkedValues("failure").length > 3) {
+          box.checked = false;
+          failureWarning.classList.add("visible");
+          setTimeout(() => failureWarning.classList.remove("visible"), 1800);
+        }
+      });
+    });
+
+    backButton.addEventListener("click", () => {
+      if (currentStep > 0) {
+        currentStep -= 1;
+        updateStep();
+      }
+    });
+
+    nextButton.addEventListener("click", () => {
+      if (currentStep >= 6) {
+        currentStep = 0;
+        updateStep();
+        return;
+      }
+
+      if (!stepIsValid()) return;
+
+      if (currentStep === 5) {
+        generatePacket();
+        currentStep = 6;
+      } else {
+        currentStep += 1;
+      }
+      updateStep();
+    });
+
+    copyButton.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(packet.textContent);
+        const old = copyButton.textContent;
+        copyButton.textContent = "Copied";
+        setTimeout(() => { copyButton.textContent = old; }, 1200);
+      } catch (error) {
+        copyButton.textContent = "Copy manually";
+      }
+    });
+
+    updateStep();
+  </script>
+</body>
+</html>
