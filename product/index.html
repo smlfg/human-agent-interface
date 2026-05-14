@@ -359,6 +359,167 @@
       font-size: clamp(1rem, 1.55vw, 1.18rem);
     }
 
+    .fit-matrix {
+      display: grid;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .fit-row {
+      display: grid;
+      grid-template-columns: minmax(170px, 0.8fr) minmax(220px, 1.1fr) minmax(120px, 0.42fr) minmax(260px, 1.3fr);
+      gap: 18px;
+      align-items: center;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      background: rgba(247, 241, 223, 0.04);
+    }
+
+    .fit-row.header {
+      padding-block: 12px;
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(247, 241, 223, 0.025);
+    }
+
+    .fit-row:not(.header) {
+      min-height: 104px;
+    }
+
+    .fit-area,
+    .fit-tools,
+    .fit-statement {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .fit-area strong {
+      display: block;
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: clamp(1.3rem, 2vw, 1.9rem);
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .fit-tools {
+      color: var(--ink);
+    }
+
+    .fit-badge {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      padding: 0 12px;
+      border: 1px solid currentColor;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .fit-badge.strong {
+      color: var(--signal);
+      background: rgba(167, 255, 79, 0.08);
+    }
+
+    .fit-badge.medium {
+      color: var(--copper);
+      background: rgba(255, 159, 95, 0.08);
+    }
+
+    .fit-badge.limited {
+      color: var(--cyan);
+      background: rgba(125, 216, 255, 0.08);
+    }
+
+    .fit-badge.no {
+      color: #ff5b4f;
+      background: rgba(255, 91, 79, 0.07);
+    }
+
+    .fit-note {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 22px;
+      align-items: center;
+      margin-top: 18px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      background: rgba(8, 9, 6, 0.46);
+    }
+
+    .fit-note p {
+      color: var(--muted);
+      font-size: clamp(1rem, 1.7vw, 1.22rem);
+    }
+
+    .fit-note strong {
+      color: var(--ink);
+    }
+
+    .fit-proof-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .fit-proof-intro {
+      margin-top: 18px;
+      padding: 16px 20px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: rgba(247, 241, 223, 0.025);
+      font-size: 0.98rem;
+    }
+
+    .fit-proof-intro strong {
+      color: var(--ink);
+    }
+
+    .fit-proof-card {
+      min-height: 230px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      background: rgba(247, 241, 223, 0.035);
+    }
+
+    .fit-proof-card span {
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .fit-proof-card strong {
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: clamp(1.45rem, 2.35vw, 2.25rem);
+      font-weight: 500;
+      line-height: 1.02;
+    }
+
+    .fit-proof-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .fit-proof-card a {
+      color: var(--signal);
+      text-decoration: none;
+    }
+
     .offers-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -603,6 +764,7 @@
     @media (max-width: 940px) {
       .hero-inner,
       .section-head,
+      .fit-note,
       .commercial-grid {
         grid-template-columns: 1fr;
       }
@@ -612,8 +774,19 @@
       }
 
       .offers-grid,
+      .fit-proof-grid,
       .faq-grid {
         grid-template-columns: 1fr;
+      }
+
+      .fit-row,
+      .fit-row.header {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .fit-row.header {
+        display: none;
       }
 
       .offer {
@@ -727,6 +900,7 @@
           <a href="../what_it_is/">Where HAI comes from</a>
           <a href="../samuel/">Samuel's work</a>
           <a href="../sidecar/">Sidecar</a>
+          <a href="#tool-fit">Tool fit</a>
           <a href="#offers">Offers</a>
           <a href="#faq">FAQ</a>
           <a class="nav-cta" href="mailto:samuel@human-agent-interface.com?subject=Book%20the%204h%20HAI%20Setup&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20the%204h%20HAI%20Setup.%0D%0A%0D%0AMy%20current%20agentic%20workflow%20problem%3A%0D%0A%0D%0ARelevant%20tools%20or%20team%20context%3A%0D%0A%0D%0APreferred%20time%20windows%3A%0D%0A%0D%0AI%20understand%20the%20range%20is%20500-1%2C500%20EUR%20depending%20on%20scope.">Book setup</a>
@@ -772,6 +946,92 @@
         </div>
       </section>
 
+      <section class="section" id="tool-fit" aria-labelledby="tool-fit-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <div>
+              <p class="kicker">Tool-fit matrix</p>
+              <h2 id="tool-fit-title">For which tools am I the right person?</h2>
+            </div>
+            <p class="section-copy">
+              I am not your general AI-coding-tool advisor. I am strongest when the problem is terminal-based
+              agent work, control layers, project context, verification, and human ownership.
+            </p>
+          </div>
+
+          <div class="fit-matrix" role="table" aria-label="Tool fit matrix">
+            <div class="fit-row header" role="row">
+              <span role="columnheader">Area</span>
+              <span role="columnheader">Tools / workflows</span>
+              <span role="columnheader">Fit</span>
+              <span role="columnheader">What it means</span>
+            </div>
+            <div class="fit-row" role="row">
+              <div class="fit-area" role="cell"><strong>Terminal agents</strong></div>
+              <div class="fit-tools" role="cell">Claude Code in the terminal, Codex CLI, Hermes</div>
+              <div role="cell"><span class="fit-badge strong">Very strong</span></div>
+              <div class="fit-statement" role="cell">Core competency: agentic work that lives close to the shell, repo, hooks, artifacts, and verification loop.</div>
+            </div>
+            <div class="fit-row" role="row">
+              <div class="fit-area" role="cell"><strong>Terminal-adjacent agents</strong></div>
+              <div class="fit-tools" role="cell">OpenCode, custom harnesses, human-in-the-loop workflows</div>
+              <div role="cell"><span class="fit-badge medium">Possible</span></div>
+              <div class="fit-statement" role="cell">Good if the problem is structure, scope, control, verification, or project context rather than product-specific support.</div>
+            </div>
+            <div class="fit-row" role="row">
+              <div class="fit-area" role="cell"><strong>App-based agents</strong></div>
+              <div class="fit-tools" role="cell">Claude Code Mac App, Codex App, chat-style agent UIs</div>
+              <div role="cell"><span class="fit-badge limited">Limited</span></div>
+              <div class="fit-statement" role="cell">Methodically useful, but weaker for deep tool setup when the workflow is mainly inside an app surface.</div>
+            </div>
+            <div class="fit-row" role="row">
+              <div class="fit-area" role="cell"><strong>IDE-based AI tools</strong></div>
+              <div class="fit-tools" role="cell">Cursor, Lovable, Google Antigravity, vibe-coding platforms</div>
+              <div role="cell"><span class="fit-badge no">Not focus</span></div>
+              <div class="fit-statement" role="cell">Usually not the right fit for deep product advice or tool support. I can still help with ownership, gates, and workflow boundaries.</div>
+            </div>
+          </div>
+
+          <div class="fit-note">
+            <p>
+              <strong>HAI does not mean knowing every AI-coding tool perfectly.</strong>
+              HAI means structuring agentic work so the human keeps orientation, control, and ownership.
+            </p>
+            <a class="button" href="../setupinflow/">Not sure? Scope your setup</a>
+          </div>
+
+          <p class="fit-proof-intro">
+            <strong>Why the terminal-agent row is marked very strong:</strong>
+            these are local evidence snapshots from real work. They combine the Claude Code backup before
+            the April reset with the current post-reset usage data, then deduplicate by session id.
+          </p>
+
+          <div class="fit-proof-grid" aria-label="Internal evidence behind the tool fit">
+            <article class="fit-proof-card">
+              <span>Claude Code log depth</span>
+              <strong>786 sessions<br>2,573h / 8.02M tokens</strong>
+              <p>Backup plus current usage-data: 20,052 recorded tool uses across 64 project paths. <a href="../tripwire-map/">The Tripwire Map shows the control rules behind this work.</a></p>
+            </article>
+            <article class="fit-proof-card">
+              <span>Codex HAI depth</span>
+              <strong>38 repo sessions<br>2,627 tool calls</strong>
+              <p>Strict Human-Agent-Interface repo sessions from 2026-05-11 to 2026-05-14, with 163 turn records and 7,476 response items.</p>
+            </article>
+            <article class="fit-proof-card">
+              <span>Hermes insights</span>
+              <strong>369 sessions<br>282.6M tokens</strong>
+              <p>Last 30 days: 3,928 tool calls, 39 distinct skills loaded, and a manual CLI slice of 61 sessions with 7,018 messages. <a href="../hermes/">See Hermes system.</a></p>
+            </article>
+            <article class="fit-proof-card">
+              <span>Eval discipline</span>
+              <strong>166 runs<br>44 / 44 gate eval</strong>
+              <p>AgentArena has 166 runs, 9 tasks, and 37 agents. Sidecar-NG adds 37 prompts and 97.3% internal local-eval accuracy.</p>
+            </article>
+          </div>
+
+        </div>
+      </section>
+
       <section class="section" id="offers" aria-labelledby="offers-title">
         <div class="section-inner">
           <div class="section-head">
@@ -797,7 +1057,7 @@
               <div class="offer-spec">
                 <div class="spec-block">
                   <h4>Who it is for</h4>
-                  <p>Founders, builders, developers, and operators already using Claude Code, Codex, Cursor, Cline, Aider, or similar agentic tools.</p>
+                  <p>Founders, builders, developers, and operators with terminal-based or terminal-adjacent agent workflows, especially Claude Code, Codex CLI, Hermes, OpenCode, or custom harnesses.</p>
                 </div>
                 <div class="spec-block">
                   <h4>Problem it solves</h4>

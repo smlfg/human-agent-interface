@@ -377,23 +377,29 @@
         <div class="field">
           <span class="label">Which tools or agents do you currently use?</span>
           <div class="choice-grid">
-            <label class="choice"><input type="checkbox" name="tools" value="ChatGPT"> ChatGPT</label>
-            <label class="choice"><input type="checkbox" name="tools" value="Claude"> Claude</label>
-            <label class="choice"><input type="checkbox" name="tools" value="Claude Code"> Claude Code</label>
-            <label class="choice"><input type="checkbox" name="tools" value="Codex"> Codex</label>
-            <label class="choice"><input type="checkbox" name="tools" value="Cursor"> Cursor</label>
-            <label class="choice"><input type="checkbox" name="tools" value="GitHub Copilot"> GitHub Copilot</label>
+            <label class="choice"><input type="checkbox" name="tools" value="Claude Code Terminal"> Claude Code Terminal</label>
+            <label class="choice"><input type="checkbox" name="tools" value="Codex CLI"> Codex CLI</label>
+            <label class="choice"><input type="checkbox" name="tools" value="Hermes"> Hermes</label>
+            <label class="choice"><input type="checkbox" name="tools" value="OpenCode"> OpenCode</label>
+            <label class="choice"><input type="checkbox" name="tools" value="terminal-based agent workflow"> terminal-based agent workflow</label>
+            <label class="choice"><input type="checkbox" name="tools" value="custom harness"> custom harness</label>
           </div>
           <div class="more-wrap">
             <button type="button" class="text-button" data-toggle="more-tools">More tools</button>
             <div class="more-panel" id="more-tools">
               <div class="choice-grid">
+                <label class="choice"><input type="checkbox" name="tools" value="ChatGPT"> ChatGPT</label>
+                <label class="choice"><input type="checkbox" name="tools" value="Claude"> Claude</label>
+                <label class="choice"><input type="checkbox" name="tools" value="Claude Code Mac App"> Claude Code Mac App</label>
+                <label class="choice"><input type="checkbox" name="tools" value="Codex App"> Codex App</label>
+                <label class="choice"><input type="checkbox" name="tools" value="Cursor"> Cursor</label>
+                <label class="choice"><input type="checkbox" name="tools" value="Lovable"> Lovable</label>
+                <label class="choice"><input type="checkbox" name="tools" value="Google Antigravity"> Google Antigravity</label>
+                <label class="choice"><input type="checkbox" name="tools" value="GitHub Copilot"> GitHub Copilot</label>
                 <label class="choice"><input type="checkbox" name="tools" value="Cline"> Cline</label>
                 <label class="choice"><input type="checkbox" name="tools" value="Aider"> Aider</label>
                 <label class="choice"><input type="checkbox" name="tools" value="Devin"> Devin</label>
                 <label class="choice"><input type="checkbox" name="tools" value="OpenHands"> OpenHands</label>
-                <label class="choice"><input type="checkbox" name="tools" value="Hermes"> Hermes</label>
-                <label class="choice"><input type="checkbox" name="tools" value="custom harness"> custom harness</label>
                 <label class="choice"><input type="checkbox" name="tools" value="automation tools"> automation tools</label>
                 <label class="choice"><input type="checkbox" name="tools" value="other"> other</label>
               </div>
@@ -705,9 +711,35 @@
 
     function classifyLevel(tools, frequency) {
       const toolSet = new Set(tools);
-      if (toolSet.has("custom harness") || toolSet.has("Hermes") || frequency === "core workflow") return "workflow operator";
-      if (["Claude Code", "Codex", "Cursor", "Cline", "Aider"].some((tool) => toolSet.has(tool))) return "agentic builder";
+      if (["Claude Code Terminal", "Codex CLI", "Hermes", "terminal-based agent workflow"].some((tool) => toolSet.has(tool)) || frequency === "core workflow") return "terminal workflow operator";
+      if (["OpenCode", "custom harness", "Cline", "Aider"].some((tool) => toolSet.has(tool))) return "agentic builder";
+      if (["Claude Code Mac App", "Codex App", "Cursor", "Lovable", "Google Antigravity"].some((tool) => toolSet.has(tool))) return "tool-surface user";
       return "tool user";
+    }
+
+    function toolFitNote(tools) {
+      const toolSet = new Set(tools);
+      const hasCore = ["Claude Code Terminal", "Codex CLI", "Hermes", "terminal-based agent workflow"].some((tool) => toolSet.has(tool));
+      const hasAdjacent = ["OpenCode", "custom harness", "Cline", "Aider"].some((tool) => toolSet.has(tool));
+      const hasApp = ["Claude Code Mac App", "Codex App", "ChatGPT", "Claude"].some((tool) => toolSet.has(tool));
+      const hasNonFocus = ["Cursor", "Lovable", "Google Antigravity", "GitHub Copilot", "Devin", "OpenHands"].some((tool) => toolSet.has(tool));
+
+      if (hasCore && hasNonFocus) {
+        return "Very strong if the real break happens in the terminal agent loop; IDE or platform-specific support is secondary.";
+      }
+      if (hasCore) {
+        return "Very strong fit: terminal-based agent workflow, project context, hooks, verification, and ownership boundaries.";
+      }
+      if (hasAdjacent) {
+        return "Possible fit: close enough if the issue is workflow structure, verification, scope control, or handoff.";
+      }
+      if (hasApp) {
+        return "Limited fit: method and ownership help are possible, but deep app-surface support is not the main focus.";
+      }
+      if (hasNonFocus) {
+        return "Not the main focus: likely better for method, gates, and ownership boundaries than product-specific tool advice.";
+      }
+      return "Unknown fit until the tool surface and workflow break are made concrete.";
     }
 
     function fitNote(failure, humanOwned, agentOwned, verification) {
@@ -730,6 +762,7 @@
       const verification = checkedValues("verification");
       const evidence = checkedValues("evidence");
       const level = classifyLevel(tools, value("frequency"));
+      const toolFit = toolFitNote(tools);
       const fit = fitNote(failure, humanOwned, agentOwned, verification);
 
       packet.textContent = `# HAI Owner Intake Packet
@@ -739,6 +772,9 @@ ${value("currentWork")}
 
 Tools in use:
 ${tools.join(", ") || "not specified"}${value("customSetup") ? `\nCustom setup: ${value("customSetup")}` : ""}
+
+Tool fit signal:
+${toolFit}
 
 Usage frequency:
 ${value("frequency")}
