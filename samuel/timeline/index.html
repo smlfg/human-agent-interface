@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Samuel Fleig - AI Builder Timeline</title>
+  <meta name="description" content="Chronologische Showcase-Timeline aus gehosteten HTML-Artefakten, Apps, Architekturen, Websites und Analysen.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="domain-strip" href="../" aria-label="Zurueck zu Samuels Proof-of-Work-Seite">
+    Samuel Fleig / Proof of Work / AI Builder Timeline
+  </a>
+
+  <header class="stats-bar">
+    <div class="stats-inner" id="statsBar"></div>
+  </header>
+
+  <div class="page-shell">
+    <section class="hero" aria-labelledby="pageTitle">
+      <div class="hero-panel">
+        <span class="eyebrow">AI Builder Timeline</span>
+        <h1 id="pageTitle">März bis Mai: sichtbare Entwicklung.</h1>
+        <p class="hero-copy">
+          Diese Seite inszeniert eine verdichtete Arbeitsphase aus Apps, Dashboards, Architekturen, Websites, Analysen und Explainern.
+          Nicht als Archiv ohne Haltung, sondern als Timeline einer technischen Arbeitsweise: schnell bauen, Systeme denken,
+          Muster erkennen, Versionen gegeneinander lesen und aus jeder Iteration ein sichtbares Artefakt machen.
+        </p>
+        <section class="hero-about" aria-labelledby="heroAboutTitle">
+          <div class="hero-section-head">
+            <span class="section-kicker">Über Samuel</span>
+            <h2 id="heroAboutTitle">Kein fertiger Senior-Mythos, sondern ein offener Lernprozess.</h2>
+          </div>
+          <p>
+            2 Jahre Vibe-Coding ohne Plan. 2 Monate Vibe-Coding mit Plan. 2 Wochen Eval-Driven Development.
+            Ich bin kein Senior Engineer, sondern jemand, der in Echtzeit lernt, wie man agentische Systeme nicht nur benutzt,
+            sondern systematisch besser macht.
+          </p>
+          <p>
+            Was ich anbiete, ist kein fertiges Produktversprechen, sondern ein ehrlicher Prozess mit messbaren Ergebnissen.
+          </p>
+        </section>
+        <div class="hero-actions">
+          <a class="button-link primary" href="#timelineStart">Zur Timeline</a>
+          <a class="button-link secondary" href="#detailPanel">Kuratiertes Detailpanel</a>
+        </div>
+        <div class="hero-bottom">
+          <section class="hero-featured" aria-labelledby="heroFeaturedTitle">
+            <div class="hero-section-head">
+              <span class="section-kicker">Featured Artifacts</span>
+              <h2 id="heroFeaturedTitle">Drei Beweise direkt am Einstieg.</h2>
+            </div>
+            <div class="hero-featured-grid" id="heroFeaturedGrid"></div>
+          </section>
+          <div class="hero-insights">
+            <section class="hero-method" aria-labelledby="heroMethodTitle">
+              <div class="hero-section-head">
+                <span class="section-kicker">Arbeitsweise</span>
+                <h2 id="heroMethodTitle">Wie diese Spur entsteht.</h2>
+              </div>
+              <div class="hero-method-grid" id="heroMethodGrid"></div>
+            </section>
+          </div>
+        </div>
+      </div>
+      <aside class="hero-meta" aria-labelledby="metaTitle">
+        <h2 id="metaTitle">Warum das zählt</h2>
+        <div class="meta-grid" id="metaGrid"></div>
+        <div>
+          <span class="section-kicker">Cluster</span>
+          <ul class="cluster-list" id="clusterList"></ul>
+        </div>
+        <div>
+          <span class="section-kicker">Phasen</span>
+          <ul class="phase-list" id="phaseList"></ul>
+        </div>
+      </aside>
+    </section>
+
+    <nav class="filter-bar" aria-label="Filter und Navigation">
+      <div class="filter-topline">
+        <p>Scan-orientierte Timeline mit Filtern nach Typ, Projekt und kuratierten Highlights.</p>
+        <div class="filter-result" id="filterResult"></div>
+      </div>
+      <div class="filter-grid">
+        <div class="filter-group">
+          <span class="filter-label">Typ</span>
+          <div class="chip-row" id="typeFilters"></div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Projekt</span>
+          <div class="chip-row" id="projectFilters"></div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Phasensprünge</span>
+          <div class="phase-jump" id="phaseJumps"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section class="detail-layout">
+      <main class="timeline-wrap" id="timelineStart">
+        <div class="timeline-line" aria-hidden="true"></div>
+        <div class="timeline-grid" id="timelineGrid"></div>
+        <div class="empty-state hidden" id="emptyState">
+          Keine Treffer für diese Kombination. Entferne einen Filter oder wechsle zurück zu den kuratierten Highlights.
+        </div>
+        <p class="footer-note">
+          Datenbasis: <code>TIMELINE_DATA.md</code>. Gruppierte Einträge bleiben bewusst als Gruppen sichtbar, wenn die Rohdaten keine einzelnen Dateinamen liefern.
+        </p>
+      </main>
+
+      <aside class="detail-panel" id="detailPanel">
+        <span class="eyebrow">Artifact Focus</span>
+        <h2>Kuratiertes Detailpanel</h2>
+        <div id="detailContent"></div>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    (() => {
+      const projectMeta = {
+        ".agent/diagrams": { slug: "diagrams", label: "diagrams" },
+        "AgentSwarmDashboard": { slug: "agentswarm", label: "AgentSwarmDashboard" },
+        "BookmarkBrain": { slug: "bookmarkbrain", label: "BookmarkBrain" },
+        "FireTracker": { slug: "firetracker", label: "FireTracker" },
+        "ProjectDashboard": { slug: "projectdashboard", label: "ProjectDashboard" },
+        "Sidecar": { slug: "sidecar", label: "Sidecar (V5)" },
+        "StudyAgent": { slug: "studyagent", label: "StudyAgent" },
+        "Sidecar-V6": { slug: "sidecar-v6", label: "Sidecar-V6" },
+        "AgentArena": { slug: "agentarena", label: "AgentArena" },
+        "Sidecar-V7": { slug: "sidecar-v7", label: "Sidecar-V7" },
+        "SidecarDashboard": { slug: "sidecardashboard", label: "SidecarDashboard" },
+        "TypoTuner": { slug: "typotuner", label: "TypoTuner" },
+        "AgentIDE": { slug: "agentide", label: "AgentIDE" },
+        "SandrasWritingWorld": { slug: "sandraswritingworld", label: "SandrasWritingWorld" },
+        "Sidecar-V7-V2": { slug: "sidecar-v7-v2", label: "Sidecar-V7-V2" },
+        "Jobs_Selbständigkeit": { slug: "jobs", label: "Jobs_Selbständigkeit" },
+        "samuel-os-v2": { slug: "samuel-os-v2", label: "samuel-os-v2" },
+        "MetaMetaMeta": { slug: "metametameta", label: "MetaMetaMeta" },
+        "CloudCodeUsageAnalysis": { slug: "cloud-code-usage", label: "CloudCodeUsageAnalysis" },
+        "PromptGarageUI": { slug: "promptgarage-ui", label: "PromptGarageUI" },
+        "HarnessEcosystem": { slug: "harness-ecosystem", label: "HarnessEcosystem" },
+        "NasaCode": { slug: "nasacode", label: "NasaCode" },
+        "aidvance-proposal": { slug: "aidvance-proposal", label: "aidvance-proposal" },
+        "BahnAgent": { slug: "bahnagent", label: "BahnAgent" },
+        "sidecar-v7-demo": { slug: "sidecar-v7-demo", label: "sidecar-v7-demo" },
+        "CodexModeGovernor": { slug: "codex-mode-governor", label: "Codex Mode Governor" },
+        "AidvanceWork": { slug: "aidvance-work", label: "AidvanceWork" },
+        "UEBER_AGENT": { slug: "ueber-agent", label: "UEBER_AGENT" },
+        "alleProjekte": { slug: "alleprojekte", label: "alleProjekte" },
+        "MultiHarnessStudio": { slug: "multiharnessstudio", label: "MultiHarnessStudio" },
+        "ClaudeInsightsTimeline": { slug: "claude-insights-timeline", label: "claude-insights-timeline" },
+        "Zentrale": { slug: "zentrale", label: "Zentrale" },
+        "OpenCodeGoUsageDashboard": { slug: "opencode-go-usage-dashboard", label: "OpenCodeGoUsageDashboard" },
+        "FirstRealHarnessEvaluation_KarpathiesMD": { slug: "first-real-harness-evaluation", label: "FirstRealHarnessEvaluation" },
+        "AIOS-Cockpit": { slug: "aios-cockpit", label: "AIOS-Cockpit" },
+        "PromptBoost": { slug: "promptboost", label: "PromptBoost" },
+        "personalPromptBoost": { slug: "personal-promptboost", label: "personalPromptBoost" },
+        "LuckSurface": { slug: "lucksurface", label: "LuckSurface / Samuel.SYSTEM" },
+        "CodexMaxHarnessHowTo": { slug: "codex-max-harness-how-to", label: "CodexMaxHarnessHowTo" },
+        "HeumandenParty": { slug: "heumandenparty", label: "HeumandenParty" },
+        "Codex_Usage_Profil": { slug: "codex-usage-profil", label: "Codex_Usage_Profil" },
+        "AgenticBuilderProfile": { slug: "agentic-builder-profile", label: "Agentic Builder Profile" },
+        "WerBinIch": { slug: "werbinich", label: "WerBinIch" },
+        "LuisHandoff": { slug: "luis-handoff", label: "LuisHandoff" },
+        "HumanAgentInterface": { slug: "human-agent-interface", label: "Human-Agent-Interface" },
+        "PseudoLogikPythonCPP": { slug: "pseudologik", label: "PseudoLogikPythonCPP" },
+        "HAI": { slug: "hai", label: "HAI" },
+        "HAI_V1_3": { slug: "hai-v1-3", label: "HAI V1.3" },
+        "PortfolioTimeline": { slug: "portfolio-timeline", label: "PortfolioTimeline" }
+      };
+
+      const phaseNotes = {
+        "Erste Woche": "Die ersten Artefakte zeigen Architektur- und Analysearbeit als Fundament: Systeme werden zuerst beschrieben, bevor Produkte daraus entstehen.",
+        "Projekte starten": "Ab hier kippt die Arbeit sichtbar in umsetzbare Interfaces. Apps, Dashboards und Planskizzen tauchen parallel auf.",
+        "Dashboard-Woche": "Fokus auf Statussichtbarkeit, Projektgesundheit und operativen Überblick. Typisch ist die Mischung aus UI-Arbeit und Reflexion.",
+        "AgentArena + Sidecar-V6": "Mehrere Linien laufen gleichzeitig: Arena-artige Interfaces, Sidecar-Prototyping und Vertiefung der Architekturspur.",
+        "Sidecar-V7 + SidecarDashboard": "Die Timeline wird produktiver und systematischer. Templates, Evaluation und Dashboard-Bausteine verdichten sich.",
+        "Hochproduktiver Tag": "Der 11.03. ist der Peak: viele neue Artefakte, mehrere Produktlinien und zugleich tiefe konzeptionelle Dokumente.",
+        "Meta-Analyse-Tag": "Ein Tag für Rückschau und Strukturverdichtung. Hier werden Konfiguration, Memory-Systeme und Versionslernen sichtbar.",
+        "aidvance + BahnAgent": "Proposal-Arbeit trifft auf Reiseplanung — beides sind sichtbare Extraprodukte außerhalb des Sidecar-Kerns.",
+        "aidvance + AIDGENTS": "Aus dem Proposal wird ein technischer Developer-Brief: interne Agenten, Notion, Microsoft 365, Meeting Prep und Operational Overhead werden als Systementwurf formulierbar.",
+        "sidecar-v7-demo + UEBER_AGENT": "Demo und Architekturportfolio liegen nebeneinander: Sidecar wird als Produkt gezeigt, UEBER_AGENT als Multi-Agent-System erklärt.",
+        "NasaCode + alleProjekte + PortfolioTimeline": "Experimentdokumentation, Projektarchiv und Selbstdokumentation laufen zusammen: Forschung, Inventar und Timeline werden sichtbar.",
+        "MultiHarnessStudio": "Die Harness-Arbeit bekommt eine kanonische Integrationsschicht: Spine erklaert, wie Modelle, Tools und Evaluation zusammenfinden.",
+        "ClaudeInsightsTimeline + OpenCodeGoUsageDashboard + Zentrale": "Selbstanalyse, Nutzungsanalyse und Orchestrierung bekommen operative Oberflaechen: Research-Graph, Kosten, Runs, Modelle und Projekte werden sichtbar steuerbar.",
+        "FirstRealHarnessEvaluation": "Der Harness wird als Experiment sichtbar: Landingpage, Architektur, Logik und Parallel-Run-Matrix fuehren in die Auswertung.",
+        "FirstRealHarnessEvaluation + HAI": "Am selben Tag verdichten sich zwei Linien: wissenschaftliche Harness-Lesbarkeit und HAI V1.3 als menschlich erklaerbares Projektzustands-System.",
+        "Human-Agent-Interface + PseudoLogikPythonCPP": "HAI formuliert eine neue Interface-Kategorie, waehrend PseudoLogikPythonCPP eine konkrete Lern-App fuer Pseudocode, Logik, Python, C++ und Wiederholung sichtbar macht.",
+        "AidvanceWork": "Die Aidvance-Arbeit wird vor dem Zoom-Termin sprechbar: Tool-Fit, Cowork-Grenzen, Pilot-Risiken und AIDGENTS-Produktlogik werden als Webseiten verdichtet.",
+        "AIOS-Cockpit + PromptBoost + CodexMaxHarness + Samuel.SYSTEM": "Agenten-Betriebssystem, Prompt-Adapter, Codex-Max-Runbook und oeffentliche Selbstpositionierung werden bedienbar: lokale Runs, Routing, Harness-Drafts, Nutzungsplanung und Proof-of-Work ruecken in Oberflaechen.",
+        "HeumandenParty + HarnessEcosystem + CodexModeGovernor + Codex Usage + AidvanceWork + personalPromptBoost": "Eine reale Event-Website trifft auf Harness-Modellvergleich, Codex-Mode-Governance, Arbeitsmessung, Aidvance-Produktfit und PromptBoost: oeffentliche Gestaltung und agentische Infrastruktur liegen am selben Tag nebeneinander.",
+        "Agentic Builder Profile": "Die Selbstpositionierung wird als evidenzbasierte Profilseite sichtbar: Staerken, Risiken, Lernmuster und Arbeitsweise werden als Portfolio-Artefakt formuliert.",
+        "WerBinIch": "Das MiniMax-Wer-bin-Ich-Labor bekommt eine Owner-Brief-Oberflaeche: Versuchsaufbau, Prompts, Commands, Status und naechster Test werden steuerbar.",
+        "personalPromptBoost": "PromptBoost wird zur FastAPI-Produktoberflaeche: Prompt-Uebersetzung, Pipeline-State, Matrix und lokale Laufhistorie sitzen in einer Web-App.",
+        "LuisHandoff": "Die Projektlandkarte wird fuer einen Menschen uebersetzt: Luis bekommt eine klare Sicht auf agentisches Arbeiten, Engstellen und seine eigentliche Aufgabe.",
+        "Usage Analysis": "Nach den späten Architekturdiagrammen wird reale Nutzungs- und Arbeitszeit sichtbar ausgewertet.",
+        "Prompt Infrastructure": "Prompt-Arbeit bekommt eine eigene Oberfläche: Verwaltung, Detailansicht, Bearbeitung und Statistik werden als UI-System angelegt.",
+        "Harness Ecosystem": "Die Harness-Arbeit wird als Ökosystem lesbar: mehrere Agenten- und CLI-Architekturen werden vergleichbar visualisiert.",
+        "Sidecar Ecosystem": "Aus Einzelfeatures wird ein Ökosystem-Narrativ. Explainer und Architektur greifen ineinander.",
+        "SandrasWritingWorld": "Ein Ausschlag in Richtung vollständige Website-Arbeit zeigt Range jenseits interner Systemtools.",
+        "Version Archaeology + V7-V2": "Versionierung wird selbst zum Untersuchungsobjekt. Forks, Daemon-Commits und Event-Pipelines machen die Evolution explizit.",
+        "Sidecar-NG + Karriere": "Technische Weiterentwicklung läuft parallel mit strategischer Selbstpositionierung.",
+        "Letzte Diagramme": "Späte Phase mit stärker verdichteten Architekturdiagrammen und Evaluationsblick.",
+        "samuel-os-v2 + MetaMetaMeta": "Die Spur endet bei stärker operativen Dashboards und Explainern für Lauf- und Eval-Pipelines."
+      };
+
+      const timelineDays = [
+        {
+          id: "2026-03-02",
+          date: "2026-03-02",
+          displayDate: "02. März",
+          phase: "Erste Woche",
+          marker: "start",
+          items: [
+            { title: "claude-cost-dashboard.html", type: "analyse", project: ".agent/diagrams", summary: "Kosten- und Usage-Sichtbarkeit als frühes Monitoring-Artefakt.", featured: true, cluster: "Analysen & Meta-Reflexion", path: "claude-cost-dashboard.html" },
+            { title: "skill-test-report.html", type: "analyse", project: ".agent/diagrams", summary: "Frühe Qualitäts- und Skill-Auswertung in HTML-Form.", cluster: "Analysen & Meta-Reflexion", path: "skill-test-report.html" },
+            { title: "claude-delegation-architecture.html", type: "architektur", project: ".agent/diagrams", summary: "Delegationslogik als Systemarchitektur beschrieben.", featured: true, cluster: "Architektur-Diagramme", path: "claude-delegation-architecture.html" },
+            { title: "claude-session-lifecycle.html", type: "architektur", project: ".agent/diagrams", summary: "Session-Lebenszyklus als sichtbares Modell für agentische Abläufe.", cluster: "Architektur-Diagramme", path: "claude-session-lifecycle.html" },
+            { title: "claude-skill-ecosystem.html", type: "architektur", project: ".agent/diagrams", summary: "Skill-Ökosystem früh als strukturiertes Gesamtsystem gedacht.", cluster: "Architektur-Diagramme", path: "claude-skill-ecosystem.html" },
+            { title: "oktopus-visual.html", type: "architektur", project: ".agent/diagrams", summary: "Visuelles Mapping komplexer Systembeziehungen.", cluster: "Architektur-Diagramme", path: "oktopus-visual.html" },
+            { title: "subconsciousness-framework.html", type: "architektur", project: ".agent/diagrams", summary: "Framework-Denken für kognitive oder agentische Schichten.", cluster: "Architektur-Diagramme", path: "subconsciousness-framework.html" }
+          ]
+        },
+        {
+          id: "2026-03-03",
+          date: "2026-03-03",
+          displayDate: "03. März",
+          phase: "Erste Woche",
+          items: [
+            { title: "panel-ux-guide.html", type: "learning", project: ".agent/diagrams", summary: "UX-Lernartefakt, das visuelle Klarheit und Bedienlogik reflektiert.", cluster: "Lernmaterial", path: "panel-ux-guide.html" },
+            { title: "subconsciousness-plan.html", type: "plan", project: ".agent/diagrams", summary: "Planungsdokument für die nächste Entwicklungsetappe.", cluster: "Pläne", path: "subconsciousness-plan.html" }
+          ]
+        },
+        {
+          id: "2026-03-04",
+          date: "2026-03-04",
+          displayDate: "04. März",
+          phase: "Erste Woche",
+          items: [
+            { title: "chatgpt-nutzung-samuel.html", type: "analyse", project: ".agent/diagrams", summary: "Analyse eines realen Nutzungsbilds und daraus ableitbarer Muster.", cluster: "Analysen & Meta-Reflexion", path: "chatgpt-nutzung-samuel.html" },
+            { title: "openclaw-sprint-recap.html", type: "analyse", project: ".agent/diagrams", summary: "Sprint-Retrospektive als HTML-Artefakt mit operativer Lesbarkeit.", cluster: "Analysen & Meta-Reflexion", path: "openclaw-sprint-recap.html" },
+            { title: "context-offloading-architecture.html", type: "architektur", project: ".agent/diagrams", summary: "Kontext-Offloading als explizites Architekturmotiv.", cluster: "Architektur-Diagramme", path: "context-offloading-architecture.html" },
+            { title: "oktopus-architektur.html", type: "architektur", project: ".agent/diagrams", summary: "Alternative Systemansicht in derselben frühen Modellierungsphase.", cluster: "Architektur-Diagramme", path: "oktopus-architektur.html" },
+            { title: "claudecodepanel-explained.html", type: "learning", project: ".agent/diagrams", summary: "Erklärstück, das komplexe Arbeitsweise zugänglich macht.", cluster: "Lernmaterial", path: "claudecodepanel-explained.html" },
+            { title: "learn-context-offloading.html", type: "learning", project: ".agent/diagrams", summary: "Lernspur zur Übertragung von Kontext in systematische Workflows.", cluster: "Lernmaterial", path: "learn-context-offloading.html" },
+            { title: "projekt-sprint-team.html", type: "plan", project: ".agent/diagrams", summary: "Planungsartefakt für Team- oder Projektrhythmus.", cluster: "Pläne", path: "projekt-sprint-team.html" }
+          ]
+        },
+        {
+          id: "2026-03-05",
+          date: "2026-03-05",
+          displayDate: "05. März",
+          phase: "Projekte starten",
+          items: [
+            { title: "static/index.html", type: "app", project: "AgentSwarmDashboard", summary: "Erstes Dashboard-Interface für agentische Koordination.", featured: true, cluster: "Apps & Dashboards", path: "static/index.html" },
+            { title: "templates/base.html", type: "app", project: "BookmarkBrain", summary: "Frühe UI-Basis für ein bookmarkzentriertes Tool.", cluster: "Apps & Dashboards", path: "templates/base.html" },
+            { title: "templates/* (7 Dateien)", type: "app", project: "FireTracker", summary: "Gruppierter FireTracker-Templateblock als sichtbarer Produktstart.", cluster: "Apps & Dashboards", grouped: true, path: "templates/" },
+            { title: "templates/partials/* (2 Dateien)", type: "app", project: "ProjectDashboard", summary: "Partials für Dashboard-Komposition und Wiederverwendbarkeit.", cluster: "Apps & Dashboards", grouped: true, path: "templates/partials/" },
+            { title: "eval/dashboard.html", type: "eval", project: "Sidecar", summary: "Frühe Evaluationsoberfläche für Sidecar-Zustände.", cluster: "Sidecar-Evolution", path: "eval/dashboard.html" },
+            { title: "templates/* (8 Dateien)", type: "app", project: "StudyAgent", summary: "Gebündelte App-Struktur für studienorientierte Agentenarbeit.", cluster: "Apps & Dashboards", grouped: true, path: "templates/" },
+            { title: "agent-sdk-landschaft-2026.html", type: "architektur", project: ".agent/diagrams", summary: "Markt- und Systemlandschaft rund um Agent SDKs kartiert.", cluster: "Architektur-Diagramme", path: "agent-sdk-landschaft-2026.html" },
+            { title: "agent-swarm-live.html", type: "architektur", project: ".agent/diagrams", summary: "Live-Systembild für koordinierte Agentenflüsse.", cluster: "Architektur-Diagramme", path: "agent-swarm-live.html" },
+            { title: "sidecar-evolution.html", type: "architektur", project: ".agent/diagrams", summary: "Evolutionspfad von Sidecar als explizite Storyline.", featured: true, cluster: "Sidecar-Evolution", path: "sidecar-evolution.html" },
+            { title: "workflow-evolution.html", type: "architektur", project: ".agent/diagrams", summary: "Entwicklung von Workflows als wiederkehrendes Motiv.", cluster: "Architektur-Diagramme", path: "workflow-evolution.html" },
+            { title: "sidecar-vs-florian.html", type: "analyse", project: ".agent/diagrams", summary: "Vergleichs- und Lernartefakt zur Abgrenzung von Systemansätzen.", cluster: "Analysen & Meta-Reflexion", path: "sidecar-vs-florian.html" },
+            { title: "adhs-study-agent.html", type: "learning", project: ".agent/diagrams", summary: "Lernmaterial mit klarer Anwendungsperspektive.", cluster: "Lernmaterial", path: "adhs-study-agent.html" },
+            { title: "sidecar-v5-lernsystem.html", type: "learning", project: ".agent/diagrams", summary: "Lernsystemspur rund um Sidecar v5.", cluster: "Sidecar-Evolution", path: "sidecar-v5-lernsystem.html" },
+            { title: "bookmarkbrain-plan.html", type: "plan", project: ".agent/diagrams", summary: "Plan für ein konkretes Produkt statt bloßer Ideenliste.", cluster: "Pläne", path: "bookmarkbrain-plan.html" },
+            { title: "sidecar-v5-plan.html", type: "plan", project: ".agent/diagrams", summary: "Versionierter Plan als unmittelbare Vorstufe zur Umsetzung.", cluster: "Pläne", path: "sidecar-v5-plan.html" }
+          ]
+        },
+        {
+          id: "2026-03-06",
+          date: "2026-03-06",
+          displayDate: "06. März",
+          phase: "Dashboard-Woche",
+          items: [
+            { title: "templates/index.html + git.html + partials/*", type: "app", project: "ProjectDashboard", summary: "Dashboard-Bausteine für Status, Git-Blick und modulare UI.", cluster: "Apps & Dashboards", grouped: true, path: "templates/" },
+            { title: "agentide-v03-review-report.html", type: "analyse", project: ".agent/diagrams", summary: "Review-Report als sichtbarer Qualitätsprozess.", cluster: "Analysen & Meta-Reflexion", path: "agentide-v03-review-report.html" },
+            { title: "claude-code-deep-analysis.html", type: "analyse", project: ".agent/diagrams", summary: "Tiefe Analyse eines Coding- und Agenten-Workflows.", featured: true, cluster: "Analysen & Meta-Reflexion", path: "claude-code-deep-analysis.html" },
+            { title: "project-health-dashboard.html", type: "analyse", project: ".agent/diagrams", summary: "Gesundheitsindikatoren für Projekte als übersichtliches Artefakt.", cluster: "Analysen & Meta-Reflexion", path: "project-health-dashboard.html" },
+            { title: "project-sweep-report.html", type: "analyse", project: ".agent/diagrams", summary: "Sweep-Report als operative Momentaufnahme.", cluster: "Analysen & Meta-Reflexion", path: "project-sweep-report.html" },
+            { title: "sidecar-v5-agent-analyse.html", type: "analyse", project: ".agent/diagrams", summary: "Analyse der Agentik einer früheren Sidecar-Version.", cluster: "Sidecar-Evolution", path: "sidecar-v5-agent-analyse.html" },
+            { title: "sidecar-erklaert.html", type: "architektur", project: ".agent/diagrams", summary: "Explizite Architekturkommunikation für ein komplexes System.", cluster: "Sidecar-Evolution", path: "sidecar-erklaert.html" },
+            { title: "sidecar-komplett-ueberblick.html", type: "architektur", project: ".agent/diagrams", summary: "Komplette Systemübersicht als Navigationskarte.", cluster: "Sidecar-Evolution", path: "sidecar-komplett-ueberblick.html" },
+            { title: "sidecar-optimization.html", type: "architektur", project: ".agent/diagrams", summary: "Optimierung als Architekturproblem visualisiert.", cluster: "Sidecar-Evolution", path: "sidecar-optimization.html" },
+            { title: "sidecar-versions-overview.html", type: "architektur", project: ".agent/diagrams", summary: "Versionsvergleich als expliziter Überblick.", cluster: "Sidecar-Evolution", path: "sidecar-versions-overview.html" },
+            { title: "git-situation-agentide.html", type: "learning", project: ".agent/diagrams", summary: "Lernartefakt zu Git-Situation und Projektzustand.", cluster: "Lernmaterial", path: "git-situation-agentide.html" },
+            { title: "sidecar-panel-roadmap.html", type: "plan", project: ".agent/diagrams", summary: "Roadmap für Panel- und Produktentwicklung.", cluster: "Pläne", path: "sidecar-panel-roadmap.html" },
+            { title: "sidecar-oder-erfolg.html", type: "explainer", project: "Sidecar-V6", summary: "Erklärstück für die praktische Relevanz von Sidecar V6.", cluster: "Sidecar-Evolution", path: "sidecar-oder-erfolg.html" }
+          ]
+        },
+        {
+          id: "2026-03-08",
+          date: "2026-03-08",
+          displayDate: "08. März",
+          phase: "AgentArena + Sidecar-V6",
+          items: [
+            { title: "docs/architecture.html", type: "architektur", project: "AgentArena", summary: "Architekturdokument als öffentliche Produktlesart.", cluster: "Apps & Dashboards", path: "docs/architecture.html" },
+            { title: "templates/base.html + matrix.html", type: "app", project: "AgentArena", summary: "UI-Basis und Matrixdarstellung als Arena-Metapher.", cluster: "Apps & Dashboards", grouped: true, path: "templates/" },
+            { title: "architektur-v6.html", type: "architektur", project: "Sidecar-V6", summary: "Version 6 wird als eigenständige Architektur lesbar.", cluster: "Sidecar-Evolution", path: "architektur-v6.html" },
+            { title: "dashboard-prototype.html", type: "app", project: "Sidecar-V6", summary: "Prototypische Oberfläche für den nächsten Sidecar-Schritt.", cluster: "Sidecar-Evolution", path: "dashboard-prototype.html" },
+            { title: "plan-tag1.html", type: "plan", project: "Sidecar-V6", summary: "Tagesplan direkt an ein laufendes Produkt gekoppelt.", cluster: "Pläne", path: "plan-tag1.html" }
+          ]
+        },
+        {
+          id: "2026-03-09",
+          date: "2026-03-09",
+          displayDate: "09. März",
+          phase: "AgentArena + Sidecar-V6",
+          items: [
+            { title: "templates/matrix.html", type: "app", project: "AgentArena", summary: "Update oder Weiterführung der Matrix-Ansicht am Folgetag.", cluster: "Apps & Dashboards", path: "templates/matrix.html" },
+            { title: "templates/partials/* (3 Dateien)", type: "app", project: "Sidecar-V6", summary: "Partials machen Sidecar V6 UI-seitig systematischer.", cluster: "Sidecar-Evolution", grouped: true, path: "templates/partials/" },
+            { title: "sidecar-v6-1-minimax-deep-integration.html", type: "architektur", project: ".agent/diagrams", summary: "Spezialisierte Integrationsarchitektur für V6.", cluster: "Sidecar-Evolution", path: "sidecar-v6-1-minimax-deep-integration.html" },
+            { title: "sidecar-v6-agentisch.html", type: "architektur", project: ".agent/diagrams", summary: "Agentische Interpretation von Sidecar V6.", cluster: "Sidecar-Evolution", path: "sidecar-v6-agentisch.html" }
+          ]
+        },
+        {
+          id: "2026-03-10",
+          date: "2026-03-10",
+          displayDate: "10. März",
+          phase: "Sidecar-V7 + SidecarDashboard",
+          items: [
+            { title: "mechanism-evaluation.html", type: "eval", project: "Sidecar-V6", summary: "Mechanismen werden nicht nur gebaut, sondern explizit evaluiert.", cluster: "Sidecar-Evolution", path: "mechanism-evaluation.html" },
+            { title: "templates/* (alle partials + main)", type: "app", project: "Sidecar-V7", summary: "V7 tritt als umfassender neuer UI-Block auf.", featured: true, cluster: "Sidecar-Evolution", grouped: true, path: "templates/" },
+            { title: "templates/* (10 Dateien)", type: "app", project: "SidecarDashboard", summary: "Eigenständiges Dashboard-Projekt mit breiter Template-Basis.", cluster: "Apps & Dashboards", grouped: true, path: "templates/" },
+            { title: "partials/deadline_item + elastic_plan", type: "app", project: "StudyAgent", summary: "Spezialisierte Lern-UI für Deadlines und Planung.", cluster: "Apps & Dashboards", path: "partials/" },
+            { title: "sidecar-v7-phase2-plan.html", type: "plan", project: ".agent/diagrams", summary: "Planungsartefakt für die nächste V7-Phase.", cluster: "Pläne", path: "sidecar-v7-phase2-plan.html" },
+            { title: "hardcore-shipping-analyse.html", type: "analyse", project: ".agent/diagrams", summary: "Shipping-Intensität als Analyse- und Arbeitsstil-Dokument.", cluster: "Analysen & Meta-Reflexion", path: "hardcore-shipping-analyse.html" },
+            { title: "sidecar-v6-mechanism-audit.html", type: "analyse", project: ".agent/diagrams", summary: "Audit-Spur für bereits gebaute Mechanismen.", cluster: "Sidecar-Evolution", path: "sidecar-v6-mechanism-audit.html" },
+            { title: "sidecar-v6-stand-der-dinge.html", type: "architektur", project: ".agent/diagrams", summary: "Zwischenstand als strukturierte Architekturkommunikation.", cluster: "Sidecar-Evolution", path: "sidecar-v6-stand-der-dinge.html" }
+          ]
+        },
+        {
+          id: "2026-03-11",
+          date: "2026-03-11",
+          displayDate: "11. März",
+          phase: "Hochproduktiver Tag",
+          highlightDay: true,
+          items: [
+            { title: "samuel/templates/* (viele partials)", type: "app", project: "Sidecar-V6", summary: "Großer Partials-Block für produktive UI-Iteration.", cluster: "Sidecar-Evolution", grouped: true, path: "samuel/templates/" },
+            { title: "docs/prompt-building-status.html", type: "docs", project: "Sidecar-V7", summary: "Statusdokumentation macht Prompt-Building nachvollziehbar.", cluster: "Sidecar-Evolution", path: "docs/prompt-building-status.html" },
+            { title: "web/templates/* (5 Dateien)", type: "app", project: "TypoTuner", summary: "Template-Sprint für ein eigenes UI-Produkt.", cluster: "Apps & Dashboards", grouped: true, path: "web/templates/" },
+            { title: "haekel-buddy-app.html", type: "app", project: ".agent/diagrams", summary: "Großes App-Konzept als visuell ausgearbeiteter Prototyp.", featured: true, cluster: "Apps & Dashboards", size: "117 KB", heavy: true, path: "haekel-buddy-app.html" },
+            { title: "haekel-buddy-architektur.html", type: "architektur", project: ".agent/diagrams", summary: "Architektur derselben Produktidee als eigenständige Perspektive.", cluster: "Architektur-Diagramme", path: "haekel-buddy-architektur.html" },
+            { title: "haekel-buddy-konzept.html", type: "konzept", project: ".agent/diagrams", summary: "Konzeptpapier als Zwischenschicht zwischen Idee und App.", cluster: "Analysen & Meta-Reflexion", path: "haekel-buddy-konzept.html" },
+            { title: "haekel-rose-anleitung.html", type: "learning", project: ".agent/diagrams", summary: "Anleitungs- und Lernformat innerhalb derselben produktiven Phase.", cluster: "Lernmaterial", path: "haekel-rose-anleitung.html" },
+            { title: "promptgarage-launcher.html", type: "app", project: ".agent/diagrams", summary: "Launcher-Idee als kleines, klares App-Artefakt.", cluster: "Apps & Dashboards", path: "promptgarage-launcher.html" },
+            { title: "typotuner-architecture.html", type: "architektur", project: ".agent/diagrams", summary: "Begleitende Architektur zu einem UI-Projekt.", cluster: "Architektur-Diagramme", path: "typotuner-architecture.html" },
+            { title: "sidecar-v7-introspection-session.html", type: "analyse", project: ".agent/diagrams", summary: "Introspektionsspur für V7 als Analyse der eigenen Arbeitsweise.", cluster: "Sidecar-Evolution", path: "sidecar-v7-introspection-session.html" },
+            { title: "minimax-bug-meta-analyse.html", type: "analyse", project: ".agent/diagrams", summary: "Meta-Analyse eines Bugs statt bloßer Fix-Notiz.", cluster: "Analysen & Meta-Reflexion", path: "minimax-bug-meta-analyse.html" },
+            { title: "v7-meta-analyse.html", type: "analyse", project: ".agent/diagrams", summary: "V7 wird im Betrieb analysiert und nicht erst im Nachhinein dokumentiert.", cluster: "Sidecar-Evolution", path: "v7-meta-analyse.html" },
+            { title: "sidecar-v5-v6-v7-interconnect.html", type: "architektur", project: ".agent/diagrams", summary: "Versionen werden als zusammenhängendes System gelesen.", featured: true, cluster: "Sidecar-Evolution", path: "sidecar-v5-v6-v7-interconnect.html" }
+          ]
+        },
+        {
+          id: "2026-03-12",
+          date: "2026-03-12",
+          displayDate: "12. März",
+          phase: "Meta-Analyse-Tag",
+          items: [
+            { title: "static/index.html", type: "app", project: "AgentIDE", summary: "AgentIDE tritt als konkrete Oberfläche in die Timeline ein.", cluster: "Apps & Dashboards", path: "static/index.html" },
+            { title: "partials/contract_status + mechanism_ranking", type: "app", project: "Sidecar-V7", summary: "UI-Bausteine für Verträge, Ranking und Systemsteuerung.", cluster: "Sidecar-Evolution", path: "partials/" },
+            { title: "meta-analyse-4wochen-samuel.html", type: "analyse", project: ".agent/diagrams", summary: "Vier-Wochen-Meta-Analyse als Verdichtung einer Arbeitsphase.", featured: true, cluster: "Analysen & Meta-Reflexion", path: "meta-analyse-4wochen-samuel.html" },
+            { title: "agentide-git-history.html", type: "analyse", project: ".agent/diagrams", summary: "Git-Historie als Produkt- und Prozessbeleg lesbar gemacht.", cluster: "Analysen & Meta-Reflexion", path: "agentide-git-history.html" },
+            { title: "claude-config-evolution.html", type: "architektur", project: ".agent/diagrams", summary: "Die größte Datei im Datensatz macht Konfigurationsentwicklung explizit sichtbar.", featured: true, cluster: "Architektur-Diagramme", size: "351 KB", heavy: true, path: "claude-config-evolution.html" },
+            { title: "dynamic-memory-system.html", type: "architektur", project: ".agent/diagrams", summary: "Memory-Systeme werden als lebende Architektur behandelt.", cluster: "Architektur-Diagramme", path: "dynamic-memory-system.html" },
+            { title: "memory-minimax-quality-analysis.html", type: "analyse", project: ".agent/diagrams", summary: "Qualität wird über Memory- und Model-Verhalten analysiert.", cluster: "Analysen & Meta-Reflexion", path: "memory-minimax-quality-analysis.html" },
+            { title: "sidecar-v7-phase-unification.html", type: "architektur", project: ".agent/diagrams", summary: "Phase-Unification als Systemstruktur statt nur Roadmap.", cluster: "Sidecar-Evolution", path: "sidecar-v7-phase-unification.html" },
+            { title: "sidecar-learnings-v1-v7.html", type: "analyse", project: ".agent/diagrams", summary: "Lernen über mehrere Versionen hinweg als explizite Datenquelle.", cluster: "Sidecar-Evolution", path: "sidecar-learnings-v1-v7.html" },
+            { title: "version-squared-framework.html", type: "analyse", project: ".agent/diagrams", summary: "Framework-Denken auf Meta-Ebene angewendet.", cluster: "Analysen & Meta-Reflexion", path: "version-squared-framework.html" }
+          ]
+        },
+        {
+          id: "2026-03-13",
+          date: "2026-03-13",
+          displayDate: "13. März",
+          phase: "Sidecar Ecosystem",
+          items: [
+            { title: "claude-api-tunnel-flow.html", type: "architektur", project: ".agent/diagrams", summary: "API-Tunnel-Flow als Infrastrukturvisualisierung.", cluster: "Architektur-Diagramme", path: "claude-api-tunnel-flow.html" },
+            { title: "claudecodepanel-deep-review.html", type: "analyse", project: ".agent/diagrams", summary: "Tiefes Review als weiteres Qualitäts- und Architekturfenster.", cluster: "Analysen & Meta-Reflexion", size: "69 KB", heavy: true, path: "claudecodepanel-deep-review.html" },
+            { title: "sidecar-ecosystem-overview.html", type: "architektur", project: ".agent/diagrams", summary: "Der Übergang von Tool zu Ökosystem wird direkt lesbar.", featured: true, cluster: "Sidecar-Evolution", size: "65 KB", heavy: true, path: "sidecar-ecosystem-overview.html" },
+            { title: "sidecar-v7-visual-explainer.html", type: "explainer", project: ".agent/diagrams", summary: "Visual Explainer als Brücke zwischen Systemtiefe und Verständlichkeit.", cluster: "Sidecar-Evolution", path: "sidecar-v7-visual-explainer.html" },
+            { title: "sidecar-v7-wie-es-hilft.html", type: "explainer", project: ".agent/diagrams", summary: "Nutzensicht auf V7 für ein nicht nur technisches Publikum.", cluster: "Sidecar-Evolution", path: "sidecar-v7-wie-es-hilft.html" },
+            { title: "sidecar-v7-speech-system.html", type: "analyse", project: ".agent/diagrams", summary: "Sprachsysteme werden als Bestandteil des Ökosystems betrachtet.", cluster: "Sidecar-Evolution", path: "sidecar-v7-speech-system.html" }
+          ]
+        },
+        {
+          id: "2026-03-14",
+          date: "2026-03-14",
+          displayDate: "14. März",
+          phase: "SandrasWritingWorld",
+          items: [
+            { title: "agent-team-workflow-demo.html", type: "demo", project: ".agent/diagrams", summary: "Demo-Artefakt für Team-Workflow und agentische Zusammenarbeit.", cluster: "Architektur-Diagramme", path: "agent-team-workflow-demo.html" }
+          ]
+        },
+        {
+          id: "2026-03-15",
+          date: "2026-03-15",
+          displayDate: "15. März",
+          phase: "SandrasWritingWorld",
+          items: [
+            { title: "index.html + 7 Seiten", type: "website", project: "SandrasWritingWorld", summary: "Vollständige Website-Arbeit mit acht Seiten als sichtbarer Range-Sprung.", featured: true, cluster: "Apps & Dashboards", grouped: true, path: "" }
+          ]
+        },
+        {
+          id: "2026-03-16",
+          date: "2026-03-16",
+          displayDate: "16. März",
+          phase: "Version Archaeology + V7-V2",
+          items: [
+            { title: "templates/* (14 Dateien, Fork)", type: "app", project: "Sidecar-V7-V2", summary: "Fork-basierte Weiterentwicklung mit eigenem Template-Satz.", featured: true, cluster: "Sidecar-Evolution", grouped: true, path: "templates/" },
+            { title: "claude-directory-architecture.html", type: "architektur", project: ".agent/diagrams", summary: "Directory-Strukturen als Architekturproblem lesbar gemacht.", cluster: "Architektur-Diagramme", size: "70 KB", heavy: true, path: "claude-directory-architecture.html" },
+            { title: "sidecar-v7-daemon-commits.html", type: "architektur", project: ".agent/diagrams", summary: "Daemon-Commits als Systemansicht, nicht nur Git-Historie.", cluster: "Sidecar-Evolution", path: "sidecar-v7-daemon-commits.html" },
+            { title: "sidecar-v7-lite-architecture.html", type: "architektur", project: ".agent/diagrams", summary: "Lite-Variante als bewusst alternative Architektur.", cluster: "Sidecar-Evolution", size: "62 KB", heavy: true, path: "sidecar-v7-lite-architecture.html" },
+            { title: "version-archaeology-v1-v6.html", type: "analyse", project: ".agent/diagrams", summary: "Versionsarchäologie macht Entwicklung selbst zum Untersuchungsgegenstand.", featured: true, cluster: "Sidecar-Evolution", path: "version-archaeology-v1-v6.html" },
+            { title: "sidecar-v7-analyse-2026-03-16.html", type: "analyse", project: ".agent/diagrams", summary: "Tagesaktuelle Analyse als direkte Begleitung laufender Entwicklung.", cluster: "Sidecar-Evolution", path: "sidecar-v7-analyse-2026-03-16.html" },
+            { title: "sidecar-v7-daemon-commits-2026-03-16.html", type: "architektur", project: ".agent/diagrams", summary: "Weitere Verfeinerung der Daemon-Linie.", cluster: "Sidecar-Evolution", path: "sidecar-v7-daemon-commits-2026-03-16.html" },
+            { title: "sidecar-v7-event-pipeline-2026-03-16.html", type: "architektur", project: ".agent/diagrams", summary: "Event-Pipeline als operative Infrastrukturspur.", cluster: "Sidecar-Evolution", path: "sidecar-v7-event-pipeline-2026-03-16.html" }
+          ]
+        },
+        {
+          id: "2026-03-18",
+          date: "2026-03-18",
+          displayDate: "18. März",
+          phase: "Sidecar-NG + Karriere",
+          items: [
+            { title: "STRATEGIE_VISUAL.html", type: "karriere", project: "Jobs_Selbständigkeit", summary: "Strategische Selbstpositionierung als visuelles Karriereartefakt.", featured: true, cluster: "Analysen & Meta-Reflexion", path: "STRATEGIE_VISUAL.html" },
+            { title: "buildmode-explainer.html", type: "explainer", project: ".agent/diagrams", summary: "Buildmode als explizit kommuniziertes Arbeitskonzept.", cluster: "Analysen & Meta-Reflexion", path: "buildmode-explainer.html" },
+            { title: "sidecar-ng-skill-router.html", type: "architektur", project: ".agent/diagrams", summary: "NG-Richtung mit Skill-Routing als Infrastrukturentscheidung.", cluster: "Sidecar-Evolution", path: "sidecar-ng-skill-router.html" },
+            { title: "v6-eval-analysis.html", type: "analyse", project: ".agent/diagrams", summary: "Eval-Spur als Rückblick auf eine frühere Version.", cluster: "Sidecar-Evolution", path: "v6-eval-analysis.html" }
+          ]
+        },
+        {
+          id: "2026-03-19",
+          date: "2026-03-19",
+          displayDate: "19. März",
+          phase: "Letzte Diagramme",
+          items: [
+            { title: "templates/index.html (Update)", type: "app", project: "Sidecar-V7", summary: "Weiterentwicklung des Hauptindexes statt bloßer Einmal-Implementierung.", cluster: "Sidecar-Evolution", path: "templates/index.html" },
+            { title: "claude-code-ecosystem-complete.html", type: "architektur", project: ".agent/diagrams", summary: "Komplette Systemübersicht am späten Ende der Timeline.", featured: true, cluster: "Architektur-Diagramme", size: "58 KB", heavy: true, path: "claude-code-ecosystem-complete.html" },
+            { title: "claude-code-model-effort-system.html", type: "architektur", project: ".agent/diagrams", summary: "Model-Effort-System als explizites Architekturmodell.", cluster: "Architektur-Diagramme", size: "46 KB", path: "claude-code-model-effort-system.html" },
+            { title: "smart-compact-flow.html", type: "architektur", project: ".agent/diagrams", summary: "Verdichteter Flow als späte Strukturierungsform.", cluster: "Architektur-Diagramme", path: "smart-compact-flow.html" },
+            { title: "v7-evaluation-deep-dive.html", type: "analyse", project: ".agent/diagrams", summary: "Tiefe V7-Evaluation als evidence-based Rückblick.", cluster: "Sidecar-Evolution", size: "72 KB", heavy: true, path: "v7-evaluation-deep-dive.html" },
+            { title: "viz-event-infrastructure.html", type: "architektur", project: ".agent/diagrams", summary: "Event-Infrastruktur als abschließende Visualisierungslinie.", cluster: "Architektur-Diagramme", path: "viz-event-infrastructure.html" },
+            { title: "Visualisungen_improve/index.html + data.json", type: "eval", project: "MetaMetaMeta", summary: "Sidecar-NG Eval Dashboard mit JSON-Daten, Methodikpanel und Experimentvergleich als visuelle Auswertung.", featured: true, cluster: "Analysen & Meta-Reflexion", path: "Visualisungen_improve/index.html", size: "87.1 KB" }
+          ]
+        },
+        {
+          id: "2026-03-20",
+          date: "2026-03-20",
+          displayDate: "20. März",
+          phase: "Usage Analysis",
+          items: [
+            { title: "index.html", type: "analyse", project: "CloudCodeUsageAnalysis", summary: "Monatsrückblick auf Cloud-Code-Nutzung: geschätzte Arbeitszeit, Projektcluster und Aktivitätsmuster als Evidenz statt Bauchgefühl.", featured: true, cluster: "Analysen & Meta-Reflexion", path: "index.html" }
+          ]
+        },
+        {
+          id: "2026-03-22",
+          date: "2026-03-22",
+          displayDate: "22. März",
+          phase: "Prompt Infrastructure",
+          items: [
+            { title: "templates/* (7 Dateien)", type: "app", project: "PromptGarageUI", summary: "PromptGarage wird zur sichtbaren Web-Oberfläche: Prompt-Liste, Detailseiten, Bearbeiten, Neuanlage, Fehlerseite und Statistik.", featured: true, cluster: "Apps & Dashboards", grouped: true, path: "templates/" }
+          ]
+        },
+        {
+          id: "2026-03-23",
+          date: "2026-03-23",
+          displayDate: "23. März",
+          phase: "Harness Ecosystem",
+          items: [
+            { title: "diagrams/architecture-*.html (5 Dateien)", type: "architektur", project: "HarnessEcosystem", summary: "Fünf vergleichbare Architekturdiagramme für Claude Code, Codex CLI, Cursor Composer, Hermes und OpenCode.", featured: true, cluster: "Architektur-Diagramme", grouped: true, path: "diagrams/" },
+            { title: "diagrams/architecture-claude-code.html", type: "architektur", project: "HarnessEcosystem", summary: "Standalone Sequenzdiagramm zur internen Claude-Code-Architektur: User, CLI, Hooks, API, Tools und Subagents als Prozessfluss fuer Harness-Vergleiche.", cluster: "Architektur-Diagramme", path: "diagrams/architecture-claude-code.html", size: "42.1 KB" },
+            { title: "diagrams/architecture-codex-cli.html", type: "architektur", project: "HarnessEcosystem", summary: "Standalone Sequenzdiagramm zur Codex-CLI-Architektur: User, CLI, Sandbox und API als Prozessfluss fuer Harness-Vergleiche.", cluster: "Architektur-Diagramme", path: "diagrams/architecture-codex-cli.html", size: "42.9 KB" },
+            { title: "diagrams/architecture-cursor-composer.html", type: "architektur", project: "HarnessEcosystem", summary: "Standalone Sequenzdiagramm zur Cursor-Composer-Architektur: User, IDE, Daemon, Backend und LLM als Prozessfluss fuer Harness-Vergleiche.", cluster: "Architektur-Diagramme", path: "diagrams/architecture-cursor-composer.html", size: "36.3 KB" },
+            { title: "diagrams/architecture-hermes.html", type: "architektur", project: "HarnessEcosystem", summary: "Standalone Sequenzdiagramm zur Hermes-Architektur: User, CLI, SOUL/Profile, LLM, Tools und Memory als Prozessfluss fuer Harness-Vergleiche.", cluster: "Architektur-Diagramme", path: "diagrams/architecture-hermes.html", size: "49.1 KB" }
+          ]
+        },
+        {
+          id: "2026-03-24",
+          date: "2026-03-24",
+          displayDate: "24. März",
+          phase: "samuel-os-v2 + MetaMetaMeta",
+          items: [
+            { title: "index.html + app.js + ecosystem.json", type: "website", project: "HarnessEcosystem", summary: "Lokale Single-Page-Website, die Samuels Harness-Ökosystem mit Tools, Diagrammen, Regeln und Anti-Patterns visualisiert.", featured: true, cluster: "Apps & Dashboards", path: "index.html", size: "73.8 KB" },
+            { title: "dashboard/index.html", type: "app", project: "samuel-os-v2", summary: "Operatives Dashboard als späte Konsolidierung von Systemarbeit.", featured: true, cluster: "Apps & Dashboards", path: "dashboard/index.html" },
+            { title: "dashboard/tutorials/index.html", type: "docs", project: "samuel-os-v2", summary: "Tutorial-Uebersichtsseite fuer samuel-os-v2 mit vier Lernpfaden: Git Mastery, Tool-Konsolidierung, Dokumentationssystem und CI/CD-Quality als praxisnahe Arbeitskapitel.", featured: true, cluster: "Apps & Dashboards", path: "dashboard/tutorials/index.html", size: "6.8 KB" },
+            { title: "dashboard/tutorials/git-mastery.html", type: "docs", project: "samuel-os-v2", summary: "Git-Mastery-Tutorial fuer tragfaehige Arbeitsweise: Repo-Setup, kleine Commits, Branching-Uebung, typische Fehlerbilder und klare Definition of Done.", cluster: "Lernmaterial", path: "dashboard/tutorials/git-mastery.html", size: "8.6 KB" },
+            { title: "dashboard/tutorials/tool-konsolidierung.html", type: "docs", project: "samuel-os-v2", summary: "Tool-Konsolidierungs-Tutorial fuer klare Rollen in Codex, OpenCode, Gemini, ChatGPT, lokalen Tools und Dotfiles statt permanentem Kontextwechsel.", cluster: "Lernmaterial", path: "dashboard/tutorials/tool-konsolidierung.html", size: "7.7 KB" },
+            { title: "dashboard/tutorials/dokumentationssystem.html", type: "docs", project: "samuel-os-v2", summary: "Dokumentationssystem-Tutorial fuer Daily Logs, Learning-Verdichtung, Projektblaetter, Inbox-Disziplin und spaeteren Wiedereinstieg ohne Panik.", cluster: "Lernmaterial", path: "dashboard/tutorials/dokumentationssystem.html", size: "7.4 KB" },
+            { title: "dashboard/tutorials/ci-cd-quality.html", type: "docs", project: "samuel-os-v2", summary: "CI/CD-Quality-Tutorial fuer robuste agentische Systeme mit minimaler Pipeline, pre-commit, Definition of Done und sichtbaren Quality Gates.", cluster: "Lernmaterial", path: "dashboard/tutorials/ci-cd-quality.html", size: "7.3 KB" },
+            { title: "dashboard/guidelines/index.html", type: "docs", project: "samuel-os-v2", summary: "Guideline-Uebersichtsseite fuer Daily Workflow, Weekly Review, Fokus- und Scope-Kontrolle sowie Eval statt Bauchgefuehl als Betriebsrahmen.", featured: true, cluster: "Apps & Dashboards", path: "dashboard/guidelines/index.html", size: "2.8 KB" },
+            { title: "dashboard/guidelines/daily-workflow.html", type: "docs", project: "samuel-os-v2", summary: "Daily-Workflow-Guideline fuer stabilen Tagesstart, ein Hauptziel, Scope-Parkplatz, Fokusblock, Tageslog, Learning und einen naechsten kleinen Schritt.", cluster: "Lernmaterial", path: "dashboard/guidelines/daily-workflow.html", size: "3.0 KB" },
+            { title: "dashboard/guidelines/weekly-review.html", type: "docs", project: "samuel-os-v2", summary: "Weekly-Review-Guideline fuer kurze, ehrliche Wochenklaerung: Fertiges, Energie, Tool-Laerm, Inbox, Learnings und maximal drei Ziele fuer die naechste Woche.", cluster: "Lernmaterial", path: "dashboard/guidelines/weekly-review.html", size: "2.9 KB" },
+            { title: "dashboard/guidelines/scope-kontrolle.html", type: "docs", project: "samuel-os-v2", summary: "Scope-Kontrolle-Guideline fuer Scope-Drift-Erkennung, ein Hauptziel pro Session, Ideen-Parkplatz und kein Systemumbau ohne klares Schmerzproblem.", cluster: "Lernmaterial", path: "dashboard/guidelines/scope-kontrolle.html", size: "2.8 KB" },
+            { title: "dashboard/guidelines/eval-statt-bauchgefuehl.html", type: "docs", project: "samuel-os-v2", summary: "Eval-statt-Bauchgefuehl-Guideline fuer belastbare Tool- und Workflow-Entscheidungen mit kleiner Vergleichsmatrix, echten Outputs und Kosten-/Fokusbewertung.", cluster: "Lernmaterial", path: "dashboard/guidelines/eval-statt-bauchgefuehl.html", size: "2.9 KB" }
+          ]
+        },
+        {
+          id: "2026-03-25",
+          date: "2026-03-25",
+          displayDate: "25. März",
+          phase: "samuel-os-v2 + MetaMetaMeta",
+          marker: "end",
+          items: [
+            { title: "eval-dashboard.html", type: "eval", project: "MetaMetaMeta", summary: "Evaluationsdashboard als späte, operationalisierte Meta-Ebene.", featured: true, cluster: "Analysen & Meta-Reflexion", path: "eval-dashboard.html" },
+            { title: "visual_explainer_run_pipeline.html", type: "explainer", project: "MetaMetaMeta", summary: "Pipeline-Explainer als Endpunkt der sichtbaren Arbeitslogik.", cluster: "Analysen & Meta-Reflexion", path: "visual_explainer_run_pipeline.html" }
+          ]
+        },
+        {
+          id: "2026-03-26",
+          date: "2026-03-26",
+          displayDate: "26. März",
+          phase: "aidvance + BahnAgent",
+          items: [
+            { title: "index.html", type: "website", project: "aidvance-proposal", summary: "Proposal-Seite für AIDVANCE — therapeutische LLM-App, Startup-Call mit Berliner Startup.", featured: true, cluster: "Karriere", path: "index.html" },
+            { title: "mockup.html", type: "demo", project: "aidvance-proposal", summary: "Evolve-Pipeline Live Example als klickbare AIDVANCE-Demo: Anfrage, Richtlinien, Claude-Antwort, Observer-Auswertung, Improvement Proposal und A/B-Test.", featured: true, cluster: "Karriere", path: "mockup.html", size: "44.5 KB" },
+            { title: "runs/20260326_231137/explainer.html", type: "explainer", project: "NasaCode", summary: "Visueller Explainer für eine NasaCode-Pipeline mit Vorher/Nachher-Codevergleich, Judge-Scorecard und Pipeline-Beobachtungen.", featured: true, cluster: "Analysen & Meta-Reflexion", path: "runs/20260326_231137/explainer.html", size: "56.5 KB" }
+          ]
+        },
+        {
+          id: "2026-03-27",
+          date: "2026-03-27",
+          displayDate: "27. März",
+          phase: "aidvance + AIDGENTS",
+          items: [
+            { title: "aidgents-brief.html", type: "website", project: "aidvance-proposal", summary: "AIDGENTS Developer Brief als technische Konzeptseite: interne Agenteninfrastruktur für Aidvance mit Notion, Microsoft 365, Rollen, Sicherheitsgrenzen und MVP-Stufen.", featured: true, cluster: "Karriere", path: "aidgents-brief.html", size: "20.7 KB" }
+          ]
+        },
+        {
+          id: "2026-04-01",
+          date: "2026-04-01",
+          displayDate: "01. April",
+          phase: "aidvance + BahnAgent",
+          items: [
+            { title: "index.html", type: "website", project: "BahnAgent", summary: "Reiseplanungs-Interface für St. Anton Ski-Trip — Wetter, Ticket, Unterkunft.", cluster: "Apps & Dashboards", path: "index.html" }
+          ]
+        },
+        {
+          id: "2026-04-04",
+          date: "2026-04-04",
+          displayDate: "04. April",
+          phase: "sidecar-v7-demo + UEBER_AGENT",
+          items: [
+            { title: "index.html", type: "demo", project: "sidecar-v7-demo", summary: "Demo-Website für Sidecar-V7 — interaktive Produktpräsentation mit Live-Workflows.", cluster: "Sidecar-Evolution", path: "index.html" },
+            { title: "diskussion/WebSite_notSourceOfTruth/pwd-portfolio.html", type: "website", project: "UEBER_AGENT", summary: "Portfolio-Seite zur Multi-Agent Stern-Architektur mit Rollenmodell, Themeninseln und Systemübersicht.", featured: true, cluster: "Agent-Systeme", path: "diskussion/WebSite_notSourceOfTruth/pwd-portfolio.html", size: "65.9 KB" },
+            { title: "diskussion/WebSite_notSourceOfTruth/zoomable-ui.html", type: "architektur", project: "UEBER_AGENT", summary: "Dunkle zoomable Architekturansicht fuer UEBER_AGENT: Meta-Router im Zentrum, vier Agenten-Pfade, Pfadkarten, Breadcrumb-Navigation und drill-down-faehige Moduldetails.", featured: true, cluster: "Agent-Systeme", path: "diskussion/WebSite_notSourceOfTruth/zoomable-ui.html", size: "65.2 KB" },
+            { title: "diskussion/WebSite_notSourceOfTruth/pwd-unified.html", type: "architektur", project: "UEBER_AGENT", summary: "Unified-Architecture-Seite fuer UEBER_AGENT mit Meta-Router, Stern-Architektur, vier Agenten-Pfaden, Theme-Switch und Longform-Research-Bezug.", featured: true, cluster: "Agent-Systeme", path: "diskussion/WebSite_notSourceOfTruth/pwd-unified.html", size: "69.7 KB" }
+          ]
+        },
+        {
+          id: "2026-04-07",
+          date: "2026-04-07",
+          displayDate: "07. April",
+          phase: "NasaCode + alleProjekte + PortfolioTimeline",
+          items: [
+            { title: "index.html", type: "website", project: "NasaCode", summary: "Projektseite zum Multi-Agent Ratchet Loop: Rollen, Pipeline, Fortschrittslogik und Experimentfokus.", featured: true, cluster: "Analysen & Meta-Reflexion", path: "index.html", size: "13.9 KB" },
+            { title: "index.html", type: "website", project: "alleProjekte", summary: "Persoenliches Projekt-Archiv mit kompakten Karten fuer Agenten, Dashboards, Tools und Sidecar-Linien.", featured: true, cluster: "Portfolio & Archiv", path: "index.html", size: "18.6 KB" },
+            { title: "index.html + styles.css", type: "website", project: "PortfolioTimeline", summary: "Die Timeline-Showcase selbst — diese Website hier! Selbstdokumentation als Arbeitsprinzip.", featured: true, cluster: "Apps & Dashboards", path: "index.html", size: "97.9 KB" }
+          ]
+        },
+        {
+          id: "2026-04-08",
+          date: "2026-04-08",
+          displayDate: "08. April",
+          phase: "MultiHarnessStudio",
+          items: [
+            { title: "Spine_Idea/spine-konzept.html", type: "konzept", project: "MultiHarnessStudio", summary: "Konzeptseite fuer Spine als kanonische Integrationsschicht zwischen Modellen, Tools, Runs und Evaluation.", featured: true, cluster: "Harness & Evaluation", path: "Spine_Idea/spine-konzept.html", size: "64.5 KB" }
+          ]
+        },
+        {
+          id: "2026-04-12",
+          date: "2026-04-12",
+          displayDate: "12. April",
+          phase: "ClaudeInsightsTimeline + OpenCodeGoUsageDashboard + Zentrale",
+          items: [
+            { title: "Samuel — Agentic Profile V2.html", type: "analyse", project: "ClaudeInsightsTimeline", summary: "Interaktive Agentic-Profile-Seite mit KPI-Bar, Knowledge-Graph, Session-Daten, Skill-/Harness-Verbindungen und Continue/Stop/Systematize-Doctrine.", featured: true, cluster: "Analysen & Meta-Reflexion", path: "Samuel — Agentic Profile V2.html", size: "51.7 KB" },
+            { title: "Samuel.SYSTEM — Agentic Research Instrument V3.html", type: "analyse", project: "ClaudeInsightsTimeline", summary: "V3-Stand des interaktiven Samuel.SYSTEM-Research-Instruments mit Knowledge-Graph, Evolutionsatlas, Denkmodell, Failure-Analyse, Harness-Sicht, Doctrine und Artefaktverweisen.", featured: true, cluster: "Analysen & Meta-Reflexion", path: "Samuel.SYSTEM — Agentic Research Instrument V3.html", size: "98.5 KB" },
+            { title: "Samuel.SYSTEM — Agentic Research Instrument V4.html", type: "analyse", project: "ClaudeInsightsTimeline", summary: "Grosses interaktives Research-Instrument fuer Samuel.SYSTEM mit Graph, Timeline, Denkmodell, Failure-Analyse, Harness-Vergleich, Artefaktliste und verdichteten Erkenntnissen.", featured: true, cluster: "Analysen & Meta-Reflexion", path: "Samuel.SYSTEM — Agentic Research Instrument V4.html", size: "129.2 KB" },
+            { title: "templates/index.html", type: "app", project: "OpenCodeGoUsageDashboard", summary: "Flask/Jinja-Dashboard fuer OpenCode-Go-Nutzung mit Tageskosten, Tokenzahlen, Modellvergleich und Harness-Blick.", featured: true, cluster: "Usage & Kosten", path: "templates/index.html", size: "17.2 KB" },
+            { title: "templates/sessions.html", type: "analyse", project: "OpenCodeGoUsageDashboard", summary: "Top-Sessions-Ansicht fuer OpenCode-Go-Nutzung mit Session-Links, Modell, Harness-Badge, Input-/Output-Tokens, Request-Zahl und Kostenranking.", featured: true, cluster: "Usage & Kosten", path: "templates/sessions.html", size: "5.4 KB" },
+            { title: "templates/session_detail.html", type: "analyse", project: "OpenCodeGoUsageDashboard", summary: "Session-Detailansicht fuer eine einzelne OpenCode-Go-Session mit Modell, Harness, Kosten-/Token-KPIs, Start-/Endzeit, Export-Buttons und All-Requests-Tabelle.", featured: true, cluster: "Usage & Kosten", path: "templates/session_detail.html", size: "7.2 KB" },
+            { title: "templates/models.html", type: "analyse", project: "OpenCodeGoUsageDashboard", summary: "Model-Comparison-Ansicht fuer OpenCode-Go-Nutzung mit Kosten, Input-/Output-Tokens, Request-Zahlen, Cost-per-1K und Efficiency Ratio pro Modell.", featured: true, cluster: "Usage & Kosten", path: "templates/models.html", size: "5.3 KB" },
+            { title: "templates/model.html", type: "analyse", project: "OpenCodeGoUsageDashboard", summary: "Modell-Detailansicht fuer ein einzelnes OpenCode-Go-Modell mit Gesamtkosten, Input-/Output-Tokens, Request-Anzahl, Efficiency Ratio und Recent-Requests-Tabelle.", featured: true, cluster: "Usage & Kosten", path: "templates/model.html", size: "7.5 KB" },
+            { title: "templates/trends.html", type: "analyse", project: "OpenCodeGoUsageDashboard", summary: "Usage-Trends-Ansicht fuer OpenCode-Go mit Zeitraumwahl, Projected-Monthly-Badge, Kosten-/Token-KPIs, Cost-over-Time-Chart und Daily-Breakdown-Tabelle.", featured: true, cluster: "Usage & Kosten", path: "templates/trends.html", size: "7.6 KB" },
+            { title: "web/index.html + static SPA", type: "app", project: "Zentrale", summary: "FastAPI/WebSocket-GUI fuer Projekte, Runs, Kosten, Effectiveness und lokale Harness-Steuerung.", featured: true, cluster: "Harness & Orchestration", path: "web/index.html", size: "84 KB" }
+          ]
+        },
+        {
+          id: "2026-04-17",
+          date: "2026-04-17",
+          displayDate: "17. April",
+          phase: "FirstRealHarnessEvaluation",
+          items: [
+            { title: "index.html", type: "eval", project: "FirstRealHarnessEvaluation_KarpathiesMD", summary: "Landingpage fuer den Aider-Bench-Harness mit Links zu Architektur, Logikfluss und Parallel-Experiment.", featured: true, cluster: "Harness & Evaluation", path: "index.html", size: "2.1 KB" },
+            { title: "harness_architecture.html", type: "architektur", project: "FirstRealHarnessEvaluation_KarpathiesMD", summary: "Vollstaendiges Architekturdiagramm fuer die Aider-Bench-Pipeline von Task-Input ueber Agent, Eval und Judge.", featured: true, cluster: "Harness & Evaluation", path: "harness_architecture.html", size: "30.3 KB" },
+            { title: "harness_logic_flow.html", type: "architektur", project: "FirstRealHarnessEvaluation_KarpathiesMD", summary: "Logikfluss-Diagramm fuer Task, Markdown-Kontext, Agent-Patch, Judge und Verdict im Aider-Bench-Harness.", featured: true, cluster: "Harness & Evaluation", path: "harness_logic_flow.html", size: "20.8 KB" },
+            { title: "harness_parallel_experiment.html", type: "eval", project: "FirstRealHarnessEvaluation_KarpathiesMD", summary: "Parallel-Experiment-Matrix fuer Tasks, Conditions und Runs bis zur Aggregation im Aider-Bench-Harness.", featured: true, cluster: "Harness & Evaluation", path: "harness_parallel_experiment.html", size: "27.8 KB" }
+          ]
+        },
+        {
+          id: "2026-04-19",
+          date: "2026-04-19",
+          displayDate: "19. April",
+          phase: "AidvanceWork",
+          items: [
+            { title: "Arbeit/cowork-aidvance.html", type: "website", project: "AidvanceWork", summary: "Claude-Cowork-Fit fuer AIDGENTS: on-device Pilotmoeglichkeiten, M365/Notion-Connectoren, Research-Grenzen und warum Cowork keine 24/7-Runtime ersetzt.", featured: true, cluster: "Karriere", path: "Arbeit/cowork-aidvance.html", size: "13.3 KB" },
+            { title: "Arbeit/agent-sdk-aidvance.html", type: "website", project: "AidvanceWork", summary: "Claude-Agent-SDK-Fit fuer AIDGENTS als Production-Runtime: Subagents, MCP, Azure-VM-Betrieb, Policy-Gates und Jannis-Workflow-Risiken.", featured: true, cluster: "Karriere", path: "Arbeit/agent-sdk-aidvance.html", size: "15.1 KB" }
+          ]
+        },
+        {
+          id: "2026-04-21",
+          date: "2026-04-21",
+          displayDate: "21. April",
+          phase: "AIOS-Cockpit + PromptBoost + CodexMaxHarness + Samuel.SYSTEM",
+          items: [
+            { title: "templates/workbench.html", type: "app", project: "AIOS-Cockpit", summary: "Primaere Workbench fuer lokales Agenten-Betriebssystem: Projektwahl, Queue, Routing, Handoff und Run-Preview.", featured: true, cluster: "Agent-Systeme", path: "templates/workbench.html", size: "8.4 KB" },
+            { title: "templates/index.html", type: "app", project: "AIOS-Cockpit", summary: "Dashboard-Ansicht fuer das lokale Agenten-Betriebssystem mit Tagesfokus, Sources of Truth, Harnesses und Handoffs.", featured: true, cluster: "Agent-Systeme", path: "templates/index.html", size: "7.3 KB" },
+            { title: "templates/handoffs.html", type: "app", project: "AIOS-Cockpit", summary: "Handoff-Archiv fuer gespeicherte Execution-Artefakte mit Ziel, Projekt, Zielagent und Routing-Metadaten.", cluster: "Agent-Systeme", path: "templates/handoffs.html", size: "1.2 KB" },
+            { title: "templates/project.html", type: "app", project: "AIOS-Cockpit", summary: "Projekt-Detailansicht mit Zustand, Warnungen, README-Auszug, wichtigen Dateien und Handoff-Formular.", cluster: "Agent-Systeme", path: "templates/project.html", size: "2.7 KB" },
+            { title: "templates/route.html", type: "app", project: "AIOS-Cockpit", summary: "Routing-Ergebnisansicht fuer KomandoZentral-Entscheidungen mit Harness, Taskklasse, Confidence, Risiken und Fallback.", cluster: "Agent-Systeme", path: "templates/route.html", size: "1.0 KB" },
+            { title: "templates/run.html", type: "app", project: "AIOS-Cockpit", summary: "Run-Detailansicht fuer Zentrale-Ausfuehrungen mit RUN.json und log.json als auditiertem Ausfuehrungsnachweis.", cluster: "Agent-Systeme", path: "templates/run.html", size: "0.9 KB" },
+            { title: "index.html", type: "app", project: "PromptBoost", summary: "PromptBoost-V2-Adapter, der Nutzerabsicht in Harness-Draft, Preconditions, Risiken und Review-Fokus uebersetzt.", featured: true, cluster: "Prompt Infrastructure", path: "index.html", size: "8.8 KB" },
+            { title: "index.html", type: "learning", project: "CodexMaxHarnessHowTo", summary: "Privates 8-Tage-Runbook fuer produktive Codex-Max-Nutzung mit Agenten-Wellen, Setup-Log, Credit-Rechner, Task-Board und wiederverwendbaren Prompts.", featured: true, cluster: "Lernmaterial", path: "index.html", size: "17.5 KB" },
+            { title: "smlfg.github.io/index.html", type: "website", project: "LuckSurface", summary: "Samuel.SYSTEM als oeffentliche Agentic-Operator-Seite: Hub, Proof, Work-Graph, Clips, Evals und Workflow-Angebot.", featured: true, cluster: "Karriere", path: "smlfg.github.io/index.html", size: "7.2 KB" }
+          ]
+        },
+        {
+          id: "2026-04-22",
+          date: "2026-04-22",
+          displayDate: "22. April",
+          phase: "HeumandenParty + HarnessEcosystem + CodexModeGovernor + Codex Usage + AidvanceWork + personalPromptBoost",
+          items: [
+            { title: "index.html", type: "website", project: "HeumandenParty", summary: "Heumaden-Lenzzauber-Website fuer ein zweitaegiges Abschiedsfestival mit Programm, Support, Community-Regeln, Helferplan, FAQ, Einkaufstools und Kontaktsektion.", featured: true, cluster: "Apps & Dashboards", path: "index.html", size: "70.7 KB" },
+            { title: "frontier-llm-harness/index.html", type: "eval", project: "HarnessEcosystem", summary: "Interaktive Harness-Trace-Lab-Seite, die Opus 4.7 und GPT-5.4 im gleichen OpenClaude-Harness gegenueberstellt: Runtime-Switch, Testfaelle, Verhaltensachsen und Regeln.", featured: true, cluster: "Harness & Evaluation", path: "frontier-llm-harness/index.html", size: "10.7 KB" },
+            { title: "sidebyside/index.html", type: "analyse", project: "HarnessEcosystem", summary: "Fetch-backed Side-by-Side-Dashboard fuer Codex, Claude Code und Hermes mit Harness-Vergleich, Nutzungsansicht, Skills-/Command-Inventar, Funden und Quellen.", featured: true, cluster: "Harness & Evaluation", path: "sidebyside/index.html", size: "4 Files · 219.0 KB" },
+            { title: "index.html", type: "app", project: "CodexModeGovernor", summary: "Kleine stateless Codex-Mode-Governor-Oberflaeche fuer Mode-Vertraege: sieben Modi, Prompt-Eingabe, Canvas-Signal, Contract-Output, Copy-Button und klare Stop-Bedingungen.", featured: true, cluster: "Agent-Systeme", path: "index.html", size: "2.2 KB" },
+            { title: "reports/codex-usage.html", type: "analyse", project: "Codex_Usage_Profil", summary: "Codex Usage Report mit Sessions, Tokenvolumen, CWD-Ranking, Top-Sessions und Datenwarnungen als Arbeitsprofil.", featured: true, cluster: "Usage & Kosten", path: "reports/codex-usage.html", size: "46.9 KB" },
+            { title: "Arbeit/aidgents-product-fit-demo.html", type: "website", project: "AidvanceWork", summary: "AIDGENTS Product Fit Board als Zoom-Demo: Buy-vs-build-Matrix, Produktnotizen, Security-Fit und Talk Track fuer Aidvance.", featured: true, cluster: "Karriere", path: "Arbeit/aidgents-product-fit-demo.html", size: "33.5 KB" },
+            { title: "Arbeit/Firstzoommeeting.html", type: "website", project: "AidvanceWork", summary: "First-Zoom-Meeting-Seite fuer AIDGENTS v0 mit kleinem Meeting-Prep-Slice, Langflow-Canvas und sicheren Startentscheidungen fuer Jannis.", featured: true, cluster: "Karriere", path: "Arbeit/Firstzoommeeting.html", size: "35.5 KB" },
+            { title: "Arbeit/SecondZoommeeting.html", type: "website", project: "AidvanceWork", summary: "Second-Zoom-Meeting-Seite als Erweiterungsagenda nach dem MVP: Product-Fit, Research, Security-Grenzen und was den Meeting-Prep-v0 nicht blockieren darf.", featured: true, cluster: "Karriere", path: "Arbeit/SecondZoommeeting.html", size: "11.9 KB" },
+            { title: "Arbeit/firstbuildlangflow.html", type: "website", project: "AidvanceWork", summary: "Langflow Build Blueprint fuer Meeting Prep mit Microsoft 365 und Notion: sichtbarer Flow, Linux-GUI-Setup, Policy Gate und Build-Roadmap.", featured: true, cluster: "Karriere", path: "Arbeit/firstbuildlangflow.html", size: "55.4 KB" },
+            { title: "promptboost/templates/index.html", type: "app", project: "personalPromptBoost", summary: "FastAPI-Startseite fuer lokale Prompt-Kompilierung mit Eingabeformular, Pipeline-State, Adapterdetails, Matrix und Run-Historie.", featured: true, cluster: "Prompt Infrastructure", path: "promptboost/templates/index.html", size: "7.6 KB" },
+            { title: "promptboost/templates/matrix_lab.html", type: "app", project: "personalPromptBoost", summary: "Matrix-Lab-Oberflaeche fuer Harness-Model-Heatmap, deterministische Matrix, Findings, Zellinspektor und Full-Agentic-Preview.", featured: true, cluster: "Prompt Infrastructure", path: "promptboost/templates/matrix_lab.html", size: "5.0 KB" }
+          ]
+        },
+        {
+          id: "2026-04-28",
+          date: "2026-04-28",
+          displayDate: "28. April",
+          phase: "Agentic Builder Profile",
+          items: [
+            { title: "Samuel — Agentic Builder Profile.html", type: "website", project: "AgenticBuilderProfile", summary: "Evidenzbasiertes Agentic-Builder-Profil mit Staerken, Risiken, Lernkarte, Arbeitsmuster und Positionierung als Architect of Agents.", featured: true, cluster: "Karriere", path: "Samuel — Agentic Builder Profile.html", size: "47.6 KB" }
+          ]
+        },
+        {
+          id: "2026-04-30",
+          date: "2026-04-30",
+          displayDate: "30. April",
+          phase: "WerBinIch",
+          items: [
+            { title: "docs/OWNER_BRIEF.html", type: "explainer", project: "WerBinIch", summary: "Owner-Brief fuer ein MiniMax-basiertes Wer-bin-Ich-Labor mit Versuchsaufbau, Datei-Landkarte, Default-Prompts, Copy-Commands, Statusklassifikation und naechstem sicheren Smoke-Test.", featured: true, cluster: "Harness & Evaluation", path: "docs/OWNER_BRIEF.html", size: "41.3 KB" }
+          ]
+        },
+        {
+          id: "2026-05-01",
+          date: "2026-05-01",
+          displayDate: "01. Mai",
+          phase: "LuisHandoff",
+          items: [
+            { title: "index.html", type: "explainer", project: "LuisHandoff", summary: "Agent Control Tower Handoff-Seite fuer Luis mit Lesemodi, Projektkarte, Rollenmatrix, Konflikten und konkretem Konsolidierungsauftrag.", featured: true, cluster: "Analysen & Meta-Reflexion", path: "index.html", size: "31.6 KB" }
+          ]
+        },
+        {
+          id: "2026-05-07",
+          date: "2026-05-07",
+          displayDate: "07. Mai",
+          phase: "LuisHandoff",
+          items: [
+            { title: "luis-agentisches-arbeiten.html", type: "explainer", project: "LuisHandoff", summary: "Luis-Briefing, das Samuels agentische Arbeitsweise, die Engstelle vor der Agentenausfuehrung und die Rolle von Luis sichtbar macht.", featured: true, cluster: "Analysen & Meta-Reflexion", path: "luis-agentisches-arbeiten.html", size: "22.7 KB" }
+          ]
+        },
+        {
+          id: "2026-05-10",
+          date: "2026-05-10",
+          displayDate: "10. Mai",
+          phase: "FirstRealHarnessEvaluation + HAI",
+          items: [
+            { title: "web/static/scientific-versuchsaufbau.html", type: "eval", project: "FirstRealHarnessEvaluation_KarpathiesMD", summary: "Wissenschaftliche A/B-Erklaerseite fuer FirstHarnessEval: falsifizierbarer Versuchsaufbau, Scope-Matrix, Modell-Achse und reproduzierbare harness-science-ab-Berichte.", featured: true, cluster: "Harness & Evaluation", path: "web/static/scientific-versuchsaufbau.html", size: "17.6 KB" },
+            { title: "web/frontend/dist/index.html + assets", type: "app", project: "FirstRealHarnessEvaluation_KarpathiesMD", summary: "Harness Cockpit als React/FastAPI-App: Versuchsaufbau, Analyse, Trajectory, Runs, Launch, Experiment und Kernmessung als operative Kontrolloberflaeche.", featured: true, cluster: "Harness & Evaluation", path: "web/frontend/dist/index.html", size: "589 KB" },
+            { title: "hai-ui-prototype/index.html", type: "app", project: "HAI", summary: "Adaptive Decision Surface als HAI-UI-Prototyp: Entscheidungszustände, Owner-Fragen, Confidence, Agentenvertrag und Next-Step-Flaeche als konkrete Interface-Skizze.", featured: true, cluster: "Agent-Systeme", path: "hai-ui-prototype/index.html", size: "26.0 KB" },
+            { title: "luis-v1-3-site/index.html", type: "explainer", project: "HAI_V1_3", summary: "Luis-Briefing zu HAI V1.3: zeigt, wie HAI von Projektmanagement-Basis zu Projektzustands-, Sinn- und Next-Step-Filter wurde.", featured: true, cluster: "Analysen & Meta-Reflexion", path: "luis-v1-3-site/index.html", size: "25.6 KB" }
+          ]
+        },
+        {
+          id: "2026-05-11",
+          date: "2026-05-11",
+          displayDate: "11. Mai",
+          phase: "Human-Agent-Interface + PseudoLogikPythonCPP",
+          marker: "current",
+          items: [
+            { title: "index.html", type: "website", project: "HumanAgentInterface", summary: "Human-Agent-Interface-Landingpage mit CLI-TUI-GUI-HAI-Linie, animiertem Agentenfeld, Problem-/Before-After-Erklaerung, Agency-Control-Framing und Kontaktsektion.", featured: true, cluster: "Agent-Systeme", path: "index.html", size: "30.3 KB" },
+            { title: "what_it_is/index.html", type: "explainer", project: "HumanAgentInterface", summary: "Erklaerseite zur Herkunft von HAI: CLI, TUI, GUI und HAI als vier Interface-Generationen fuer Systeme, die nicht nur reagieren, sondern handeln koennen.", featured: true, cluster: "Agent-Systeme", path: "what_it_is/index.html", size: "35.6 KB" },
+            { title: "product/index.html", type: "website", project: "HumanAgentInterface", summary: "Kommerzielle HAI-Produktseite mit 4h-Setup, Agentic-System-Setup, Sidecar-NG-Fit, Adminspace/Userspace-Angebot, Preisrahmen und Evidence-Panel.", featured: true, cluster: "Agent-Systeme", path: "product/index.html", size: "31.5 KB" },
+            { title: "samuel/index.html", type: "website", project: "HumanAgentInterface", summary: "Samuel-Fleig-Proof-of-Work-Seite fuer HAI mit gelebter Agentenpraxis, Control-Surface-Erfahrung, Sidecar-/Harness-Spuren und public-safe Artefakttrail.", featured: true, cluster: "Agent-Systeme", path: "samuel/index.html", size: "36.2 KB" },
+            { title: "fit/index.html", type: "explainer", project: "HumanAgentInterface", summary: "Human-Fit-Erklaerseite fuer HAI: zeigt, warum Agenten-Workflows an Denkweise, Vertrauen, Fokus, Ueberlastung und Entscheidungstempo des Menschen angepasst werden muessen.", featured: true, cluster: "Agent-Systeme", path: "fit/index.html", size: "21.9 KB" },
+            { title: "site/hai-audit.html", type: "website", project: "HumanAgentInterface", summary: "Pilotangebot fuer ein 4h Human-Agent-Workflow-Audit: aus diffusem Agenten-Chaos werden Owner-Entscheidung, Delegationsauftrag, Verifikation und ein klares Next-Action-Packet.", featured: true, cluster: "Agent-Systeme", path: "site/hai-audit.html", size: "24.2 KB" },
+            { title: "site/samuel-hai-profile.html", type: "explainer", project: "HumanAgentInterface", summary: "Meta-Hermes/HAI-Profilseite: Samuel als Owner, Hermes als Control Plane, HAI als Work Protocol, Agent-Fleet, Owner-Interface-Regeln und naechster Bauplan.", featured: true, cluster: "Agent-Systeme", path: "site/samuel-hai-profile.html", size: "19.5 KB" },
+            { title: "frontend/dist/index.html", type: "app", project: "PseudoLogikPythonCPP", summary: "Lokale Lern-Web-App zum Uebersetzen zwischen Pseudocode, formaler Logik, Python und C++ mit Bibliothek, Aufgaben, Denkschritt-Pruefung, Wiederholung, MiniMax-Uebersetzer und Settings.", featured: true, cluster: "Lernmaterial", path: "frontend/dist/index.html", size: "3 Files · 188.5 KB" }
+          ]
+        }
+      ];
+
+      const typeMeta = {
+        all: { label: "Alle" },
+        featured: { label: "Highlights" },
+        app: { label: "App" },
+        architektur: { label: "Architektur" },
+        analyse: { label: "Analyse" },
+        explainer: { label: "Explainer" },
+        eval: { label: "Eval" },
+        plan: { label: "Plan" },
+        learning: { label: "Learning" },
+        konzept: { label: "Konzept" },
+        karriere: { label: "Karriere" },
+        docs: { label: "Docs" },
+        website: { label: "Website" },
+        demo: { label: "Demo" }
+      };
+
+      const availableScreenshotSlugs = new Set([
+        "diagrams--agent-team-workflow-demo",
+        "diagrams--agentide-git-history",
+        "diagrams--buildmode-explainer",
+        "diagrams--claude-api-tunnel-flow",
+        "diagrams--claude-code-ecosystem-complete",
+        "diagrams--claude-code-model-effort-system",
+        "diagrams--claude-config-evolution",
+        "diagrams--claude-directory-architecture",
+        "diagrams--claudecodepanel-deep-review",
+        "diagrams--dynamic-memory-system",
+        "diagrams--haekel-buddy-app",
+        "diagrams--haekel-buddy-architektur",
+        "diagrams--haekel-buddy-konzept",
+        "diagrams--haekel-rose-anleitung",
+        "diagrams--memory-minimax-quality-analysis",
+        "diagrams--meta-analyse-4wochen-samuel",
+        "diagrams--promptgarage-launcher",
+        "diagrams--sidecar-ecosystem-overview",
+        "diagrams--sidecar-ng-skill-router",
+        "diagrams--sidecar-v7-daemon-commits",
+        "diagrams--sidecar-v7-introspection-session",
+        "diagrams--sidecar-v7-lite-architecture",
+        "diagrams--sidecar-v7-phase-unification",
+        "diagrams--sidecar-v7-phase2-plan",
+        "diagrams--sidecar-v7-visual-explainer",
+        "diagrams--sidecar-v7-wie-es-hilft",
+        "diagrams--smart-compact-flow",
+        "diagrams--typotuner-architecture",
+        "diagrams--v6-eval-analysis",
+        "diagrams--v7-evaluation-deep-dive",
+        "diagrams--viz-event-infrastructure",
+        "diagrams--agentide-v03-review-report",
+        "diagrams--chatgpt-nutzung-samuel",
+        "diagrams--claude-code-deep-analysis",
+        "diagrams--claude-cost-dashboard",
+        "diagrams--hardcore-shipping-analyse",
+        "diagrams--minimax-bug-meta-analyse",
+        "diagrams--openclaw-sprint-recap",
+        "diagrams--project-health-dashboard",
+        "diagrams--project-sweep-report",
+        "diagrams--sidecar-learnings-v1-v7",
+        "diagrams--sidecar-v5-agent-analyse",
+        "diagrams--sidecar-v6-mechanism-audit",
+        "diagrams--sidecar-vs-florian",
+        "diagrams--skill-test-report",
+        "diagrams--v7-meta-analyse",
+        "diagrams--version-archaeology-v1-v6",
+        "diagrams--version-squared-framework",
+        "diagrams--agent-sdk-landschaft-2026",
+        "diagrams--agent-swarm-live",
+        "diagrams--claude-delegation-architecture",
+        "diagrams--claude-session-lifecycle",
+        "diagrams--claude-skill-ecosystem",
+        "diagrams--context-offloading-architecture",
+        "diagrams--oktopus-architektur",
+        "diagrams--oktopus-visual",
+        "diagrams--sidecar-erklaert",
+        "diagrams--sidecar-evolution",
+        "diagrams--sidecar-komplett-ueberblick",
+        "diagrams--sidecar-optimization",
+        "diagrams--sidecar-v5-v6-v7-interconnect",
+        "diagrams--sidecar-v6-1-minimax-deep-integration",
+        "diagrams--sidecar-v6-agentisch",
+        "diagrams--sidecar-v6-stand-der-dinge",
+        "diagrams--sidecar-v7-analyse-2026-03-16",
+        "diagrams--sidecar-v7-daemon-commits-2026-03-16",
+        "diagrams--sidecar-v7-event-pipeline-2026-03-16",
+        "diagrams--sidecar-versions-overview",
+        "diagrams--subconsciousness-framework",
+        "diagrams--workflow-evolution",
+        "diagrams--adhs-study-agent",
+        "diagrams--claudecodepanel-explained",
+        "diagrams--git-situation-agentide",
+        "diagrams--learn-context-offloading",
+        "diagrams--panel-ux-guide",
+        "diagrams--sidecar-v5-lernsystem",
+        "diagrams--bookmarkbrain-plan",
+        "diagrams--projekt-sprint-team",
+        "diagrams--sidecar-panel-roadmap",
+        "diagrams--sidecar-v5-plan",
+        "diagrams--subconsciousness-plan",
+        "diagrams--sidecar-v7-speech-system",
+        "agentarena--architecture",
+        "agentswarm--index",
+        "agentide--index",
+        "sidecar--eval-dashboard",
+        "sidecar-v6--architektur-v6",
+        "sidecar-v6--dashboard-prototype",
+        "sidecar-v6--mechanism-evaluation",
+        "sidecar-v6--plan-tag1",
+        "sidecar-v6--sidecar-oder-erfolg",
+        "sidecar-v7--prompt-building-status",
+        "jobs--strategie-visual",
+        "sandraswritingworld--index",
+        "samuel-os-v2--dashboard",
+        "samuel-os-v2--tutorials-index",
+        "samuel-os-v2--tutorial-git-mastery",
+        "samuel-os-v2--tutorial-tool-konsolidierung",
+        "samuel-os-v2--tutorial-dokumentationssystem",
+        "samuel-os-v2--tutorial-ci-cd-quality",
+        "samuel-os-v2--guidelines-index",
+        "samuel-os-v2--guideline-daily-workflow",
+        "samuel-os-v2--guideline-weekly-review",
+        "samuel-os-v2--guideline-scope-kontrolle",
+        "samuel-os-v2--guideline-eval-statt-bauchgefuehl",
+        "metametameta--eval-dashboard",
+        "metametameta--visual-explainer-run-pipeline",
+        "cloud-code-usage--index",
+        "harness-ecosystem--index",
+        "harness-ecosystem--frontier-llm-harness",
+        "harness-ecosystem--architecture-claude-code",
+        "harness-ecosystem--architecture-codex-cli",
+        "harness-ecosystem--architecture-cursor-composer",
+        "harness-ecosystem--architecture-hermes",
+        "harness-ecosystem--sidebyside",
+        "claude-insights-timeline--samuel-agentic-profile-v2",
+        "claude-insights-timeline--samuel-system-agentic-research-instrument-v3",
+        "claude-insights-timeline--samuel-system-agentic-research-instrument-v4",
+        "metametameta--visualisungen-improve",
+        "nasacode--explainer",
+        "nasacode--index",
+        "bahnagent--index",
+        "aidvance-proposal--index",
+        "aidvance-proposal--mockup",
+        "aidvance-proposal--aidgents-brief",
+        "sidecar-v7-demo--index",
+        "codex-mode-governor--index",
+        "portfolio-timeline--index",
+        "ueber-agent--pwd-portfolio",
+        "ueber-agent--zoomable-ui",
+        "ueber-agent--pwd-unified",
+        "alleprojekte--index",
+        "multiharnessstudio--spine-konzept",
+        "zentrale--index",
+        "opencode-go-usage-dashboard--index",
+        "opencode-go-usage-dashboard--sessions",
+        "opencode-go-usage-dashboard--session-detail",
+        "opencode-go-usage-dashboard--models",
+        "opencode-go-usage-dashboard--model",
+        "opencode-go-usage-dashboard--trends",
+        "first-real-harness-evaluation--index",
+        "first-real-harness-evaluation--harness-architecture",
+        "first-real-harness-evaluation--harness-logic-flow",
+        "first-real-harness-evaluation--harness-parallel-experiment",
+        "first-real-harness-evaluation--scientific-versuchsaufbau",
+        "first-real-harness-evaluation--web-dashboard",
+        "hai--ui-prototype",
+        "hai-v1-3--luis-v1-3-site",
+        "heumandenparty--index",
+        "aios-cockpit--workbench",
+        "aios-cockpit--index",
+        "aios-cockpit--handoffs",
+        "aios-cockpit--project",
+        "aios-cockpit--route",
+        "aios-cockpit--run",
+        "promptboost--index",
+        "codex-max-harness-how-to--index",
+        "personal-promptboost--index",
+        "personal-promptboost--matrix-lab",
+        "aidvance-work--cowork-aidvance",
+        "aidvance-work--agent-sdk-aidvance",
+        "codex-usage-profil--codex-usage",
+        "aidvance-work--aidgents-product-fit-demo",
+        "aidvance-work--firstzoommeeting",
+        "aidvance-work--secondzoommeeting",
+        "aidvance-work--firstbuildlangflow",
+        "agentic-builder-profile--samuel-agentic-builder-profile",
+        "werbinich--owner-brief",
+        "lucksurface--index",
+        "luis-handoff--index",
+        "luis-handoff--luis-agentisches-arbeiten",
+        "human-agent-interface--index",
+        "human-agent-interface--what-it-is",
+        "human-agent-interface--product",
+        "human-agent-interface--samuel",
+        "human-agent-interface--fit",
+        "human-agent-interface--hai-audit",
+        "human-agent-interface--samuel-hai-profile",
+        "pseudologik--frontend-index"
+      ]);
+
+      const screenshotSlugOverride = {
+        "Sidecar::eval/dashboard.html": "sidecar--eval-dashboard",
+        "samuel-os-v2::dashboard/index.html": "samuel-os-v2--dashboard",
+        "samuel-os-v2::dashboard/tutorials/index.html": "samuel-os-v2--tutorials-index",
+        "samuel-os-v2::dashboard/tutorials/git-mastery.html": "samuel-os-v2--tutorial-git-mastery",
+        "samuel-os-v2::dashboard/tutorials/tool-konsolidierung.html": "samuel-os-v2--tutorial-tool-konsolidierung",
+        "samuel-os-v2::dashboard/tutorials/dokumentationssystem.html": "samuel-os-v2--tutorial-dokumentationssystem",
+        "samuel-os-v2::dashboard/tutorials/ci-cd-quality.html": "samuel-os-v2--tutorial-ci-cd-quality",
+        "samuel-os-v2::dashboard/guidelines/index.html": "samuel-os-v2--guidelines-index",
+        "samuel-os-v2::dashboard/guidelines/daily-workflow.html": "samuel-os-v2--guideline-daily-workflow",
+        "samuel-os-v2::dashboard/guidelines/weekly-review.html": "samuel-os-v2--guideline-weekly-review",
+        "samuel-os-v2::dashboard/guidelines/scope-kontrolle.html": "samuel-os-v2--guideline-scope-kontrolle",
+        "samuel-os-v2::dashboard/guidelines/eval-statt-bauchgefuehl.html": "samuel-os-v2--guideline-eval-statt-bauchgefuehl",
+        "MetaMetaMeta::Visualisungen_improve/index.html": "metametameta--visualisungen-improve",
+        "HarnessEcosystem::frontier-llm-harness/index.html": "harness-ecosystem--frontier-llm-harness",
+        "HarnessEcosystem::diagrams/architecture-claude-code.html": "harness-ecosystem--architecture-claude-code",
+        "HarnessEcosystem::diagrams/architecture-codex-cli.html": "harness-ecosystem--architecture-codex-cli",
+        "HarnessEcosystem::diagrams/architecture-cursor-composer.html": "harness-ecosystem--architecture-cursor-composer",
+        "HarnessEcosystem::diagrams/architecture-hermes.html": "harness-ecosystem--architecture-hermes",
+        "HarnessEcosystem::sidebyside/index.html": "harness-ecosystem--sidebyside",
+        "FirstRealHarnessEvaluation_KarpathiesMD::web/frontend/dist/index.html": "first-real-harness-evaluation--web-dashboard",
+        "HumanAgentInterface::what_it_is/index.html": "human-agent-interface--what-it-is",
+        "HumanAgentInterface::product/index.html": "human-agent-interface--product",
+        "HumanAgentInterface::samuel/index.html": "human-agent-interface--samuel",
+        "HumanAgentInterface::fit/index.html": "human-agent-interface--fit",
+        "PseudoLogikPythonCPP::frontend/dist/index.html": "pseudologik--frontend-index",
+        "HAI::hai-ui-prototype/index.html": "hai--ui-prototype",
+        "HAI_V1_3::luis-v1-3-site/index.html": "hai-v1-3--luis-v1-3-site"
+      };
+
+      function slugifyScreenshotValue(value) {
+        return value
+          .toLowerCase()
+          .replace(/\.html$/i, "")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+      }
+
+      function deriveScreenshotSlug(item) {
+        if (item.grouped || !item.path) {
+          return null;
+        }
+
+        const overrideKey = `${item.project}::${item.path}`;
+        if (screenshotSlugOverride[overrideKey]) {
+          return screenshotSlugOverride[overrideKey];
+        }
+
+        const sourceName = item.path.endsWith(".html")
+          ? item.path.split("/").pop()
+          : item.title;
+
+        return `${item.projectSlug}--${slugifyScreenshotValue(sourceName)}`;
+      }
+
+      function resolveScreenshot(item) {
+        const slug = deriveScreenshotSlug(item);
+        if (!slug || !availableScreenshotSlugs.has(slug)) {
+          return { hasScreenshot: false, slug: null, src: null, alt: null };
+        }
+
+        return {
+          hasScreenshot: true,
+          slug,
+          src: `screenshots/${slug}.png`,
+          alt: `${item.projectLabel} Vorschau für ${item.title}`
+        };
+      }
+
+      const sizeLookup = {
+        "AgentSwarmDashboard::static/index.html": "6.5 KB",
+        "BookmarkBrain::templates/base.html": "2.9 KB",
+        "FireTracker::templates/* (7 Dateien)": "7 Files · 38.0 KB",
+        "ProjectDashboard::templates/partials/* (2 Dateien)": "4 Files · 13.4 KB",
+        "Sidecar::eval/dashboard.html": "29.3 KB",
+        "StudyAgent::templates/* (8 Dateien)": "8 Files · 15.5 KB",
+        "ProjectDashboard::templates/index.html + git.html + partials/*": "6 Files · 16.7 KB",
+        "Sidecar-V6::sidecar-oder-erfolg.html": "36.4 KB",
+        "AgentArena::docs/architecture.html": "63.2 KB",
+        "AgentArena::templates/base.html + matrix.html": "8 Files · 55.6 KB",
+        "Sidecar-V6::architektur-v6.html": "85.8 KB",
+        "Sidecar-V6::dashboard-prototype.html": "18.6 KB",
+        "Sidecar-V6::plan-tag1.html": "31.8 KB",
+        "Sidecar-V6::templates/partials/* (3 Dateien)": "12 Files · 33.4 KB",
+        "Sidecar-V6::mechanism-evaluation.html": "49.0 KB",
+        "Sidecar-V7::templates/* (alle partials + main)": "14 Files · 64.1 KB",
+        "SidecarDashboard::templates/* (10 Dateien)": "10 Files · 21.4 KB",
+        "StudyAgent::partials/deadline_item + elastic_plan": "6 Files · 10.7 KB",
+        "Sidecar-V6::samuel/templates/* (viele partials)": "14 Files · 79.7 KB",
+        "Sidecar-V7::docs/prompt-building-status.html": "68.8 KB",
+        "TypoTuner::web/templates/* (5 Dateien)": "5 Files · 22.9 KB",
+        "AgentIDE::static/index.html": "4.9 KB",
+        "Sidecar-V7::partials/contract_status + mechanism_ranking": "11 Files · 20.1 KB",
+        "SandrasWritingWorld::index.html + 7 Seiten": "8 Pages · 21.8 KB",
+        "Sidecar-V7-V2::templates/* (14 Dateien, Fork)": "14 Files · 64.1 KB",
+        "Jobs_Selbständigkeit::STRATEGIE_VISUAL.html": "58.0 KB",
+        "Sidecar-V7::templates/index.html (Update)": "35.2 KB",
+        "samuel-os-v2::dashboard/index.html": "7.7 KB",
+        "samuel-os-v2::dashboard/tutorials/index.html": "6.8 KB",
+        "samuel-os-v2::dashboard/tutorials/git-mastery.html": "8.6 KB",
+        "samuel-os-v2::dashboard/tutorials/tool-konsolidierung.html": "7.7 KB",
+        "samuel-os-v2::dashboard/tutorials/dokumentationssystem.html": "7.4 KB",
+        "samuel-os-v2::dashboard/tutorials/ci-cd-quality.html": "7.3 KB",
+        "samuel-os-v2::dashboard/guidelines/index.html": "2.8 KB",
+        "samuel-os-v2::dashboard/guidelines/daily-workflow.html": "3.0 KB",
+        "samuel-os-v2::dashboard/guidelines/weekly-review.html": "2.9 KB",
+        "samuel-os-v2::dashboard/guidelines/scope-kontrolle.html": "2.8 KB",
+        "samuel-os-v2::dashboard/guidelines/eval-statt-bauchgefuehl.html": "2.9 KB",
+        "MetaMetaMeta::eval-dashboard.html": "63.2 KB",
+        "MetaMetaMeta::visual_explainer_run_pipeline.html": "49.1 KB",
+        "PromptGarageUI::templates/* (7 Dateien)": "7 Files · 37.4 KB",
+        "HarnessEcosystem::diagrams/architecture-*.html (5 Dateien)": "5 Files · 230.1 KB",
+        "HarnessEcosystem::diagrams/architecture-claude-code.html": "42.1 KB",
+        "HarnessEcosystem::diagrams/architecture-codex-cli.html": "42.9 KB",
+        "HarnessEcosystem::diagrams/architecture-cursor-composer.html": "36.3 KB",
+        "HarnessEcosystem::diagrams/architecture-hermes.html": "49.1 KB"
+      };
+
+      const allItems = timelineDays.flatMap((day, dayIndex) => day.items.map((item, itemIndex) => {
+        const project = projectMeta[item.project];
+        return {
+          ...item,
+          id: `${day.id}-${itemIndex + 1}`,
+          dayId: day.id,
+          dayDate: day.date,
+          dayLabel: day.displayDate,
+          dayIndex,
+          itemIndex,
+          phase: day.phase,
+          projectSlug: project.slug,
+          projectLabel: project.label,
+          size: item.size || sizeLookup[`${item.project}::${item.title}`] || null
+        };
+      }));
+
+      const state = {
+        type: new URLSearchParams(window.location.search).get("type") || "all",
+        project: new URLSearchParams(window.location.search).get("project") || "all",
+        selectedId: new URLSearchParams(window.location.search).get("artifact") || null
+      };
+
+      const heroFeaturedConfig = [
+        {
+          project: ".agent/diagrams",
+          title: "claude-config-evolution.html",
+          kicker: "Systemtiefe",
+          thesis: "Die größte Datei im Datensatz macht aus Konfiguration eine sichtbare Evolutionsspur."
+        },
+        {
+          project: ".agent/diagrams",
+          title: "haekel-buddy-app.html",
+          kicker: "App-Konzept",
+          thesis: "Produktidee, Interface und Story landen hier in einem einzigen sichtbaren Artefakt."
+        },
+        {
+          project: ".agent/diagrams",
+          title: "sidecar-evolution.html",
+          kicker: "Versionsnarrativ",
+          thesis: "Die Sidecar-Linie wird früh als zusammenhängende Bewegung statt als einzelne Files lesbar."
+        }
+      ];
+
+      const hostedArtifactLinks = {
+        ".agent/diagrams::claude-config-evolution.html": "artifacts/claude-config-evolution/",
+        ".agent/diagrams::haekel-buddy-app.html": "artifacts/haekel-buddy-app/",
+        ".agent/diagrams::sidecar-evolution.html": "artifacts/sidecar-evolution/"
+      };
+
+      const heroMethodConfig = [
+        { verb: "bauen", copy: "Interfaces schnell sichtbar machen" },
+        { verb: "modellieren", copy: "Systeme als Strukturen lesbar machen" },
+        { verb: "evaluieren", copy: "Mechanismen gegen Ergebnisse prüfen" },
+        { verb: "vergleichen", copy: "Versionen gegeneinander lesen" },
+        { verb: "verdichten", copy: "Learnings in neue Artefakte überführen" }
+      ];
+
+      const statsBar = document.getElementById("statsBar");
+      const metaGrid = document.getElementById("metaGrid");
+      const clusterList = document.getElementById("clusterList");
+      const phaseList = document.getElementById("phaseList");
+      const typeFilters = document.getElementById("typeFilters");
+      const projectFilters = document.getElementById("projectFilters");
+      const phaseJumps = document.getElementById("phaseJumps");
+      const timelineGrid = document.getElementById("timelineGrid");
+      const detailContent = document.getElementById("detailContent");
+      const filterResult = document.getElementById("filterResult");
+      const emptyState = document.getElementById("emptyState");
+      const filterBar = document.querySelector(".filter-bar");
+      const heroFeaturedGrid = document.getElementById("heroFeaturedGrid");
+      const heroMethodGrid = document.getElementById("heroMethodGrid");
+
+      function countBy(items, getter) {
+        const map = new Map();
+        items.forEach((item) => {
+          const key = getter(item);
+          map.set(key, (map.get(key) || 0) + 1);
+        });
+        return map;
+      }
+
+      function buildStats() {
+        const projectCount = new Set(allItems.map((item) => item.project)).size;
+        const typeCount = new Set(allItems.map((item) => item.type)).size;
+        const peakDay = timelineDays.reduce((current, day) => day.items.length > current.items.length ? day : current, timelineDays[0]);
+        const heavyCount = allItems.filter((item) => item.heavy).length;
+        statsBar.innerHTML = `
+          <span><span class="stat-num">${allItems.length}</span> Artefakte</span>
+          <span>·</span>
+          <span><span class="stat-num">${timelineDays.length}</span> aktive Tage</span>
+          <span>·</span>
+          <span><span class="stat-num">${projectCount}</span> Projekte</span>
+          <span>·</span>
+          <span>Peak: <span class="stat-num highlight">${peakDay.displayDate}</span></span>
+          <span>·</span>
+          <span><span class="stat-num">${typeCount}</span> Werktypen</span>
+          <span>·</span>
+          <span><span class="stat-num">${heavyCount}</span> Heavy Files</span>
+        `;
+      }
+
+      function buildMeta() {
+        const featuredCount = allItems.filter((item) => item.featured).length;
+        const groupedCount = allItems.filter((item) => item.grouped).length;
+        const sidecarCount = allItems.filter((item) => item.cluster === "Sidecar-Evolution").length;
+        const clusterCounts = Array.from(countBy(allItems, (item) => item.cluster).entries()).sort((a, b) => b[1] - a[1]);
+        const phaseCounts = Array.from(countBy(timelineDays, (day) => day.phase).entries()).sort((a, b) => b[1] - a[1]);
+
+        metaGrid.innerHTML = `
+          <div class="meta-card"><strong>${featuredCount}</strong><span>kuratiert hervorgehobene Artefakte</span></div>
+          <div class="meta-card"><strong>${groupedCount}</strong><span>gruppierte Quellblöcke aus den Rohdaten</span></div>
+          <div class="meta-card"><strong>${sidecarCount}</strong><span>Artefakte in der Sidecar-Evolutionsspur</span></div>
+          <div class="meta-card"><strong>${allItems.filter((item) => item.type === "app").length}</strong><span>App- oder Website-nahe Einträge</span></div>
+        `;
+
+        clusterList.innerHTML = clusterCounts.map(([cluster, count]) => `
+          <li><strong>${cluster}</strong><span>${count} Artefakte</span></li>
+        `).join("");
+
+        phaseList.innerHTML = phaseCounts.map(([phase, count]) => `
+          <li><strong>${phase}</strong><span>${count} aktive Tage</span></li>
+        `).join("");
+      }
+
+      function buildHeroBottom() {
+        const featuredItems = heroFeaturedConfig
+          .map((config) => {
+            const item = allItems.find((entry) => entry.project === config.project && entry.title === config.title);
+            return item ? { ...item, ...config } : null;
+          })
+          .filter(Boolean);
+
+        heroFeaturedGrid.innerHTML = featuredItems.map((item) => {
+          const screenshot = resolveScreenshot(item);
+          const artifactLink = resolveArtifactLink(item);
+          return `
+            <article class="hero-feature-card" data-type="${item.type}">
+              ${screenshot.hasScreenshot ? `
+                <div class="hero-feature-media">
+                  <img src="${screenshot.src}" alt="${screenshot.alt}" loading="lazy" decoding="async">
+                </div>
+              ` : ""}
+              <div class="hero-feature-body">
+                <span class="hero-feature-kicker">${item.kicker}</span>
+                <h3>${item.title.replace(/\.html$/i, "")}</h3>
+                <p>${item.thesis}</p>
+                <div class="hero-feature-meta">
+                  <span>${item.dayLabel}</span>
+                  <span>${item.projectLabel}</span>
+                </div>
+                <div class="card-actions">
+                  <button class="card-button" type="button" data-select-artifact="${item.id}">Im Detail ansehen</button>
+                  ${artifactLink.resolved
+                    ? `<a class="card-link" href="${artifactLink.href}" target="_blank" rel="noreferrer">Open hosted artifact</a>`
+                    : `<span class="card-link disabled" aria-disabled="true">Artifact unavailable</span>`}
+                </div>
+              </div>
+            </article>
+          `;
+        }).join("");
+
+        heroMethodGrid.innerHTML = heroMethodConfig.map((item) => `
+          <article class="hero-method-item">
+            <strong>${item.verb}</strong>
+            <p>${item.copy}</p>
+          </article>
+        `).join("");
+      }
+
+      function renderFilters() {
+        const typesInData = ["all", "featured", ...Object.keys(typeMeta).filter((key) => !["all", "featured"].includes(key) && allItems.some((item) => item.type === key))];
+        typeFilters.innerHTML = typesInData.map((type) => `
+          <button class="chip ${state.type === type ? "active" : ""}" data-filter-type="${type}">${typeMeta[type].label}</button>
+        `).join("");
+
+        const projects = [
+          "all",
+          ...Object.values(projectMeta)
+            .map((project) => project.slug)
+            .filter((slug) => allItems.some((item) => item.projectSlug === slug))
+        ];
+        projectFilters.innerHTML = projects.map((slug) => {
+          const label = slug === "all" ? "Alle Projekte" : Object.values(projectMeta).find((project) => project.slug === slug).label;
+          return `<button class="chip ${state.project === slug ? "active" : ""}" data-filter-project="${slug}">${label}</button>`;
+        }).join("");
+
+        const phases = Array.from(new Set(timelineDays.map((day) => day.phase)));
+        phaseJumps.innerHTML = phases.map((phase) => {
+          const day = timelineDays.find((entry) => entry.phase === phase);
+          return `<a class="phase-link" href="#${day.id}">${phase}</a>`;
+        }).join("");
+      }
+
+      const diagramRootFiles = new Set([
+        "agent-team-workflow-demo.html",
+        "agentide-git-history.html",
+        "buildmode-explainer.html",
+        "claude-api-tunnel-flow.html",
+        "claude-code-ecosystem-complete.html",
+        "claude-code-model-effort-system.html",
+        "claude-config-evolution.html",
+        "claude-directory-architecture.html",
+        "claudecodepanel-deep-review.html",
+        "dynamic-memory-system.html",
+        "haekel-buddy-app.html",
+        "haekel-buddy-architektur.html",
+        "haekel-buddy-konzept.html",
+        "haekel-rose-anleitung.html",
+        "memory-minimax-quality-analysis.html",
+        "meta-analyse-4wochen-samuel.html",
+        "promptgarage-launcher.html",
+        "sidecar-ecosystem-overview.html",
+        "sidecar-ng-skill-router.html",
+        "sidecar-v7-daemon-commits.html",
+        "sidecar-v7-introspection-session.html",
+        "sidecar-v7-lite-architecture.html",
+        "sidecar-v7-phase-unification.html",
+        "sidecar-v7-phase2-plan.html",
+        "sidecar-v7-visual-explainer.html",
+        "sidecar-v7-wie-es-hilft.html",
+        "smart-compact-flow.html",
+        "typotuner-architecture.html",
+        "v6-eval-analysis.html",
+        "v7-evaluation-deep-dive.html",
+        "viz-event-infrastructure.html"
+      ]);
+
+      function resolveArtifactLink(item) {
+        const key = `${item.project}::${item.path || ""}`;
+        const href = hostedArtifactLinks[key];
+        return href ? { href, resolved: true } : { href: null, resolved: false };
+      }
+
+      function filterItems(items) {
+        return items.filter((item) => {
+          const typeMatch = state.type === "all" || (state.type === "featured" ? Boolean(item.featured) : item.type === state.type);
+          const projectMatch = state.project === "all" || item.projectSlug === state.project;
+          return typeMatch && projectMatch;
+        });
+      }
+
+      function renderTimeline() {
+        const filteredItems = filterItems(allItems);
+        const visibleIds = new Set(filteredItems.map((item) => item.id));
+        const sections = timelineDays.map((day) => {
+          const dayItems = day.items
+            .map((item, itemIndex) => allItems.find((entry) => entry.dayId === day.id && entry.itemIndex === itemIndex))
+            .filter(Boolean)
+            .filter((item) => visibleIds.has(item.id));
+
+          if (!dayItems.length) {
+            return "";
+          }
+
+          const note = phaseNotes[day.phase] || "";
+          const marker = day.marker === "start"
+            ? '<span class="journey-marker start">&larr; Start</span>'
+            : day.marker === "end"
+              ? '<span class="journey-marker end">Heute &rarr;</span>'
+              : "";
+          const header = timelineDays.find((entry) => entry.phase === day.phase && entry.id === day.id)
+            ? `
+              <div class="phase-banner">
+                <h2 class="phase-title">${day.phase}</h2>
+                <span class="phase-chip">${dayItems.length} Artefakte</span>
+              </div>
+              <p class="phase-copy">${note}</p>
+            `
+            : "";
+
+          return `
+            <section class="day-section" id="${day.id}">
+              <div class="day-rail">
+                <div class="day-label">
+                  <strong>${day.displayDate}</strong>
+                  <span>${dayItems.length} sichtbar</span>
+                </div>
+                <span class="day-dot" aria-hidden="true"></span>
+                ${marker}
+              </div>
+              <div class="day-content">
+                ${header}
+                <div class="cards-grid">
+                  ${dayItems.map((item) => renderCard(item, day.highlightDay)).join("")}
+                </div>
+              </div>
+            </section>
+          `;
+        }).join("");
+
+        timelineGrid.innerHTML = sections;
+        emptyState.classList.toggle("hidden", filteredItems.length > 0);
+        filterResult.textContent = `${filteredItems.length} / ${allItems.length} Artefakte sichtbar`;
+      }
+
+      function renderCard(item, highlightDay) {
+        const artifactLink = resolveArtifactLink(item);
+        const screenshot = resolveScreenshot(item);
+        const badge = item.size
+          ? `<span class="size-badge ${item.heavy ? "heavy" : ""}">${item.size}</span>`
+          : "";
+        const note = [
+          item.cluster,
+          item.grouped ? "grouped source" : null
+        ].filter(Boolean).join(" · ");
+
+        return `
+          <article class="timeline-card ${highlightDay ? "highlight-day" : ""} ${screenshot.hasScreenshot ? "has-media" : ""}" data-type="${item.type}" data-project="${item.projectSlug}">
+            ${screenshot.hasScreenshot ? `
+              <div class="card-media">
+                <img src="${screenshot.src}" alt="${screenshot.alt}" loading="lazy" decoding="async">
+              </div>
+            ` : ""}
+            <div class="card-topline">
+              <span class="badge type-badge">${typeMeta[item.type].label}</span>
+              <span class="badge project-badge">${item.projectLabel}</span>
+              ${item.featured ? '<span class="badge phase-badge">Featured</span>' : ""}
+              ${badge}
+            </div>
+            <h3>${item.title}</h3>
+            <p>${item.summary}</p>
+            <div class="card-footer">
+              <span class="meta-note">${note}</span>
+              <div class="card-actions">
+                <button class="card-button" type="button" data-select-artifact="${item.id}">Details</button>
+                ${artifactLink.resolved
+                  ? `<a class="card-link" href="${artifactLink.href}" target="_blank" rel="noreferrer">Open hosted artifact</a>`
+                  : `<span class="card-link disabled" aria-disabled="true">Artifact unavailable</span>`}
+              </div>
+            </div>
+          </article>
+        `;
+      }
+
+      function selectArtifact(id, pushState = true) {
+        const artifact = allItems.find((item) => item.id === id) || filterItems(allItems)[0] || allItems[0];
+        if (!artifact) {
+          detailContent.innerHTML = "<p>Keine Daten verfügbar.</p>";
+          return;
+        }
+
+        const artifactLink = resolveArtifactLink(artifact);
+        state.selectedId = artifact.id;
+        const currentIndex = allItems.findIndex((item) => item.id === artifact.id);
+        const neighbors = [allItems[currentIndex - 1], allItems[currentIndex + 1]].filter(Boolean);
+        const samePhaseCount = allItems.filter((item) => item.phase === artifact.phase).length;
+
+        detailContent.innerHTML = `
+          <div data-type="${artifact.type}">
+            <div class="detail-tags">
+              <span class="badge type-badge">${typeMeta[artifact.type].label}</span>
+              <span class="badge project-badge">${artifact.projectLabel}</span>
+              <span class="badge phase-badge">${artifact.phase}</span>
+            </div>
+            <h3 class="detail-title">${artifact.title}</h3>
+            <p>${artifact.summary}</p>
+            <div class="detail-stats">
+              <div class="detail-stat"><strong>${artifact.dayLabel}</strong><span>Datum im sichtbaren Sprint</span></div>
+              <div class="detail-stat"><strong>${samePhaseCount}</strong><span>Artefakte in derselben Phase</span></div>
+              <div class="detail-stat"><strong>${artifact.cluster}</strong><span>thematischer Cluster</span></div>
+            </div>
+            <p>
+              ${artifact.featured ? "Dieses Artefakt ist kuratiert hervorgehoben, weil es entweder einen Phasenwechsel, besondere technische Tiefe oder ungewöhnliche Produktbreite sichtbar macht." : "Dieses Artefakt ist Teil des vollständigen Stroms und zeigt, wie dicht verschiedene Arbeitsmodi in kurzer Zeit nebeneinander lagen."}
+            </p>
+            <p>
+              ${artifact.grouped ? "Der Rohdatensatz nennt hier einen gruppierten Block statt einzelner Dateien. Die Website behält diese Ehrlichkeit bei und zeigt den Block als gebündelten Produktionsschritt." : "Der Eintrag verweist auf ein einzelnes HTML-Artefakt. Öffentlich verlinkt wird es nur, wenn eine gehostete Version existiert."}
+            </p>
+            <div class="card-actions">
+              ${artifactLink.resolved
+                ? `<a class="card-link" href="${artifactLink.href}" target="_blank" rel="noreferrer">Open hosted artifact</a>`
+                : `<span class="card-link disabled" aria-disabled="true">Artifact unavailable</span>`}
+              <a class="card-link" href="#${artifact.dayId}">Jump to day</a>
+            </div>
+            <div class="detail-neighbors">
+              ${neighbors.map((neighbor) => `
+                <div class="neighbor-card" data-type="${neighbor.type}">
+                  <small>${neighbor.dayLabel} · ${typeMeta[neighbor.type].label}</small>
+                  <strong>${neighbor.title}</strong>
+                  <p>${neighbor.summary}</p>
+                  <button class="card-button" type="button" data-select-artifact="${neighbor.id}">Inspect artifact</button>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+
+        if (pushState) {
+          syncUrl();
+        }
+      }
+
+      function syncUrl() {
+        const params = new URLSearchParams();
+        if (state.type !== "all") params.set("type", state.type);
+        if (state.project !== "all") params.set("project", state.project);
+        if (state.selectedId) params.set("artifact", state.selectedId);
+        const nextUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ""}`;
+        window.history.replaceState({}, "", nextUrl);
+      }
+
+      function updateStickyOffsets() {
+        const root = document.documentElement;
+        const statsHeight = statsBar ? Math.ceil(statsBar.offsetHeight) : 54;
+        root.style.setProperty("--stats-bar-height", `${statsHeight}px`);
+      }
+
+      document.addEventListener("click", (event) => {
+        const typeButton = event.target.closest("[data-filter-type]");
+        if (typeButton) {
+          state.type = typeButton.dataset.filterType;
+          renderFilters();
+          renderTimeline();
+          selectArtifact(state.selectedId || filterItems(allItems)[0]?.id || allItems[0]?.id);
+          return;
+        }
+
+        const projectButton = event.target.closest("[data-filter-project]");
+        if (projectButton) {
+          state.project = projectButton.dataset.filterProject;
+          renderFilters();
+          renderTimeline();
+          selectArtifact(state.selectedId || filterItems(allItems)[0]?.id || allItems[0]?.id);
+          return;
+        }
+
+        const artifactButton = event.target.closest("[data-select-artifact]");
+        if (artifactButton) {
+          selectArtifact(artifactButton.dataset.selectArtifact);
+        }
+      });
+
+      buildStats();
+      buildMeta();
+      buildHeroBottom();
+      renderFilters();
+      renderTimeline();
+      selectArtifact(state.selectedId || allItems.find((item) => item.featured)?.id || allItems[0].id, false);
+      updateStickyOffsets();
+      window.addEventListener("resize", updateStickyOffsets);
+      syncUrl();
+    })();
+  </script>
+</body>
+</html>

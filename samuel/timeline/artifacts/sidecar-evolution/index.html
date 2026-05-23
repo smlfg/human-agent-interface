@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sidecar Evolution — v1 → v2 → v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-display: 'Instrument Serif', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+    --bg: #faf8f5;
+    --surface: #ffffff;
+    --surface2: #f3efe9;
+    --surface-elevated: #fffdf9;
+    --border: rgba(0, 0, 0, 0.07);
+    --border-bright: rgba(0, 0, 0, 0.14);
+    --text: #1e1a15;
+    --text-dim: #7a6f62;
+
+    --navy: #1e3a5f;
+    --navy-dim: rgba(30, 58, 95, 0.08);
+    --gold: #b8860b;
+    --gold-dim: rgba(184, 134, 11, 0.08);
+    --teal: #0f766e;
+    --teal-dim: rgba(15, 118, 110, 0.08);
+    --amber: #92400e;
+    --amber-dim: rgba(146, 64, 14, 0.08);
+    --plum: #7e22ce;
+    --plum-dim: rgba(126, 34, 206, 0.08);
+    --sage: #4d7c0f;
+    --sage-dim: rgba(77, 124, 15, 0.08);
+    --rose: #9f1239;
+    --rose-dim: rgba(159, 18, 57, 0.06);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141210;
+      --surface: #1c1915;
+      --surface2: #252119;
+      --surface-elevated: #2a251d;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-bright: rgba(255, 255, 255, 0.12);
+      --text: #ede5d8;
+      --text-dim: #998d7e;
+
+      --navy: #7aaddb;
+      --navy-dim: rgba(122, 173, 219, 0.1);
+      --gold: #e6b422;
+      --gold-dim: rgba(230, 180, 34, 0.1);
+      --teal: #5eead4;
+      --teal-dim: rgba(94, 234, 212, 0.08);
+      --amber: #fbbf24;
+      --amber-dim: rgba(251, 191, 36, 0.08);
+      --plum: #c084fc;
+      --plum-dim: rgba(192, 132, 252, 0.1);
+      --sage: #a3e635;
+      --sage-dim: rgba(163, 230, 53, 0.08);
+      --rose: #fda4af;
+      --rose-dim: rgba(253, 164, 175, 0.08);
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 15% 0%, var(--navy-dim) 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 100%, var(--gold-dim) 0%, transparent 40%);
+    color: var(--text);
+    font-family: var(--font-body);
+    padding: 48px 40px;
+    min-height: 100vh;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeScale {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes countUp {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .anim {
+    animation: fadeUp 0.45s ease-out both;
+    animation-delay: calc(var(--i, 0) * 0.07s);
+  }
+  .anim-scale {
+    animation: fadeScale 0.4s ease-out both;
+    animation-delay: calc(var(--i, 0) * 0.07s);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  .container { max-width: 1140px; margin: 0 auto; }
+
+  /* Header */
+  h1 {
+    font-family: var(--font-display);
+    font-size: 46px;
+    font-weight: 400;
+    letter-spacing: 0;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .subtitle {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 48px;
+  }
+
+  /* KPI Row */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+  }
+  .kpi-value {
+    font-family: var(--font-display);
+    font-size: 36px;
+    line-height: 1.1;
+  }
+  .kpi-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-dim);
+    margin-top: 6px;
+  }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    padding-left: 48px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--navy), var(--gold), var(--plum));
+    border-radius: 1px;
+  }
+
+  .version {
+    position: relative;
+    margin-bottom: 48px;
+  }
+  .version:last-child { margin-bottom: 0; }
+
+  .version-dot {
+    position: absolute;
+    left: -42px;
+    top: 8px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 2px var(--border-bright);
+  }
+
+  .version-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .version-tag {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 400;
+  }
+  .version-title {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .version-date {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    background: var(--surface2);
+    padding: 2px 10px;
+    border-radius: 4px;
+  }
+  .version-stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .stat strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .stat .delta {
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: 4px;
+  }
+  .delta-up {
+    background: var(--sage-dim);
+    color: var(--sage);
+  }
+
+  /* Cards grid */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .ve-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    transition: border-color 0.2s;
+  }
+  .ve-card:hover { border-color: var(--border-bright); }
+  .ve-card--new {
+    border-left: 3px solid;
+    border-left-color: var(--accent-color, var(--gold));
+  }
+  .card-title {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-title .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .card-desc {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-dim);
+  }
+  .card-desc code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    background: var(--surface2);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  .card-loc {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 8px;
+    opacity: 0.7;
+  }
+
+  /* Architecture diagram */
+  .arch-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    overflow-x: auto;
+    margin-bottom: 16px;
+    color: var(--text-dim);
+  }
+  .arch-box strong { color: var(--text); }
+  .arch-box .hl-navy { color: var(--navy); font-weight: 600; }
+  .arch-box .hl-gold { color: var(--gold); font-weight: 600; }
+  .arch-box .hl-teal { color: var(--teal); font-weight: 600; }
+  .arch-box .hl-plum { color: var(--plum); font-weight: 600; }
+
+  /* Learnings */
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 400;
+    margin-top: 56px;
+    margin-bottom: 24px;
+  }
+  .learning-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+  }
+  .learning {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    border-left: 3px solid var(--gold);
+  }
+  .learning-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .learning-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .learning-desc {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-dim);
+  }
+
+  /* Evolution arrow between versions */
+  .evolution-arrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0 8px 0;
+    margin-bottom: 12px;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .evolution-arrow svg {
+    width: 18px; height: 18px;
+    fill: none;
+    stroke: var(--border-bright);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  /* Callout */
+  .callout {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--navy);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-dim);
+    margin-top: 16px;
+  }
+  .callout strong { color: var(--text); }
+
+  /* Cost table */
+  .cost-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 12px;
+  }
+  .cost-table th {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--border-bright);
+    font-weight: 600;
+  }
+  .cost-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .cost-table tr:last-child td { border-bottom: none; }
+  .cost-table .layer-name {
+    font-weight: 600;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .cost-table .cost-badge {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .cost-free { background: var(--sage-dim); color: var(--sage); }
+  .cost-cheap { background: var(--gold-dim); color: var(--gold); }
+  .cost-planned { background: var(--surface2); color: var(--text-dim); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    body { padding: 24px 16px; }
+    h1 { font-size: 32px; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .timeline { padding-left: 36px; }
+    .timeline::before { left: 12px; }
+    .version-dot { left: -34px; }
+    .cards { grid-template-columns: 1fr; }
+    .learning-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1 class="anim" style="--i:0">Sidecar Evolution</h1>
+  <p class="subtitle anim" style="--i:1">QA-Inspektor fuer Claude Code — von Pattern Detection zu LLM Judge &middot; 4.–5. Maerz 2026</p>
+
+  <!-- KPIs -->
+  <div class="kpi-row">
+    <div class="kpi anim-scale" style="--i:2">
+      <div class="kpi-value" style="color:var(--navy)">3</div>
+      <div class="kpi-label">Versionen</div>
+    </div>
+    <div class="kpi anim-scale" style="--i:3">
+      <div class="kpi-value" style="color:var(--gold)">5.630</div>
+      <div class="kpi-label">Lines of Code</div>
+    </div>
+    <div class="kpi anim-scale" style="--i:4">
+      <div class="kpi-value" style="color:var(--teal)">37</div>
+      <div class="kpi-label">Dateien</div>
+    </div>
+    <div class="kpi anim-scale" style="--i:5">
+      <div class="kpi-value" style="color:var(--plum)">15</div>
+      <div class="kpi-label">Git Commits</div>
+    </div>
+  </div>
+
+  <!-- Three-Layer Table -->
+  <div class="anim" style="--i:6">
+    <table class="cost-table" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+      <thead>
+        <tr>
+          <th>QA-Schicht</th>
+          <th>Kosten</th>
+          <th>Latenz</th>
+          <th>Version</th>
+          <th>Was sie tut</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="layer-name">Deterministisch</td>
+          <td><span class="cost-badge cost-free">$0</span></td>
+          <td style="font-family:var(--font-mono);font-size:12px;">~1ms</td>
+          <td style="font-family:var(--font-mono);font-size:12px;">v1</td>
+          <td>Pattern Detection, Blocking Gates, Enforcement Rules</td>
+        </tr>
+        <tr>
+          <td class="layer-name">Quick Judge</td>
+          <td><span class="cost-badge cost-cheap">~$0.0002</span></td>
+          <td style="font-family:var(--font-mono);font-size:12px;">~1-2s</td>
+          <td style="font-family:var(--font-mono);font-size:12px;">v3</td>
+          <td>LLM bewertet Session gegen Coaching-Rules (MiniMax / Gemini)</td>
+        </tr>
+        <tr>
+          <td class="layer-name">Deep Judge</td>
+          <td><span class="cost-badge cost-planned">geplant</span></td>
+          <td style="font-family:var(--font-mono);font-size:12px;">&mdash;</td>
+          <td style="font-family:var(--font-mono);font-size:12px;">v4</td>
+          <td>Autonomer Agent mit Zugriff auf Wissensbasis</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Timeline -->
+  <div class="section-title anim" style="--i:7">Die drei Versionen</div>
+
+  <div class="timeline">
+
+    <!-- v1 -->
+    <div class="version anim" style="--i:8">
+      <div class="version-dot" style="background:var(--navy);"></div>
+      <div class="version-header">
+        <span class="version-tag" style="color:var(--navy)">v1</span>
+        <span class="version-title">Core Daemon + Plugin Architecture</span>
+        <span class="version-date">4. Maerz 2026, 13:00</span>
+      </div>
+      <div class="version-stats">
+        <span class="stat"><strong>15</strong> Dateien</span>
+        <span class="stat"><strong>2.527</strong> LOC</span>
+        <span class="stat"><strong>9</strong> Commits</span>
+      </div>
+
+      <div class="arch-box anim" style="--i:9"><strong>Architektur v1:</strong>
+
+  Claude Code Hooks (PostToolUse, UserPromptSubmit, PreToolUse)
+           |
+     <span class="hl-navy">Unix Socket</span> (/tmp/claude-sidecar.sock)
+           |
+     <span class="hl-navy">sidecar.py</span>  [asyncio daemon, 1255 LOC]
+       |- RuleRegistry     22 Regeln
+       |- PluginLoader     importlib, hot-reload (SIGHUP)
+       |- PhaseTracker     4 Phasen (DE+EN bilingual)
+           |
+     additionalContext → Claude Code</div>
+
+      <div class="cards">
+        <div class="ve-card ve-card--new" style="--accent-color:var(--navy)">
+          <div class="card-title"><span class="dot" style="background:var(--navy)"></span> sidecar.py</div>
+          <div class="card-desc">Kern-Daemon. Asyncio Unix Socket, 9 Detektoren, 6 Gates, 5 Enforcement-Rules. Session State als JSON in <code>/tmp</code>.</div>
+          <div class="card-loc">1.255 LOC</div>
+        </div>
+        <div class="ve-card ve-card--new" style="--accent-color:var(--navy)">
+          <div class="card-title"><span class="dot" style="background:var(--navy)"></span> Plugin-System</div>
+          <div class="card-desc">3 Rule-Plugins: <code>research_first</code>, <code>delegation_check</code>, <code>git_safety</code>. Hot-Reload via SIGHUP.</div>
+          <div class="card-loc">rule_plugin.py + plugin_loader.py + rules/</div>
+        </div>
+        <div class="ve-card ve-card--new" style="--accent-color:var(--navy)">
+          <div class="card-title"><span class="dot" style="background:var(--navy)"></span> Phase Tracker</div>
+          <div class="card-desc">4 Phasen: exploration → implementation → testing → debugging. Bilingual Keywords (DE+EN).</div>
+          <div class="card-loc">143 LOC</div>
+        </div>
+        <div class="ve-card ve-card--new" style="--accent-color:var(--navy)">
+          <div class="card-title"><span class="dot" style="background:var(--navy)"></span> sidecar-ctl</div>
+          <div class="card-desc">CLI mit 10 Subcommands: status, rules, enable, disable, snooze, sessions, findings, reload, log.</div>
+          <div class="card-loc">305 LOC</div>
+        </div>
+        <div class="ve-card ve-card--new" style="--accent-color:var(--navy)">
+          <div class="card-title"><span class="dot" style="background:var(--navy)"></span> Voice Bridge</div>
+          <div class="card-desc">STT-Daemon: Named Pipe → arecord → Whisper HTTP → wtype/ydotool. Iron Rule: never crash.</div>
+          <div class="card-loc">366 LOC</div>
+        </div>
+      </div>
+
+      <div class="callout anim" style="--i:10">
+        <strong>Kern-Entscheidung:</strong> Unix Socket statt HTTP (~1ms vs ~10ms), file-based Session State (kein DB noetig), fcntl Locking gegen Race Conditions bei parallelen Hook-Calls.
+      </div>
+    </div>
+
+    <!-- v1 → v2 arrow -->
+    <div class="evolution-arrow anim" style="--i:11">
+      <svg viewBox="0 0 18 18"><path d="M9 3 L9 15 M5 11 L9 15 L13 11"/></svg>
+      +2.092 LOC &middot; +15 Dateien &middot; Fokus: Intelligente Kontextauswahl + GUI
+    </div>
+
+    <!-- v2 -->
+    <div class="version anim" style="--i:12">
+      <div class="version-dot" style="background:var(--gold);"></div>
+      <div class="version-header">
+        <span class="version-tag" style="color:var(--gold)">v2</span>
+        <span class="version-title">SessionWatcher + ContextSelector + GUI</span>
+        <span class="version-date">5. Maerz 2026, 03:46</span>
+      </div>
+      <div class="version-stats">
+        <span class="stat"><strong>30</strong> Dateien <span class="delta delta-up">+15</span></span>
+        <span class="stat"><strong>4.619</strong> LOC <span class="delta delta-up">+83%</span></span>
+        <span class="stat"><strong>13</strong> Commits</span>
+      </div>
+
+      <div class="arch-box anim" style="--i:13"><strong>Neue Komponenten in v2:</strong>
+
+  <span class="hl-gold">SessionWatcher</span>     inotify-basiertes JSONL Tailing (kein Polling!)
+  <span class="hl-gold">ContextSelector</span>    Phasen-basiertes Filtering: ~20 Zeilen statt ~900
+  <span class="hl-gold">SkillRecommender</span>   Dynamische Top-3 Skill-Vorschlaege pro Prompt
+  <span class="hl-gold">PhaseTracker</span>       Erweitert: Tool Window + Phase History
+  <span class="hl-gold">GTK3 GUI</span>           5-Tab Dashboard, Live Socket Updates</div>
+
+      <div class="cards">
+        <div class="ve-card ve-card--new" style="--accent-color:var(--gold)">
+          <div class="card-title"><span class="dot" style="background:var(--gold)"></span> SessionWatcher</div>
+          <div class="card-desc">Echtzeit-Monitoring via inotify/watchdog. Kein Polling — <1ms Detection-Latenz. Background Thread.</div>
+          <div class="card-loc">375 LOC</div>
+        </div>
+        <div class="ve-card ve-card--new" style="--accent-color:var(--gold)">
+          <div class="card-title"><span class="dot" style="background:var(--gold)"></span> ContextSelector</div>
+          <div class="card-desc">Phasen-basiertes Filtering. Reduziert permanenten Context von ~900 auf ~20 Zeilen pro Prompt. <strong>60-80% Token-Einsparung.</strong></div>
+          <div class="card-loc">310 LOC</div>
+        </div>
+        <div class="ve-card ve-card--new" style="--accent-color:var(--gold)">
+          <div class="card-title"><span class="dot" style="background:var(--gold)"></span> SkillRecommender</div>
+          <div class="card-desc">Ersetzt 258-Zeilen statische Skilluebersicht. Keyword + Phase Matching fuer Top-3 pro Prompt.</div>
+          <div class="card-loc">200 LOC</div>
+        </div>
+        <div class="ve-card ve-card--new" style="--accent-color:var(--gold)">
+          <div class="card-title"><span class="dot" style="background:var(--gold)"></span> GTK3 GUI Dashboard</div>
+          <div class="card-desc">Standalone 5-Tab Panel: Status, Rules, Findings, Sessions, Context. Live Updates via Socket.</div>
+          <div class="card-loc">gui/ — 6 Dateien</div>
+        </div>
+        <div class="ve-card ve-card--new" style="--accent-color:var(--gold)">
+          <div class="card-title"><span class="dot" style="background:var(--gold)"></span> Context Tab + Transparency</div>
+          <div class="card-desc">Live Injection Viewer: Jede Injektion sichtbar mit Quelle und Timestamp. Flicker-Fix.</div>
+          <div class="card-loc">context_tab.py</div>
+        </div>
+      </div>
+
+      <div class="callout anim" style="--i:14">
+        <strong>Paradigmenwechsel:</strong> v1 injizierte <em>alles</em>, v2 waehlt <em>intelligent aus</em>. Statt 900 Zeilen CLAUDE.md permanent zu laden, schiebt Sidecar nur die ~20 Zeilen rein, die zur aktuellen Phase passen. CLAUDE.md schrumpfte von 135 → 74 Zeilen (-45%).
+      </div>
+    </div>
+
+    <!-- v2 → v3 arrow -->
+    <div class="evolution-arrow anim" style="--i:15">
+      <svg viewBox="0 0 18 18"><path d="M9 3 L9 15 M5 11 L9 15 L13 11"/></svg>
+      +1.011 LOC &middot; +7 Dateien &middot; Fokus: LLM-basierte Qualitaetsbewertung
+    </div>
+
+    <!-- v3 -->
+    <div class="version anim" style="--i:16">
+      <div class="version-dot" style="background:var(--plum);"></div>
+      <div class="version-header">
+        <span class="version-tag" style="color:var(--plum)">v3</span>
+        <span class="version-title">LLM Judge mit MiniMax M2.5</span>
+        <span class="version-date">5. Maerz 2026, 12:49</span>
+      </div>
+      <div class="version-stats">
+        <span class="stat"><strong>37</strong> Dateien <span class="delta delta-up">+7</span></span>
+        <span class="stat"><strong>5.630</strong> LOC <span class="delta delta-up">+22%</span></span>
+        <span class="stat"><strong>15</strong> Commits</span>
+      </div>
+
+      <div class="arch-box anim" style="--i:17"><strong>LLM Judge Architektur:</strong>
+
+  Schicht 1: <span class="hl-navy">Deterministisch</span> ($0, ~1ms, IMMER)
+    → 6 Gates + 9 Detektoren + Phase Tracker
+    |
+  Schicht 2: <span class="hl-plum">LLM Judge</span> (~$0.0002/Call, ~1-2s)
+    → MiniMax M2.5 bewertet Session gegen <span class="hl-gold">coaching_rules.txt</span>
+    → 3 Trigger: <span class="hl-teal">Detektor-Enrichment</span> | <span class="hl-teal">Periodisch (6 Turns)</span> | <span class="hl-teal">Phasenwechsel</span>
+    → BudgetTracker: $0.05/Tag Cap, Dedup Cache
+    → Provider: MiniMax (primaer) → Gemini (fallback) → Ollama (lokal)</div>
+
+      <div class="cards">
+        <div class="ve-card ve-card--new" style="--accent-color:var(--plum)">
+          <div class="card-title"><span class="dot" style="background:var(--plum)"></span> llm_judge.py</div>
+          <div class="card-desc">LLM-as-a-Judge: Bewertet Claude Code gegen dokumentierte Arbeitsregeln. 3 Trigger-Typen, BudgetTracker, Dedup Cache, Lazy Provider Loading.</div>
+          <div class="card-loc">330 LOC</div>
+        </div>
+        <div class="ve-card ve-card--new" style="--accent-color:var(--plum)">
+          <div class="card-title"><span class="dot" style="background:var(--plum)"></span> coaching_rules.txt</div>
+          <div class="card-desc">Komprimierte Arbeitsregeln als System-Prompt: Research First, Delegation, CLI First, Kosten-Bewusstsein, Anti-Patterns.</div>
+          <div class="card-loc">59 Zeilen</div>
+        </div>
+        <div class="ve-card ve-card--new" style="--accent-color:var(--plum)">
+          <div class="card-title"><span class="dot" style="background:var(--plum)"></span> llm_providers/</div>
+          <div class="card-desc">Modulare Provider: <code>minimax.py</code> (primaer, 8s timeout), <code>gemini.py</code> (fallback), <code>ollama.py</code> (lokal). Lazy-loaded, zur Runtime wechselbar.</div>
+          <div class="card-loc">3 Dateien, ~130 LOC</div>
+        </div>
+        <div class="ve-card ve-card--new" style="--accent-color:var(--plum)">
+          <div class="card-title"><span class="dot" style="background:var(--plum)"></span> GUI: Judge Panel</div>
+          <div class="card-desc">Status-Tab zeigt Judge-Status, Eval-Count, Budget. Context-Tab zeigt <code>[JUDGE]</code> Eintraege in Lila (#cba6f7).</div>
+          <div class="card-loc">status_tab.py + context_tab.py</div>
+        </div>
+      </div>
+
+      <div class="callout anim" style="--i:18">
+        <strong>Der Sprung:</strong> v1+v2 waren rein deterministisch — Keyword-Matching und Schwellwerte. v3 bringt natuerlichsprachliche Bewertung: Der Judge liest den Session-Kontext und formuliert konkrete Hinweise statt generischer Warnungen. Budget-Cap von $0.05/Tag haelt die Kosten bei ~$1.50/Monat.
+      </div>
+    </div>
+
+  </div><!-- /timeline -->
+
+  <!-- Lessons Learned -->
+  <div class="section-title anim" style="--i:19">Lessons Learned</div>
+
+  <div class="learning-grid">
+    <div class="learning anim" style="--i:20">
+      <div class="learning-num">Lesson 1</div>
+      <div class="learning-title">Iron Rule: Fail-Open</div>
+      <div class="learning-desc">Sidecar darf Claude nie zum Absturz bringen. Jede Exception wird gefangen, schlimmstenfalls gibt der Daemon <code>{}</code> zurueck. Das Tool das ueberwacht darf nie das ueberwachte Tool blockieren.</div>
+    </div>
+    <div class="learning anim" style="--i:21">
+      <div class="learning-num">Lesson 2</div>
+      <div class="learning-title">Self-Detection ist Pflicht</div>
+      <div class="learning-desc">Ohne <code>SELF_MARKERS</code>-Check erkennt Sidecar seine eigenen <code>[SIDECAR]</code>-Warnungen als neue Events → Endlos-Loop. Jedes Monitoring-System muss sich selbst ausschliessen.</div>
+    </div>
+    <div class="learning anim" style="--i:22">
+      <div class="learning-num">Lesson 3</div>
+      <div class="learning-title">Sync-Hooks muessen schnell sein</div>
+      <div class="learning-desc">Claude Hooks blockieren den Workflow. Unix Socket + asyncio halten die Latenz bei ~1-3ms. Timeout-Safety auf jeder Schicht: Bridge 10s, Hook 15s, LLM 8s.</div>
+    </div>
+    <div class="learning anim" style="--i:23">
+      <div class="learning-num">Lesson 4</div>
+      <div class="learning-title">Cooldown verhindert Spam</div>
+      <div class="learning-desc">Ohne Cooldown (15s) wuerde jeder Call eine Warnung produzieren. Claude bekommt sonst mehr Meta-Kontext als Nutz-Kontext. Weniger ist mehr bei Context Injection.</div>
+    </div>
+    <div class="learning anim" style="--i:24">
+      <div class="learning-num">Lesson 5</div>
+      <div class="learning-title">Intelligent filtern statt alles laden</div>
+      <div class="learning-desc">v1 → v2 war der groesste Paradigmenwechsel: Statt 900 Zeilen permanent zu laden, waehlt ContextSelector ~20 phasenrelevante Zeilen. CLAUDE.md schrumpfte um 45%.</div>
+    </div>
+    <div class="learning anim" style="--i:25">
+      <div class="learning-num">Lesson 6</div>
+      <div class="learning-title">File Locking ist nicht optional</div>
+      <div class="learning-desc">Mehrere Hooks feuern parallel (PostToolUse + PreToolUse). Ohne fcntl-Lock korrupte JSON Session-Dateien. Race Conditions sind real bei Event-driven Architekturen.</div>
+    </div>
+    <div class="learning anim" style="--i:26">
+      <div class="learning-num">Lesson 7</div>
+      <div class="learning-title">Budget-Caps vor Feature-Creep</div>
+      <div class="learning-desc">Der LLM Judge koennte bei jedem Call evaluieren — tut er nicht. $0.05/Tag Cap + Dedup Cache + 3 gezielte Trigger halten die Kosten negligible. Constraints erzwingen gutes Design.</div>
+    </div>
+    <div class="learning anim" style="--i:27">
+      <div class="learning-num">Lesson 8</div>
+      <div class="learning-title">Phase Tracking ist bilingual</div>
+      <div class="learning-desc">Samuel schreibt Deutsch, Code-Prompts sind oft Englisch. PhaseTracker braucht Keywords in beiden Sprachen. Internationalisierung ist kein Nice-to-have wenn der User zweisprachig arbeitet.</div>
+    </div>
+  </div>
+
+  <!-- Footer callout -->
+  <div class="callout anim" style="--i:28;margin-top:40px;border-left-color:var(--plum);">
+    <strong>Alles an einem Tag.</strong> Die gesamte Evolution von v1 bis v3 passierte am 4.–5. Maerz 2026. 15 Commits, 5.630 Zeilen Code, von einem asyncio Daemon mit Pattern Detection zu einem dreischichtigen QA-System mit LLM Judge. Publiziert auf GitHub: <code>smlfg/sidecar-v1</code>, <code>smlfg/sidecar-v2</code>, <code>smlfg/sidecar-v3</code>.
+  </div>
+
+</div><!-- /container -->
+</body>
+</html>

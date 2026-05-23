@@ -1,0 +1,3176 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Häkel-Buddy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============ THEME — Paper/Ink + Craft ============ */
+  :root {
+    --font-body: 'Fraunces', Georgia, serif;
+    --font-mono: 'Source Code Pro', 'SF Mono', Consolas, monospace;
+
+    --bg: #faf7f2;
+    --surface: #ffffff;
+    --surface2: #f3ede4;
+    --surface-elevated: #fffcf7;
+    --border: rgba(90, 60, 30, 0.1);
+    --border-bright: rgba(90, 60, 30, 0.2);
+    --text: #2c2520;
+    --text-dim: #8a7b6e;
+
+    --terracotta: #b85c38;
+    --terracotta-dim: rgba(184, 92, 56, 0.08);
+    --sage: #5a7a3a;
+    --sage-dim: rgba(90, 122, 58, 0.08);
+    --rose: #c44569;
+    --rose-dim: rgba(196, 69, 105, 0.08);
+    --yarn: #d4a574;
+    --yarn-dim: rgba(212, 165, 116, 0.12);
+    --plum: #6b3a6b;
+    --plum-dim: rgba(107, 58, 107, 0.08);
+    --sky: #3a6b8c;
+    --sky-dim: rgba(58, 107, 140, 0.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1714;
+      --surface: #242019;
+      --surface2: #2e2922;
+      --surface-elevated: #322c24;
+      --border: rgba(255, 220, 180, 0.08);
+      --border-bright: rgba(255, 220, 180, 0.15);
+      --text: #ede4d8;
+      --text-dim: #a09080;
+
+      --terracotta: #e8845a;
+      --terracotta-dim: rgba(232, 132, 90, 0.12);
+      --sage: #8cb85c;
+      --sage-dim: rgba(140, 184, 92, 0.1);
+      --rose: #e8687a;
+      --rose-dim: rgba(232, 104, 122, 0.12);
+      --yarn: #d4a574;
+      --yarn-dim: rgba(212, 165, 116, 0.1);
+      --plum: #b880b8;
+      --plum-dim: rgba(184, 128, 184, 0.1);
+      --sky: #6aafdb;
+      --sky-dim: rgba(106, 175, 219, 0.1);
+    }
+  }
+
+  /* ============ RESET ============ */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 15% 5%, var(--rose-dim) 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 90%, var(--sage-dim) 0%, transparent 40%),
+      radial-gradient(ellipse at 50% 50%, var(--yarn-dim) 0%, transparent 60%);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100dvh;
+    line-height: 1.6;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* ============ ANIMATIONS ============ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeScale {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes progressGrow {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  /* ============ VIEWS ============ */
+  .view {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .view.active {
+    display: block;
+    animation: fadeUp 0.35s ease-out forwards;
+  }
+
+  /* ============ SELECTOR VIEW ============ */
+  .selector-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+  }
+  .app-header {
+    margin-bottom: 28px;
+  }
+  .app-title {
+    font-size: clamp(28px, 5vw, 40px);
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.15;
+    font-variation-settings: 'opsz' 144;
+  }
+  .app-title span { color: var(--rose); }
+  .app-subtitle {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  /* ============ FILTER PILLS ============ */
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .filter-pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    border: 1.5px solid var(--border-bright);
+    background: var(--surface);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.3px;
+  }
+  .filter-pill:hover {
+    border-color: var(--rose);
+    color: var(--rose);
+    background: var(--rose-dim);
+  }
+  .filter-pill.active {
+    background: var(--rose);
+    color: white;
+    border-color: var(--rose);
+  }
+
+  /* ============ PATTERN GRID ============ */
+  .pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .pattern-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+    animation: fadeScale 0.35s ease-out both;
+    animation-delay: calc(var(--i, 0) * 0.05s);
+  }
+  .pattern-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--rose-dim);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .pattern-card:hover {
+    border-color: var(--rose);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+  }
+  .pattern-card:hover::before { opacity: 1; }
+  .pattern-card:active { transform: translateY(0); }
+
+  .card-emoji {
+    font-size: 36px;
+    line-height: 1;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .card-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-variation-settings: 'opsz' 48;
+    position: relative;
+  }
+  .card-meta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .card-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .card-tag--category {
+    background: var(--terracotta-dim);
+    color: var(--terracotta);
+  }
+  .card-tag--difficulty {
+    background: var(--yarn-dim);
+    color: #7a5c30;
+  }
+  @media (prefers-color-scheme: dark) {
+    .card-tag--difficulty { color: var(--yarn); }
+  }
+  .card-tag--time {
+    background: var(--sky-dim);
+    color: var(--sky);
+  }
+
+  .card-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    position: relative;
+  }
+  .card-progress-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .card-progress-fill {
+    height: 100%;
+    background: var(--sage);
+    border-radius: 2px;
+    transition: width 0.3s;
+  }
+  .card-progress-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--sage);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .card-progress--done .card-progress-label { color: var(--text-dim); }
+  .card-progress--done .card-progress-fill { background: var(--text-dim); }
+
+  .card-done-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--sage);
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+  }
+
+  /* ============ PATTERN VIEW ============ */
+  .pattern-view {
+    max-width: 680px;
+    margin: 0 auto;
+    padding-bottom: 100px;
+  }
+
+  /* sticky top progress */
+  .pattern-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+  }
+  .pattern-topbar-inner {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .topbar-row1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .back-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: 1.5px solid var(--border-bright);
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .back-btn:hover {
+    border-color: var(--text-dim);
+    color: var(--text);
+    background: var(--surface2);
+  }
+  .topbar-progress-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-align: right;
+  }
+  .topbar-progress-label strong {
+    color: var(--sage);
+    font-weight: 700;
+  }
+  .topbar-progress-bar {
+    height: 5px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .topbar-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sage), var(--terracotta));
+    border-radius: 3px;
+    transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* pattern header */
+  .pattern-header {
+    padding: 24px 20px 20px;
+  }
+  .pattern-emoji-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  .pattern-emoji-big {
+    font-size: 48px;
+    line-height: 1;
+  }
+  .pattern-title-block {}
+  .pattern-title {
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: 800;
+    letter-spacing: 0;
+    font-variation-settings: 'opsz' 72;
+  }
+  .pattern-subtitle {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 4px;
+  }
+
+  .pattern-info-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .info-chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: var(--surface2);
+    color: var(--text-dim);
+  }
+  .info-chip strong { color: var(--text); font-weight: 600; }
+
+  .materials-box {
+    background: var(--yarn-dim);
+    border: 1px solid rgba(212, 165, 116, 0.25);
+    border-radius: 10px;
+    padding: 14px 18px;
+  }
+  .materials-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--terracotta);
+    margin-bottom: 8px;
+  }
+  .materials-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .materials-list li {
+    font-size: 13px;
+    color: var(--text);
+    background: var(--surface);
+    padding: 3px 10px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+  }
+
+  /* ============ STEPS LIST ============ */
+  .steps-list {
+    padding: 0 20px;
+  }
+  .step-item {
+    display: flex;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    border: 1.5px solid transparent;
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .step-item--done {
+    background: var(--sage-dim);
+    border-color: rgba(90, 122, 58, 0.15);
+  }
+  .step-item--active {
+    background: var(--rose-dim);
+    border-color: var(--rose);
+    box-shadow: 0 2px 12px rgba(196, 69, 105, 0.1);
+  }
+  .step-item--upcoming {
+    opacity: 0.45;
+  }
+
+  .step-check {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--border-bright);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    margin-top: 1px;
+    transition: all 0.2s;
+  }
+  .step-item--done .step-check {
+    background: var(--sage);
+    border-color: var(--sage);
+    color: white;
+  }
+  .step-item--active .step-check {
+    border-color: var(--rose);
+    background: var(--rose-dim);
+    color: var(--rose);
+  }
+  .step-item--upcoming .step-check {
+    color: transparent;
+  }
+
+  .step-content { flex: 1; min-width: 0; }
+  .step-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .step-item--done .step-label { color: var(--sage); }
+  .step-item--active .step-label { color: var(--rose); }
+  .step-item--upcoming .step-label { color: var(--text-dim); }
+
+  .step-number {
+    margin-right: 6px;
+    opacity: 0.6;
+  }
+  .step-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-variation-settings: 'opsz' 36;
+  }
+  .step-instruction {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .step-notation {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--yarn-dim);
+    color: var(--terracotta);
+    padding: 3px 9px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+  .step-count {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    background: var(--sky-dim);
+    color: var(--sky);
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-left: 6px;
+    margin-top: 4px;
+  }
+  .step-tip {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    background: var(--surface2);
+    border-left: 3px solid var(--yarn);
+    border-radius: 0 6px 6px 0;
+    padding: 8px 12px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .step-tip-icon {
+    flex-shrink: 0;
+    font-size: 14px;
+    margin-top: 1px;
+  }
+
+  /* ============ STICKY BOTTOM ============ */
+  .bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 12px 20px 20px;
+    background: linear-gradient(to top, var(--bg) 70%, transparent);
+    display: none;
+  }
+  .bottom-bar.visible { display: block; }
+  .bottom-bar-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn-primary {
+    flex: 1;
+    background: var(--rose);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-variation-settings: 'opsz' 36;
+    letter-spacing: 0;
+  }
+  .btn-primary:hover {
+    background: var(--terracotta);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(196, 69, 105, 0.3);
+  }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--text-dim);
+    border: 1.5px solid var(--border-bright);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-secondary:hover {
+    border-color: var(--text-dim);
+    color: var(--text);
+    background: var(--surface2);
+  }
+  .btn-secondary:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  /* ============ COMPLETION VIEW ============ */
+  .completion-wrap {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    text-align: center;
+    animation: fadeUp 0.45s ease-out both;
+  }
+  .completion-emoji {
+    font-size: 72px;
+    line-height: 1;
+    margin-bottom: 20px;
+    display: block;
+  }
+  .completion-title {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: 0;
+    margin-bottom: 12px;
+    font-variation-settings: 'opsz' 144;
+  }
+  .completion-title span { color: var(--rose); }
+  .completion-text {
+    font-size: 17px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 32px;
+    max-width: 380px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .completion-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+  .btn-completion-primary {
+    background: var(--sage);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 16px 24px;
+    font-family: var(--font-body);
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-variation-settings: 'opsz' 36;
+  }
+  .btn-completion-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(90, 122, 58, 0.25);
+  }
+  .btn-completion-secondary {
+    background: var(--surface);
+    color: var(--text-dim);
+    border: 1.5px solid var(--border-bright);
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-completion-secondary:hover {
+    color: var(--text);
+    border-color: var(--text-dim);
+    background: var(--surface2);
+  }
+  .completion-confetti {
+    font-size: 32px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    animation: fadeScale 0.5s ease-out 0.2s both;
+  }
+
+  /* ============ STITCH TOOLTIP ============ */
+  code[title] {
+    cursor: help;
+    text-decoration: underline dotted var(--terracotta);
+    text-underline-offset: 2px;
+  }
+
+  /* ============ EMPTY STATE ============ */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  .empty-state-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  /* ============ MOBILE ============ */
+  @media (max-width: 480px) {
+    .selector-wrap { padding: 20px 16px 100px; }
+    .pattern-grid { grid-template-columns: 1fr 1fr; }
+    .pattern-topbar { padding: 10px 16px; }
+    .pattern-header { padding: 16px 16px 14px; }
+    .steps-list { padding: 0 12px; }
+    .bottom-bar { padding: 10px 16px 18px; }
+    .step-item { padding: 12px; }
+    .pattern-emoji-big { font-size: 36px; }
+  }
+  @media (max-width: 360px) {
+    .pattern-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ============ SVG ENHANCEMENTS ============ */
+  .card-svg {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 0.5rem;
+  }
+  .card-svg svg {
+    width: 100%;
+    height: 100%;
+  }
+  .pattern-svg-big {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1rem;
+  }
+  .pattern-svg-big svg {
+    width: 100%;
+    height: 100%;
+  }
+  .step-illustration {
+    width: 140px;
+    height: 105px;
+    margin: 0.5rem auto;
+    opacity: 0.85;
+  }
+  .step-illustration svg {
+    width: 100%;
+    height: 100%;
+  }
+  .stitch-legend {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    margin: 1rem 0;
+    display: none;
+  }
+  .stitch-legend.open {
+    display: block;
+  }
+  .stitch-legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.75rem;
+  }
+  .stitch-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+  }
+  .stitch-legend-item svg {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+  .stitch-legend-toggle {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    color: var(--text);
+    cursor: pointer;
+    margin: 0.5rem 0;
+  }
+  .stitch-legend-toggle:hover {
+    background: var(--border);
+  }
+  .pattern-description {
+    text-align: center;
+    margin: 0.5rem 0 1rem;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .pattern-description .special {
+    font-style: italic;
+    margin-top: 0.3rem;
+  }
+  .pattern-description .gift {
+    margin-top: 0.3rem;
+    font-size: 0.8rem;
+  }
+
+  /* ============ STEP CHART (Stitch Diagrams) ============ */
+  .step-chart {
+    margin: 8px 0;
+    padding: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: auto;
+  }
+  .step-chart svg {
+    height: 50px;
+    width: auto;
+    max-width: 100%;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ SELECTOR VIEW ============ -->
+<div id="view-selector" class="view active">
+  <div class="selector-wrap">
+    <div class="app-header">
+      <h1 class="app-title">Haekel<span>Buddy</span></h1>
+      <p class="app-subtitle">10 Anleitungen · Schritt fuer Schritt</p>
+    </div>
+    <div class="filter-bar" id="filter-bar"></div>
+    <div class="pattern-grid" id="pattern-grid"></div>
+  </div>
+</div>
+
+<!-- ============ PATTERN VIEW ============ -->
+<div id="view-pattern" class="view">
+  <div class="pattern-topbar">
+    <div class="pattern-topbar-inner">
+      <div class="topbar-row1">
+        <button class="back-btn" id="back-btn" onclick="goBack()">
+          &#8592; Zurueck
+        </button>
+        <div class="topbar-progress-label" id="topbar-label"></div>
+      </div>
+      <div class="topbar-progress-bar">
+        <div class="topbar-progress-fill" id="topbar-fill" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-view">
+    <div class="pattern-header" id="pattern-header"></div>
+    <div class="steps-list" id="steps-list"></div>
+  </div>
+
+  <div class="bottom-bar visible" id="bottom-bar">
+    <div class="bottom-bar-inner">
+      <button class="btn-secondary" id="btn-back-step" onclick="prevStep()">&#8592; Zurueck</button>
+      <button class="btn-primary" id="btn-confirm" onclick="nextStep()"></button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ COMPLETION VIEW ============ -->
+<div id="view-completion" class="view">
+  <div class="completion-wrap">
+    <span class="completion-confetti">&#127995; &#129514; &#127834;</span>
+    <span class="completion-emoji" id="completion-emoji"></span>
+    <h2 class="completion-title">Fertig! <span>Gut gemacht.</span></h2>
+    <p class="completion-text" id="completion-text"></p>
+    <div class="completion-buttons">
+      <button class="btn-completion-primary" onclick="restartPattern()">Nochmal haekeln</button>
+      <button class="btn-completion-secondary" onclick="showSelector()">Andere Anleitung</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ SVG DEFINITIONS ============
+const HAEKEL_SVGS = {
+
+  stitchSymbols: {
+
+    chain: `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="20" cy="20" rx="13" ry="8"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"/>
+  <ellipse cx="20" cy="20" rx="7" ry="3.5"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.5"
+    stroke-dasharray="2 2"
+    opacity="0.45"/>
+</svg>`,
+
+    slip: `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="20" cy="20" r="10"
+    fill="currentColor"/>
+  <circle cx="20" cy="20" r="4"
+    fill="var(--surface)"/>
+</svg>`,
+
+    sc: `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <line x1="20" y1="7" x2="20" y2="33"
+    stroke="currentColor"
+    stroke-width="3"
+    stroke-linecap="round"/>
+  <line x1="7" y1="20" x2="33" y2="20"
+    stroke="currentColor"
+    stroke-width="3"
+    stroke-linecap="round"/>
+</svg>`,
+
+    hdc: `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <line x1="20" y1="12" x2="20" y2="33"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"/>
+  <line x1="10" y1="12" x2="30" y2="12"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"/>
+  <line x1="20" y1="8" x2="20" y2="14"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    opacity="0.5"/>
+</svg>`,
+
+    dc: `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <line x1="20" y1="9" x2="20" y2="33"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"/>
+  <line x1="9" y1="9" x2="31" y2="9"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"/>
+  <line x1="14" y1="19" x2="26" y2="9"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    opacity="0.75"/>
+</svg>`,
+
+    tr: `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <line x1="20" y1="8" x2="20" y2="34"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"/>
+  <line x1="9" y1="8" x2="31" y2="8"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"/>
+  <line x1="13" y1="20" x2="22" y2="8"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    opacity="0.75"/>
+  <line x1="18" y1="20" x2="27" y2="8"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    opacity="0.75"/>
+</svg>`,
+
+    inc: `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <line x1="20" y1="33" x2="10" y2="9"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"/>
+  <line x1="20" y1="33" x2="30" y2="9"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"/>
+  <line x1="7" y1="9" x2="33" y2="9"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    opacity="0.5"/>
+  <circle cx="20" cy="33" r="2.5"
+    fill="currentColor"/>
+</svg>`,
+
+    dec: `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <line x1="10" y1="33" x2="20" y2="9"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"/>
+  <line x1="30" y1="33" x2="20" y2="9"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"/>
+  <line x1="7" y1="33" x2="33" y2="33"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    opacity="0.5"/>
+  <circle cx="20" cy="9" r="2.5"
+    fill="currentColor"/>
+</svg>`,
+
+    magic_ring: `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="20" cy="20" r="12"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-dasharray="5 3"/>
+  <circle cx="20" cy="20" r="4"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"/>
+  <polyline points="16,8 20,4 24,8"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"/>
+</svg>`,
+
+  },
+
+  productPreviews: {
+
+    rose: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="roseGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="var(--rose)" stop-opacity="1"/>
+      <stop offset="60%" stop-color="var(--terracotta)" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="var(--yarn)" stop-opacity="0.7"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="60" cy="28" rx="12" ry="18" fill="url(#roseGrad)" opacity="0.75" transform="rotate(-20 60 60)"/>
+  <ellipse cx="60" cy="28" rx="12" ry="18" fill="url(#roseGrad)" opacity="0.75" transform="rotate(20 60 60)"/>
+  <ellipse cx="60" cy="28" rx="12" ry="18" fill="url(#roseGrad)" opacity="0.75" transform="rotate(65 60 60)"/>
+  <ellipse cx="60" cy="28" rx="12" ry="18" fill="url(#roseGrad)" opacity="0.75" transform="rotate(110 60 60)"/>
+  <ellipse cx="60" cy="28" rx="12" ry="18" fill="url(#roseGrad)" opacity="0.75" transform="rotate(155 60 60)"/>
+  <ellipse cx="60" cy="28" rx="12" ry="18" fill="url(#roseGrad)" opacity="0.75" transform="rotate(200 60 60)"/>
+  <ellipse cx="60" cy="28" rx="12" ry="18" fill="url(#roseGrad)" opacity="0.75" transform="rotate(245 60 60)"/>
+  <ellipse cx="60" cy="28" rx="12" ry="18" fill="url(#roseGrad)" opacity="0.75" transform="rotate(290 60 60)"/>
+  <ellipse cx="60" cy="28" rx="12" ry="18" fill="url(#roseGrad)" opacity="0.75" transform="rotate(335 60 60)"/>
+  <ellipse cx="60" cy="38" rx="8" ry="12" fill="var(--rose)" opacity="0.85" transform="rotate(0 60 60)"/>
+  <ellipse cx="60" cy="38" rx="8" ry="12" fill="var(--rose)" opacity="0.85" transform="rotate(60 60 60)"/>
+  <ellipse cx="60" cy="38" rx="8" ry="12" fill="var(--rose)" opacity="0.85" transform="rotate(120 60 60)"/>
+  <ellipse cx="60" cy="38" rx="8" ry="12" fill="var(--rose)" opacity="0.85" transform="rotate(180 60 60)"/>
+  <ellipse cx="60" cy="38" rx="8" ry="12" fill="var(--rose)" opacity="0.85" transform="rotate(240 60 60)"/>
+  <ellipse cx="60" cy="38" rx="8" ry="12" fill="var(--rose)" opacity="0.85" transform="rotate(300 60 60)"/>
+  <circle cx="60" cy="60" r="10" fill="var(--terracotta)"/>
+  <circle cx="60" cy="60" r="5" fill="var(--yarn)"/>
+</svg>`,
+
+    granny_square: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <rect x="12" y="12" width="96" height="96" rx="8"
+    fill="var(--sky-dim)"
+    stroke="var(--sky)"
+    stroke-width="2.5"/>
+  <rect x="26" y="26" width="68" height="68" rx="5"
+    fill="var(--terracotta-dim)"
+    stroke="var(--terracotta)"
+    stroke-width="2"/>
+  <rect x="42" y="42" width="36" height="36" rx="4"
+    fill="var(--sage-dim)"
+    stroke="var(--sage)"
+    stroke-width="2"/>
+  <circle cx="26" cy="26" r="5" fill="var(--surface)" stroke="var(--sky)" stroke-width="1.5"/>
+  <circle cx="94" cy="26" r="5" fill="var(--surface)" stroke="var(--sky)" stroke-width="1.5"/>
+  <circle cx="26" cy="94" r="5" fill="var(--surface)" stroke="var(--sky)" stroke-width="1.5"/>
+  <circle cx="94" cy="94" r="5" fill="var(--surface)" stroke="var(--sky)" stroke-width="1.5"/>
+  <circle cx="60" cy="20" r="3.5" fill="var(--surface)" stroke="var(--sky)" stroke-width="1.5"/>
+  <circle cx="60" cy="100" r="3.5" fill="var(--surface)" stroke="var(--sky)" stroke-width="1.5"/>
+  <circle cx="20" cy="60" r="3.5" fill="var(--surface)" stroke="var(--sky)" stroke-width="1.5"/>
+  <circle cx="100" cy="60" r="3.5" fill="var(--surface)" stroke="var(--sky)" stroke-width="1.5"/>
+  <circle cx="42" cy="42" r="4" fill="var(--surface)" stroke="var(--terracotta)" stroke-width="1.5"/>
+  <circle cx="78" cy="42" r="4" fill="var(--surface)" stroke="var(--terracotta)" stroke-width="1.5"/>
+  <circle cx="42" cy="78" r="4" fill="var(--surface)" stroke="var(--terracotta)" stroke-width="1.5"/>
+  <circle cx="78" cy="78" r="4" fill="var(--surface)" stroke="var(--terracotta)" stroke-width="1.5"/>
+  <circle cx="60" cy="60" r="6" fill="var(--yarn)" stroke="var(--terracotta)" stroke-width="1.5"/>
+</svg>`,
+
+    amigurumi_heart: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="heartGrad" cx="38%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="var(--yarn)" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="var(--rose)" stop-opacity="1"/>
+      <stop offset="100%" stop-color="var(--plum)" stop-opacity="0.9"/>
+    </radialGradient>
+  </defs>
+  <path d="M60 95 C60 95 15 65 15 40 C15 25 25 15 38 15 C47 15 55 21 60 28 C65 21 73 15 82 15 C95 15 105 25 105 40 C105 65 60 95 60 95 Z"
+    fill="url(#heartGrad)"
+    stroke="var(--rose)"
+    stroke-width="2"/>
+  <ellipse cx="45" cy="35" rx="12" ry="8"
+    fill="white"
+    opacity="0.25"
+    transform="rotate(-20 45 35)"/>
+  <path d="M30 45 Q40 50 30 58" fill="none" stroke="var(--plum)" stroke-width="1.2" opacity="0.4" stroke-linecap="round"/>
+  <path d="M50 65 Q60 70 55 78" fill="none" stroke="var(--plum)" stroke-width="1.2" opacity="0.4" stroke-linecap="round"/>
+  <path d="M72 55 Q80 48 85 55" fill="none" stroke="var(--plum)" stroke-width="1.2" opacity="0.4" stroke-linecap="round"/>
+</svg>`,
+
+    topflappen: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="60" cy="60" r="50"
+    fill="var(--terracotta-dim)"
+    stroke="var(--terracotta)"
+    stroke-width="3"/>
+  <circle cx="60" cy="60" r="42"
+    fill="none"
+    stroke="var(--yarn)"
+    stroke-width="4"
+    stroke-dasharray="6 4"/>
+  <circle cx="60" cy="60" r="33"
+    fill="none"
+    stroke="var(--terracotta)"
+    stroke-width="4"
+    stroke-dasharray="5 3"/>
+  <circle cx="60" cy="60" r="24"
+    fill="none"
+    stroke="var(--sage)"
+    stroke-width="4"
+    stroke-dasharray="4 3"/>
+  <circle cx="60" cy="60" r="15"
+    fill="none"
+    stroke="var(--terracotta)"
+    stroke-width="3"
+    stroke-dasharray="3 2"/>
+  <circle cx="60" cy="60" r="7"
+    fill="var(--yarn)"
+    stroke="var(--terracotta)"
+    stroke-width="2"/>
+  <circle cx="60" cy="10" r="4"
+    fill="none"
+    stroke="var(--terracotta)"
+    stroke-width="2.5"/>
+  <line x1="60" y1="14" x2="60" y2="22"
+    stroke="var(--terracotta)"
+    stroke-width="2"
+    stroke-linecap="round"/>
+</svg>`,
+
+    schal: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(60,60) rotate(-8) translate(-60,-60)">
+    <rect x="18" y="22" width="84" height="76" rx="6"
+      fill="var(--plum-dim)"
+      stroke="var(--plum)"
+      stroke-width="2"/>
+    <line x1="18" y1="34" x2="102" y2="34" stroke="var(--plum)" stroke-width="1" opacity="0.4"/>
+    <line x1="18" y1="44" x2="102" y2="44" stroke="var(--plum)" stroke-width="1" opacity="0.4"/>
+    <line x1="18" y1="54" x2="102" y2="54" stroke="var(--plum)" stroke-width="1" opacity="0.4"/>
+    <line x1="18" y1="64" x2="102" y2="64" stroke="var(--plum)" stroke-width="1" opacity="0.4"/>
+    <line x1="18" y1="74" x2="102" y2="74" stroke="var(--plum)" stroke-width="1" opacity="0.4"/>
+    <line x1="18" y1="84" x2="102" y2="84" stroke="var(--plum)" stroke-width="1" opacity="0.4"/>
+    <path d="M18 39 Q27 35 36 39 Q45 43 54 39 Q63 35 72 39 Q81 43 90 39 Q99 35 102 37"
+      fill="none" stroke="var(--plum)" stroke-width="1.5" opacity="0.6" stroke-linecap="round"/>
+    <path d="M18 49 Q27 45 36 49 Q45 53 54 49 Q63 45 72 49 Q81 53 90 49 Q99 45 102 47"
+      fill="none" stroke="var(--plum)" stroke-width="1.5" opacity="0.6" stroke-linecap="round"/>
+    <path d="M18 59 Q27 55 36 59 Q45 63 54 59 Q63 55 72 59 Q81 63 90 59 Q99 55 102 57"
+      fill="none" stroke="var(--plum)" stroke-width="1.5" opacity="0.6" stroke-linecap="round"/>
+    <line x1="24" y1="98" x2="22" y2="110" stroke="var(--plum)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="32" y1="98" x2="30" y2="111" stroke="var(--plum)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="40" y1="98" x2="38" y2="110" stroke="var(--plum)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="48" y1="98" x2="47" y2="111" stroke="var(--plum)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="56" y1="98" x2="55" y2="110" stroke="var(--plum)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="64" y1="98" x2="63" y2="111" stroke="var(--plum)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="72" y1="98" x2="71" y2="110" stroke="var(--plum)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="80" y1="98" x2="79" y2="111" stroke="var(--plum)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="88" y1="98" x2="87" y2="110" stroke="var(--plum)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="96" y1="98" x2="96" y2="111" stroke="var(--plum)" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>`,
+
+    untersetzer: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="60" cy="60" r="48"
+    fill="var(--sage-dim)"
+    stroke="var(--sage)"
+    stroke-width="2.5"/>
+  <line x1="60" y1="60" x2="60" y2="14" stroke="var(--sage)" stroke-width="1.5" opacity="0.5"/>
+  <line x1="60" y1="60" x2="60" y2="14" stroke="var(--sage)" stroke-width="1.5" opacity="0.5" transform="rotate(30 60 60)"/>
+  <line x1="60" y1="60" x2="60" y2="14" stroke="var(--sage)" stroke-width="1.5" opacity="0.5" transform="rotate(60 60 60)"/>
+  <line x1="60" y1="60" x2="60" y2="14" stroke="var(--sage)" stroke-width="1.5" opacity="0.5" transform="rotate(90 60 60)"/>
+  <line x1="60" y1="60" x2="60" y2="14" stroke="var(--sage)" stroke-width="1.5" opacity="0.5" transform="rotate(120 60 60)"/>
+  <line x1="60" y1="60" x2="60" y2="14" stroke="var(--sage)" stroke-width="1.5" opacity="0.5" transform="rotate(150 60 60)"/>
+  <line x1="60" y1="60" x2="60" y2="14" stroke="var(--sage)" stroke-width="1.5" opacity="0.5" transform="rotate(180 60 60)"/>
+  <line x1="60" y1="60" x2="60" y2="14" stroke="var(--sage)" stroke-width="1.5" opacity="0.5" transform="rotate(210 60 60)"/>
+  <line x1="60" y1="60" x2="60" y2="14" stroke="var(--sage)" stroke-width="1.5" opacity="0.5" transform="rotate(240 60 60)"/>
+  <line x1="60" y1="60" x2="60" y2="14" stroke="var(--sage)" stroke-width="1.5" opacity="0.5" transform="rotate(270 60 60)"/>
+  <line x1="60" y1="60" x2="60" y2="14" stroke="var(--sage)" stroke-width="1.5" opacity="0.5" transform="rotate(300 60 60)"/>
+  <line x1="60" y1="60" x2="60" y2="14" stroke="var(--sage)" stroke-width="1.5" opacity="0.5" transform="rotate(330 60 60)"/>
+  <circle cx="60" cy="60" r="16"
+    fill="none"
+    stroke="var(--sage)"
+    stroke-width="2.5"
+    stroke-dasharray="4 3"/>
+  <circle cx="60" cy="60" r="30"
+    fill="none"
+    stroke="var(--sage)"
+    stroke-width="2"
+    stroke-dasharray="5 4"/>
+  <circle cx="60" cy="60" r="7"
+    fill="var(--sage)"
+    stroke="var(--surface)"
+    stroke-width="2"/>
+</svg>`,
+
+    stirnband: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="60" cy="60" rx="48" ry="32"
+    fill="var(--yarn-dim)"
+    stroke="var(--yarn)"
+    stroke-width="2.5"/>
+  <ellipse cx="60" cy="60" rx="28" ry="14"
+    fill="var(--surface)"
+    stroke="var(--yarn)"
+    stroke-width="2"/>
+  <line x1="12" y1="56" x2="108" y2="56" stroke="var(--yarn)" stroke-width="1.2" opacity="0.35"/>
+  <line x1="13" y1="60" x2="107" y2="60" stroke="var(--yarn)" stroke-width="1.5" opacity="0.5"/>
+  <line x1="12" y1="64" x2="108" y2="64" stroke="var(--yarn)" stroke-width="1.2" opacity="0.35"/>
+  <path d="M28 38 Q60 30 92 38" fill="none" stroke="var(--yarn)" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+  <path d="M22 44 Q60 34 98 44" fill="none" stroke="var(--terracotta)" stroke-width="1.5" opacity="0.45" stroke-linecap="round"/>
+  <path d="M28 82 Q60 90 92 82" fill="none" stroke="var(--yarn)" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+  <path d="M22 76 Q60 86 98 76" fill="none" stroke="var(--terracotta)" stroke-width="1.5" opacity="0.45" stroke-linecap="round"/>
+</svg>`,
+
+    amigurumi_ball: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="ballGrad" cx="38%" cy="32%" r="60%">
+      <stop offset="0%" stop-color="var(--sky)" stop-opacity="0.5"/>
+      <stop offset="40%" stop-color="var(--sky)" stop-opacity="1"/>
+      <stop offset="100%" stop-color="var(--plum)" stop-opacity="0.85"/>
+    </radialGradient>
+  </defs>
+  <circle cx="60" cy="60" r="48"
+    fill="url(#ballGrad)"
+    stroke="var(--sky)"
+    stroke-width="2"/>
+  <ellipse cx="60" cy="60" rx="48" ry="14"
+    fill="none"
+    stroke="var(--sky)"
+    stroke-width="1.2"
+    opacity="0.4"/>
+  <ellipse cx="60" cy="60" rx="40" ry="28"
+    fill="none"
+    stroke="var(--sky)"
+    stroke-width="1.2"
+    opacity="0.3"/>
+  <ellipse cx="46" cy="42" rx="13" ry="8"
+    fill="white"
+    opacity="0.25"
+    transform="rotate(-25 46 42)"/>
+  <circle cx="44" cy="40" r="4"
+    fill="white"
+    opacity="0.35"/>
+</svg>`,
+
+    schluesselanhaenger_blume: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="60" cy="30" rx="10" ry="18"
+    fill="var(--rose)"
+    opacity="0.85"/>
+  <ellipse cx="60" cy="30" rx="10" ry="18"
+    fill="var(--rose)"
+    opacity="0.85"
+    transform="rotate(72 60 60)"/>
+  <ellipse cx="60" cy="30" rx="10" ry="18"
+    fill="var(--rose)"
+    opacity="0.85"
+    transform="rotate(144 60 60)"/>
+  <ellipse cx="60" cy="30" rx="10" ry="18"
+    fill="var(--rose)"
+    opacity="0.85"
+    transform="rotate(216 60 60)"/>
+  <ellipse cx="60" cy="30" rx="10" ry="18"
+    fill="var(--rose)"
+    opacity="0.85"
+    transform="rotate(288 60 60)"/>
+  <line x1="60" y1="45" x2="60" y2="18" stroke="var(--plum)" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+  <line x1="60" y1="45" x2="60" y2="18" stroke="var(--plum)" stroke-width="1" opacity="0.3" stroke-linecap="round" transform="rotate(72 60 60)"/>
+  <line x1="60" y1="45" x2="60" y2="18" stroke="var(--plum)" stroke-width="1" opacity="0.3" stroke-linecap="round" transform="rotate(144 60 60)"/>
+  <line x1="60" y1="45" x2="60" y2="18" stroke="var(--plum)" stroke-width="1" opacity="0.3" stroke-linecap="round" transform="rotate(216 60 60)"/>
+  <line x1="60" y1="45" x2="60" y2="18" stroke="var(--plum)" stroke-width="1" opacity="0.3" stroke-linecap="round" transform="rotate(288 60 60)"/>
+  <circle cx="60" cy="60" r="12"
+    fill="var(--yarn)"
+    stroke="var(--terracotta)"
+    stroke-width="2"/>
+  <circle cx="60" cy="60" r="5"
+    fill="var(--terracotta)"/>
+  <line x1="60" y1="48" x2="60" y2="38" stroke="var(--text-dim)" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+  <circle cx="60" cy="33" r="5"
+    fill="none"
+    stroke="var(--text-dim)"
+    stroke-width="2.5"
+    opacity="0.6"/>
+</svg>`,
+
+    babymuetze: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <path d="M18 72 Q18 20 60 18 Q102 20 102 72 Z"
+    fill="var(--terracotta-dim)"
+    stroke="var(--terracotta)"
+    stroke-width="2.5"
+    stroke-linejoin="round"/>
+  <path d="M26 55 Q60 50 94 55" fill="none" stroke="var(--terracotta)" stroke-width="1.2" opacity="0.4" stroke-linecap="round"/>
+  <path d="M22 65 Q60 59 98 65" fill="none" stroke="var(--terracotta)" stroke-width="1.2" opacity="0.4" stroke-linecap="round"/>
+  <path d="M20 72 Q60 66 100 72" fill="none" stroke="var(--terracotta)" stroke-width="1.2" opacity="0.4" stroke-linecap="round"/>
+  <rect x="14" y="72" width="92" height="18" rx="4"
+    fill="var(--yarn-dim)"
+    stroke="var(--yarn)"
+    stroke-width="2"/>
+  <line x1="24" y1="72" x2="24" y2="90" stroke="var(--yarn)" stroke-width="1.5" opacity="0.5"/>
+  <line x1="33" y1="72" x2="33" y2="90" stroke="var(--yarn)" stroke-width="1.5" opacity="0.5"/>
+  <line x1="42" y1="72" x2="42" y2="90" stroke="var(--yarn)" stroke-width="1.5" opacity="0.5"/>
+  <line x1="51" y1="72" x2="51" y2="90" stroke="var(--yarn)" stroke-width="1.5" opacity="0.5"/>
+  <line x1="60" y1="72" x2="60" y2="90" stroke="var(--yarn)" stroke-width="1.5" opacity="0.5"/>
+  <line x1="69" y1="72" x2="69" y2="90" stroke="var(--yarn)" stroke-width="1.5" opacity="0.5"/>
+  <line x1="78" y1="72" x2="78" y2="90" stroke="var(--yarn)" stroke-width="1.5" opacity="0.5"/>
+  <line x1="87" y1="72" x2="87" y2="90" stroke="var(--yarn)" stroke-width="1.5" opacity="0.5"/>
+  <line x1="96" y1="72" x2="96" y2="90" stroke="var(--yarn)" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="60" cy="18" r="8"
+    fill="var(--rose)"
+    stroke="var(--terracotta)"
+    stroke-width="1.5"/>
+  <line x1="60" y1="10" x2="60" y2="7" stroke="var(--rose)" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  <line x1="60" y1="10" x2="60" y2="7" stroke="var(--rose)" stroke-width="2" stroke-linecap="round" opacity="0.7" transform="rotate(45 60 10)"/>
+  <line x1="60" y1="10" x2="60" y2="7" stroke="var(--rose)" stroke-width="2" stroke-linecap="round" opacity="0.7" transform="rotate(90 60 10)"/>
+  <line x1="60" y1="10" x2="60" y2="7" stroke="var(--rose)" stroke-width="2" stroke-linecap="round" opacity="0.7" transform="rotate(135 60 10)"/>
+  <line x1="60" y1="10" x2="60" y2="7" stroke="var(--rose)" stroke-width="2" stroke-linecap="round" opacity="0.7" transform="rotate(180 60 10)"/>
+  <line x1="60" y1="10" x2="60" y2="7" stroke="var(--rose)" stroke-width="2" stroke-linecap="round" opacity="0.7" transform="rotate(225 60 10)"/>
+  <line x1="60" y1="10" x2="60" y2="7" stroke="var(--rose)" stroke-width="2" stroke-linecap="round" opacity="0.7" transform="rotate(270 60 10)"/>
+  <line x1="60" y1="10" x2="60" y2="7" stroke="var(--rose)" stroke-width="2" stroke-linecap="round" opacity="0.7" transform="rotate(315 60 10)"/>
+</svg>`,
+
+  },
+
+  stepIllustrations: {
+
+    magic_ring_formation: `<svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+  <rect x="72" y="50" width="16" height="50" rx="8"
+    fill="var(--yarn-dim)"
+    stroke="var(--yarn)"
+    stroke-width="1.5"/>
+  <path d="M30 60 Q30 20 80 22 Q130 20 130 60 Q130 95 80 98 Q40 95 30 75"
+    fill="none"
+    stroke="var(--rose)"
+    stroke-width="3"
+    stroke-linecap="round"/>
+  <path d="M35 68 Q28 60 30 50"
+    fill="none"
+    stroke="var(--terracotta)"
+    stroke-width="2"
+    stroke-linecap="round"/>
+  <polyline points="24,52 30,50 33,57"
+    fill="none"
+    stroke="var(--terracotta)"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"/>
+  <path d="M30 75 Q20 85 18 100"
+    fill="none"
+    stroke="var(--rose)"
+    stroke-width="2.5"
+    stroke-dasharray="4 3"
+    stroke-linecap="round"/>
+  <path d="M130 60 Q145 58 155 55"
+    fill="none"
+    stroke="var(--rose)"
+    stroke-width="2.5"
+    stroke-linecap="round"/>
+  <rect x="5" y="4" width="30" height="18" rx="4"
+    fill="var(--rose-dim)"
+    stroke="var(--rose)"
+    stroke-width="1.2"/>
+  <text x="20" y="17" text-anchor="middle"
+    font-size="10" font-weight="700"
+    fill="var(--rose)"
+    font-family="monospace">MR</text>
+  <circle cx="80" cy="60" r="5"
+    fill="var(--terracotta)"
+    opacity="0.7"/>
+</svg>`,
+
+    spiral_roll: `<svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+  <rect x="8" y="50" width="55" height="20" rx="5"
+    fill="var(--rose-dim)"
+    stroke="var(--rose)"
+    stroke-width="2"/>
+  <line x1="8" y1="57" x2="63" y2="57" stroke="var(--rose)" stroke-width="0.8" opacity="0.5"/>
+  <line x1="8" y1="63" x2="63" y2="63" stroke="var(--rose)" stroke-width="0.8" opacity="0.5"/>
+  <path d="M63 60 Q72 60 76 55"
+    fill="none"
+    stroke="var(--terracotta)"
+    stroke-width="2"
+    stroke-linecap="round"/>
+  <polyline points="72,50 76,55 70,57"
+    fill="none"
+    stroke="var(--terracotta)"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"/>
+  <path d="M120 60 A22 22 0 1 1 97 60" fill="none" stroke="var(--rose)" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+  <path d="M120 60 A14 14 0 1 1 105 60" fill="none" stroke="var(--terracotta)" stroke-width="3.5" stroke-linecap="round" opacity="0.8"/>
+  <path d="M120 60 A7 7 0 1 1 112 60" fill="none" stroke="var(--rose)" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+  <circle cx="120" cy="60" r="3.5"
+    fill="var(--terracotta)"/>
+  <rect x="5" y="4" width="72" height="18" rx="4"
+    fill="var(--rose-dim)"
+    stroke="var(--rose)"
+    stroke-width="1.2"/>
+  <text x="41" y="17" text-anchor="middle"
+    font-size="10" font-weight="600"
+    fill="var(--rose)"
+    font-family="monospace">Spirale rollen</text>
+</svg>`,
+
+    join_halves: `<svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+  <path d="M75 95 C75 95 35 68 35 45 C35 32 44 24 55 24 C63 24 70 29 75 36 Z"
+    fill="var(--rose-dim)"
+    stroke="var(--rose)"
+    stroke-width="2.5"/>
+  <path d="M85 95 C85 95 125 68 125 45 C125 32 116 24 105 24 C97 24 90 29 85 36 Z"
+    fill="var(--rose-dim)"
+    stroke="var(--rose)"
+    stroke-width="2.5"/>
+  <line x1="80" y1="36" x2="80" y2="95"
+    stroke="var(--terracotta)"
+    stroke-width="2"
+    stroke-dasharray="3 3"
+    stroke-linecap="round"/>
+  <polyline points="68,60 78,60 75,56"
+    fill="none"
+    stroke="var(--terracotta)"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"/>
+  <polyline points="92,60 82,60 85,56"
+    fill="none"
+    stroke="var(--terracotta)"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"/>
+  <line x1="77" y1="45" x2="83" y2="45" stroke="var(--terracotta)" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="77" y1="54" x2="83" y2="54" stroke="var(--terracotta)" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="77" y1="63" x2="83" y2="63" stroke="var(--terracotta)" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="77" y1="72" x2="83" y2="72" stroke="var(--terracotta)" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="77" y1="81" x2="83" y2="81" stroke="var(--terracotta)" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <rect x="5" y="4" width="82" height="18" rx="4"
+    fill="var(--rose-dim)"
+    stroke="var(--rose)"
+    stroke-width="1.2"/>
+  <text x="46" y="17" text-anchor="middle"
+    font-size="10" font-weight="600"
+    fill="var(--rose)"
+    font-family="monospace">Haelften zusammen</text>
+</svg>`,
+
+    increase_schema: `<svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="80" cy="60" r="8"
+    fill="var(--sage-dim)"
+    stroke="var(--sage)"
+    stroke-width="2"/>
+  <text x="80" y="64" text-anchor="middle"
+    font-size="8" font-weight="700"
+    fill="var(--sage)"
+    font-family="monospace">R1</text>
+  <circle cx="80" cy="60" r="22"
+    fill="none"
+    stroke="var(--sage)"
+    stroke-width="2"
+    stroke-dasharray="4 2"/>
+  <circle cx="80" cy="60" r="36"
+    fill="none"
+    stroke="var(--terracotta)"
+    stroke-width="2"
+    stroke-dasharray="4 2"/>
+  <circle cx="80" cy="60" r="50"
+    fill="none"
+    stroke="var(--sage)"
+    stroke-width="2"
+    stroke-dasharray="4 2"/>
+  <path d="M80 38 L76 44 L84 44 Z" fill="var(--terracotta)" opacity="0.8"/>
+  <path d="M80 38 L76 44 L84 44 Z" fill="var(--terracotta)" opacity="0.8" transform="rotate(90 80 60)"/>
+  <path d="M80 38 L76 44 L84 44 Z" fill="var(--terracotta)" opacity="0.8" transform="rotate(180 80 60)"/>
+  <path d="M80 38 L76 44 L84 44 Z" fill="var(--terracotta)" opacity="0.8" transform="rotate(270 80 60)"/>
+  <path d="M80 24 L77 30 L83 30 Z" fill="var(--terracotta)" opacity="0.65" transform="rotate(0 80 60)"/>
+  <path d="M80 24 L77 30 L83 30 Z" fill="var(--terracotta)" opacity="0.65" transform="rotate(60 80 60)"/>
+  <path d="M80 24 L77 30 L83 30 Z" fill="var(--terracotta)" opacity="0.65" transform="rotate(120 80 60)"/>
+  <path d="M80 24 L77 30 L83 30 Z" fill="var(--terracotta)" opacity="0.65" transform="rotate(180 80 60)"/>
+  <path d="M80 24 L77 30 L83 30 Z" fill="var(--terracotta)" opacity="0.65" transform="rotate(240 80 60)"/>
+  <path d="M80 24 L77 30 L83 30 Z" fill="var(--terracotta)" opacity="0.65" transform="rotate(300 80 60)"/>
+  <text x="104" y="62" font-size="8" fill="var(--sage)" font-family="monospace" font-weight="600">R2</text>
+  <text x="118" y="62" font-size="8" fill="var(--terracotta)" font-family="monospace" font-weight="600">R3</text>
+  <text x="133" y="62" font-size="8" fill="var(--sage)" font-family="monospace" font-weight="600">R4</text>
+  <rect x="5" y="4" width="90" height="18" rx="4"
+    fill="var(--sage-dim)"
+    stroke="var(--sage)"
+    stroke-width="1.2"/>
+  <text x="50" y="17" text-anchor="middle"
+    font-size="10" font-weight="600"
+    fill="var(--sage)"
+    font-family="monospace">Zunahme-Schema</text>
+</svg>`,
+
+    color_change: `<svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+  <rect x="8" y="46" width="60" height="28" rx="5"
+    fill="var(--sky-dim)"
+    stroke="var(--sky)"
+    stroke-width="2"/>
+  <line x1="8" y1="54" x2="68" y2="54" stroke="var(--sky)" stroke-width="0.8" opacity="0.45"/>
+  <line x1="8" y1="60" x2="68" y2="60" stroke="var(--sky)" stroke-width="0.8" opacity="0.45"/>
+  <line x1="8" y1="66" x2="68" y2="66" stroke="var(--sky)" stroke-width="0.8" opacity="0.45"/>
+  <rect x="92" y="46" width="60" height="28" rx="5"
+    fill="var(--terracotta-dim)"
+    stroke="var(--terracotta)"
+    stroke-width="2"/>
+  <line x1="92" y1="54" x2="152" y2="54" stroke="var(--terracotta)" stroke-width="0.8" opacity="0.45"/>
+  <line x1="92" y1="60" x2="152" y2="60" stroke="var(--terracotta)" stroke-width="0.8" opacity="0.45"/>
+  <line x1="92" y1="66" x2="152" y2="66" stroke="var(--terracotta)" stroke-width="0.8" opacity="0.45"/>
+  <path d="M68 74 Q68 95 55 108"
+    fill="none"
+    stroke="var(--sky)"
+    stroke-width="2.5"
+    stroke-dasharray="4 3"
+    stroke-linecap="round"/>
+  <path d="M92 74 Q92 95 105 108"
+    fill="none"
+    stroke="var(--terracotta)"
+    stroke-width="2.5"
+    stroke-dasharray="4 3"
+    stroke-linecap="round"/>
+  <circle cx="80" cy="60" r="10"
+    fill="var(--surface)"
+    stroke="var(--yarn)"
+    stroke-width="2.5"/>
+  <line x1="74" y1="54" x2="86" y2="66" stroke="var(--yarn)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="86" y1="54" x2="74" y2="66" stroke="var(--yarn)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="68" y1="60" x2="70" y2="60" stroke="var(--sky)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="90" y1="60" x2="92" y2="60" stroke="var(--terracotta)" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="52" cy="90" r="4" fill="none" stroke="var(--text-dim)" stroke-width="1.5"/>
+  <circle cx="58" cy="90" r="4" fill="none" stroke="var(--text-dim)" stroke-width="1.5"/>
+  <line x1="48" y1="94" x2="62" y2="86" stroke="var(--text-dim)" stroke-width="1.2" stroke-linecap="round"/>
+  <rect x="5" y="4" width="80" height="18" rx="4"
+    fill="var(--yarn-dim)"
+    stroke="var(--yarn)"
+    stroke-width="1.2"/>
+  <text x="45" y="17" text-anchor="middle"
+    font-size="10" font-weight="600"
+    fill="var(--terracotta)"
+    font-family="monospace">Farbwechsel</text>
+</svg>`,
+
+  }
+
+};
+
+// ============ PATTERN SVG MAP ============
+const PATTERN_SVG_MAP = {
+  rose: 'rose',
+  granny: 'granny_square',
+  herz: 'amigurumi_heart',
+  topflappen: 'topflappen',
+  schal: 'schal',
+  untersetzer: 'untersetzer',
+  stirnband: 'stirnband',
+  ball: 'amigurumi_ball',
+  blume: 'schluesselanhaenger_blume',
+  muetze: 'babymuetze'
+};
+
+// ============ PATTERN DESCRIPTIONS ============
+const PATTERN_DESCRIPTIONS = {
+  rose: {
+    description: "Ein spiralfoermiger Streifen der aufgerollt wie eine echte Rose aussieht — kein Runden-Haekeln, nur zwei kurze Reihen und dann zusammenrollen.",
+    result_description: "Ca. 5 cm Durchmesser, eine dreidimensionale Bluete mit natuerlich wirkenden, leicht kraeuseligen Blattern. Haelt ihre Form dauerhaft ohne Fuellwatte.",
+    special_pattern: "Spiralstreifen-Methode: In Reihe 2 wird jede Masche verdoppelt (2 Stb in jede M) — das verdoppelte Garn kraeuselst den Streifen automatisch und ergibt die Rueschenform der Bluetenblaetter.",
+    gift_idea: "Als Aufnaehschmuck auf Muetzen, Taschen oder Jacken. Auf eine Haarspange naehen fuer ein schnelles Geschenk. Mehrere Rosen in verschiedenen Groessen ergeben ein huebsches Strauesslein.",
+    step_illustrations: { "7": "spiral_roll", "8": "spiral_roll" }
+  },
+  granny: {
+    description: "Das klassische Granny Square — von der Mitte nach aussen in konzentrischen Runden mit 3er-Staebchen-Gruppen und Luftmaschen-Ecken. Mit Farbwechsel nach jeder Runde.",
+    result_description: "Ca. 9–12 cm Seitenlaenge (3–4 Runden), ein flaches quadratisches Motiv mit elegantem Durchbruchmuster. Je mehr Runden, desto groesser das Square.",
+    special_pattern: "Die 2-Luftmaschen-Boegen an den vier Ecken definieren das quadratische Format — zwischen den Ecken wachst das Square durch Gruppen von je 3 Staebchen gleichmaessig in alle Richtungen.",
+    gift_idea: "Mehrere Squares zusammennaehen ergibt Schals, Decken oder Taschen. Einzeln als Untersetzer oder Topflappen. Ein perfektes Lernprojekt fuer die Weitergabe an andere Anfaenger.",
+    step_illustrations: { "2": "magic_ring_formation", "4": "color_change" }
+  },
+  herz: {
+    description: "Ein dreidimensionales gefuelltes Herz aus Amigurumi-Technik — zwei identische Halbkugeln werden in Spiralrunden gehaekelt und dann durch Weiterhaekeln verbunden.",
+    result_description: "Ca. 5–6 cm Breite und 5 cm Hoehe, ein prall gefuelltes 3D-Herz in typischer Herzform mit zwei runden Woelbungen oben und einer spitzen Unterseite.",
+    special_pattern: "Der Trick liegt im Verbinden der zwei Haelften: Die letzte Masche der zweiten Haelfte wird direkt an die erste Masche der ersten Haelfte angeschlossen und dann in einem Stueck rund um beide Teile weitergehaekelt — so entsteht die charakteristische Herzform ohne Naehte.",
+    gift_idea: "Als Schluesselraumanhaenger mit aufgenaehtem Ring. Valentinstag- oder Muttertagsgeschenk. Mit Lavendel gefuellt als Duftsaeckchen. Kleines Trostgeschenk fuer Kinder.",
+    step_illustrations: { "2": "magic_ring_formation", "6": "magic_ring_formation", "7": "join_halves" }
+  },
+  topflappen: {
+    description: "Ein runder Topflappen der von der Mitte nach aussen in gleichmaessigen Zunahmen wachst — solide Kreistechnik mit abschliessendem festen Maschen-Rand und Aufhaenge-Schlaufe.",
+    result_description: "Ca. 19–20 cm Durchmesser, ein flacher runder Kreis aus hitzebestaendiger Baumwolle. Dicker genug fuer Hitzeschutz, bleibt nach dem Waschen in Form.",
+    special_pattern: "Das Kreis-Zunahme-Schema: In jeder Runde wird ein Staebchen mehr zwischen den Zunahmen eingefuegt (*n Stb, Zun* x12) — dadurch bleibt der Kreis immer perfekt flach ohne Woelben oder Wellen.",
+    gift_idea: "Immer ein willkommenes Kuechen-Geschenk. Set aus zwei runden Topflappen zusammennaehen fuer mehr Hitzeschutz. In den Lieblingsfarben der beschenkten Person haekeln.",
+    step_illustrations: { "2": "magic_ring_formation", "3": "increase_schema", "4": "increase_schema", "5": "increase_schema", "6": "increase_schema" }
+  },
+  schal: {
+    description: "Ein einfacher rechteckiger Schal in halbfesten Maschen (hStb) — Reihen hin und zurueck, das groesste Einsteiger-Textilprojekt zum echten Tragen.",
+    result_description: "Ca. 15 cm breit und 150 cm lang, ein weicher Schal mit gleichmaessiger Maschentextur. Das dicke Garn (6 mm Nadel) macht ihn warm und voluminoes, fertig in 3–4 Stunden.",
+    special_pattern: "Halbe Staebchen (hStb) ergeben eine weichere, flexiblere Textur als feste Maschen oder volle Staebchen — perfekt fuer Kleidungsstuecke die geschmeidig fallen sollen. Wichtigste Regel: immer auch in die letzte Masche einhaekeln, sonst werden die Reihen kuerzer.",
+    gift_idea: "Das erste selbst getragene Haekelstueck — ein grosses Erfolgserlebnis. Als Wintergeschenk in den Lieblingsfarben des Empfaengers. Mit Fransen veredeln fuer einen bohemian Look.",
+    step_illustrations: {}
+  },
+  untersetzer: {
+    description: "Ein kleiner runder Untersetzer — dieselbe Kreistechnik wie beim Topflappen, aber kleiner und mit einem gedrehten Rand aus Krebsmaschen.",
+    result_description: "Ca. 10 cm Durchmesser, ein flacher dichter Kreis der perfekt unter eine Tasse oder ein Glas passt. Krebsmaschen am Rand geben ihm einen professionellen, gedrehten Abschluss.",
+    special_pattern: "Krebsmaschen (auch Garnkrebse oder fM rueckwaerts): Statt wie gewohnt von rechts nach links werden die festen Maschen von links nach rechts gehaekelt — das ergibt einen gedrehten Randstich der wie eine kleine Schnur aussieht und dem Untersetzer Stabilitaet gibt.",
+    gift_idea: "Set aus 4–6 Untersetzern in verschiedenen Farben als Geschenkset. Schnell haekeln — ein einzelner Untersetzer dauert nur 15 Minuten, das Set ist an einem Abend fertig. Mit Korkboden aus dem Bastelladen versehen fuer mehr Rutschfestigkeit.",
+    step_illustrations: { "2": "magic_ring_formation", "3": "increase_schema", "4": "increase_schema", "5": "increase_schema" }
+  },
+  stirnband: {
+    description: "Ein dehnbares Stirnband in festen Maschen mit Rippen-Optik — durch das Einhaekeln nur ins hintere Maschenglied entstehen charakteristische Laengsrippen.",
+    result_description: "Ca. 8 cm breit und 48–50 cm Umfang, ein elastisches Stirnband das sich gut dehnt und angenehm am Kopf sitzt. Die Rippentextur laeuft senkrecht zur Hakelrichtung.",
+    special_pattern: "Rippentechnik durch hinteres Maschenglied: Normalerweise haekelt man unter beide Maschenglieder — wird nur das hintere Maschenglied genommen, entsteht vorne eine sichtbare horizontale 'Rippe'. Reihe fuer Reihe ergibt sich so das klassische Rippen-Muster.",
+    gift_idea: "Schnelles Last-Minute-Geschenk — fertig in 45 Minuten. Mit optionalem Twist (Band einmal drehen vor dem Verbinden) fuer den beliebten Knoten-Look. In Wolle-Acryl-Mix weich und warm fuer den Winter.",
+    step_illustrations: {}
+  },
+  ball: {
+    description: "Eine runde Amigurumi-Kugel in Spiralrunden — symmetrisches Zu- und Abnehmen ergibt eine perfekte Kugel die mit Fuellwatte gestopft wird.",
+    result_description: "Ca. 5–6 cm Durchmesser, eine prall gefuellte straffe Kugel die ihre Form dauerhaft haelt. Durch die dichte Amigurumi-Technik (3 mm Nadel, engmaschig) schaut keine Fuellwatte durch.",
+    special_pattern: "Symmetrisches Amigurumi-Schema: erst gleichmaessig zunehmen (6 → 12 → 18 → 24 M), dann gerade Runden fuer die Mitte, dann spiegelbildlich abnehmen (24 → 18 → 12 → 6 M) — das erzeugt eine mathematisch perfekte Kugel.",
+    gift_idea: "Als Babyspielzeug mit einer Rassel oder Folie-Knistring innen — vor dem Schliessen einlegen. In Vereinsfarben als Fussball-Imitat. Kleine Baelle in verschiedenen Farben als Mobile. Als Katzenspielzeug mit Katzenminze gefuellt.",
+    step_illustrations: { "2": "magic_ring_formation", "3": "increase_schema", "4": "increase_schema", "5": "increase_schema" }
+  },
+  blume: {
+    description: "Eine flache Hakelblume mit 6 Blattern als Schluesselanhaenger — schnell gehaekelt, zweifarbig und mit Schluesselring versehen.",
+    result_description: "Ca. 4–5 cm Durchmesser, eine flache Blume mit sechs ausladenden Blattern in einer Kontrastfarbe um eine runde Mitte. Klein genug fuer einen Schluesselanhaenger, auffaellig genug um aufzufallen.",
+    special_pattern: "Jedes Bluetenblatt wird direkt in die Mitte gearbeitet: eine Kettmasche, dann 3 Luftmaschen + 2 Staebchen + 3 Luftmaschen in dieselbe Masche — der Bogen aus Luftmaschen formt das spitz zulaufende Blatt automatisch.",
+    gift_idea: "Als schnelles personalisiertes Geschenk in den Lieblingsfarben. Zwei Blumen in verschiedenen Groessen uebereinander naehen fuer einen Brosche-Effekt. Auf eine Haarspange oder Haargummi naehen. Eine Blume haekeln dauert 15 Minuten — perfektes Mini-Geschenk.",
+    step_illustrations: { "2": "magic_ring_formation" }
+  },
+  muetze: {
+    description: "Eine Babymutze die vom Scheitel nach unten in Runden wachst — erst ein flacher Kreis (wie Topflappen), dann gerade Runden fuer die Muetzenhoehe, abgeschlossen mit festem Rand.",
+    result_description: "Ca. 14 cm Durchmesser fuer Neugeborene (passt auch fuer 3–6 Monate bei etwas mehr Runden), ca. 10–12 cm hoch. Weiche gleichmaessige Textur aus Staebchen und festem Abschlussrand.",
+    special_pattern: "Top-down-Kreis-Technik: Die ersten 5 Runden folgen demselben Zunahme-Schema wie Topflappen oder Untersetzer — dann hoert man mit den Zunahmen auf und haekelt einfach gerade Runden weiter, wodurch sich die Flaeche zur Mutzenform aufrundet.",
+    gift_idea: "Das klassische Babygeschenk — junge Eltern freuen sich immer. Farbset aus zwei Mutzen (eine fuer jetzt, eine fuer naechste Saison). Mit einem Pompom oben veredeln. Tipp: Vor dem Verschenken immer erst auf 30 Grad Handwaesche testen.",
+    step_illustrations: { "2": "magic_ring_formation", "3": "increase_schema", "4": "increase_schema", "5": "increase_schema", "6": "increase_schema" }
+  }
+};
+
+// ============ STEP SVG CHART GENERATOR ============
+// Parses the notation string of a step and returns an SVG string showing stitch symbols.
+// Falls back to technique illustrations when notation is null.
+
+function generateStepSVG(step, patternId, stepIndex) {
+  // ---- Symbol draw helpers (return SVG element strings) ----
+
+  // fM — Feste Masche — Plus-Kreuz
+  function symFM(cx, cy, r) {
+    r = r || 8;
+    return `<line x1="${cx}" y1="${cy - r}" x2="${cx}" y2="${cy + r}" stroke="var(--sage)" stroke-width="2" stroke-linecap="round"/>` +
+           `<line x1="${cx - r}" y1="${cy}" x2="${cx + r}" y2="${cy}" stroke="var(--sage)" stroke-width="2" stroke-linecap="round"/>`;
+  }
+
+  // Stb — Staebchen — T-Form
+  function symStb(cx, cy) {
+    return `<line x1="${cx}" y1="${cy - 10}" x2="${cx}" y2="${cy + 8}" stroke="var(--terracotta)" stroke-width="2" stroke-linecap="round"/>` +
+           `<line x1="${cx - 7}" y1="${cy - 10}" x2="${cx + 7}" y2="${cy - 10}" stroke="var(--terracotta)" stroke-width="2" stroke-linecap="round"/>`;
+  }
+
+  // hStb — Halbes Staebchen — kleineres T
+  function symHStb(cx, cy) {
+    return `<line x1="${cx}" y1="${cy - 7}" x2="${cx}" y2="${cy + 7}" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/>` +
+           `<line x1="${cx - 5}" y1="${cy - 7}" x2="${cx + 5}" y2="${cy - 7}" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/>`;
+  }
+
+  // dStb — Doppelstaebchen — T mit Doppel-Schrägstrich
+  function symDStb(cx, cy) {
+    return `<line x1="${cx}" y1="${cy - 12}" x2="${cx}" y2="${cy + 8}" stroke="var(--plum)" stroke-width="2" stroke-linecap="round"/>` +
+           `<line x1="${cx - 7}" y1="${cy - 12}" x2="${cx + 7}" y2="${cy - 12}" stroke="var(--plum)" stroke-width="2" stroke-linecap="round"/>` +
+           `<line x1="${cx - 4}" y1="${cy - 5}" x2="${cx + 4}" y2="${cy - 9}" stroke="var(--plum)" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>` +
+           `<line x1="${cx - 4}" y1="${cy}" x2="${cx + 4}" y2="${cy - 4}" stroke="var(--plum)" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>`;
+  }
+
+  // Lm — Luftmasche — Oval
+  function symLm(cx, cy) {
+    return `<ellipse cx="${cx}" cy="${cy}" rx="6" ry="4" fill="none" stroke="var(--yarn)" stroke-width="2"/>`;
+  }
+
+  // Km — Kettmasche — gefüllter Punkt
+  function symKm(cx, cy) {
+    return `<circle cx="${cx}" cy="${cy}" r="5" fill="var(--text-dim)"/>`;
+  }
+
+  // Zun — Zunahme — V-Form
+  function symZun(cx, cy) {
+    return `<line x1="${cx}" y1="${cy + 8}" x2="${cx - 7}" y2="${cy - 8}" stroke="var(--sage)" stroke-width="2" stroke-linecap="round"/>` +
+           `<line x1="${cx}" y1="${cy + 8}" x2="${cx + 7}" y2="${cy - 8}" stroke="var(--sage)" stroke-width="2" stroke-linecap="round"/>`;
+  }
+
+  // Abn — Abnahme — Λ-Form (umgekehrtes V)
+  function symAbn(cx, cy) {
+    return `<line x1="${cx - 7}" y1="${cy + 8}" x2="${cx}" y2="${cy - 8}" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/>` +
+           `<line x1="${cx + 7}" y1="${cy + 8}" x2="${cx}" y2="${cy - 8}" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/>`;
+  }
+
+  // MR — Magic Ring — Kreis mit Pfeil
+  function symMR(cx, cy) {
+    return `<circle cx="${cx}" cy="${cy}" r="8" fill="none" stroke="var(--terracotta)" stroke-width="2" stroke-dasharray="4 2"/>` +
+           `<polyline points="${cx - 2},${cy - 12} ${cx + 2},${cy - 8} ${cx - 2},${cy - 4}" fill="none" stroke="var(--terracotta)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  }
+
+  // Ellipsis dots
+  function symEllipsis(cx, cy) {
+    return `<circle cx="${cx - 4}" cy="${cy}" r="1.5" fill="var(--text-dim)"/>` +
+           `<circle cx="${cx}" cy="${cy}" r="1.5" fill="var(--text-dim)"/>` +
+           `<circle cx="${cx + 4}" cy="${cy}" r="1.5" fill="var(--text-dim)"/>`;
+  }
+
+  // ---- Token type → draw function ----
+  const SYMBOL_MAP = {
+    'fM':   symFM,
+    'Stb':  symStb,
+    'hStb': symHStb,
+    'dStb': symDStb,
+    'Lm':   symLm,
+    'Km':   symKm,
+    'Zun':  symZun,
+    'Abn':  symAbn,
+    'MR':   (cx, cy) => symMR(cx, cy),
+  };
+
+  // ---- Parse notation into a flat list of {type, count} tokens ----
+  // Returns array like [{type:'MR',count:1},{type:'fM',count:6},...]
+  function parseNotation(notation) {
+    if (!notation) return [];
+    const tokens = [];
+    const n = notation.trim();
+
+    // Handle "MR" standalone
+    if (n === 'MR') { tokens.push({type:'MR', count:1}); return tokens; }
+
+    // Pattern with repeat: "*...*  ×N" or "*...* xN" — extract inner tokens, max 3-4 reps shown
+    const repeatMatch = n.match(/\*([^*]+)\*\s*[×x]\s*(\d+)/);
+    if (repeatMatch) {
+      const inner = repeatMatch[1].trim();
+      const totalReps = parseInt(repeatMatch[2], 10);
+      const showReps = Math.min(totalReps, 3);
+      // Parse inner once and repeat showReps times
+      const innerTokens = parseSimple(inner);
+      for (let r = 0; r < showReps; r++) {
+        tokens.push(...innerTokens);
+      }
+      if (totalReps > showReps) {
+        tokens.push({type:'...', count:1});
+      }
+      return tokens;
+    }
+
+    // Simple notation: possibly comma-separated segments
+    return parseSimple(n);
+  }
+
+  function parseSimple(text) {
+    // Split by comma, parse each segment
+    const result = [];
+    const parts = text.split(',');
+    for (const part of parts) {
+      const p = part.trim();
+      if (!p) continue;
+      // Match: optional count + stitch type + optional "pro Runde" etc.
+      // Order matters: longer abbreviations first
+      const stitchTypes = ['hStb','dStb','fM','Stb','Lm','Km','Zun','Abn','MR','WLm'];
+      let matched = false;
+      for (const st of stitchTypes) {
+        // e.g. "6 fM" or "12 Stb" or "fM" or "MR" or "2 WLm + 46 hStb"
+        const re = new RegExp('(\\d+)?\\s*' + st.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?:\\s|$|,|\\+|×|x)', 'g');
+        let m;
+        while ((m = re.exec(p)) !== null) {
+          const count = m[1] ? parseInt(m[1], 10) : 1;
+          // Skip WLm (Wendeluftmasche) — render as Lm
+          const type = st === 'WLm' ? 'Lm' : st;
+          result.push({type, count});
+          matched = true;
+        }
+      }
+      // If nothing matched but has MR standalone
+      if (!matched && p.includes('MR')) {
+        result.push({type:'MR', count:1});
+      }
+    }
+    return result;
+  }
+
+  // ---- Build symbol list respecting max-display rule ----
+  // Expand tokens to flat symbol array, apply truncation if >12
+  function buildSymbolList(tokens) {
+    const flat = [];
+    for (const tok of tokens) {
+      if (tok.type === '...') {
+        flat.push('...');
+        continue;
+      }
+      const count = Math.max(1, tok.count);
+      for (let i = 0; i < count; i++) {
+        flat.push(tok.type);
+      }
+    }
+
+    const MAX_SHOW = 12;
+    if (flat.length > MAX_SHOW) {
+      // Show first 6, ellipsis, last 2
+      const head = flat.slice(0, 6);
+      const tail = flat.slice(-2);
+      return [...head, '...', ...tail];
+    }
+    return flat;
+  }
+
+  // ---- Technique illustrations for steps without notation ----
+  function getTechniqueIllustration(step) {
+    const title = (step.title || '').toLowerCase();
+    const instr = (step.instruction || '').toLowerCase();
+    const combined = title + ' ' + instr;
+
+    if (combined.includes('magic ring') || combined.includes('fadenring') || combined.includes('mr')) {
+      // Magic Ring illustration — central ring with radiating stitches
+      return `<svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+        <text x="4" y="10" font-size="7" font-family="monospace" fill="var(--text-dim)" font-weight="600">MR</text>
+        <circle cx="40" cy="32" r="18" fill="none" stroke="var(--terracotta)" stroke-width="2.5" stroke-dasharray="5 3"/>
+        <circle cx="40" cy="32" r="6" fill="none" stroke="var(--terracotta)" stroke-width="1.5"/>
+        <polyline points="38,12 40,8 42,12" fill="none" stroke="var(--terracotta)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="58" y1="32" x2="52" y2="32" stroke="var(--sage)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="58" y1="32" x2="60" y2="32" stroke="var(--sage)" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+        <line x1="66" y1="20" x2="76" y2="20" stroke="var(--sage)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="71" y1="16" x2="71" y2="24" stroke="var(--sage)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="86" y1="32" x2="96" y2="32" stroke="var(--sage)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="91" y1="28" x2="91" y2="36" stroke="var(--sage)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="66" y1="44" x2="76" y2="44" stroke="var(--sage)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="71" y1="40" x2="71" y2="48" stroke="var(--sage)" stroke-width="2" stroke-linecap="round"/>
+        <text x="58" y="56" font-size="6.5" font-family="monospace" fill="var(--text-dim)">6 fM in Ring</text>
+      </svg>`;
+    }
+
+    if (combined.includes('spirale') || combined.includes('rollen')) {
+      // Spiral roll
+      return `<svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+        <text x="4" y="10" font-size="7" font-family="monospace" fill="var(--text-dim)" font-weight="600">Rollen</text>
+        <path d="M60 30 A20 20 0 1 1 39 30" fill="none" stroke="var(--rose)" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+        <path d="M60 30 A13 13 0 1 1 46 30" fill="none" stroke="var(--terracotta)" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+        <path d="M60 30 A7 7 0 1 1 52 30" fill="none" stroke="var(--yarn)" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+        <circle cx="60" cy="30" r="3" fill="var(--terracotta)"/>
+        <polyline points="95,22 90,30 98,30" fill="none" stroke="var(--text-dim)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+        <line x1="80" y1="46" x2="110" y2="46" stroke="var(--rose)" stroke-width="8" stroke-linecap="round" opacity="0.18"/>
+        <line x1="80" y1="46" x2="110" y2="46" stroke="var(--rose)" stroke-width="5" stroke-linecap="round" opacity="0.35"/>
+      </svg>`;
+    }
+
+    if (combined.includes('verbinden') || combined.includes('haelften') || combined.includes('zusammen')) {
+      // Join halves
+      return `<svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+        <text x="4" y="10" font-size="7" font-family="monospace" fill="var(--text-dim)" font-weight="600">Verbinden</text>
+        <path d="M30 50 C30 50 12 36 12 24 C12 16 18 12 26 12 C32 12 37 16 40 21 Z" fill="var(--rose-dim)" stroke="var(--rose)" stroke-width="2"/>
+        <path d="M50 50 C50 50 68 36 68 24 C68 16 62 12 54 12 C48 12 43 16 40 21 Z" fill="var(--rose-dim)" stroke="var(--rose)" stroke-width="2"/>
+        <line x1="40" y1="21" x2="40" y2="50" stroke="var(--terracotta)" stroke-width="1.5" stroke-dasharray="3 2" stroke-linecap="round"/>
+        <line x1="85" y1="20" x2="85" y2="50" stroke="var(--text-dim)" stroke-width="2.5" stroke-linecap="round"/>
+        <polyline points="78,25 85,18 92,25" fill="none" stroke="var(--text-dim)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="78" y1="30" x2="92" y2="30" stroke="var(--yarn)" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+        <line x1="78" y1="38" x2="92" y2="38" stroke="var(--yarn)" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+        <line x1="78" y1="46" x2="92" y2="46" stroke="var(--yarn)" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+      </svg>`;
+    }
+
+    if (combined.includes('material') || combined.includes('bereitlegen')) {
+      // Materials — yarn ball + needle
+      return `<svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="38" cy="32" r="20" fill="var(--yarn-dim)" stroke="var(--yarn)" stroke-width="2"/>
+        <path d="M22 22 Q38 16 54 32" fill="none" stroke="var(--yarn)" stroke-width="2" stroke-linecap="round"/>
+        <path d="M24 36 Q38 28 50 36" fill="none" stroke="var(--yarn)" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+        <path d="M26 44 Q38 38 48 44" fill="none" stroke="var(--yarn)" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+        <line x1="72" y1="12" x2="95" y2="48" stroke="var(--text-dim)" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="72" cy="12" r="4" fill="var(--surface2)" stroke="var(--text-dim)" stroke-width="2"/>
+        <ellipse cx="95" cy="49" rx="3" ry="5" fill="var(--text-dim)" transform="rotate(30 95 49)"/>
+        <text x="4" y="10" font-size="7" font-family="monospace" fill="var(--text-dim)" font-weight="600">Material</text>
+      </svg>`;
+    }
+
+    if (combined.includes('farbwechsel') || combined.includes('farbe wechsel') || combined.includes('neue farbe')) {
+      // Color change — two colored blocks with arrow
+      return `<svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="18" width="42" height="28" rx="5" fill="var(--sky-dim)" stroke="var(--sky)" stroke-width="2"/>
+        <rect x="70" y="18" width="42" height="28" rx="5" fill="var(--terracotta-dim)" stroke="var(--terracotta)" stroke-width="2"/>
+        <polyline points="50,32 70,32" fill="none" stroke="var(--text-dim)" stroke-width="2" stroke-linecap="round"/>
+        <polyline points="62,26 70,32 62,38" fill="none" stroke="var(--text-dim)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="4" y="10" font-size="7" font-family="monospace" fill="var(--text-dim)" font-weight="600">Farbwechsel</text>
+      </svg>`;
+    }
+
+    if (combined.includes('fertig') || combined.includes('abschluss') || combined.includes('vernaehen')) {
+      // Scissors + thread
+      return `<svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+        <line x1="20" y1="20" x2="70" y2="45" stroke="var(--yarn)" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="20" y1="20" x2="25" y2="12" stroke="var(--yarn)" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        <circle cx="72" cy="22" r="8" fill="none" stroke="var(--text-dim)" stroke-width="2.5"/>
+        <circle cx="86" cy="38" r="8" fill="none" stroke="var(--text-dim)" stroke-width="2.5"/>
+        <line x1="68" y1="28" x2="82" y2="44" stroke="var(--text-dim)" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="76" y1="16" x2="90" y2="44" stroke="var(--text-dim)" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="4" y="10" font-size="7" font-family="monospace" fill="var(--text-dim)" font-weight="600">Fertig</text>
+      </svg>`;
+    }
+
+    if (combined.includes('stopfen') || combined.includes('fuellwatte') || combined.includes('fuellen')) {
+      // Stuffing illustration — ball shape with fill arrows
+      return `<svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="60" cy="32" r="22" fill="var(--yarn-dim)" stroke="var(--yarn)" stroke-width="2"/>
+        <line x1="60" y1="10" x2="60" y2="18" stroke="var(--terracotta)" stroke-width="2" stroke-linecap="round"/>
+        <polyline points="55,16 60,22 65,16" fill="none" stroke="var(--terracotta)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="52" cy="30" r="4" fill="var(--surface)" opacity="0.6"/>
+        <circle cx="66" cy="28" r="5" fill="var(--surface)" opacity="0.5"/>
+        <circle cx="58" cy="40" r="4" fill="var(--surface)" opacity="0.5"/>
+        <text x="4" y="10" font-size="7" font-family="monospace" fill="var(--text-dim)" font-weight="600">Stopfen</text>
+      </svg>`;
+    }
+
+    // Generic crochet icon — hook with yarn
+    return `<svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+      <path d="M30 48 L30 18 Q30 10 38 10 Q46 10 46 18 Q46 24 38 24" fill="none" stroke="var(--text-dim)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="60" cy="34" r="18" fill="none" stroke="var(--yarn)" stroke-width="2" stroke-dasharray="4 3"/>
+      <path d="M50 28 Q60 22 70 28 Q78 34 70 42" fill="none" stroke="var(--yarn)" stroke-width="2" stroke-linecap="round"/>
+      <text x="4" y="10" font-size="7" font-family="monospace" fill="var(--text-dim)" font-weight="600">Haekeln</text>
+    </svg>`;
+  }
+
+  // ---- Main logic ----
+  if (!step.notation) {
+    return getTechniqueIllustration(step);
+  }
+
+  const tokens = parseNotation(step.notation);
+  if (tokens.length === 0) {
+    return getTechniqueIllustration(step);
+  }
+
+  const symbols = buildSymbolList(tokens);
+  if (symbols.length === 0) {
+    return getTechniqueIllustration(step);
+  }
+
+  // ---- Layout: linear row of symbols ----
+  const SYMBOL_SIZE = 20;   // space allocated per symbol (px)
+  const PADDING_LEFT = 10;
+  const CY = 30;             // vertical center in 60-high viewbox
+
+  const totalW = PADDING_LEFT * 2 + symbols.length * SYMBOL_SIZE;
+  // Minimum width 80, no max (SVG scales)
+  const vbW = Math.max(80, totalW);
+
+  let innerSVG = '';
+  symbols.forEach((sym, idx) => {
+    const cx = PADDING_LEFT + idx * SYMBOL_SIZE + SYMBOL_SIZE / 2;
+    const cy = CY;
+    if (sym === '...') {
+      innerSVG += symEllipsis(cx, cy);
+    } else if (SYMBOL_MAP[sym]) {
+      innerSVG += SYMBOL_MAP[sym](cx, cy);
+    }
+  });
+
+  return `<svg viewBox="0 0 ${vbW} 60" xmlns="http://www.w3.org/2000/svg">${innerSVG}</svg>`;
+}
+
+// ============ STITCH ABBREVIATION TOOLTIPS ============
+const STITCH_TITLES = {
+  'fM': 'Feste Masche',
+  'Stb': 'Staebchen',
+  'hStb': 'Halbes Staebchen',
+  'Lm': 'Luftmasche',
+  'Km': 'Kettmasche',
+  'WLm': 'Wendeluftmasche',
+  'Zun': 'Zunahme (2 Maschen in 1)',
+  'Abn': 'Abnahme (2 Maschen zusammen)',
+  'MR': 'Magic Ring (Fadenring)',
+  'M': 'Masche(n)',
+};
+
+// ============ PATTERN DATA ============
+const PATTERNS = [
+  {
+    id: "rose",
+    title: "Gehaekelte Rose",
+    category: "Blumen",
+    difficulty: "Anfaenger",
+    time: "20 Min",
+    hook: "3,5 mm",
+    yarn: "Baumwolle (z.B. Catania)",
+    image: "🌹",
+    materials: ["Baumwollgarn Rosa (~15m)", "Haekelnnadel 3,5 mm", "Wollnadel", "Schere"],
+    steps: [
+      {
+        title: "Material bereitlegen",
+        instruction: "Garn, Haekelnnadel 3,5 mm, Wollnadel und Schere bereitlegen.",
+        tip: "Ein glatter Baumwollfaden wie Catania eignet sich am besten.",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Luftmaschenkette",
+        instruction: "48 Luftmaschen (Lm) anschlagen. Nicht zu fest, nicht zu locker.",
+        tip: null,
+        notation: "48 Lm",
+        stitch_count: "48 Maschen"
+      },
+      {
+        title: "Reihe 1: Halbe Staebchen",
+        instruction: "1 hStb in die 3. Lm ab Nadel. Dann je 1 hStb in jede weitere Lm bis Ende.",
+        tip: "Die 2 uebersprungenen Lm zaehlen als 1. hStb.",
+        notation: "2 WLm + 46 hStb",
+        stitch_count: "46 hStb + 2 WLm"
+      },
+      {
+        title: "Wenden",
+        instruction: "Arbeit wenden. 3 Wendeluftmaschen haekeln (zaehlen als 1. Staebchen).",
+        tip: null,
+        notation: "3 WLm (= 1 Stb)",
+        stitch_count: null
+      },
+      {
+        title: "Reihe 2: Rueschen",
+        instruction: "In jede Masche 2 Staebchen haekeln. Das verdoppelt die Maschenzahl und erzeugt Rueschen.",
+        tip: "Durch das Verdoppeln kraeuselts sich der Streifen — genau richtig!",
+        notation: "*2 Stb in jede M*",
+        stitch_count: "= 92 Stb"
+      },
+      {
+        title: "Abschluss",
+        instruction: "1 Kettmasche in letzte Masche. Faden abschneiden, 30 cm haengen lassen!",
+        tip: "WICHTIG: Genug Faden lassen zum Naehen!",
+        notation: "1 Km",
+        stitch_count: null
+      },
+      {
+        title: "Spirale rollen — Start",
+        instruction: "Am schmalen Ende beginnen. Eng zusammenrollen — das wird das Zentrum.",
+        tip: "Erste 3–4 Windungen eng, dann lockerer.",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Spirale rollen — Form",
+        instruction: "Weiter aufrollen, Rueschen nach aussen. Ab und zu Form kontrollieren.",
+        tip: null,
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Zusammennaehen",
+        instruction: "Faden auf Wollnadel. Von unten durch alle Schichten naehen, 4–5 Stiche.",
+        tip: "Von unten stechen, dann sieht man die Naehte nicht.",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Fertig!",
+        instruction: "Bluetenblaetter nach aussen biegen, Faeden vernaehen, abschneiden.",
+        tip: "Rose auf Muetze, Tasche oder Haarspange naehen.",
+        notation: null,
+        stitch_count: null
+      }
+    ]
+  },
+  {
+    id: "granny",
+    title: "Granny Square",
+    category: "Deko",
+    difficulty: "Anfaenger",
+    time: "30 Min",
+    hook: "4 mm",
+    yarn: "Baumwolle (2-3 Farben)",
+    image: "🔲",
+    materials: ["Baumwollgarn 2-3 Farben (~20m je Farbe)", "Haekelnnadel 4 mm", "Wollnadel", "Schere"],
+    steps: [
+      {
+        title: "Material",
+        instruction: "2-3 Farben Garn, Haekelnnadel 4 mm, Wollnadel, Schere bereitlegen.",
+        tip: "Kontrastfarben sehen am besten aus.",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Fadenring",
+        instruction: "Einen Fadenring (Magic Ring) bilden.",
+        tip: "Alternativ: 4 Lm, mit Km zum Ring schliessen.",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Runde 1: Zentrum",
+        instruction: "3 Lm (= 1 Stb), 2 Stb in Ring, 2 Lm, *3 Stb, 2 Lm* 3x. Km in 3. Lm.",
+        tip: "Die 2-Lm-Boegen bilden die Ecken.",
+        notation: "4\u00d7 (3 Stb + 2 Lm)",
+        stitch_count: "12 Stb, 4 Ecken"
+      },
+      {
+        title: "Farbwechsel",
+        instruction: "Faden abschneiden. Neue Farbe in beliebige Ecke (2-Lm-Bogen) einstechen.",
+        tip: "Faeden spaeter vernaehen, jetzt einfach haengen lassen.",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Runde 2",
+        instruction: "3 Lm, 2 Stb in selbe Ecke, 2 Lm, 3 Stb in selbe Ecke (= Ecke fertig). *3 Stb + 2 Lm + 3 Stb in naechste Ecke* 3x. Km.",
+        tip: null,
+        notation: "4\u00d7 (3+3 Stb + 2 Lm)",
+        stitch_count: "24 Stb, 4 Ecken"
+      },
+      {
+        title: "Runde 3",
+        instruction: "Wie Runde 2, aber: zwischen den Ecken zusaetzlich 3 Stb in die Luecke.",
+        tip: null,
+        notation: "je Seite: 3 Stb + Ecke + 3 Stb",
+        stitch_count: "36 Stb"
+      },
+      {
+        title: "Optional: Runde 4",
+        instruction: "Noch eine Runde fuer groesseres Square. Gleiches Prinzip: 3 Stb je Luecke, Ecke = 3+2Lm+3.",
+        tip: null,
+        notation: "je Seite: 2\u00d7 3 Stb + Ecke",
+        stitch_count: "48 Stb"
+      },
+      {
+        title: "Abschluss",
+        instruction: "Km, Faden abschneiden (15 cm). Alle Faeden mit Wollnadel vernaehen.",
+        tip: "Faeden entlang der Stb-Pfosten vernaehen = unsichtbar.",
+        notation: null,
+        stitch_count: null
+      }
+    ]
+  },
+  {
+    id: "herz",
+    title: "Amigurumi Herz",
+    category: "Amigurumi",
+    difficulty: "Anfaenger",
+    time: "25 Min",
+    hook: "3 mm",
+    yarn: "Baumwolle Rot (~10m)",
+    image: "❤️",
+    materials: ["Baumwollgarn Rot (~10m)", "Haekelnnadel 3 mm", "Fuellwatte", "Wollnadel", "Schere", "Maschenmarkierer"],
+    steps: [
+      {
+        title: "Material",
+        instruction: "Garn, Nadel 3 mm, Fuellwatte, Maschenmarkierer, Wollnadel, Schere.",
+        tip: null,
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Erste Haelfte",
+        instruction: "Fadenring, 6 fM. Markierer setzen.",
+        tip: "In Spiralrunden arbeiten, NICHT mit Km schliessen.",
+        notation: "MR, 6 fM",
+        stitch_count: "6 M"
+      },
+      {
+        title: "Runde 2",
+        instruction: "Jede Masche verdoppeln.",
+        tip: null,
+        notation: "6 Zun",
+        stitch_count: "12 M"
+      },
+      {
+        title: "Runde 3",
+        instruction: "*1 fM, 1 Zun* 6x wiederholen.",
+        tip: null,
+        notation: "*1 fM, Zun* \u00d76",
+        stitch_count: "18 M"
+      },
+      {
+        title: "Runde 4–5",
+        instruction: "2 Runden je 18 fM ohne Zunahme. Faden abschneiden, langen Faden lassen. Markierer drin lassen.",
+        tip: null,
+        notation: "18 fM",
+        stitch_count: "18 M"
+      },
+      {
+        title: "Zweite Haelfte",
+        instruction: "Identisch: MR, 6 fM, Zun-Runde (12), *1fM, Zun* (18), 2 Runden 18 fM. Faden NICHT abschneiden.",
+        tip: null,
+        notation: null,
+        stitch_count: "18 M"
+      },
+      {
+        title: "Haelften verbinden",
+        instruction: "Letzte M der 2. Haelfte → erste M der 1. Haelfte. Weiter in fM rund um beide Teile.",
+        tip: "Das ist der tricky Teil — langsam arbeiten!",
+        notation: "36 fM (rund um beide)",
+        stitch_count: "36 M"
+      },
+      {
+        title: "Runde 7",
+        instruction: "*4 fM, 1 Abn* 6x.",
+        tip: null,
+        notation: "*4 fM, Abn* \u00d76",
+        stitch_count: "30 M"
+      },
+      {
+        title: "Runde 8",
+        instruction: "*3 fM, 1 Abn* 6x. Leicht mit Fuellwatte stopfen.",
+        tip: "Nicht zu fest stopfen, sonst beult es.",
+        notation: "*3 fM, Abn* \u00d76",
+        stitch_count: "24 M"
+      },
+      {
+        title: "Runde 9–10",
+        instruction: "Weiter abnehmen: *2 fM, Abn* (18), dann *1 fM, Abn* (12). Mehr Watte rein.",
+        tip: null,
+        notation: "Abn-Runden",
+        stitch_count: "18 \u2192 12 M"
+      },
+      {
+        title: "Schliessen",
+        instruction: "*Abn* 6x (= 6 M). Faden durch alle 6 M ziehen, fest anziehen.",
+        tip: null,
+        notation: "6 Abn",
+        stitch_count: "geschlossen"
+      },
+      {
+        title: "Fertig",
+        instruction: "Faeden vernaehen. Optional: Schluesselring-Oese annaehen.",
+        tip: null,
+        notation: null,
+        stitch_count: null
+      }
+    ]
+  },
+  {
+    id: "topflappen",
+    title: "Topflappen (rund)",
+    category: "Haushalt",
+    difficulty: "Anfaenger",
+    time: "40 Min",
+    hook: "4 mm",
+    yarn: "Topflappengarn Baumwolle (~40m)",
+    image: "🔵",
+    materials: ["Topflappengarn (Baumwolle!) 1-2 Farben (~40m)", "Haekelnnadel 4 mm", "Wollnadel", "Schere"],
+    steps: [
+      {
+        title: "Material",
+        instruction: "Topflappengarn (hitzebestaendige Baumwolle!), Nadel 4 mm.",
+        tip: "KEIN Acryl — das schmilzt! Nur reine Baumwolle.",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Fadenring",
+        instruction: "Magic Ring bilden.",
+        tip: null,
+        notation: "MR",
+        stitch_count: null
+      },
+      {
+        title: "Runde 1",
+        instruction: "3 Lm (= 1 Stb), 11 Stb in Ring. Km in 3. Lm. Ring zuziehen.",
+        tip: null,
+        notation: "12 Stb",
+        stitch_count: "12 M"
+      },
+      {
+        title: "Runde 2",
+        instruction: "3 Lm, 1 Stb in selbe M, *2 Stb in jede M*. Km.",
+        tip: null,
+        notation: "12 Zun",
+        stitch_count: "24 M"
+      },
+      {
+        title: "Runde 3",
+        instruction: "3 Lm, *1 Stb, 2 Stb in naechste M* wiederholen. Km.",
+        tip: null,
+        notation: "*1 Stb, Zun* \u00d712",
+        stitch_count: "36 M"
+      },
+      {
+        title: "Runde 4",
+        instruction: "3 Lm, *2 Stb, Zun* wiederholen. Km.",
+        tip: null,
+        notation: "*2 Stb, Zun* \u00d712",
+        stitch_count: "48 M"
+      },
+      {
+        title: "Runde 5",
+        instruction: "3 Lm, *3 Stb, Zun* wiederholen. Km.",
+        tip: null,
+        notation: "*3 Stb, Zun* \u00d712",
+        stitch_count: "60 M"
+      },
+      {
+        title: "Runde 6",
+        instruction: "3 Lm, *4 Stb, Zun* wiederholen. Km.",
+        tip: "Liegt der Kreis flach? Wenn er sich wellt: zu viele Zunahmen. Woelbt er sich: zu wenige.",
+        notation: "*4 Stb, Zun* \u00d712",
+        stitch_count: "72 M"
+      },
+      {
+        title: "Rand",
+        instruction: "1 Runde fM in jede M. Km.",
+        tip: null,
+        notation: "72 fM",
+        stitch_count: "72 M"
+      },
+      {
+        title: "Schlaufe",
+        instruction: "12 Lm, Km in selbe M = Aufhaenge-Schlaufe.",
+        tip: null,
+        notation: "12 Lm + Km",
+        stitch_count: null
+      },
+      {
+        title: "Fertig",
+        instruction: "Faden abschneiden, vernaehen. Eventuell 2. Lage fuer mehr Hitzeschutz.",
+        tip: "Fuer dicken Topflappen: 2 Kreise haekeln, zusammennaehen.",
+        notation: null,
+        stitch_count: null
+      }
+    ]
+  },
+  {
+    id: "schal",
+    title: "Einfacher Schal",
+    category: "Kleidung",
+    difficulty: "Anfaenger",
+    time: "3–4 Std",
+    hook: "6 mm",
+    yarn: "Wolle chunky (~200m)",
+    image: "🧣",
+    materials: ["Wolle chunky/dick (~200m)", "Haekelnnadel 6 mm", "Schere"],
+    steps: [
+      {
+        title: "Material",
+        instruction: "Dickes Garn (Naedelstaerke 6 mm), grosse Nadel.",
+        tip: "Acryl-Mischungen sind weich und guenstig fuer den Anfang.",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Luftmaschen",
+        instruction: "25 Lm anschlagen (oder gewuenschte Breite).",
+        tip: "25 Lm ≈ 15 cm Breite. Mehr = breiter.",
+        notation: "25 Lm",
+        stitch_count: "25 M"
+      },
+      {
+        title: "Reihe 1",
+        instruction: "1 hStb in 3. Lm ab Nadel, je 1 hStb bis Ende.",
+        tip: null,
+        notation: "23 hStb + 2 WLm",
+        stitch_count: "23 hStb"
+      },
+      {
+        title: "Reihe 2",
+        instruction: "2 WLm, wenden. Je 1 hStb in jede M bis Ende.",
+        tip: "Immer in die LETZTE Masche auch einhaekeln — sonst wird der Schal schmaler!",
+        notation: "23 hStb",
+        stitch_count: "23 hStb"
+      },
+      {
+        title: "Reihen 3–20",
+        instruction: "Reihe 2 wiederholen. Immer gleich: 2 WLm, wenden, hStb bis Ende.",
+        tip: "Zaehle alle paar Reihen die Maschen — muessen immer 23 sein.",
+        notation: "23 hStb pro Reihe",
+        stitch_count: null
+      },
+      {
+        title: "Weiter haekeln",
+        instruction: "Bis der Schal ca. 150 cm lang ist (oder gewuenschte Laenge).",
+        tip: "Um den Hals wickeln zum Testen. ~80 Reihen fuer 150 cm.",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Abketten",
+        instruction: "Letzte Reihe: 1 Km in jede M (statt hStb). Faden abschneiden.",
+        tip: null,
+        notation: "23 Km",
+        stitch_count: null
+      },
+      {
+        title: "Fransen (optional)",
+        instruction: "Je 3 Faeden (30 cm) durch die kurzen Enden knoten.",
+        tip: "8-10 Fransenbueschel pro Seite sieht gut aus.",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Fertig",
+        instruction: "Faeden vernaehen. Schal leicht daempfen fuer gleichmaessiges Maschenbild.",
+        tip: null,
+        notation: null,
+        stitch_count: null
+      }
+    ]
+  },
+  {
+    id: "untersetzer",
+    title: "Untersetzer",
+    category: "Haushalt",
+    difficulty: "Anfaenger",
+    time: "15 Min",
+    hook: "3,5 mm",
+    yarn: "Baumwolle (~8m)",
+    image: "🫗",
+    materials: ["Baumwollgarn (~8m)", "Haekelnnadel 3,5 mm", "Wollnadel", "Schere"],
+    steps: [
+      {
+        title: "Material",
+        instruction: "Baumwollgarn, Nadel 3,5 mm.",
+        tip: "Baumwolle saugt Kondenswasser auf — perfekt fuer Untersetzer.",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Fadenring",
+        instruction: "Magic Ring bilden.",
+        tip: null,
+        notation: "MR",
+        stitch_count: null
+      },
+      {
+        title: "Runde 1",
+        instruction: "3 Lm (= 1 Stb), 11 Stb in Ring. Km. Ring fest zuziehen.",
+        tip: null,
+        notation: "12 Stb",
+        stitch_count: "12 M"
+      },
+      {
+        title: "Runde 2",
+        instruction: "3 Lm, *2 Stb in jede M*. Km.",
+        tip: null,
+        notation: "12 Zun",
+        stitch_count: "24 M"
+      },
+      {
+        title: "Runde 3",
+        instruction: "3 Lm, *1 Stb, Zun*. Km.",
+        tip: null,
+        notation: "*1 Stb, Zun* \u00d712",
+        stitch_count: "36 M"
+      },
+      {
+        title: "Runde 4",
+        instruction: "3 Lm, *2 Stb, Zun*. Km.",
+        tip: "~10 cm Durchmesser — perfekt fuer Tassen!",
+        notation: "*2 Stb, Zun* \u00d712",
+        stitch_count: "48 M"
+      },
+      {
+        title: "Rand",
+        instruction: "1 Runde fM (Krebsmaschen fuer schoenen Rand: fM rueckwaerts haekeln).",
+        tip: "Krebsmaschen = fM von links nach rechts. Ergibt einen gedrehten Rand.",
+        notation: "48 fM rueckwaerts",
+        stitch_count: null
+      },
+      {
+        title: "Fertig",
+        instruction: "Km, Faden abschneiden, vernaehen.",
+        tip: "Set aus 4-6 Untersetzern in verschiedenen Farben!",
+        notation: null,
+        stitch_count: null
+      }
+    ]
+  },
+  {
+    id: "stirnband",
+    title: "Stirnband",
+    category: "Kleidung",
+    difficulty: "Anfaenger",
+    time: "45 Min",
+    hook: "5 mm",
+    yarn: "Wolle mittelstark (~30m)",
+    image: "🎀",
+    materials: ["Wolle mittelstark (~30m)", "Haekelnnadel 5 mm", "Wollnadel", "Schere"],
+    steps: [
+      {
+        title: "Material",
+        instruction: "Mitteldickes Garn, Nadel 5 mm.",
+        tip: "Wolle-Acryl-Mix ist weich und warm.",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Luftmaschen",
+        instruction: "12 Lm anschlagen (Breite des Stirnbands).",
+        tip: "12 Lm ≈ 8 cm breit. Anpassen nach Geschmack.",
+        notation: "12 Lm",
+        stitch_count: "12 M"
+      },
+      {
+        title: "Reihe 1",
+        instruction: "1 fM in 2. Lm, je 1 fM bis Ende.",
+        tip: null,
+        notation: "11 fM",
+        stitch_count: "11 fM"
+      },
+      {
+        title: "Reihe 2 — Rippen",
+        instruction: "1 WLm, wenden. Nur hinteres Maschenglied: 11 fM.",
+        tip: "Nur ins hintere Maschenglied = Rippen-Optik!",
+        notation: "11 fM (hint. MG)",
+        stitch_count: "11 fM"
+      },
+      {
+        title: "Reihen 3–50",
+        instruction: "Reihe 2 wiederholen bis das Band um den Kopf passt (~50 cm).",
+        tip: "Etwas kuerzer als Kopfumfang — das Band dehnt sich.",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Enden verbinden",
+        instruction: "Anfang und Ende uebereinander legen, mit Km oder fM zusammennaehen.",
+        tip: null,
+        notation: "Km durch beide Lagen",
+        stitch_count: null
+      },
+      {
+        title: "Twist (optional)",
+        instruction: "Fuer Twist-Stirnband: Band einmal drehen bevor du die Enden verbindest.",
+        tip: "Der Twist ergibt den beliebten 'gekreuzten' Look.",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Fertig",
+        instruction: "Faeden vernaehen. Passt? Fertig!",
+        tip: null,
+        notation: null,
+        stitch_count: null
+      }
+    ]
+  },
+  {
+    id: "ball",
+    title: "Amigurumi Ball",
+    category: "Amigurumi",
+    difficulty: "Anfaenger",
+    time: "30 Min",
+    hook: "3 mm",
+    yarn: "Baumwolle (~15m)",
+    image: "⚽",
+    materials: ["Baumwollgarn (~15m)", "Haekelnnadel 3 mm", "Fuellwatte", "Maschenmarkierer", "Wollnadel", "Schere"],
+    steps: [
+      {
+        title: "Material",
+        instruction: "Garn, Nadel 3 mm, Fuellwatte, Maschenmarkierer.",
+        tip: "In Spiralrunden — Markierer ist Pflicht!",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Start",
+        instruction: "Fadenring, 6 fM. Markierer in 1. M.",
+        tip: null,
+        notation: "MR, 6 fM",
+        stitch_count: "6 M"
+      },
+      {
+        title: "Runde 2",
+        instruction: "Jede M verdoppeln.",
+        tip: null,
+        notation: "6 Zun",
+        stitch_count: "12 M"
+      },
+      {
+        title: "Runde 3",
+        instruction: "*1 fM, Zun* 6x.",
+        tip: null,
+        notation: "*1 fM, Zun* \u00d76",
+        stitch_count: "18 M"
+      },
+      {
+        title: "Runde 4",
+        instruction: "*2 fM, Zun* 6x.",
+        tip: null,
+        notation: "*2 fM, Zun* \u00d76",
+        stitch_count: "24 M"
+      },
+      {
+        title: "Runden 5–8",
+        instruction: "4 Runden je 24 fM ohne Zu-/Abnahme.",
+        tip: "Hier entsteht die Kugelform.",
+        notation: "24 fM",
+        stitch_count: "24 M"
+      },
+      {
+        title: "Runde 9",
+        instruction: "*2 fM, Abn* 6x.",
+        tip: null,
+        notation: "*2 fM, Abn* \u00d76",
+        stitch_count: "18 M"
+      },
+      {
+        title: "Stopfen",
+        instruction: "Jetzt mit Fuellwatte fuellen, schoen fest.",
+        tip: "Nicht zu viel, nicht zu wenig — Ball soll rund sein.",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Runde 10",
+        instruction: "*1 fM, Abn* 6x.",
+        tip: null,
+        notation: "*1 fM, Abn* \u00d76",
+        stitch_count: "12 M"
+      },
+      {
+        title: "Schliessen",
+        instruction: "*Abn* 6x. Faden durch alle M ziehen, zuziehen. Vernaehen.",
+        tip: "Als Babyspielzeug: Rassel reinlegen vor dem Schliessen!",
+        notation: "6 Abn",
+        stitch_count: "geschlossen"
+      }
+    ]
+  },
+  {
+    id: "blume",
+    title: "Schluesselanhanger Blume",
+    category: "Deko",
+    difficulty: "Anfaenger",
+    time: "15 Min",
+    hook: "3 mm",
+    yarn: "Baumwolle 2 Farben (~5m je)",
+    image: "🌸",
+    materials: ["Baumwollgarn 2 Farben (~5m je Farbe)", "Haekelnnadel 3 mm", "Schluesselring", "Wollnadel", "Schere"],
+    steps: [
+      {
+        title: "Material",
+        instruction: "2 Farben Garn (Mitte + Bluete), Nadel 3 mm, Schluesselring.",
+        tip: null,
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Fadenring",
+        instruction: "Farbe 1 (Mitte): Magic Ring.",
+        tip: null,
+        notation: "MR",
+        stitch_count: null
+      },
+      {
+        title: "Bluetenmitte",
+        instruction: "6 fM in Ring. Km. Ring zuziehen. Farbe wechseln.",
+        tip: null,
+        notation: "6 fM, Km",
+        stitch_count: "6 M"
+      },
+      {
+        title: "Bluetenblaetter",
+        instruction: "Farbe 2: In jede M: *1 Km, 3 Lm, 2 Stb in selbe M, 3 Lm, 1 Km in selbe M*.",
+        tip: "Jedes Blutenblatt hat 3 Lm + 2 Stb + 3 Lm. Schoen locker arbeiten.",
+        notation: "6\u00d7 (Km + 3Lm + 2Stb + 3Lm + Km)",
+        stitch_count: "6 Bluetenblaetter"
+      },
+      {
+        title: "Abschluss",
+        instruction: "Km, Faden abschneiden (20 cm).",
+        tip: null,
+        notation: "Km",
+        stitch_count: null
+      },
+      {
+        title: "Schluesselring",
+        instruction: "Mit dem langen Faden 8 Lm haekeln. Durch Schluesselring fuehren, zurueck zur Blume naehen.",
+        tip: null,
+        notation: "8 Lm + Km",
+        stitch_count: null
+      },
+      {
+        title: "Fertig",
+        instruction: "Alle Faeden vernaehen.",
+        tip: "Zweite Blume in anderer Farbe als Geschenk!",
+        notation: null,
+        stitch_count: null
+      }
+    ]
+  },
+  {
+    id: "muetze",
+    title: "Babymuetze",
+    category: "Baby",
+    difficulty: "Leicht Fortgeschritten",
+    time: "1–2 Std",
+    hook: "4 mm",
+    yarn: "Babywolle hypoallergen (~50m)",
+    image: "🧢",
+    materials: ["Babywolle (hypoallergen!, ~50m)", "Haekelnnadel 4 mm", "Maschenmarkierer", "Wollnadel", "Schere"],
+    steps: [
+      {
+        title: "Material",
+        instruction: "Babywolle (hypoallergen!), Nadel 4 mm, Maschenmarkierer.",
+        tip: "Babywolle ist Pflicht — keine kratzige Wolle!",
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Start",
+        instruction: "Fadenring, 3 Lm (= 1 Stb), 11 Stb. Km in 3. Lm.",
+        tip: null,
+        notation: "12 Stb",
+        stitch_count: "12 M"
+      },
+      {
+        title: "Runde 2",
+        instruction: "3 Lm, *2 Stb in jede M*. Km.",
+        tip: null,
+        notation: "12 Zun",
+        stitch_count: "24 M"
+      },
+      {
+        title: "Runde 3",
+        instruction: "3 Lm, *1 Stb, Zun* 12x. Km.",
+        tip: null,
+        notation: "*1 Stb, Zun* \u00d712",
+        stitch_count: "36 M"
+      },
+      {
+        title: "Runde 4",
+        instruction: "3 Lm, *2 Stb, Zun* 12x. Km.",
+        tip: null,
+        notation: "*2 Stb, Zun* \u00d712",
+        stitch_count: "48 M"
+      },
+      {
+        title: "Runde 5",
+        instruction: "3 Lm, *3 Stb, Zun* 12x. Km.",
+        tip: "Flach auf Babykopf legen — passt der Durchmesser? (~14 cm fuer Neugeborene)",
+        notation: "*3 Stb, Zun* \u00d712",
+        stitch_count: "60 M"
+      },
+      {
+        title: "Runden 6–12",
+        instruction: "7 Runden je 60 Stb ohne Zunahme. Km am Ende jeder Runde.",
+        tip: "Ca. 10 cm Hoehe fuer Neugeborene, 12 cm fuer 3-6 Monate.",
+        notation: "60 Stb pro Runde",
+        stitch_count: "60 M"
+      },
+      {
+        title: "Rand",
+        instruction: "2 Runden fM fuer festen Rand.",
+        tip: null,
+        notation: "60 fM",
+        stitch_count: "60 M"
+      },
+      {
+        title: "Ohrenklappen (optional)",
+        instruction: "15 fM ab Hinterkopf-Mitte. Wenden, Abn an jeder Seite, bis 5 M uebrig. Lm-Kette fuer Bindeband.",
+        tip: null,
+        notation: null,
+        stitch_count: null
+      },
+      {
+        title: "Fertig",
+        instruction: "Faeden vernaehen. Pompom aufnaehen (optional).",
+        tip: "Vor dem Verschenken: 30 Grad Handwaesche testen!",
+        notation: null,
+        stitch_count: null
+      }
+    ]
+  }
+];
+
+// ============ STATE ============
+let currentPatternId = null;
+let currentStep = 0;
+const STORAGE_KEY = 'haekel-buddy-progress';
+
+function loadAllProgress() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+function saveProgress(patternId, step) {
+  const all = loadAllProgress();
+  all[patternId] = step;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+}
+
+function loadProgress(patternId) {
+  return loadAllProgress()[patternId] || 0;
+}
+
+// ============ VIEWS ============
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => {
+    v.classList.remove('active');
+    v.style.display = 'none';
+  });
+  const el = document.getElementById('view-' + id);
+  el.style.display = 'block';
+  requestAnimationFrame(() => el.classList.add('active'));
+}
+
+// ============ SELECTOR ============
+let activeFilter = 'Alle';
+
+function getCategories() {
+  const cats = ['Alle', ...new Set(PATTERNS.map(p => p.category))];
+  return cats;
+}
+
+function renderFilterBar() {
+  const bar = document.getElementById('filter-bar');
+  bar.innerHTML = '';
+  getCategories().forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-pill' + (cat === activeFilter ? ' active' : '');
+    btn.textContent = cat;
+    btn.onclick = () => {
+      activeFilter = cat;
+      renderFilterBar();
+      renderGrid();
+    };
+    bar.appendChild(btn);
+  });
+}
+
+function renderGrid() {
+  const grid = document.getElementById('pattern-grid');
+  const allProgress = loadAllProgress();
+  const filtered = activeFilter === 'Alle'
+    ? PATTERNS
+    : PATTERNS.filter(p => p.category === activeFilter);
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><span class="empty-state-icon">🧶</span>Keine Muster in dieser Kategorie</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map((p, i) => {
+    const progress = allProgress[p.id] || 0;
+    const total = p.steps.length;
+    const done = progress >= total;
+    const started = progress > 0;
+    const pct = Math.round((progress / total) * 100);
+
+    let progressHtml = '';
+    if (started) {
+      progressHtml = `
+        <div class="card-progress${done ? ' card-progress--done' : ''}">
+          <div class="card-progress-bar">
+            <div class="card-progress-fill" style="width:${pct}%"></div>
+          </div>
+          <span class="card-progress-label">${done ? 'Fertig!' : progress + '/' + total}</span>
+        </div>`;
+    }
+
+    const doneBadge = done ? '<span class="card-done-badge">✓</span>' : '';
+
+    const svgKey = PATTERN_SVG_MAP[p.id];
+    const svgPreview = svgKey && HAEKEL_SVGS.productPreviews[svgKey]
+      ? `<div class="card-svg">${HAEKEL_SVGS.productPreviews[svgKey]}</div>`
+      : `<span class="card-emoji">${p.image}</span>`;
+
+    return `<div class="pattern-card" style="--i:${i}" onclick="openPattern('${p.id}')">
+      ${doneBadge}
+      ${svgPreview}
+      <div class="card-title">${p.title}</div>
+      <div class="card-meta">
+        <span class="card-tag card-tag--category">${p.category}</span>
+        <span class="card-tag card-tag--difficulty">${p.difficulty}</span>
+        <span class="card-tag card-tag--time">⏱ ${p.time}</span>
+      </div>
+      ${progressHtml}
+    </div>`;
+  }).join('');
+}
+
+function renderSelector() {
+  renderFilterBar();
+  renderGrid();
+}
+
+function showSelector() {
+  renderSelector();
+  showView('selector');
+  document.getElementById('bottom-bar').classList.remove('visible');
+}
+
+// ============ PATTERN VIEW ============
+function openPattern(patternId) {
+  currentPatternId = patternId;
+  currentStep = loadProgress(patternId);
+  const pattern = PATTERNS.find(p => p.id === patternId);
+  if (!pattern) return;
+
+  // Check if already done
+  if (currentStep >= pattern.steps.length) {
+    renderCompletion(pattern);
+    showView('completion');
+    document.getElementById('bottom-bar').classList.remove('visible');
+    return;
+  }
+
+  renderPatternHeader(pattern);
+  renderSteps(pattern);
+  updateTopbar(pattern);
+  updateBottomButtons(pattern);
+  showView('pattern');
+  document.getElementById('bottom-bar').classList.add('visible');
+
+  // Scroll active step into view after transition
+  setTimeout(() => scrollActiveIntoView(), 350);
+}
+
+function renderPatternHeader(pattern) {
+  const header = document.getElementById('pattern-header');
+  const svgKey = PATTERN_SVG_MAP[pattern.id];
+  const svgBig = svgKey && HAEKEL_SVGS.productPreviews[svgKey]
+    ? `<div class="pattern-svg-big">${HAEKEL_SVGS.productPreviews[svgKey]}</div>`
+    : `<span class="pattern-emoji-big">${pattern.image}</span>`;
+
+  const desc = PATTERN_DESCRIPTIONS[pattern.id];
+  let descHtml = '';
+  if (desc) {
+    descHtml = `
+    <div class="pattern-description">
+      <div>${desc.description}</div>
+      <div>${desc.result_description}</div>
+      ${desc.special_pattern ? `<div class="special">&#x2728; ${desc.special_pattern}</div>` : ''}
+      ${desc.gift_idea ? `<div class="gift">&#x1F381; ${desc.gift_idea}</div>` : ''}
+    </div>`;
+  }
+
+  const stitchLegendItems = [
+    { key: 'chain',      abbr: 'Lm',  name: 'Luftmasche' },
+    { key: 'slip',       abbr: 'Km',  name: 'Kettmasche' },
+    { key: 'sc',         abbr: 'fM',  name: 'Feste Masche' },
+    { key: 'hdc',        abbr: 'hStb', name: 'Halbes Staebchen' },
+    { key: 'dc',         abbr: 'Stb', name: 'Staebchen' },
+    { key: 'tr',         abbr: 'dStb', name: 'Doppelstaebchen' },
+    { key: 'inc',        abbr: 'Zun', name: 'Zunahme' },
+    { key: 'dec',        abbr: 'Abn', name: 'Abnahme' },
+    { key: 'magic_ring', abbr: 'MR',  name: 'Magic Ring' },
+  ].map(s => `<div class="stitch-legend-item">${HAEKEL_SVGS.stitchSymbols[s.key]}<strong>${s.abbr}</strong> ${s.name}</div>`).join('');
+
+  header.innerHTML = `
+    <div class="pattern-emoji-title">
+      ${svgBig}
+      <div class="pattern-title-block">
+        <h1 class="pattern-title">${pattern.title}</h1>
+        <div class="pattern-subtitle">${pattern.category} · ${pattern.steps.length} Schritte</div>
+      </div>
+    </div>
+    ${descHtml}
+    <button class="stitch-legend-toggle" onclick="toggleStitchLegend(this)">&#x1F9F5; Maschensymbole anzeigen</button>
+    <div class="stitch-legend" id="stitch-legend">
+      <div class="stitch-legend-grid">${stitchLegendItems}</div>
+    </div>
+    <div class="pattern-info-row">
+      <span class="info-chip">&#x2702; <strong>${pattern.hook}</strong></span>
+      <span class="info-chip">&#x1F9F6; <strong>${pattern.yarn}</strong></span>
+      <span class="info-chip">&#x23F1; <strong>${pattern.time}</strong></span>
+      <span class="info-chip">&#x1F4AA; <strong>${pattern.difficulty}</strong></span>
+    </div>
+    <div class="materials-box">
+      <div class="materials-label">&#x1F4CB; Material</div>
+      <ul class="materials-list">
+        ${pattern.materials.map(m => `<li>${m}</li>`).join('')}
+      </ul>
+    </div>
+  `;
+}
+
+function toggleStitchLegend(btn) {
+  const legend = document.getElementById('stitch-legend');
+  const isOpen = legend.classList.toggle('open');
+  btn.textContent = isOpen ? '\uD83E\uDDF5 Maschensymbole ausblenden' : '\uD83E\uDDF5 Maschensymbole anzeigen';
+}
+
+function annotateStitches(text) {
+  // Replace known stitch abbreviations with code elements bearing title tooltips
+  let result = text;
+  // Sort by length desc so longer abbreviations match first
+  const abbrs = Object.keys(STITCH_TITLES).sort((a, b) => b.length - a.length);
+  abbrs.forEach(abbr => {
+    const title = STITCH_TITLES[abbr];
+    // Only match as whole words
+    const re = new RegExp('\\b' + abbr.replace(/\./g, '\\.') + '\\b', 'g');
+    result = result.replace(re, `<code title="${title}">${abbr}</code>`);
+  });
+  return result;
+}
+
+function renderSteps(pattern) {
+  const list = document.getElementById('steps-list');
+  const descData = PATTERN_DESCRIPTIONS[pattern.id];
+  const stepIllustrations = descData && descData.step_illustrations ? descData.step_illustrations : {};
+
+  list.innerHTML = pattern.steps.map((step, i) => {
+    const state = i < currentStep ? 'done' : i === currentStep ? 'active' : 'upcoming';
+    const checkIcon = state === 'done' ? '&#10003;' : state === 'active' ? String(i + 1) : '';
+
+    let notationHtml = '';
+    if (step.notation) {
+      notationHtml += `<span class="step-notation">${annotateStitches(step.notation)}</span>`;
+    }
+    if (step.stitch_count) {
+      notationHtml += `<span class="step-count">${step.stitch_count}</span>`;
+    }
+    if (notationHtml) notationHtml = `<div style="margin-top:6px">${notationHtml}</div>`;
+
+    const tipHtml = step.tip
+      ? `<div class="step-tip"><span class="step-tip-icon">&#x1F4A1;</span><span>${step.tip}</span></div>`
+      : '';
+
+    // Step chart SVG — shown for active and done steps
+    let chartHtml = '';
+    if (state !== 'upcoming') {
+      const stepSvg = generateStepSVG(step, pattern.id, i);
+      if (stepSvg) {
+        chartHtml = `<div class="step-chart">${stepSvg}</div>`;
+      }
+    }
+
+    // Legacy step illustration (kept for backward compat, shown below chart when both apply)
+    let illustrationHtml = '';
+    const stepNum = String(i + 1);
+    if (state !== 'upcoming' && stepIllustrations[stepNum]) {
+      const illustKey = stepIllustrations[stepNum];
+      const svg = HAEKEL_SVGS.stepIllustrations[illustKey];
+      if (svg) {
+        illustrationHtml = `<div class="step-illustration">${svg}</div>`;
+      }
+    }
+
+    return `<div class="step-item step-item--${state}" id="step-${i}" data-step="${i}">
+      <div class="step-check">${checkIcon}</div>
+      <div class="step-content">
+        <div class="step-label step-label--${state}">
+          <span class="step-number">Schritt ${i + 1}</span>${step.title}
+        </div>
+        ${chartHtml}
+        ${state !== 'upcoming' ? `<div class="step-instruction">${annotateStitches(step.instruction)}</div>` : `<div class="step-title">${step.title}</div>`}
+        ${state !== 'upcoming' ? notationHtml : ''}
+        ${illustrationHtml}
+        ${state === 'active' ? tipHtml : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateTopbar(pattern) {
+  const total = pattern.steps.length;
+  const pct = currentStep >= total ? 100 : Math.round((currentStep / total) * 100);
+  document.getElementById('topbar-label').innerHTML =
+    currentStep >= total
+      ? '<strong>Fertig!</strong>'
+      : `Schritt <strong>${currentStep + 1}</strong> / ${total}`;
+  document.getElementById('topbar-fill').style.width = pct + '%';
+}
+
+function updateBottomButtons(pattern) {
+  const total = pattern.steps.length;
+  const confirmBtn = document.getElementById('btn-confirm');
+  const backBtn = document.getElementById('btn-back-step');
+
+  if (currentStep >= total) {
+    confirmBtn.textContent = 'Fertig! \uD83C\uDF89';
+    confirmBtn.disabled = false;
+  } else {
+    confirmBtn.textContent = `Schritt ${currentStep + 1} fertig \u2713`;
+    confirmBtn.disabled = false;
+  }
+
+  backBtn.disabled = currentStep === 0;
+}
+
+function scrollActiveIntoView() {
+  const active = document.querySelector('.step-item--active');
+  if (active) {
+    active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function nextStep() {
+  const pattern = PATTERNS.find(p => p.id === currentPatternId);
+  if (!pattern) return;
+
+  if (currentStep >= pattern.steps.length) {
+    // Already done — show completion
+    saveProgress(currentPatternId, pattern.steps.length);
+    renderCompletion(pattern);
+    showView('completion');
+    document.getElementById('bottom-bar').classList.remove('visible');
+    return;
+  }
+
+  currentStep++;
+  saveProgress(currentPatternId, currentStep);
+
+  if (currentStep >= pattern.steps.length) {
+    // Just finished
+    renderCompletion(pattern);
+    showView('completion');
+    document.getElementById('bottom-bar').classList.remove('visible');
+    return;
+  }
+
+  renderSteps(pattern);
+  updateTopbar(pattern);
+  updateBottomButtons(pattern);
+  setTimeout(scrollActiveIntoView, 100);
+}
+
+function prevStep() {
+  if (currentStep === 0) return;
+  const pattern = PATTERNS.find(p => p.id === currentPatternId);
+  if (!pattern) return;
+
+  currentStep--;
+  saveProgress(currentPatternId, currentStep);
+  renderSteps(pattern);
+  updateTopbar(pattern);
+  updateBottomButtons(pattern);
+  setTimeout(scrollActiveIntoView, 100);
+}
+
+function goBack() {
+  showSelector();
+}
+
+// ============ COMPLETION ============
+function renderCompletion(pattern) {
+  document.getElementById('completion-emoji').textContent = pattern.image;
+  document.getElementById('completion-text').textContent =
+    `Du hast "${pattern.title}" erfolgreich abgeschlossen. ${pattern.steps.length} Schritte gemeistert!`;
+}
+
+function restartPattern() {
+  if (!currentPatternId) return;
+  currentStep = 0;
+  saveProgress(currentPatternId, 0);
+  openPattern(currentPatternId);
+}
+
+// ============ INIT ============
+renderSelector();
+</script>
+</body>
+</html>
