@@ -1032,13 +1032,13 @@ select {
 
 @media (max-width: 960px) {
   .timeline-line {
-    left: 24px;
+    inset-inline-start: 24px;
   }
 
   .day-section {
     grid-template-columns: 1fr;
     gap: 12px;
-    padding-left: 42px;
+    padding-inline-start: 42px;
   }
 
   .day-rail {
@@ -1047,8 +1047,8 @@ select {
   }
 
   .day-dot {
-    left: -31px;
-    right: auto;
+    inset-inline-start: -31px;
+    inset-inline-end: auto;
   }
 
   .cards-grid,
@@ -1069,7 +1069,7 @@ select {
   }
 
   .hero {
-    padding-top: 30px;
+    padding-block-start: 30px;
   }
 
   .hero-panel,
@@ -1120,15 +1120,15 @@ select {
   }
 
   .timeline-line {
-    left: 18px;
+    inset-inline-start: 18px;
   }
 
   .day-section {
-    padding-left: 28px;
+    padding-inline-start: 28px;
   }
 
   .day-dot {
-    left: -25px;
+    inset-inline-start: -25px;
   }
 
   .detail-title {
