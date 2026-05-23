@@ -46,3 +46,6 @@ __pycache__/
 .dev.vars*
 !.dev.vars.example
 !.env.example
+
+# --- Hermes agent local state ---
+.hermes/

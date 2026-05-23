@@ -1,0 +1,1435 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta
+    name="description"
+    content="Why Human Agent Interface matters to Samuel Fleig: spending more time with agents than people while needing a human-owned interface for ADHD, overload, scope, evidence, and decisions."
+  >
+  <title>Why HAI matters to me | Samuel Fleig</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f5efdf;
+      --muted: #b9ad95;
+      --quiet: #766d5e;
+      --black: #080806;
+      --charcoal: #11100d;
+      --panel: rgba(245, 239, 223, 0.06);
+      --panel-strong: rgba(245, 239, 223, 0.11);
+      --line: rgba(245, 239, 223, 0.16);
+      --line-strong: rgba(245, 239, 223, 0.32);
+      --gold: #e6a83a;
+      --signal: #83dbc8;
+      --ember: #df6242;
+      --green: #a7ff4f;
+      --max: 1120px;
+      --pad: clamp(18px, 4vw, 56px);
+      --display: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      --body: "Neue Haas Grotesk Text", "Aptos", "Segoe UI", sans-serif;
+      --mono: "Berkeley Mono", "Iosevka", "SFMono-Regular", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--black);
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      font-family: var(--body);
+      background:
+        radial-gradient(circle at 78% 12%, rgba(131, 219, 200, 0.12), transparent 30vw),
+        radial-gradient(circle at 14% 40%, rgba(223, 98, 66, 0.1), transparent 28vw),
+        linear-gradient(180deg, #080806 0%, #12100d 48%, #090a08 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 20;
+      opacity: 0.22;
+      background-image:
+        linear-gradient(rgba(245, 239, 223, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245, 239, 223, 0.032) 1px, transparent 1px);
+      background-size: 78px 78px;
+      mask-image: linear-gradient(180deg, black, transparent 78%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    .site-shell {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+      padding: 14px var(--pad) 0;
+    }
+
+    .topbar-inner {
+      width: min(var(--max), 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(245, 239, 223, 0.12);
+      background: rgba(8, 8, 6, 0.72);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 70px rgba(0, 0, 0, 0.3);
+      pointer-events: auto;
+    }
+
+    .mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mark-symbol {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 1px solid var(--line-strong);
+      color: var(--gold);
+      font-size: 13px;
+      line-height: 1;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(12px, 2vw, 28px);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .nav a {
+      opacity: 0.82;
+      transition: color 160ms ease, opacity 160ms ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      color: var(--ink);
+      opacity: 1;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 92svh;
+      display: grid;
+      align-items: end;
+      padding: 130px var(--pad) 8svh;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero::before {
+      content: "OWNER SIGNAL";
+      position: absolute;
+      right: -0.06em;
+      bottom: 8vh;
+      z-index: -1;
+      color: rgba(245, 239, 223, 0.035);
+      font-family: var(--mono);
+      font-size: clamp(78px, 15vw, 216px);
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background:
+        linear-gradient(90deg, rgba(8, 8, 6, 0.98) 0%, rgba(8, 8, 6, 0.72) 52%, rgba(8, 8, 6, 0.3) 100%),
+        radial-gradient(circle at 38% 58%, rgba(230, 168, 58, 0.16), transparent 24vw);
+    }
+
+    .hero-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(260px, 0.44fr);
+      gap: clamp(30px, 7vw, 96px);
+      align-items: end;
+      min-width: 0;
+    }
+
+    .hero-text {
+      min-width: 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: clamp(11px, 1.35vw, 13px);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 38px;
+      height: 1px;
+      background: var(--gold);
+      box-shadow: 0 0 26px rgba(230, 168, 58, 0.9);
+    }
+
+    h1 {
+      max-width: 960px;
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: clamp(54px, 9vw, 124px);
+      line-height: 0.9;
+      letter-spacing: 0;
+      text-wrap: balance;
+      overflow-wrap: break-word;
+    }
+
+    .hero-lede {
+      max-width: 790px;
+      margin-top: clamp(28px, 5vw, 48px);
+      color: var(--ink);
+      font-size: clamp(22px, 2.7vw, 36px);
+      line-height: 1.1;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .hero-copy {
+      max-width: 700px;
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: clamp(16px, 1.55vw, 19px);
+      line-height: 1.55;
+    }
+
+    .mobile-signal-strip {
+      display: none;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .button {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      border: 1px solid var(--line);
+      background: rgba(245, 239, 223, 0.055);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .button.primary {
+      border-color: rgba(167, 255, 79, 0.7);
+      background: rgba(167, 255, 79, 0.16);
+      color: var(--green);
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      background: rgba(245, 239, 223, 0.095);
+    }
+
+    .signal-panel {
+      display: grid;
+      gap: 14px;
+      padding: 24px;
+      border-left: 1px solid var(--line-strong);
+      background: linear-gradient(90deg, rgba(245, 239, 223, 0.075), transparent);
+    }
+
+    .signal-panel strong {
+      color: var(--signal);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .signal-panel p {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .agent-year-panel {
+      position: relative;
+      min-height: 520px;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 22px;
+      padding: 24px;
+      border: 1px solid var(--line-strong);
+      background:
+        linear-gradient(180deg, rgba(245, 239, 223, 0.075), rgba(245, 239, 223, 0.025)),
+        rgba(8, 8, 6, 0.78);
+      box-shadow: 0 24px 88px rgba(0, 0, 0, 0.28);
+      overflow: hidden;
+    }
+
+    .agent-year-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.42;
+      background:
+        linear-gradient(rgba(131, 219, 200, 0.16) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(131, 219, 200, 0.11) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: radial-gradient(circle at 74% 20%, black 0 18%, transparent 58%);
+    }
+
+    .agent-year-panel > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-label {
+      color: var(--signal);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .time-balance {
+      display: grid;
+      gap: 10px;
+    }
+
+    .balance-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 46px;
+      gap: 12px;
+      align-items: center;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .meter {
+      height: 11px;
+      overflow: hidden;
+      border: 1px solid rgba(245, 239, 223, 0.16);
+      background: rgba(245, 239, 223, 0.045);
+    }
+
+    .meter-fill {
+      height: 100%;
+      display: block;
+    }
+
+    .meter-fill.agent {
+      width: 78%;
+      background: linear-gradient(90deg, var(--signal), var(--green));
+      box-shadow: 0 0 24px rgba(131, 219, 200, 0.32);
+    }
+
+    .meter-fill.human {
+      width: 22%;
+      background: var(--gold);
+    }
+
+    .year-map {
+      display: grid;
+      grid-template-columns: repeat(14, minmax(0, 1fr));
+      gap: 5px;
+      padding: 12px;
+      border: 1px solid rgba(245, 239, 223, 0.13);
+      background:
+        radial-gradient(circle at 18% 30%, rgba(131, 219, 200, 0.12), transparent 28%),
+        rgba(8, 8, 6, 0.38);
+    }
+
+    .day-cell {
+      aspect-ratio: 1;
+      border: 1px solid rgba(245, 239, 223, 0.09);
+      background: rgba(245, 239, 223, 0.035);
+    }
+
+    .day-cell.agent {
+      border-color: rgba(131, 219, 200, 0.34);
+      background: rgba(131, 219, 200, 0.44);
+      box-shadow: 0 0 16px rgba(131, 219, 200, 0.12);
+    }
+
+    .day-cell.human {
+      border-color: rgba(230, 168, 58, 0.42);
+      background: rgba(230, 168, 58, 0.58);
+    }
+
+    .day-cell.overload {
+      border-color: rgba(223, 98, 66, 0.55);
+      background: rgba(223, 98, 66, 0.62);
+      box-shadow: 0 0 18px rgba(223, 98, 66, 0.18);
+    }
+
+    .day-cell.owner {
+      border-color: rgba(167, 255, 79, 0.78);
+      background: rgba(167, 255, 79, 0.7);
+      box-shadow: 0 0 22px rgba(167, 255, 79, 0.2);
+    }
+
+    .map-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      margin-top: -8px;
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .map-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      display: inline-block;
+      border: 1px solid rgba(245, 239, 223, 0.18);
+    }
+
+    .legend-dot.agent {
+      background: var(--signal);
+    }
+
+    .legend-dot.human {
+      background: var(--gold);
+    }
+
+    .legend-dot.owner {
+      background: var(--green);
+    }
+
+    .room-matrix {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      align-content: start;
+    }
+
+    .room {
+      min-height: 76px;
+      display: grid;
+      align-content: space-between;
+      padding: 10px;
+      border: 1px solid rgba(245, 239, 223, 0.14);
+      background: rgba(245, 239, 223, 0.045);
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .room strong {
+      color: var(--ink);
+      font-size: 12px;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .room.agent {
+      border-color: rgba(131, 219, 200, 0.34);
+      background: rgba(131, 219, 200, 0.075);
+    }
+
+    .room.human {
+      border-color: rgba(230, 168, 58, 0.36);
+      background: rgba(230, 168, 58, 0.08);
+    }
+
+    .room.owner {
+      grid-column: span 3;
+      min-height: 88px;
+      border-color: rgba(167, 255, 79, 0.52);
+      background: linear-gradient(135deg, rgba(167, 255, 79, 0.15), rgba(131, 219, 200, 0.055));
+    }
+
+    .stream-stack {
+      display: grid;
+      gap: 6px;
+    }
+
+    .stream-line {
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      border-left: 2px solid rgba(131, 219, 200, 0.42);
+      background: rgba(245, 239, 223, 0.045);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .stream-line.warning {
+      border-left-color: var(--ember);
+      color: var(--ink);
+    }
+
+    section {
+      position: relative;
+      padding: clamp(76px, 11vw, 138px) var(--pad);
+    }
+
+    .section-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+      min-width: 0;
+    }
+
+    .kicker {
+      margin-bottom: 18px;
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      max-width: 880px;
+      font-family: var(--display);
+      font-size: clamp(42px, 7vw, 88px);
+      font-weight: 500;
+      line-height: 0.96;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .section-copy {
+      max-width: 780px;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 23px);
+      line-height: 1.45;
+      text-wrap: balance;
+    }
+
+    .three-part {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: clamp(42px, 7vw, 82px);
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .part-card {
+      min-height: 310px;
+      padding: clamp(22px, 3vw, 30px);
+      display: grid;
+      align-content: space-between;
+      background: rgba(8, 8, 6, 0.84);
+    }
+
+    .part-card span {
+      color: var(--ember);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .part-card h3 {
+      margin-top: 38px;
+      font-family: var(--display);
+      font-size: clamp(32px, 4vw, 54px);
+      font-weight: 500;
+      line-height: 0.95;
+    }
+
+    .part-card p {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.46;
+    }
+
+    .ownership {
+      border-block: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(245, 239, 223, 0.035), rgba(245, 239, 223, 0.01)),
+        rgba(10, 10, 8, 0.72);
+    }
+
+    .flow-section {
+      border-block: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(131, 219, 200, 0.05), rgba(245, 239, 223, 0.012)),
+        #0a0a08;
+    }
+
+    .flow-board {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 44px minmax(0, 0.72fr) 44px minmax(0, 1fr);
+      gap: 12px;
+      align-items: stretch;
+      margin-top: clamp(38px, 7vw, 76px);
+    }
+
+    .flow-node {
+      min-height: 260px;
+      display: grid;
+      align-content: space-between;
+      gap: 26px;
+      padding: clamp(20px, 3vw, 28px);
+      border: 1px solid var(--line);
+      background: rgba(245, 239, 223, 0.045);
+    }
+
+    .flow-node.agentic {
+      border-color: rgba(131, 219, 200, 0.34);
+      background: rgba(131, 219, 200, 0.06);
+    }
+
+    .flow-node.bottleneck {
+      border-color: rgba(223, 98, 66, 0.4);
+      background: rgba(223, 98, 66, 0.07);
+    }
+
+    .flow-node.hai {
+      border-color: rgba(167, 255, 79, 0.45);
+      background: rgba(167, 255, 79, 0.075);
+    }
+
+    .flow-node span {
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .flow-node h3 {
+      font-family: var(--display);
+      font-size: clamp(30px, 4vw, 54px);
+      font-weight: 500;
+      line-height: 0.95;
+    }
+
+    .flow-node p {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .flow-arrow {
+      display: grid;
+      place-items: center;
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 22px;
+    }
+
+    .output-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .output-tags b {
+      min-height: 26px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 8px;
+      border: 1px solid rgba(245, 239, 223, 0.15);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(280px, 0.56fr);
+      gap: clamp(30px, 7vw, 92px);
+      align-items: start;
+    }
+
+    .body-copy {
+      color: var(--muted);
+      font-size: clamp(17px, 1.65vw, 20px);
+      line-height: 1.55;
+    }
+
+    .body-copy + .body-copy {
+      margin-top: 20px;
+    }
+
+    .principles {
+      display: grid;
+      gap: 12px;
+    }
+
+    .principle {
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: rgba(245, 239, 223, 0.045);
+    }
+
+    .principle b {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--signal);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .principle p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .closing {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .closing-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: clamp(24px, 5vw, 72px);
+      align-items: center;
+      padding: clamp(26px, 5vw, 46px);
+      border: 1px solid var(--line-strong);
+      background:
+        linear-gradient(135deg, rgba(167, 255, 79, 0.08), rgba(131, 219, 200, 0.045)),
+        rgba(245, 239, 223, 0.045);
+    }
+
+    .closing-panel h2 {
+      max-width: 760px;
+      font-family: var(--display);
+      font-size: clamp(38px, 6vw, 82px);
+      font-weight: 500;
+      line-height: 0.96;
+      text-wrap: balance;
+    }
+
+    .closing-panel p {
+      max-width: 700px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: clamp(17px, 1.8vw, 21px);
+      line-height: 1.48;
+    }
+
+    .footer {
+      padding: 28px var(--pad);
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .footer-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .topbar-inner,
+      .nav,
+      .hero-inner,
+      .split,
+      .flow-board,
+      .closing-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 112px;
+      }
+
+      .hero-inner {
+        align-items: start;
+      }
+
+      .three-part {
+        grid-template-columns: 1fr;
+      }
+
+      .agent-year-panel {
+        min-height: auto;
+      }
+
+      .flow-arrow {
+        min-height: 36px;
+        transform: rotate(90deg);
+      }
+
+      .closing-panel {
+        align-items: start;
+      }
+    }
+
+    @media (max-width: 560px) {
+      html,
+      body,
+      .site-shell {
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .topbar {
+        padding: 10px 0 0;
+      }
+
+      .topbar-inner {
+        width: calc(100% - 20px);
+        max-width: calc(100% - 20px);
+        flex: 0 1 auto;
+        min-width: 0;
+        margin: 0 auto;
+        padding: 10px 12px;
+      }
+
+      .mark span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .hero {
+        width: auto;
+        max-width: none;
+        padding: 96px 0 56px;
+      }
+
+      section {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .hero-inner,
+      .section-inner {
+        width: calc(100% - 32px);
+        max-width: calc(100% - 32px);
+        margin-left: auto;
+        margin-right: auto;
+        min-width: 0;
+      }
+
+      .split,
+      .closing-panel {
+        width: auto;
+        max-width: 100%;
+        min-width: 0;
+      }
+
+      h1 {
+        width: calc(100vw - 32px);
+        max-width: calc(100vw - 32px);
+      }
+
+      .hero-text {
+        width: calc(100vw - 32px);
+        max-width: calc(100vw - 32px);
+      }
+
+      .hero-lede,
+      .hero-copy,
+      .button-row,
+      .mobile-signal-strip {
+        width: min(326px, calc(100vw - 64px));
+        max-width: min(326px, calc(100vw - 64px));
+      }
+
+      h1 {
+        font-size: clamp(40px, 13vw, 54px);
+        line-height: 0.96;
+      }
+
+      .mobile-signal-strip {
+        display: grid;
+        gap: 10px;
+        margin-top: 22px;
+        padding: 12px;
+        width: min(326px, calc(100vw - 64px));
+        max-width: min(326px, calc(100vw - 64px));
+        border: 1px solid rgba(245, 239, 223, 0.16);
+        background:
+          linear-gradient(90deg, rgba(131, 219, 200, 0.1), rgba(223, 98, 66, 0.075)),
+          rgba(245, 239, 223, 0.035);
+        overflow: hidden;
+      }
+
+      .mobile-mini-bars {
+        display: grid;
+        gap: 7px;
+      }
+
+      .mobile-mini-bar {
+        display: grid;
+        grid-template-columns: 58px 1fr;
+        gap: 8px;
+        align-items: center;
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 9px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .mobile-mini-track {
+        height: 8px;
+        border: 1px solid rgba(245, 239, 223, 0.14);
+        background: rgba(245, 239, 223, 0.04);
+      }
+
+      .mobile-mini-fill {
+        height: 100%;
+        display: block;
+      }
+
+      .mobile-mini-fill.agent {
+        width: 82%;
+        background: linear-gradient(90deg, var(--signal), var(--green));
+      }
+
+      .mobile-mini-fill.human {
+        width: 22%;
+        background: var(--gold);
+      }
+
+      .mobile-signal-dots {
+        display: grid;
+        grid-template-columns: repeat(18, minmax(0, 1fr));
+        gap: 4px;
+      }
+
+      .mobile-signal-dots i {
+        aspect-ratio: 1;
+        border: 1px solid rgba(245, 239, 223, 0.1);
+        background: rgba(245, 239, 223, 0.04);
+      }
+
+      .mobile-signal-dots .agent {
+        background: rgba(131, 219, 200, 0.58);
+        border-color: rgba(131, 219, 200, 0.4);
+      }
+
+      .mobile-signal-dots .human {
+        background: rgba(230, 168, 58, 0.62);
+        border-color: rgba(230, 168, 58, 0.42);
+      }
+
+      .mobile-signal-dots .overload {
+        background: rgba(223, 98, 66, 0.72);
+        border-color: rgba(223, 98, 66, 0.52);
+      }
+
+      .mobile-signal-dots .owner {
+        background: rgba(167, 255, 79, 0.82);
+        border-color: rgba(167, 255, 79, 0.72);
+      }
+
+      .hero-lede {
+        font-size: 20px;
+        line-height: 1.18;
+        text-wrap: auto;
+      }
+
+      .hero-copy {
+        font-size: 15px;
+        line-height: 1.5;
+      }
+
+      .hero-lede,
+      .hero-copy,
+      .section-copy,
+      .body-copy,
+      .part-card p,
+      .flow-node p,
+      .principle p,
+      .closing-panel p {
+        overflow-wrap: anywhere;
+      }
+
+      .section-title {
+        font-size: clamp(34px, 11vw, 44px);
+        width: min(326px, calc(100vw - 64px));
+        max-width: min(326px, calc(100vw - 64px));
+        text-wrap: auto;
+        overflow-wrap: anywhere;
+      }
+
+      .section-copy {
+        font-size: 17px;
+        width: min(326px, calc(100vw - 64px));
+        max-width: min(326px, calc(100vw - 64px));
+      }
+
+      .body-copy,
+      .closing-panel h2,
+      .closing-panel p,
+      .part-card h3,
+      .flow-node h3 {
+        max-width: min(326px, calc(100vw - 64px));
+        overflow-wrap: anywhere;
+      }
+
+      .agent-year-panel {
+        width: min(326px, calc(100vw - 64px));
+        max-width: min(326px, calc(100vw - 64px));
+        gap: 16px;
+        padding: 16px;
+      }
+
+      .three-part,
+      .flow-board,
+      .principles,
+      .closing-panel {
+        width: min(326px, calc(100vw - 64px));
+        max-width: min(326px, calc(100vw - 64px));
+      }
+
+      .balance-row {
+        grid-template-columns: 64px 1fr 42px;
+        gap: 8px;
+        font-size: 10px;
+      }
+
+      .year-map {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .room-matrix {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .room {
+        min-height: 68px;
+      }
+
+      .room.owner {
+        grid-column: span 2;
+      }
+
+      .flow-node {
+        min-height: auto;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar" aria-label="Site navigation">
+      <div class="topbar-inner">
+        <a class="mark" href="../" aria-label="Back to Samuel page">
+          <span class="mark-symbol">SF</span>
+          <span>Why HAI matters</span>
+        </a>
+        <nav class="nav" aria-label="Page sections">
+          <a href="../../">Home</a>
+          <a href="../">Samuel</a>
+          <a href="../../what_it_is/">Where HAI comes from</a>
+          <a href="../../proof/">Proof</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-inner">
+          <div class="hero-text">
+            <p class="eyebrow">Personal origin</p>
+            <h1 id="hero-title">This year, I spent more time with agents than with people.</h1>
+            <div class="mobile-signal-strip" aria-label="Agent-heavy year visual">
+              <div class="mobile-mini-bars" aria-hidden="true">
+                <div class="mobile-mini-bar">
+                  <span>Agents</span>
+                  <span class="mobile-mini-track"><span class="mobile-mini-fill agent"></span></span>
+                </div>
+                <div class="mobile-mini-bar">
+                  <span>People</span>
+                  <span class="mobile-mini-track"><span class="mobile-mini-fill human"></span></span>
+                </div>
+              </div>
+              <div class="mobile-signal-dots" aria-hidden="true">
+                <i class="agent"></i>
+                <i class="agent"></i>
+                <i class="overload"></i>
+                <i class="agent"></i>
+                <i class="human"></i>
+                <i class="agent"></i>
+                <i class="agent"></i>
+                <i class="overload"></i>
+                <i class="agent"></i>
+                <i></i>
+                <i class="agent"></i>
+                <i class="human"></i>
+                <i class="agent"></i>
+                <i class="overload"></i>
+                <i class="agent"></i>
+                <i class="agent"></i>
+                <i class="human"></i>
+                <i class="owner"></i>
+              </div>
+            </div>
+            <p class="hero-lede">
+              And the strange part is: I loved a lot of it. The speed, the weirdness,
+              the leverage, the feeling that a thought can become a working artifact in minutes.
+            </p>
+            <p class="hero-copy">
+              But this also became a real place I lived in: terminal agents, coding agents,
+              model chats, harnesses, profile systems, partial answers, false done signals,
+              and decisions that still had to be mine. My ADHD brain does not automatically survive that new agentic reality.
+              HAI is the interface I started building so I do not disappear inside the systems I love using.
+            </p>
+            <div class="button-row">
+              <a class="button primary" href="#interface">See the interface answer</a>
+              <a class="button" href="../">Back to Samuel</a>
+            </div>
+          </div>
+
+          <aside class="agent-year-panel" aria-label="This year with agents visualized">
+            <span class="panel-label">2026 / lived interface</span>
+            <div class="time-balance" aria-label="Time balance illustration">
+              <div class="balance-row">
+                <span>Agents</span>
+                <div class="meter" aria-hidden="true"><span class="meter-fill agent"></span></div>
+                <span>Most</span>
+              </div>
+              <div class="balance-row">
+                <span>People</span>
+                <div class="meter" aria-hidden="true"><span class="meter-fill human"></span></div>
+                <span>Less</span>
+              </div>
+            </div>
+
+            <div class="year-map" aria-label="Visual year map: most days are agent-heavy, fewer are human-heavy, one owner decision is highlighted">
+              <span class="day-cell agent"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell overload"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell"></span>
+              <span class="day-cell human"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell overload"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell human"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell overload"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell human"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell overload"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell human"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell overload"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell overload"></span>
+              <span class="day-cell human"></span>
+              <span class="day-cell agent"></span>
+              <span class="day-cell owner"></span>
+            </div>
+            <div class="map-legend" aria-hidden="true">
+              <span><i class="legend-dot agent"></i>agent days</span>
+              <span><i class="legend-dot human"></i>human days</span>
+              <span><i class="legend-dot owner"></i>owner signal</span>
+            </div>
+
+            <div class="room-matrix" aria-label="Agent rooms and human room">
+              <div class="room agent"><span>room</span><strong>Claude Code</strong></div>
+              <div class="room agent"><span>room</span><strong>Codex</strong></div>
+              <div class="room agent"><span>room</span><strong>Hermes</strong></div>
+              <div class="room agent"><span>room</span><strong>profiles</strong></div>
+              <div class="room agent"><span>room</span><strong>harnesses</strong></div>
+              <div class="room human"><span>room</span><strong>humans</strong></div>
+              <div class="room owner"><span>missing room</span><strong>one decision I can still own</strong></div>
+            </div>
+
+            <div class="stream-stack" aria-label="Agent output stream">
+              <div class="stream-line">plan generated</div>
+              <div class="stream-line">artifact created</div>
+              <div class="stream-line">critique returned</div>
+              <div class="stream-line warning">ownership still unresolved</div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="flow-section" aria-labelledby="flow-title">
+        <div class="section-inner">
+          <p class="kicker">Not just a feeling</p>
+          <h2 class="section-title" id="flow-title">The failure is visible when you draw the loop.</h2>
+          <p class="section-copy">
+            The emotional weight comes from an operational shape: many systems can act,
+            but the final responsibility still lands in one human nervous system.
+          </p>
+
+          <div class="flow-board" aria-label="Agent flood to HAI boundary">
+            <article class="flow-node agentic">
+              <span>Agent rooms</span>
+              <h3>Many things move at once.</h3>
+              <div class="output-tags" aria-label="Agent output types">
+                <b>plans</b>
+                <b>patches</b>
+                <b>proof</b>
+                <b>critique</b>
+                <b>new ideas</b>
+                <b>done claims</b>
+              </div>
+            </article>
+            <div class="flow-arrow" aria-hidden="true">→</div>
+            <article class="flow-node bottleneck">
+              <span>ADHD bottleneck</span>
+              <h3>All of it asks to be held.</h3>
+              <p>
+                The cost is not only information. It is deciding what matters, what is real,
+                what is safe, and what should stop.
+              </p>
+            </article>
+            <div class="flow-arrow" aria-hidden="true">→</div>
+            <article class="flow-node hai">
+              <span>HAI boundary</span>
+              <h3>Return to one owner packet.</h3>
+              <p>
+                Scope, evidence, stop rule, next action. Not less agent power:
+                less human disappearance.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="shape-title">
+        <div class="section-inner">
+          <p class="kicker">The pattern</p>
+          <h2 class="section-title" id="shape-title">The problem starts where the work starts feeling alive.</h2>
+          <p class="section-copy">
+            Strong agents do not just answer. They pull. They offer momentum, companionship with the work,
+            fast feedback, strange ideas, and the sense that the machine is thinking beside you.
+            Then they multiply: more threads, more outputs, more promises, more things only I can decide.
+          </p>
+
+          <div class="three-part" aria-label="Pull, cost, need">
+            <article class="part-card">
+              <span>01 / the pull</span>
+              <div>
+                <h3>Agents made the work feel close.</h3>
+                <p>
+                  They made thinking visible. A vague feeling could become a prototype,
+                  a page, a diagram, a test run, or a better question before the energy was gone.
+                </p>
+              </div>
+            </article>
+            <article class="part-card">
+              <span>02 / the cost</span>
+              <div>
+                <h3>The work started occupying my head.</h3>
+                <p>
+                  When agents run in parallel, every output asks for a place in memory.
+                  Plans, critiques, artifacts, warnings, and next steps arrive faster than ownership can settle.
+                </p>
+              </div>
+            </article>
+            <article class="part-card">
+              <span>03 / the need</span>
+              <div>
+                <h3>I needed a way back to one decision.</h3>
+                <p>
+                  HAI is that way back: a boundary between the agentic flood and the human
+                  who still has to say yes, no, stop, park, or do this next.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="ownership" id="interface" aria-labelledby="interface-title">
+        <div class="section-inner split">
+          <div>
+            <p class="kicker">What HAI protects</p>
+            <h2 class="section-title" id="interface-title">The human must not become the hidden runtime.</h2>
+          </div>
+          <div>
+            <p class="body-copy">
+              Without an interface, the human becomes the scheduler, memory layer, verifier, risk owner,
+              product manager, and emergency brake. That is not collaboration. That is invisible operations work.
+            </p>
+            <p class="body-copy">
+              HAI is my attempt to make that work explicit: capture the messy human state, classify the task,
+              bound what an agent may do, require evidence, and return the next decision in a form the human can still hold.
+            </p>
+            <p class="body-copy">
+              For me, this is not theoretical. It is the difference between loving agent work and being consumed by it.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="rules-title">
+        <div class="section-inner split">
+          <div>
+            <p class="kicker">Operational meaning</p>
+            <h2 class="section-title" id="rules-title">This has to become behavior, not branding.</h2>
+          </div>
+          <div class="principles">
+            <article class="principle">
+              <b>Keep the joy</b>
+              <p>HAI should preserve the play and leverage of agent work, not slow it into bureaucracy.</p>
+            </article>
+            <article class="principle">
+              <b>Reduce the flood</b>
+              <p>Raw agent output is not automatically useful. It has to be filtered into owner packets and next actions.</p>
+            </article>
+            <article class="principle">
+              <b>Leave ownership human</b>
+              <p>Scope, risk, irreversible choices, and acceptance stay with the human instead of disappearing into automation.</p>
+            </article>
+            <article class="principle">
+              <b>Make stop possible</b>
+              <p>A good HAI does not only start agents. It makes parking, rejecting, freezing, and verifying normal.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing" id="contact" aria-labelledby="contact-title">
+        <div class="section-inner">
+          <div class="closing-panel">
+            <div>
+              <p class="kicker">Start small</p>
+              <h2 id="contact-title">Bring one workflow where agent work stopped feeling ownable.</h2>
+              <p>
+                Not your whole system. One workflow where agents create output faster than ownership.
+                That is enough to find the first useful Human Agent Interface.
+              </p>
+            </div>
+            <a
+              class="button primary"
+              href="mailto:samuel@human-agent-interface.com?subject=Human%20Agent%20Interface%20conversation"
+            >Bring one workflow</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>Samuel Fleig / Human Agent Interface</span>
+        <span>Built for joy without overload</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
