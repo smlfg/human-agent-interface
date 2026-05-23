@@ -328,6 +328,25 @@
         margin-top: clamp(28px, 5vw, 56px);
       }
 
+      .hero-copy.hero-variant,
+      .hero-text-variant {
+        display: none;
+      }
+
+      html:not([data-hero-variant]) .hero-copy.hero-variant[data-hero-variant="A_control"],
+      html[data-hero-variant="A_control"] .hero-copy.hero-variant[data-hero-variant="A_control"],
+      html[data-hero-variant="B_offer_first"] .hero-copy.hero-variant[data-hero-variant="B_offer_first"],
+      html[data-hero-variant="C_proof_first"] .hero-copy.hero-variant[data-hero-variant="C_proof_first"] {
+        display: grid;
+      }
+
+      html:not([data-hero-variant]) .hero-text-variant[data-hero-variant="A_control"],
+      html[data-hero-variant="A_control"] .hero-text-variant[data-hero-variant="A_control"],
+      html[data-hero-variant="B_offer_first"] .hero-text-variant[data-hero-variant="B_offer_first"],
+      html[data-hero-variant="C_proof_first"] .hero-text-variant[data-hero-variant="C_proof_first"] {
+        display: contents;
+      }
+
       .lead {
         max-width: 720px;
         margin: 0;
@@ -1142,6 +1161,8 @@
             </div>
             <a
               class="nav-cta"
+              data-site-event="hero_cta_click"
+              data-event-target="contact_fit_call_nav"
               href="mailto:samuel@human-agent-interface.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A"
             >Book fit call</a>
           </div>
@@ -1167,14 +1188,30 @@
             </div>
           </div>
 
-          <p class="eyebrow reveal">For people stuck inside agent threads</p>
+          <p class="eyebrow reveal">
+            <span class="hero-text-variant" data-hero-variant="A_control">For people stuck inside agent threads</span>
+            <span class="hero-text-variant" data-hero-variant="B_offer_first">For one messy agent workflow</span>
+            <span class="hero-text-variant" data-hero-variant="C_proof_first">Proof before more agent output</span>
+          </p>
           <h1 class="reveal" id="hero-title">
-            AI work should create momentum.
-            <span class="desktop-break"></span>
-            For most people, it creates confusion.
+            <span class="hero-text-variant" data-hero-variant="A_control">
+              AI work should create momentum.
+              <span class="desktop-break"></span>
+              For most people, it creates confusion.
+            </span>
+            <span class="hero-text-variant" data-hero-variant="B_offer_first">
+              Bring one chaotic agent workflow.
+              <span class="desktop-break"></span>
+              Leave with one concrete next action packet.
+            </span>
+            <span class="hero-text-variant" data-hero-variant="C_proof_first">
+              The problem is not stronger agents.
+              <span class="desktop-break"></span>
+              It is whether the human can still own the work.
+            </span>
           </h1>
 
-          <div class="hero-copy">
+          <div class="hero-copy hero-variant" data-hero-variant="A_control">
             <p class="lead reveal">
               <strong>Human Agent Interface</strong> turns agent chaos into work a human can still own.
             </p>
@@ -1189,10 +1226,44 @@
             <div class="hero-actions reveal">
               <a
                 class="button primary"
+                data-site-event="hero_cta_click"
+                data-event-target="contact_fit_call"
                 href="mailto:samuel@human-agent-interface.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A"
               >Book 20 min HAI fit call</a>
-              <a class="button" href="#choose-path">Choose your path</a>
-              <a class="button" href="./proof/">Proof</a>
+              <a class="button" data-site-event="hero_cta_click" data-event-target="choose_path" href="#choose-path">Choose your path</a>
+              <a class="button" data-site-event="hero_cta_click" data-event-target="proof" href="./proof/">Proof</a>
+            </div>
+          </div>
+
+          <div class="hero-copy hero-variant" data-hero-variant="B_offer_first">
+            <p class="lead reveal">
+              <strong>HAI starts with one workflow you can actually inspect.</strong> Bring the messy agent thread, stalled tool run, or pile of conflicting plans. Leave with a scoped packet: what the agent does, what you decide, and how the work gets verified.
+            </p>
+            <div class="hero-actions reveal">
+              <a
+                class="button primary"
+                data-site-event="hero_cta_click"
+                data-event-target="contact_one_workflow"
+                href="mailto:samuel@human-agent-interface.com?subject=One%20messy%20agent%20workflow&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20bring%20one%20messy%20agent%20workflow%20and%20turn%20it%20into%20a%20clear%20next%20action%20packet.%0D%0A%0D%0AWhat%20is%20currently%20chaotic%3A%0D%0A%0D%0ATools%20involved%3A%0D%0A%0D%0AWhat%20I%20need%20to%20decide%3A%0D%0A%0D%0APreferred%20time%20windows%3A"
+              >Bring one workflow</a>
+              <a class="button" data-site-event="hero_cta_click" data-event-target="product" href="./product/">See product</a>
+              <a class="button" data-site-event="hero_cta_click" data-event-target="fit" href="./fit/">Human fit</a>
+            </div>
+          </div>
+
+          <div class="hero-copy hero-variant" data-hero-variant="C_proof_first">
+            <p class="lead reveal">
+              <strong>HAI is built from real local agent systems, evals, and owner-control artifacts.</strong> The point is not to worship stronger tools. The point is whether the human can still inspect, stop, verify, and own the work.
+            </p>
+            <div class="hero-actions reveal">
+              <a class="button primary" data-site-event="hero_cta_click" data-event-target="proof" href="./proof/">See proof</a>
+              <a
+                class="button"
+                data-site-event="hero_cta_click"
+                data-event-target="contact_fit_call"
+                href="mailto:samuel@human-agent-interface.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A"
+              >Book fit call</a>
+              <a class="button" data-site-event="hero_cta_click" data-event-target="product" href="./product/">See product</a>
             </div>
           </div>
 
@@ -1561,6 +1632,51 @@
     <script>
       document.documentElement.classList.add("js");
 
+      const HERO_EXPERIMENT_ID = "homepage-hero-2026-05-23";
+      const HERO_VARIANTS = ["A_control", "B_offer_first", "C_proof_first"];
+
+      function isHeroVariant(value) {
+        return HERO_VARIANTS.includes(value);
+      }
+
+      function readCookie(name) {
+        const prefix = `${name}=`;
+        return document.cookie
+          .split(";")
+          .map((part) => part.trim())
+          .find((part) => part.startsWith(prefix))
+          ?.slice(prefix.length) || "";
+      }
+
+      function writeHeroVariantCookie(variant) {
+        document.cookie = `haiHeroVariant=${variant}; Max-Age=2592000; Path=/; SameSite=Lax`;
+      }
+
+      function chooseHeroVariant() {
+        const params = new URLSearchParams(window.location.search);
+        const previewVariant = params.get("hero_variant");
+        if (isHeroVariant(previewVariant)) {
+          document.documentElement.dataset.heroVariant = previewVariant;
+          document.documentElement.dataset.heroExperiment = HERO_EXPERIMENT_ID;
+          return { variant: previewVariant, preview: true };
+        }
+
+        let variant = document.documentElement.dataset.heroVariant;
+        if (!isHeroVariant(variant)) {
+          const cookieVariant = readCookie("haiHeroVariant");
+          variant = isHeroVariant(cookieVariant)
+            ? cookieVariant
+            : HERO_VARIANTS[Math.floor(Math.random() * HERO_VARIANTS.length)];
+          writeHeroVariantCookie(variant);
+        }
+
+        document.documentElement.dataset.heroVariant = variant;
+        document.documentElement.dataset.heroExperiment = HERO_EXPERIMENT_ID;
+        return { variant, preview: false };
+      }
+
+      const heroExperiment = chooseHeroVariant();
+
       const storedLang = (() => {
         try {
           return localStorage.getItem("haiLang");
@@ -1592,6 +1708,48 @@
         button.addEventListener("click", () => setLanguage(button.dataset.langToggle, true));
       });
       setLanguage(storedLang || browserLang);
+
+      function viewportClass() {
+        if (window.matchMedia("(max-width: 620px)").matches) return "mobile";
+        if (window.matchMedia("(max-width: 900px)").matches) return "tablet";
+        return "desktop";
+      }
+
+      function sendSiteEvent(event, target = "") {
+        if (heroExperiment.preview) return;
+
+        const payload = JSON.stringify({
+          experiment_id: HERO_EXPERIMENT_ID,
+          variant: heroExperiment.variant,
+          event,
+          target,
+          path: window.location.pathname || "/",
+          language: document.documentElement.lang || "en",
+          viewport_class: viewportClass(),
+        });
+
+        if (navigator.sendBeacon) {
+          const body = new Blob([payload], { type: "application/json" });
+          if (navigator.sendBeacon("/api/site-event", body)) return;
+        }
+
+        fetch("/api/site-event", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: payload,
+          keepalive: true,
+        }).catch(() => {
+          /* Analytics must never block navigation. */
+        });
+      }
+
+      sendSiteEvent("hero_impression");
+
+      document.querySelectorAll("[data-site-event]").forEach((element) => {
+        element.addEventListener("click", () => {
+          sendSiteEvent(element.dataset.siteEvent, element.dataset.eventTarget || "");
+        });
+      });
 
       const canvas = document.getElementById("agentField");
       const ctx = canvas.getContext("2d");
