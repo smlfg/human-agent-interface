@@ -1,13 +1,72 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "human-agent-interface",
+  "main": "src/worker.js",
   "compatibility_date": "2026-05-13",
   "observability": {
     "enabled": true
   },
   "assets": {
-    "directory": "."
+    "directory": ".",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/",
+      "/index.html",
+      "/api/*"
+    ],
+    "exclude": [
+      ".agents/**",
+      ".codex/**",
+      ".dev.vars*",
+      ".env",
+      ".env.*",
+      ".git/**",
+      ".gitignore",
+      ".hermes/**",
+      ".wrangler/**",
+      "_deploy/**",
+      "86ef15d3-*.png",
+      "*.swp",
+      "*.swo",
+      "agentic-feedback/**",
+      "antropic",
+      "assets/incoming/**",
+      "claude",
+      "downloads/**",
+      "HAI_AUDIT_OFFER_V0.md",
+      "HAI_DEVELOPMENT_PACKET.md",
+      "HAI_HANDOFF_TRIPWIRE_MAP.md",
+      "HAI_HANDOFF_TRIPWIRE_MAP_PROMPT.md",
+      "idea",
+      "Idee_greifbar.md",
+      "interviews/**",
+      "Münztelfon/.agents/**",
+      "Münztelfon/.codex/**",
+      "Münztelfon/*.md",
+      "Münztelfon/idea",
+      "node_modules/**",
+      "non-agentic-friends-feedback/**",
+      "Projek-Managment/**",
+      "src/**",
+      "WAS_ICH_MIT_MENSCHEN_BESPRECHEN_MUSS.md",
+      "Worklog1.html",
+      "Worklog1_files/**",
+      "wrangler.jsonc"
+    ]
   },
+  "r2_buckets": [
+    {
+      "binding": "HAI_CLIENT_HANDOFFS",
+      "bucket_name": "hai-client-handoffs",
+      "preview_bucket_name": "hai-client-handoffs-preview"
+    }
+  ],
+  "analytics_engine_datasets": [
+    {
+      "binding": "HAI_SITE_EVENTS",
+      "dataset": "hai_site_events"
+    }
+  ],
   "compatibility_flags": [
     "nodejs_compat"
   ]
