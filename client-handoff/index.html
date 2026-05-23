@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Accepted Case Handoff - Human Agent Interface</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #090a08;
+      --panel: #11120f;
+      --ink: #f7f1df;
+      --muted: #b7ad97;
+      --quiet: #7a715f;
+      --line: rgba(247, 241, 223, 0.16);
+      --line-strong: rgba(247, 241, 223, 0.3);
+      --signal: #a7ff4f;
+      --copper: #ff9f5f;
+      --red: #ff6a5f;
+      --max: 1360px;
+      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+      --body: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
+      --display: Georgia, "Times New Roman", serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: var(--body);
+      line-height: 1.45;
+      overflow-x: hidden;
+    }
+
+    main {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      padding: 34px 0 64px;
+    }
+
+    header {
+      padding: 18px 0 26px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 1040px;
+      margin-top: 12px;
+      font-family: var(--display);
+      font-size: clamp(2.7rem, 7vw, 5.6rem);
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    h1,
+    h2,
+    .lead,
+    .hint,
+    .check {
+      overflow-wrap: anywhere;
+    }
+
+    h2 {
+      font-family: var(--display);
+      font-size: clamp(1.9rem, 4vw, 3.1rem);
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 1rem;
+      letter-spacing: 0;
+    }
+
+    .eyebrow,
+    .limit,
+    .tiny,
+    .back-link {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      color: var(--copper);
+    }
+
+    .lead {
+      max-width: 900px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2vw, 1.28rem);
+    }
+
+    .back-link {
+      display: inline-flex;
+      margin-top: 22px;
+      color: var(--ink);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.58fr);
+      gap: 18px;
+      margin-top: 20px;
+      align-items: start;
+    }
+
+    .panel,
+    .side-panel {
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: rgba(17, 18, 15, 0.84);
+      padding: clamp(18px, 4vw, 34px);
+    }
+
+    .side-panel {
+      position: sticky;
+      top: 18px;
+    }
+
+    .hint {
+      max-width: 860px;
+      margin-top: 10px;
+      color: var(--muted);
+    }
+
+    .field {
+      margin-top: 20px;
+    }
+
+    .field + .field {
+      margin-top: 18px;
+    }
+
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    label,
+    .label {
+      display: block;
+      color: var(--ink);
+      font-weight: 750;
+    }
+
+    .limit,
+    .tiny {
+      color: var(--quiet);
+      white-space: nowrap;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="file"],
+    textarea {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      min-height: 46px;
+      border: 1px solid var(--line);
+      background: #090a08;
+      color: var(--ink);
+      padding: 11px 12px;
+      font: inherit;
+      border-radius: 0;
+    }
+
+    input[type="file"] {
+      padding: 10px;
+      color: var(--muted);
+    }
+
+    textarea {
+      min-height: 104px;
+      resize: vertical;
+    }
+
+    .check {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .check input {
+      margin-top: 4px;
+      accent-color: var(--signal);
+    }
+
+    .submit-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    button {
+      min-height: 46px;
+      border: 1px solid rgba(167, 255, 79, 0.72);
+      background: var(--signal);
+      color: #101208;
+      padding: 0 18px;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.54;
+    }
+
+    .status {
+      min-height: 24px;
+      color: var(--muted);
+    }
+
+    .status.error {
+      color: var(--red);
+    }
+
+    .status.success {
+      color: var(--signal);
+    }
+
+    .rule-list,
+    .example-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .rule-list li,
+    .example-list li {
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+      color: var(--muted);
+    }
+
+    code {
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 0.92em;
+    }
+
+    .danger {
+      margin-top: 18px;
+      border: 1px solid rgba(255, 106, 95, 0.36);
+      background: rgba(255, 106, 95, 0.08);
+      padding: 14px;
+      color: #ffd0cb;
+    }
+
+    @media (max-width: 860px) {
+      main {
+        width: calc(100vw - 24px);
+        max-width: calc(100vw - 24px);
+        padding-top: 22px;
+        overflow-x: hidden;
+      }
+
+      .layout {
+        width: 100%;
+        grid-template-columns: 1fr;
+      }
+
+      .panel,
+      .side-panel,
+      header {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      h1 {
+        font-size: clamp(2.15rem, 9vw, 2.75rem);
+        text-wrap: auto;
+      }
+
+      h2 {
+        font-size: clamp(1.65rem, 7vw, 2.2rem);
+      }
+
+      .side-panel {
+        position: static;
+      }
+
+      .label-row {
+        display: block;
+      }
+
+      .limit {
+        display: block;
+        margin-top: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">Human Agent Interface / Accepted Case Handoff</p>
+      <h1>Upload context.</h1>
+      <p class="lead">
+        This page is for accepted cases only.<br>
+        Upload one Markdown file for Samuel's preparation.
+      </p>
+      <a class="back-link" href="../product/">Back to products</a>
+    </header>
+
+    <div class="layout">
+      <section class="panel" aria-labelledby="upload-title">
+        <p class="eyebrow">Step 3 / Preparation Upload</p>
+        <h2 id="upload-title">One file.<br>Clear consent.<br>No raw agent folder.</h2>
+        <p class="hint">
+          Upload one <code>.md</code> file up to 1 MB.<br>
+          No API keys, passwords, tokens, customer data, or <code>.claude</code> folders.
+        </p>
+
+        <form id="handoffForm" enctype="multipart/form-data">
+          <input type="hidden" name="consentVersion" value="client-handoff-md-v0-2026-05-14">
+
+          <div class="field">
+            <div class="label-row">
+              <label for="caseId">Accepted case ID</label>
+              <span class="limit">from Samuel</span>
+            </div>
+            <input id="caseId" name="caseId" type="text" autocomplete="off" required placeholder="Example: hai-2026-001">
+          </div>
+
+          <div class="field">
+            <div class="label-row">
+              <label for="customerName">Your name</label>
+              <span class="limit">required</span>
+            </div>
+            <input id="customerName" name="customerName" type="text" autocomplete="name" required>
+          </div>
+
+          <div class="field">
+            <div class="label-row">
+              <label for="customerEmail">Email</label>
+              <span class="limit">required</span>
+            </div>
+            <input id="customerEmail" name="customerEmail" type="email" autocomplete="email" required>
+          </div>
+
+          <div class="field">
+            <div class="label-row">
+              <label for="contextNote">Short note</label>
+              <span class="limit">optional</span>
+            </div>
+            <textarea id="contextNote" name="contextNote" placeholder="What should Samuel understand?"></textarea>
+          </div>
+
+          <div class="field">
+            <div class="label-row">
+              <label for="handoffFile">Markdown file</label>
+              <span class="limit">.md only, max 1 MB</span>
+            </div>
+            <input id="handoffFile" name="handoffFile" type="file" accept=".md,text/markdown" required>
+            <p class="tiny" id="fileHint">Accepted examples: CLAUDE.md, AGENTS.md, CLOUD.md, project context, agent setup note, chat or agent-run export.</p>
+          </div>
+
+          <div class="field">
+            <label class="check">
+              <input id="consent" name="consent" type="checkbox" value="yes" required>
+              <span>I confirm that this file is intended for Samuel's preparation work on my accepted HAI case and does not contain API keys, passwords, tokens, raw customer data, or a full agent-system folder.</span>
+            </label>
+          </div>
+
+          <div class="submit-row">
+            <button id="submitButton" type="submit">Upload context</button>
+            <p class="status" id="status" aria-live="polite">Nothing uploaded yet.</p>
+          </div>
+        </form>
+      </section>
+
+      <aside class="side-panel" aria-labelledby="rules-title">
+        <p class="eyebrow">Trust boundary</p>
+        <h2 id="rules-title">What belongs here?</h2>
+        <ul class="example-list">
+          <li><code>CLAUDE.md</code>, <code>AGENTS.md</code>, or a short setup description.</li>
+          <li>A project description or problem-context Markdown file.</li>
+          <li>A reduced export from one chat or agent run.</li>
+        </ul>
+
+        <div class="danger">
+          <h3>Do not upload a full <code>.claude</code> folder.</h3>
+          <p class="hint">
+            Agent folders can contain tokens, private prompts, shell-like logs, internal paths, customer data, tool outputs, or business secrets.
+          </p>
+        </div>
+
+        <ul class="rule-list">
+          <li>A safer project or agent-system import will be a separate HAI Context Bundle later.</li>
+          <li>That bundle needs allowlists, secret scanning, redaction, preview, manifest, consent, and deletion rules.</li>
+          <li>This MVP is intentionally smaller: one file, one accepted case, one preparation purpose.</li>
+        </ul>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const MAX_BYTES = 1024 * 1024;
+    const form = document.getElementById("handoffForm");
+    const fileInput = document.getElementById("handoffFile");
+    const statusEl = document.getElementById("status");
+    const submitButton = document.getElementById("submitButton");
+
+    function setStatus(message, type = "") {
+      statusEl.textContent = message;
+      statusEl.className = `status ${type}`.trim();
+    }
+
+    function validateFile() {
+      const file = fileInput.files[0];
+
+      if (!file) {
+        setStatus("Choose one Markdown file before uploading.");
+        return false;
+      }
+
+      if (!file.name.toLowerCase().endsWith(".md")) {
+        setStatus("Only .md files are accepted in this MVP.", "error");
+        return false;
+      }
+
+      if (file.size <= 0) {
+        setStatus("The selected file is empty.", "error");
+        return false;
+      }
+
+      if (file.size > MAX_BYTES) {
+        setStatus("The selected file is larger than 1 MB.", "error");
+        return false;
+      }
+
+      setStatus(`${file.name} is ready to upload.`);
+      return true;
+    }
+
+    fileInput.addEventListener("change", validateFile);
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (!form.reportValidity() || !validateFile()) return;
+
+      submitButton.disabled = true;
+      setStatus("Uploading context...");
+
+      try {
+        const response = await fetch("/api/client-handoff-upload", {
+          method: "POST",
+          body: new FormData(form),
+        });
+        const payload = await response.json().catch(() => ({}));
+
+        if (!response.ok || !payload.ok) {
+          throw new Error(payload.error || "Upload failed.");
+        }
+
+        setStatus(`Uploaded. Reference: ${payload.uploadId}`, "success");
+        form.reset();
+      } catch (error) {
+        setStatus(error.message || "Upload failed.", "error");
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
