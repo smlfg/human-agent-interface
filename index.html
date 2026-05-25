@@ -131,8 +131,25 @@
         display: inline-flex;
         align-items: center;
         gap: 12px;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         justify-content: flex-end;
+      }
+
+      .lang-copy {
+        display: none;
+      }
+
+      .lang-copy[data-lang-copy="en"] {
+        display: inline;
+      }
+
+      html.lang-de .lang-copy[data-lang-copy="en"] {
+        display: none;
+      }
+
+      html.lang-en .lang-copy[data-lang-copy="en"],
+      html.lang-de .lang-copy[data-lang-copy="de"] {
+        display: inline;
       }
 
       .language-switch {
@@ -1145,16 +1162,24 @@
             <span class="brand-mark">HAI</span>
             <span>Human Agent Interface</span>
           </a>
-          <a class="mobile-samuel-link" href="./samuel/">Samuel's work</a>
+          <a class="mobile-samuel-link" href="./samuel/">
+            <span class="lang-copy" data-lang-copy="en">Samuel</span>
+            <span class="lang-copy" data-lang-copy="de">Samuel</span>
+          </a>
           <div class="nav-actions">
-            <a class="nav-link desktop-nav-link" href="./product/">Products</a>
-            <a class="nav-link desktop-nav-link" href="./proof/">Proof</a>
-            <a class="nav-link desktop-nav-link" href="./sidecar/">Sidecar</a>
-            <a class="nav-link desktop-nav-link" href="./meta-mode/">Meta-Mode</a>
-            <a class="nav-link desktop-nav-link" href="./hermes/">Hermes System</a>
-            <a class="nav-link desktop-nav-link" href="./fit/">Human Fit</a>
-            <a class="nav-link desktop-nav-link" href="./what_it_is/">Where HAI comes from</a>
-            <a class="nav-link desktop-nav-link" href="./samuel/">Samuel's work</a>
+            <a class="nav-link desktop-nav-link" href="./what_it_is/">
+              <span class="lang-copy" data-lang-copy="en">Method</span>
+              <span class="lang-copy" data-lang-copy="de">Methode</span>
+            </a>
+            <a class="nav-link desktop-nav-link" href="./proof/">
+              <span class="lang-copy" data-lang-copy="en">Proof</span>
+              <span class="lang-copy" data-lang-copy="de">Nachweis</span>
+            </a>
+            <a class="nav-link desktop-nav-link" href="./samuel/">Samuel</a>
+            <a class="nav-link desktop-nav-link" href="./product/">
+              <span class="lang-copy" data-lang-copy="en">Offer</span>
+              <span class="lang-copy" data-lang-copy="de">Angebot</span>
+            </a>
             <div class="language-switch" aria-label="Language">
               <button class="lang-button" type="button" data-lang-toggle="de" aria-pressed="false">DE</button>
               <button class="lang-button" type="button" data-lang-toggle="en" aria-pressed="false">EN</button>
@@ -1164,7 +1189,10 @@
               data-site-event="hero_cta_click"
               data-event-target="contact_fit_call_nav"
               href="mailto:samuel@human-agent-interface.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A"
-            >Book fit call</a>
+            >
+              <span class="lang-copy" data-lang-copy="en">Test fit call</span>
+              <span class="lang-copy" data-lang-copy="de">Fit-Call testen</span>
+            </a>
           </div>
         </nav>
 
