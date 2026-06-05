@@ -394,13 +394,19 @@
 
       .access-router {
         width: 100%;
-        max-width: 1040px;
-        margin-top: clamp(28px, 5vw, 54px);
+        max-width: 1120px;
+        margin: 0 auto;
         padding: clamp(18px, 3vw, 28px);
         border: 1px solid rgba(247, 241, 223, 0.2);
-        background: rgba(9, 10, 8, 0.68);
+        background: rgba(13, 14, 11, 0.82);
         backdrop-filter: blur(16px);
         box-shadow: 0 24px 82px rgba(0, 0, 0, 0.22);
+      }
+
+      .router-section {
+        padding-top: clamp(36px, 6vw, 82px);
+        background:
+          linear-gradient(180deg, #090a08 0%, #141511 52%, #191b15 100%);
       }
 
       .router-panel {
@@ -1295,7 +1301,11 @@
             </div>
           </div>
 
-          <div class="access-router reveal" id="choose-path" aria-label="Language and audience router">
+        </div>
+      </section>
+
+      <section class="section router-section" aria-labelledby="choose-path">
+        <div class="access-router reveal" id="choose-path" aria-label="Language and audience router">
             <section class="router-panel" data-lang="en" aria-labelledby="router-title-en">
               <div class="router-head">
                 <div>
@@ -1328,8 +1338,8 @@
                     <span>Adminspace</span>
                   </div>
                   <div class="route-actions">
-                    <a class="button primary" href="mailto:samuel@human-agent-interface.com?subject=Agent-native%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20already%20work%20with%20agents%20and%20want%20to%20scope%20one%20workflow.%0D%0A%0D%0AWhere%20control%20breaks%3A%0D%0A%0D%0ATools%20I%20use%3A%0D%0A%0D%0APreferred%20time%20windows%3A">Bring one agent workflow</a>
-                    <a class="button" href="./product/">See agent-native offers</a>
+                    <a class="button primary" data-site-event="cta_click" data-event-target="router_agent_workflow" href="mailto:samuel@human-agent-interface.com?subject=Agent-native%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20already%20work%20with%20agents%20and%20want%20to%20scope%20one%20workflow.%0D%0A%0D%0AWhere%20control%20breaks%3A%0D%0A%0D%0ATools%20I%20use%3A%0D%0A%0D%0APreferred%20time%20windows%3A">Bring one agent workflow</a>
+                    <a class="button" data-site-event="cta_click" data-event-target="hero_product" href="./product/">See agent-native offers</a>
                   </div>
                 </article>
 
@@ -1347,8 +1357,8 @@
                     <span>Diagnostic</span>
                   </div>
                   <div class="route-actions">
-                    <a class="button" href="mailto:samuel@human-agent-interface.com?subject=HAI%20orientation%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20am%20not%20agent-native%20yet%2C%20but%20I%20want%20to%20understand%20how%20to%20use%20AI%20work%20without%20losing%20control.%0D%0A%0D%0AWhere%20I%20feel%20confused%3A%0D%0A%0D%0AWhat%20I%20want%20to%20decide%20next%3A">Ask for orientation</a>
-                    <a class="button" href="mailto:samuel@human-agent-interface.com?subject=10%20min%20HAI%20diagnostic&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20start%20small%20with%20a%2010%20minute%20Muenztelefon%20diagnostic.%0D%0A%0D%0AMy%20current%20AI%20or%20agent%20confusion%3A">Start small: Muenztelefon diagnostic</a>
+                    <a class="button" data-site-event="cta_click" data-event-target="router_orientation" href="mailto:samuel@human-agent-interface.com?subject=HAI%20orientation%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20am%20not%20agent-native%20yet%2C%20but%20I%20want%20to%20understand%20how%20to%20use%20AI%20work%20without%20losing%20control.%0D%0A%0D%0AWhere%20I%20feel%20confused%3A%0D%0A%0D%0AWhat%20I%20want%20to%20decide%20next%3A">Ask for orientation</a>
+                    <a class="button" data-site-event="cta_click" data-event-target="router_muenztelefon" href="./M%C3%BCnztelfon/">Start small: Muenztelefon diagnostic</a>
                   </div>
                 </article>
               </div>
@@ -1358,10 +1368,10 @@
               <div class="router-head">
                 <div>
                   <p class="eyebrow">Sprache und Einstieg</p>
-                  <h2 id="router-title-de">Starte dort, wo dein Workflow wirklich steht.</h2>
+                  <h2 id="router-title-de">Was ist gerade chaotisch?</h2>
                   <p>
-                    HAI bleibt f&uuml;r agent-native Arbeit gebaut. Wenn du noch nicht dort bist,
-                    bekommst du eine verst&auml;ndlichere Eingangst&uuml;r, aber kein "KI f&uuml;r Anf&auml;nger".
+                    Nicht noch mehr Output. Erst wieder Überblick: Wo kann ich Kontrolle, Überblick oder Vertrauen verlieren?
+                    Und was passiert mit meinem mentalen Modell des Projekts?
                   </p>
                 </div>
                 <div class="language-switch" aria-label="Sprache">
@@ -1372,47 +1382,47 @@
 
               <div class="router-grid">
                 <article class="audience-card is-primary">
-                  <span class="route-label">Kernpfad / agent-native</span>
-                  <h3>Ich arbeite schon mit Agents.</h3>
+                  <span class="route-label">Kernpfad / agentisches Kopfweh</span>
+                  <h3>Ich arbeite schon mit Agents, aber es wird zu viel.</h3>
                   <p>
-                    Du nutzt Claude Code, Codex, Cursor, Hermes, eigene Harnesses oder wiederholte
-                    Agenten-Workflows. Das Problem ist nicht Zugang. Das Problem ist Scope,
-                    Vertrauen, Verifikation, Ownership und wo der Mensch Kontrolle behalten muss.
+                    Es ist zu viel Output, aber keine Entscheidung: Claude Code ist offen, Codex
+                    plant weiter, drei Chats widersprechen sich, und am Ende musst du trotzdem
+                    entscheiden. Agenten dürfen arbeiten, aber sie dürfen mir nicht das Projekt aus der Hand nehmen.
+                    HAI macht daraus: ein kleiner, prüfbarer nächster Schritt.
                   </p>
                   <div class="route-tags" aria-label="Agent-native Themen">
-                    <span>Terminal agents</span>
-                    <span>Verifikation</span>
-                    <span>Human gates</span>
-                    <span>Adminspace</span>
+                    <span>Zu viel Output</span>
+                    <span>Keine Entscheidung</span>
+                    <span>Prüfbarer Schritt</span>
+                    <span>Projekt behalten</span>
                   </div>
                   <div class="route-actions">
-                    <a class="button primary" href="mailto:samuel@human-agent-interface.com?subject=Agent-native%20HAI%20Fit-Call&amp;body=Hallo%20Samuel%2C%0D%0A%0D%0AIch%20arbeite%20schon%20mit%20Agents%20und%20will%20einen%20Workflow%20sauber%20scopen.%0D%0A%0D%0AWo%20Kontrolle%20bricht%3A%0D%0A%0D%0ATools%2C%20die%20ich%20nutze%3A%0D%0A%0D%0AMoegliche%20Zeiten%3A">Einen Agent-Workflow mitbringen</a>
-                    <a class="button" href="./product/">Agent-native Angebote ansehen</a>
+                    <a class="button primary" data-site-event="cta_click" data-event-target="router_agent_workflow" href="mailto:samuel@human-agent-interface.com?subject=Agent-native%20HAI%20Fit-Call&amp;body=Hallo%20Samuel%2C%0D%0A%0D%0AIch%20arbeite%20schon%20mit%20Agents%20und%20will%20einen%20Workflow%20sauber%20scopen.%0D%0A%0D%0AWo%20Kontrolle%20bricht%3A%0D%0A%0D%0ATools%2C%20die%20ich%20nutze%3A%0D%0A%0D%0AMoegliche%20Zeiten%3A">Einen chaotischen Agent-Workflow mitbringen</a>
+                    <a class="button" data-site-event="cta_click" data-event-target="hero_product" href="./product/">Angebote ansehen</a>
                   </div>
                 </article>
 
                 <article class="audience-card">
-                  <span class="route-label">Eingang / non-agentic</span>
-                  <h3>Ich will KI-Arbeit erst kontrollierbar verstehen.</h3>
+                  <span class="route-label">Eingang / erst Orientierung</span>
+                  <h3>Ich will verstehen, was ich an KI abgeben kann, und was nicht.</h3>
                   <p>
-                    Das ist kein Einsteigerkurs. Du brauchst Sprache, Grenzen und eine kleine
-                    Diagnose, damit diffuse KI-Arbeit zu einem klaren n&auml;chsten Schritt wird.
+                    Das ist kein KI-Einsteigerkurs. Es geht darum, Kontrolle, Vertrauen und Grenzen
+                    zu finden, bevor du mehr an Tools oder Agents delegierst. Münztelefon ist für Leute, die nicht lesen wollen oder gerade überfordert sind.
                   </p>
                   <div class="route-tags" aria-label="Non-agentic Einstiegsthemen">
-                    <span>Orientierung</span>
-                    <span>Vertrauen</span>
+                    <span>Was abgeben?</span>
+                    <span>Was behalten?</span>
+                    <span>Was entscheiden?</span>
                     <span>Grenzen</span>
-                    <span>Diagnose</span>
                   </div>
                   <div class="route-actions">
-                    <a class="button" href="mailto:samuel@human-agent-interface.com?subject=HAI%20Orientierung&amp;body=Hallo%20Samuel%2C%0D%0A%0D%0AIch%20bin%20noch%20nicht%20agent-native%2C%20will%20aber%20KI-Arbeit%20nutzen%2C%20ohne%20Kontrolle%20zu%20verlieren.%0D%0A%0D%0AWo%20ich%20gerade%20unsicher%20bin%3A%0D%0A%0D%0AWas%20ich%20als%20naechstes%20entscheiden%20will%3A">Orientierung anfragen</a>
-                    <a class="button" href="mailto:samuel@human-agent-interface.com?subject=10%20min%20HAI%20Diagnose&amp;body=Hallo%20Samuel%2C%0D%0A%0D%0AIch%20will%20klein%20starten%20mit%20einer%2010%20Minuten%20Muenztelefon-Diagnose.%0D%0A%0D%0AMeine%20aktuelle%20KI-%20oder%20Agenten-Verwirrung%3A">Klein starten: M&uuml;nztelefon-Diagnose</a>
+                    <a class="button" data-site-event="cta_click" data-event-target="router_orientation" href="mailto:samuel@human-agent-interface.com?subject=HAI%20Orientierung&amp;body=Hallo%20Samuel%2C%0D%0A%0D%0AIch%20bin%20noch%20nicht%20agent-native%2C%20will%20aber%20KI-Arbeit%20nutzen%2C%20ohne%20Kontrolle%20zu%20verlieren.%0D%0A%0D%0AWo%20ich%20gerade%20unsicher%20bin%3A%0D%0A%0D%0AWas%20ich%20als%20naechstes%20entscheiden%20will%3A">Orientierung anfragen</a>
+                    <a class="button" data-site-event="cta_click" data-event-target="router_muenztelefon" href="./M%C3%BCnztelfon/">Keine Lust zu lesen: Münztelefon starten</a>
                   </div>
                 </article>
               </div>
             </section>
           </div>
-        </div>
       </section>
 
       <section class="section" aria-labelledby="confusion-title">
