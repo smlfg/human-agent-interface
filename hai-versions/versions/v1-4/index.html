@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HAI V1.4</title>
+  <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body data-version="v1-4">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="../../"><span class="brand-mark">HAI</span><span>Version Dossier</span></a>
+      <nav class="nav" aria-label="Version Navigation">
+        <a href="../../">Index</a>
+        <a data-prev href="../v1-3/">Zurueck</a>
+        <a data-next-link href="../v1-5/">Weiter</a>
+      </nav>
+    </div>
+  </header>
+  <main class="shell version-site">
+    <section class="version-hero">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow" data-version-number></p>
+          <h1 data-version-title></h1>
+          <p class="lead" data-version-one-line></p>
+        </div>
+        <aside class="hero-card">
+          <span class="status" data-version-status></span>
+          <p data-background></p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section ascii-section" aria-labelledby="ascii-title">
+      <article class="panel ascii-panel">
+        <div class="ascii-head">
+          <p class="label">Owner-Loop</p>
+          <h2 id="ascii-title">ASCII-Art dieser Version</h2>
+        </div>
+        <div class="ascii-visual-grid">
+          <pre class="ascii-art" data-ascii-art aria-label="HAI Owner-Loop ASCII-Art"></pre>
+          <figure class="ai-key-visual" data-ai-visual aria-label="Erklaerendes Architektur-Visual dieser Version"></figure>
+        </div>
+      </article>
+    </section>
+
+    <section class="section version-story" aria-labelledby="story-title">
+      <article class="panel story-panel">
+        <p class="label">Version Story</p>
+        <h2 id="story-title" data-story-title></h2>
+        <p class="story-lead" data-story-lead></p>
+        <div class="story-grid">
+          <div>
+            <h3>Vorher</h3>
+            <p data-story-before></p>
+          </div>
+          <div>
+            <h3>Nachher</h3>
+            <p data-story-after></p>
+          </div>
+          <div>
+            <h3>Owner-Frage</h3>
+            <p data-owner-question></p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="section product-profile" aria-labelledby="profile-title">
+      <article class="panel profile-panel">
+        <div class="profile-kicker">
+          <p class="label">Agenten-Steckbrief</p>
+          <span class="profile-badge" data-agent-role></span>
+        </div>
+        <h2 id="profile-title">Systematik, mentales Modell, Versions-Diff</h2>
+        <p class="profile-lead" data-product-positioning></p>
+        <div class="profile-grid">
+          <section class="profile-card profile-card-wide">
+            <h3>Systematik</h3>
+            <div class="system-stack">
+              <div>
+                <h4>Inputs</h4>
+                <div data-system-inputs></div>
+              </div>
+              <div>
+                <h4>Prozesslogik</h4>
+                <p data-system-process></p>
+              </div>
+              <div>
+                <h4>Outputs</h4>
+                <div data-system-outputs></div>
+              </div>
+            </div>
+          </section>
+          <section class="profile-card">
+            <h3>Mentales Nutzermodell</h3>
+            <p data-mental-model></p>
+          </section>
+          <section class="profile-card">
+            <h3>Änderungen</h3>
+            <div data-version-changes></div>
+          </section>
+          <section class="profile-card">
+            <h3>Neue Funktionen / Skills</h3>
+            <div data-version-functions></div>
+          </section>
+          <section class="profile-card profile-card-wide">
+            <h3>Grenzen & Governance</h3>
+            <p data-profile-governance></p>
+          </section>
+        </div>
+      </article>
+    </section>
+
+    <section class="section">
+      <div class="dossier-grid">
+        <article class="panel">
+          <h3>Skillstand</h3>
+          <div data-skillstand></div>
+        </article>
+        <article class="panel">
+          <h3>Skill-Pipeline</h3>
+          <div class="pipeline" data-skill-chain></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="evidence-grid">
+        <article class="patch-cell stand"><h3>Stand</h3><p data-stand></p></article>
+        <article class="patch-cell problem"><h3>Problem</h3><p data-problem></p></article>
+        <article class="patch-cell proposal"><h3>Verbesserungsvorschlag</h3><p data-proposal></p></article>
+        <article class="patch-cell implementation"><h3>Umsetzung</h3><p data-implementation></p></article>
+        <article class="patch-cell test"><h3>Test</h3><p data-test></p></article>
+        <article class="patch-cell validation"><h3>Validierung</h3><p data-validation-text></p></article>
+        <article class="patch-cell method"><h3>Methodischer Fokus</h3><p data-method></p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="two-column">
+        <article class="mini-card good">
+          <h3>Gut</h3>
+          <div data-good></div>
+        </article>
+        <article class="mini-card bad">
+          <h3>Schlecht</h3>
+          <div data-weak></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="dossier-grid">
+        <article class="panel next-jump">
+          <h3>Geplanter naechster Sprung</h3>
+          <p data-next></p>
+        </article>
+        <article class="panel">
+          <h3>Proof Strip</h3>
+          <div class="proof-strip" data-proof></div>
+          <div class="source-list" data-sources></div>
+        </article>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">Lokaler Review-Prototyp. Noch nicht Teil des Produktrepos.</footer>
+  <script src="../../assets/app.js"></script>
+</body>
+</html>

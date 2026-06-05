@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HAI Versionspfad</title>
+  <meta name="description" content="Lokaler visueller Explainer fuer die HAI-Versionen V1.0 bis V1.6.">
+  <link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="./" aria-label="HAI Versionspfad">
+        <span class="brand-mark">HAI</span>
+        <span>Version Dossiers</span>
+      </a>
+      <nav class="nav" aria-label="Navigation">
+        <a href="#evolution">Evolution</a>
+        <a href="#matrix">Matrix</a>
+        <a href="./versions/v1-6/">V1.6</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="intro-board" aria-labelledby="page-title">
+      <div class="intro-copy">
+        <p class="eyebrow">Lokaler Review-Prototyp</p>
+        <h1 id="page-title">HAI Versionspfad</h1>
+        <p class="lead">
+          Der Pfad zeigt, wie HAI von Projekt-Verstehen zu kontrollierter
+          Ausfuehrung, sinnvollen Stops, engem Repair und begrenztem Pair-Modus gewachsen ist.
+        </p>
+      </div>
+      <div class="current-state" aria-label="Aktueller Stand">
+        <span class="status">V1.6: Pair-Modus Patchlinie</span>
+        <p>Zwei unabhaengige Lanes sind erlaubt, aber nur mit Scope-Beweis, Worktree-Isolation und Join nach Validator-ACCEPT.</p>
+      </div>
+    </section>
+
+    <section class="section" id="evolution">
+      <div class="section-head">
+        <div>
+          <p class="label">Evolution Board</p>
+          <h2>Sieben Stufen, eine Prozesslinie.</h2>
+        </div>
+        <p class="section-note">
+          Jede Version beantwortet denselben Dossier-Satz: Skillstand,
+          Bruchstelle, Aenderung, Validierung und naechster Sprung.
+        </p>
+      </div>
+      <div class="process-line" data-evolution></div>
+    </section>
+
+    <section class="section" id="matrix">
+      <div class="section-head">
+        <div>
+          <p class="label">Vergleichsmatrix</p>
+          <h2>Was pro Version besser wurde.</h2>
+        </div>
+        <p class="section-note">
+          Die Matrix ist absichtlich grob: sie zeigt die Reife der HAI-Faehigkeit,
+          nicht interne Changelog-Details.
+        </p>
+      </div>
+      <div class="matrix-wrap">
+        <table class="comparison-matrix" data-matrix>
+          <caption>HAI Faehigkeiten von V1.0 bis V1.6</caption>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    Lokaler Prototyp: /home/smlflg/Projekte/HAI/hai-version-explainers
+  </footer>
+
+  <script src="./assets/app.js"></script>
+</body>
+</html>
