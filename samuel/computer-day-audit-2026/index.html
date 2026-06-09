@@ -1,0 +1,1208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Computer Day Audit 2026</title>
+  <script src="data/activity-2026.js"></script>
+  <style>
+    :root {
+      --paper: #f8f7f2;
+      --ink: #151512;
+      --muted: #67645d;
+      --line: #d9d3c4;
+      --panel: #ffffff;
+      --panel-2: #efebe1;
+      --green: #10a66a;
+      --green-dark: #086b46;
+      --amber: #d58a00;
+      --red: #c84b31;
+      --cyan: #1596a3;
+      --codex: #315fdc;
+      --claude: #b6532d;
+      --opencode: #087f5b;
+      --black: #0e0f0c;
+      --cell: 13px;
+      --row-h: 22px;
+      font-family: ui-sans-serif, "Aptos", "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(90deg, rgba(21, 21, 18, 0.035) 1px, transparent 1px),
+        linear-gradient(rgba(21, 21, 18, 0.035) 1px, transparent 1px),
+        var(--paper);
+      background-size: 24px 24px;
+      color: var(--ink);
+      min-width: 320px;
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    .shell {
+      width: min(1760px, calc(100vw - 28px));
+      margin: 0 auto;
+      padding: 18px 0 32px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: end;
+      border-bottom: 2px solid var(--black);
+      padding-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 4vw, 4.8rem);
+      line-height: 0.9;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin-top: 10px;
+      max-width: 900px;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.45;
+    }
+
+    .stamp {
+      justify-self: end;
+      min-width: 240px;
+      border: 2px solid var(--black);
+      background: var(--panel);
+      padding: 12px;
+      text-align: right;
+      box-shadow: 5px 5px 0 var(--black);
+    }
+
+    .stamp strong {
+      display: block;
+      font-size: 1.55rem;
+      line-height: 1;
+    }
+
+    .stamp span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(112px, 1fr));
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.84);
+      padding: 12px;
+      min-height: 84px;
+    }
+
+    .metric label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .metric b {
+      display: block;
+      margin-top: 8px;
+      font-size: clamp(1.4rem, 2.4vw, 2.5rem);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 0;
+      margin-bottom: 14px;
+    }
+
+    .control {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+    }
+
+    .control span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .control select,
+    .control input {
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .control input {
+      width: 190px;
+    }
+
+    .source-toggle {
+      gap: 6px;
+      padding-right: 12px;
+    }
+
+    .source-toggle input {
+      width: auto;
+      accent-color: var(--black);
+    }
+
+    .source-dot {
+      width: 9px;
+      height: 9px;
+      display: inline-block;
+      background: var(--dot);
+      border: 1px solid rgba(14, 15, 12, 0.35);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 390px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .visual-column,
+    .detail-column {
+      min-width: 0;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 18px 0 8px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.38rem;
+      letter-spacing: 0;
+    }
+
+    .section-title span {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .timeline-wrap,
+    .market-panel,
+    .detail-panel,
+    .rank-panel {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .timeline-wrap {
+      overflow: auto;
+      position: relative;
+      max-height: calc(100vh - 252px);
+      min-height: 420px;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: 174px repeat(var(--day-count), var(--cell));
+      min-width: max-content;
+      background: var(--panel);
+    }
+
+    .corner,
+    .month-cell,
+    .axis-label,
+    .row-label,
+    .cell,
+    .hermes-cell,
+    .total-cell {
+      border-right: 1px solid rgba(21, 21, 18, 0.08);
+      border-bottom: 1px solid rgba(21, 21, 18, 0.08);
+    }
+
+    .corner {
+      position: sticky;
+      left: 0;
+      z-index: 6;
+      background: var(--black);
+      color: #fff;
+      padding: 8px 10px;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .month-cell {
+      height: 30px;
+      background: var(--black);
+      color: #fff;
+      font-size: 0.69rem;
+      line-height: 30px;
+      text-align: center;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .axis-label,
+    .row-label {
+      position: sticky;
+      left: 0;
+      z-index: 5;
+      height: var(--row-h);
+      background: #fbfaf6;
+      padding: 3px 8px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      border-right: 2px solid var(--black);
+      white-space: nowrap;
+    }
+
+    .axis-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      background: #eee8db;
+    }
+
+    .row-label {
+      font-size: 0.82rem;
+    }
+
+    .row-label .rank {
+      color: var(--muted);
+      font-size: 0.72rem;
+      width: 24px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .row-label .name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    .row-label .rank-agents {
+      margin-left: auto;
+      display: flex;
+      gap: 3px;
+      max-width: 48px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .row-label .source-badge {
+      width: 8px;
+      height: 8px;
+      margin: 0;
+      gap: 0;
+      font-size: 0;
+    }
+
+    .row-label .source-badge::before {
+      width: 8px;
+      height: 8px;
+    }
+
+    .cell,
+    .hermes-cell,
+    .agent-cell,
+    .total-cell {
+      width: var(--cell);
+      height: var(--row-h);
+      cursor: crosshair;
+      transition: transform 120ms ease, outline-color 120ms ease;
+    }
+
+    .cell:hover,
+    .hermes-cell:hover,
+    .agent-cell:hover,
+    .total-cell:hover {
+      outline: 2px solid var(--black);
+      outline-offset: -2px;
+      transform: scale(1.12);
+      z-index: 10;
+    }
+
+    .axis-row {
+      display: contents;
+    }
+
+    .project-row {
+      display: contents;
+    }
+
+    .selected-cell {
+      outline: 2px solid var(--black);
+      outline-offset: -2px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin: 10px 0 0;
+    }
+
+    .ramp {
+      display: inline-grid;
+      grid-template-columns: repeat(7, 24px);
+      height: 12px;
+      border: 1px solid var(--line);
+    }
+
+    .ramp span {
+      display: block;
+    }
+
+    .detail-column {
+      position: sticky;
+      top: 12px;
+    }
+
+    .detail-panel,
+    .market-panel,
+    .rank-panel {
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .detail-panel h2,
+    .market-panel h2,
+    .rank-panel h2 {
+      margin: 0 0 10px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.26rem;
+    }
+
+    .day-readout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .mini-stat {
+      background: var(--panel-2);
+      padding: 9px;
+      min-height: 58px;
+    }
+
+    .mini-stat span {
+      color: var(--muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .mini-stat b {
+      display: block;
+      margin-top: 5px;
+      font-size: 1.35rem;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .agent-breakdown {
+      display: grid;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .agent-row {
+      display: grid;
+      grid-template-columns: 78px 1fr auto;
+      gap: 8px;
+      align-items: center;
+      font-size: 0.82rem;
+    }
+
+    .agent-track {
+      height: 8px;
+      background: rgba(21, 21, 18, 0.08);
+      overflow: hidden;
+    }
+
+    .agent-fill {
+      height: 100%;
+      width: var(--w);
+      background: var(--source-color);
+    }
+
+    .session-list {
+      display: grid;
+      gap: 6px;
+      margin-top: 12px;
+      max-height: 245px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .session-item {
+      border-top: 1px solid var(--line);
+      padding-top: 7px;
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: start;
+      font-size: 0.78rem;
+    }
+
+    .session-item strong {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .session-item small {
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .session-item > small {
+      max-width: 66px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .source-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-right: 4px;
+      color: var(--ink);
+      font-size: 0.68rem;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .source-badge::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      background: var(--source-color);
+      border: 1px solid rgba(14, 15, 12, 0.25);
+    }
+
+    .tile-agents,
+    .rank-agents {
+      margin-top: 7px;
+      min-height: 12px;
+    }
+
+    .rank-item .rank-agents .source-badge {
+      width: auto;
+      height: auto;
+      font-size: 0.68rem;
+      gap: 4px;
+      margin-right: 4px;
+    }
+
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .market-tile {
+      border: 1px solid rgba(21, 21, 18, 0.14);
+      min-height: 70px;
+      padding: 9px;
+      background: var(--panel-2);
+      overflow: hidden;
+    }
+
+    .market-tile strong {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 0.88rem;
+    }
+
+    .market-tile span {
+      display: block;
+      margin-top: 8px;
+      font-size: 1.42rem;
+      line-height: 1;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .rank-list {
+      display: grid;
+      gap: 7px;
+      max-height: 360px;
+      overflow: auto;
+    }
+
+    .rank-item {
+      display: grid;
+      grid-template-columns: 30px 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+    }
+
+    .rank-item:hover {
+      color: var(--green-dark);
+    }
+
+    .rank-item .bar {
+      height: 7px;
+      margin-top: 5px;
+      background: linear-gradient(90deg, var(--green), var(--amber));
+      transform-origin: left;
+    }
+
+    .rank-item small {
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tooltip {
+      position: fixed;
+      pointer-events: none;
+      z-index: 50;
+      display: none;
+      background: var(--black);
+      color: #fff;
+      padding: 8px 9px;
+      max-width: 280px;
+      font-size: 0.78rem;
+      line-height: 1.35;
+      box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.22);
+    }
+
+    .notice {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 1120px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-column {
+        position: static;
+      }
+
+      .metrics {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(100vw - 16px, 1760px);
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .stamp {
+        justify-self: stretch;
+        text-align: left;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline {
+        grid-template-columns: 136px repeat(var(--day-count), 12px);
+      }
+
+      :root {
+        --cell: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <h1>Computer Day Audit 2026</h1>
+        <p class="subtitle">Visible file changes by project, day by day. Dot paths are excluded from file counts. Hermes, Codex, Claude Code, and OpenCode are metadata-only activity layers.</p>
+      </div>
+      <aside class="stamp">
+        <strong id="rangeStamp">2026</strong>
+        <span id="generatedStamp"></span>
+      </aside>
+    </header>
+
+    <section class="metrics" aria-label="Summary metrics">
+      <div class="metric"><label>Visible project files</label><b id="metricProjectFiles">0</b></div>
+      <div class="metric"><label>Active projects</label><b id="metricProjects">0</b></div>
+      <div class="metric"><label>Active days</label><b id="metricDays">0</b></div>
+      <div class="metric"><label>Hermes sessions</label><b id="metricHermes">0</b></div>
+      <div class="metric"><label>Agent sessions</label><b id="metricAgents">0</b></div>
+      <div class="metric"><label>Codex sessions</label><b id="metricCodex">0</b></div>
+      <div class="metric"><label>Claude sessions</label><b id="metricClaude">0</b></div>
+      <div class="metric"><label>OpenCode sessions</label><b id="metricOpenCode">0</b></div>
+      <div class="metric"><label>Current terminals</label><b id="metricTerminals">0</b></div>
+    </section>
+
+    <section class="toolbar" aria-label="Display controls">
+      <label class="control"><span>Rows</span><select id="rowLimit"><option value="25">Top 25</option><option value="50">Top 50</option><option value="100">Top 100</option><option value="all">All</option></select></label>
+      <label class="control"><span>Search</span><input id="projectSearch" type="search" placeholder="Project name"></label>
+      <label class="control"><span>Scale</span><select id="scaleMode"><option value="sqrt">Market sqrt</option><option value="linear">Linear</option></select></label>
+      <label class="control source-toggle"><input type="checkbox" data-source-toggle="files" checked><i class="source-dot" style="--dot: var(--green)"></i><span>Files</span></label>
+      <label class="control source-toggle"><input type="checkbox" data-source-toggle="hermes" checked><i class="source-dot" style="--dot: var(--cyan)"></i><span>Hermes</span></label>
+      <label class="control source-toggle"><input type="checkbox" data-source-toggle="codex" checked><i class="source-dot" style="--dot: var(--codex)"></i><span>Codex</span></label>
+      <label class="control source-toggle"><input type="checkbox" data-source-toggle="claude" checked><i class="source-dot" style="--dot: var(--claude)"></i><span>Claude</span></label>
+      <label class="control source-toggle"><input type="checkbox" data-source-toggle="opencode" checked><i class="source-dot" style="--dot: var(--opencode)"></i><span>OpenCode</span></label>
+      <button class="control" id="latestButton" type="button"><span>Jump</span> Latest active day</button>
+    </section>
+
+    <section class="layout">
+      <div class="visual-column">
+        <div class="section-title">
+          <h2>Project Timeline</h2>
+          <span id="timelineCaption"></span>
+        </div>
+        <div class="timeline-wrap" id="timelineWrap">
+          <div class="timeline" id="timeline"></div>
+        </div>
+        <div class="legend">
+          <span>Files per project/day</span>
+          <span class="ramp" id="legendRamp"></span>
+          <span>Hermes tape uses cyan/orange intensity</span>
+        </div>
+        <p class="notice" id="methodNotice"></p>
+      </div>
+
+      <aside class="detail-column">
+        <section class="detail-panel">
+          <h2 id="selectedDate">Select a day</h2>
+          <div class="day-readout">
+            <div class="mini-stat"><span>Project files</span><b id="dayFiles">0</b></div>
+            <div class="mini-stat"><span>Hermes sessions</span><b id="dayHermes">0</b></div>
+            <div class="mini-stat"><span>Codex</span><b id="dayCodex">0</b></div>
+            <div class="mini-stat"><span>Claude</span><b id="dayClaude">0</b></div>
+            <div class="mini-stat"><span>OpenCode</span><b id="dayOpenCode">0</b></div>
+            <div class="mini-stat"><span>Agent events</span><b id="dayAgentEvents">0</b></div>
+          </div>
+          <div class="agent-breakdown" id="agentBreakdown"></div>
+          <div class="session-list" id="sessionList"></div>
+        </section>
+
+        <section class="market-panel">
+          <h2>Day Market Map</h2>
+          <div class="market-grid" id="marketGrid"></div>
+        </section>
+
+        <section class="rank-panel">
+          <h2>Project Leaders</h2>
+          <div class="rank-list" id="rankList"></div>
+        </section>
+      </aside>
+    </section>
+  </main>
+  <div class="tooltip" id="tooltip"></div>
+
+  <script>
+    const data = window.ACTIVITY_2026_DATA;
+    const dayByDate = new Map(data.days.map((day) => [day.date, day]));
+    const agentSources = ["codex", "claude", "opencode"];
+    const nonProjectBuckets = ["unknown", "home", "hermes", "codex", "claude", "opencode"];
+    const sourceConfig = {
+      codex: { label: "Codex", rgb: [49, 95, 220], css: "var(--codex)" },
+      claude: { label: "Claude", rgb: [182, 83, 45], css: "var(--claude)" },
+      opencode: { label: "OpenCode", rgb: [8, 127, 91], css: "var(--opencode)" },
+    };
+    let selectedDate = data.days[data.days.length - 1].date;
+
+    const fmt = new Intl.NumberFormat("en-US");
+    const compactFmt = new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 });
+    const moneyFmt = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 });
+    const timeline = document.getElementById("timeline");
+    const rowLimit = document.getElementById("rowLimit");
+    const projectSearch = document.getElementById("projectSearch");
+    const scaleMode = document.getElementById("scaleMode");
+    const tooltip = document.getElementById("tooltip");
+
+    function sum(values) {
+      return values.reduce((acc, value) => acc + value, 0);
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function sourceEnabled(source) {
+      const input = document.querySelector(`[data-source-toggle="${source}"]`);
+      return !input || input.checked;
+    }
+
+    function rgba(source, alpha) {
+      const [r, g, b] = sourceConfig[source].rgb;
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    function agentStats(day, source) {
+      return day.agents?.[source] || {};
+    }
+
+    function agentActivityValue(stats) {
+      return (stats.events || 0) + (stats.usage_events || 0) + (stats.subagents || 0);
+    }
+
+    function agentSessionTotal(day) {
+      return agentSources.reduce((acc, source) => acc + (agentStats(day, source).sessions || 0), 0);
+    }
+
+    function agentEventTotal(day) {
+      return agentSources.reduce((acc, source) => acc + agentActivityValue(agentStats(day, source)), 0);
+    }
+
+    const agentSourceMax = Object.fromEntries(agentSources.map((source) => [
+      source,
+      Math.max(1, ...data.days.map((day) => agentActivityValue(agentStats(day, source)))),
+    ]));
+
+    function projectIntensity(count) {
+      if (!sourceEnabled("files") || !count) return "rgba(21, 21, 18, 0.035)";
+      const max = Math.max(1, data.scale.max_project_cell);
+      const raw = scaleMode.value === "linear" ? count / max : Math.sqrt(count) / Math.sqrt(max);
+      const t = clamp(raw, 0.08, 1);
+      if (t < 0.38) return `rgba(16, 166, 106, ${0.18 + t * 0.75})`;
+      if (t < 0.72) return `rgba(213, 138, 0, ${0.18 + t * 0.78})`;
+      return `rgba(200, 75, 49, ${0.20 + t * 0.78})`;
+    }
+
+    function hermesIntensity(day) {
+      const sessions = day.hermes.sessions || 0;
+      if (!sourceEnabled("hermes") || !sessions) return "rgba(21, 21, 18, 0.035)";
+      const t = Math.sqrt(sessions) / Math.sqrt(Math.max(1, data.scale.max_hermes_sessions));
+      return `rgba(21, 150, 163, ${0.16 + t * 0.84})`;
+    }
+
+    function totalIntensity(day) {
+      const total = day.visible_projects_total || 0;
+      if (!sourceEnabled("files") || !total) return "rgba(21, 21, 18, 0.035)";
+      const t = Math.sqrt(total) / Math.sqrt(Math.max(1, data.scale.max_project_total));
+      return `rgba(213, 138, 0, ${0.16 + t * 0.76})`;
+    }
+
+    function agentIntensity(day, source) {
+      if (!sourceEnabled(source)) return "rgba(21, 21, 18, 0.035)";
+      const value = agentActivityValue(agentStats(day, source));
+      if (!value) return "rgba(21, 21, 18, 0.035)";
+      const max = agentSourceMax[source];
+      const raw = scaleMode.value === "linear" ? value / max : Math.sqrt(value) / Math.sqrt(max);
+      const t = clamp(raw, 0.08, 1);
+      return rgba(source, 0.16 + t * 0.82);
+    }
+
+    function projectAgentCounts(day, projectName) {
+      return agentSources
+        .map((source) => ({ source, count: agentStats(day, source).projects?.[projectName] || 0 }))
+        .filter((item) => sourceEnabled(item.source) && item.count > 0);
+    }
+
+    function agentBadges(items) {
+      return items.map((item) => {
+        const config = sourceConfig[item.source];
+        return `<span class="source-badge" style="--source-color:${config.css}">${config.label} ${fmt.format(item.count)}</span>`;
+      }).join("");
+    }
+
+    function applyAgentStripes(cell, items) {
+      if (!items.length) {
+        cell.style.boxShadow = "";
+        return;
+      }
+      cell.style.boxShadow = items
+        .slice(0, 3)
+        .map((item, index) => `inset 0 -${4 + index * 3}px 0 ${rgba(item.source, 0.95)}`)
+        .join(", ");
+    }
+
+    function visibleProjects() {
+      const limit = rowLimit.value === "all" ? Infinity : Number(rowLimit.value);
+      const query = projectSearch.value.trim().toLowerCase();
+      return data.projects
+        .filter((project) => !query || project.name.toLowerCase().includes(query))
+        .slice(0, limit);
+    }
+
+    function projectMarketEntries(day) {
+      const entries = new Map();
+      Object.entries(day.projects).forEach(([name, files]) => {
+        entries.set(name, { name, files, agents: [] });
+      });
+      agentSources.forEach((source) => {
+        if (!sourceEnabled(source)) return;
+        Object.entries(agentStats(day, source).projects || {}).forEach(([name, count]) => {
+          if (nonProjectBuckets.includes(name)) return;
+          const entry = entries.get(name) || { name, files: 0, agents: [] };
+          entry.agents.push({ source, count });
+          entries.set(name, entry);
+        });
+      });
+      return [...entries.values()].sort((a, b) => {
+        const agentA = sum(a.agents.map((item) => item.count));
+        const agentB = sum(b.agents.map((item) => item.count));
+        return b.files - a.files || agentB - agentA || a.name.localeCompare(b.name);
+      });
+    }
+
+    function monthLabelFor(index) {
+      const day = data.days[index];
+      if (index === 0) return day.month;
+      const prev = data.days[index - 1];
+      return day.month !== prev.month ? day.month : "";
+    }
+
+    function setTooltip(event, html) {
+      tooltip.innerHTML = html;
+      tooltip.style.display = "block";
+      const pad = 14;
+      tooltip.style.left = `${Math.min(window.innerWidth - 300, event.clientX + pad)}px`;
+      tooltip.style.top = `${Math.min(window.innerHeight - 140, event.clientY + pad)}px`;
+    }
+
+    function hideTooltip() {
+      tooltip.style.display = "none";
+    }
+
+    function selectDay(date) {
+      selectedDate = date;
+      document.querySelectorAll(".selected-cell").forEach((node) => node.classList.remove("selected-cell"));
+      document.querySelectorAll(`[data-date="${date}"]`).forEach((node) => node.classList.add("selected-cell"));
+      renderDetails();
+    }
+
+    function renderTimeline() {
+      const projects = visibleProjects();
+      document.documentElement.style.setProperty("--day-count", data.days.length);
+      timeline.innerHTML = "";
+
+      const corner = document.createElement("div");
+      corner.className = "corner";
+      corner.textContent = "Project / Day";
+      timeline.appendChild(corner);
+
+      data.days.forEach((day, index) => {
+        const cell = document.createElement("div");
+        cell.className = "month-cell";
+        cell.textContent = monthLabelFor(index);
+        cell.title = day.date;
+        timeline.appendChild(cell);
+      });
+
+      if (sourceEnabled("hermes")) appendAxisRow("Hermes sessions", "hermes");
+      agentSources.forEach((source) => {
+        if (sourceEnabled(source)) appendAgentAxisRow(source);
+      });
+      if (sourceEnabled("files")) appendAxisRow("Project files", "total");
+
+      projects.forEach((project) => {
+        const label = document.createElement("div");
+        label.className = "row-label";
+        const projectAgents = agentSources
+          .map((source) => ({ source, count: project.agent_activity?.[source] || 0 }))
+          .filter((item) => item.count > 0);
+        label.innerHTML = `<span class="rank">${project.rank}</span><span class="name">${escapeHtml(project.name)}</span>`;
+        if (projectAgents.length) {
+          const badges = document.createElement("span");
+          badges.className = "rank-agents";
+          badges.innerHTML = agentBadges(projectAgents);
+          label.appendChild(badges);
+        }
+        timeline.appendChild(label);
+
+        data.days.forEach((day) => {
+          const count = day.projects[project.name] || 0;
+          const agentCounts = projectAgentCounts(day, project.name);
+          const cell = document.createElement("div");
+          cell.className = "cell";
+          cell.dataset.date = day.date;
+          cell.dataset.project = project.name;
+          cell.style.background = projectIntensity(count);
+          applyAgentStripes(cell, agentCounts);
+          cell.addEventListener("mousemove", (event) => {
+            const agentText = agentCounts.length ? `<br>${agentBadges(agentCounts)}` : "";
+            setTooltip(event, `<strong>${escapeHtml(project.name)}</strong><br>${day.date}<br>${fmt.format(count)} visible files<br>${fmt.format(day.hermes.sessions || 0)} Hermes sessions${agentText}`);
+          });
+          cell.addEventListener("mouseleave", hideTooltip);
+          cell.addEventListener("click", () => selectDay(day.date));
+          timeline.appendChild(cell);
+        });
+      });
+
+      document.getElementById("timelineCaption").textContent = `${projects.length} project rows x ${data.days.length} days`;
+      selectDay(selectedDate);
+    }
+
+    function appendAgentAxisRow(source) {
+      const label = document.createElement("div");
+      label.className = "axis-label";
+      label.textContent = `${sourceConfig[source].label} activity`;
+      timeline.appendChild(label);
+
+      data.days.forEach((day) => {
+        const stats = agentStats(day, source);
+        const cell = document.createElement("div");
+        cell.className = "agent-cell";
+        cell.dataset.date = day.date;
+        cell.style.background = agentIntensity(day, source);
+        cell.addEventListener("mousemove", (event) => {
+          const cost = source === "opencode" && stats.cost ? `<br>${moneyFmt.format(stats.cost)} local recorded cost` : "";
+          const tokens = stats.total_tokens ? `<br>${compactFmt.format(stats.total_tokens)} tokens` : "";
+          setTooltip(event, `<strong>${day.date}</strong><br>${sourceConfig[source].label}: ${fmt.format(stats.sessions || 0)} sessions<br>${fmt.format(agentActivityValue(stats))} events${tokens}${cost}`);
+        });
+        cell.addEventListener("mouseleave", hideTooltip);
+        cell.addEventListener("click", () => selectDay(day.date));
+        timeline.appendChild(cell);
+      });
+    }
+
+    function appendAxisRow(labelText, mode) {
+      const label = document.createElement("div");
+      label.className = "axis-label";
+      label.textContent = labelText;
+      timeline.appendChild(label);
+
+      data.days.forEach((day) => {
+        const cell = document.createElement("div");
+        cell.className = mode === "hermes" ? "hermes-cell" : "total-cell";
+        cell.dataset.date = day.date;
+        cell.style.background = mode === "hermes" ? hermesIntensity(day) : totalIntensity(day);
+        cell.addEventListener("mousemove", (event) => {
+          const text = mode === "hermes"
+            ? `${fmt.format(day.hermes.sessions || 0)} sessions, ${fmt.format(day.hermes.api_calls || 0)} API calls`
+            : `${fmt.format(day.visible_projects_total)} visible project files`;
+          setTooltip(event, `<strong>${day.date}</strong><br>${text}`);
+        });
+        cell.addEventListener("mouseleave", hideTooltip);
+        cell.addEventListener("click", () => selectDay(day.date));
+        timeline.appendChild(cell);
+      });
+    }
+
+    function renderDetails() {
+      const day = dayByDate.get(selectedDate) || data.days[data.days.length - 1];
+      const codex = agentStats(day, "codex");
+      const claude = agentStats(day, "claude");
+      const opencode = agentStats(day, "opencode");
+      document.getElementById("selectedDate").textContent = day.date;
+      document.getElementById("dayFiles").textContent = fmt.format(day.visible_projects_total);
+      document.getElementById("dayHermes").textContent = fmt.format(day.hermes.sessions || 0);
+      document.getElementById("dayCodex").textContent = fmt.format(codex.sessions || 0);
+      document.getElementById("dayClaude").textContent = fmt.format(claude.sessions || 0);
+      document.getElementById("dayOpenCode").textContent = fmt.format(opencode.sessions || 0);
+      document.getElementById("dayAgentEvents").textContent = compactFmt.format(agentEventTotal(day));
+      renderAgentBreakdown(day);
+      renderSessionList(day);
+
+      const marketGrid = document.getElementById("marketGrid");
+      marketGrid.innerHTML = "";
+      const entries = projectMarketEntries(day).slice(0, 10);
+      if (!entries.length) {
+        marketGrid.innerHTML = `<div class="notice">No visible project or agent activity on this day.</div>`;
+      } else {
+        entries.forEach((entry) => {
+          const tile = document.createElement("div");
+          tile.className = "market-tile";
+          const flex = Math.max(1, Math.round(Math.sqrt(entry.files || sum(entry.agents.map((item) => item.count)))));
+          tile.style.gridColumn = flex >= 8 ? "span 2" : "span 1";
+          tile.style.background = entry.files ? projectIntensity(entry.files) : "rgba(255, 255, 255, 0.78)";
+          tile.innerHTML = `<strong>${escapeHtml(entry.name)}</strong><span>${fmt.format(entry.files)}</span><div class="tile-agents">${agentBadges(entry.agents)}</div>`;
+          marketGrid.appendChild(tile);
+        });
+      }
+    }
+
+    function renderAgentBreakdown(day) {
+      const container = document.getElementById("agentBreakdown");
+      const max = Math.max(1, ...agentSources.map((source) => agentActivityValue(agentStats(day, source))));
+      container.innerHTML = agentSources.map((source) => {
+        const stats = agentStats(day, source);
+        const value = agentActivityValue(stats);
+        const width = `${Math.max(2, (value / max) * 100)}%`;
+        const extra = source === "opencode" && stats.cost ? `, ${moneyFmt.format(stats.cost)}` : "";
+        return `
+          <div class="agent-row">
+            <strong>${sourceConfig[source].label}</strong>
+            <span class="agent-track"><span class="agent-fill" style="--w:${width};--source-color:${sourceConfig[source].css}"></span></span>
+            <small>${fmt.format(stats.sessions || 0)} / ${compactFmt.format(value)}${extra}</small>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderSessionList(day) {
+      const container = document.getElementById("sessionList");
+      const sessions = (data.agent_sessions || [])
+        .filter((session) => session.date === day.date && sourceEnabled(session.source))
+        .slice(-18)
+        .reverse();
+      if (!sessions.length) {
+        container.innerHTML = `<div class="notice">No metadata sessions for the active source filters.</div>`;
+        return;
+      }
+      container.innerHTML = sessions.map((session) => {
+        const config = sourceConfig[session.source] || { label: session.source, css: "var(--black)" };
+        const title = session.title || session.cwd || session.project || session.id;
+        const tokenText = session.tokens?.total ? `${compactFmt.format(session.tokens.total)} tok` : "";
+        const costText = session.cost ? moneyFmt.format(session.cost) : "";
+        const right = [tokenText, costText].filter(Boolean).join(" / ");
+        return `
+          <div class="session-item">
+            <span class="source-badge" style="--source-color:${config.css}">${config.label}</span>
+            <div>
+              <strong>${escapeHtml(title)}</strong>
+              <small>${escapeHtml(session.project || "unknown")} - ${escapeHtml(session.start_ts || "")}</small>
+            </div>
+            <small>${escapeHtml(right || session.id.slice(0, 8))}</small>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderRankList() {
+      const rankList = document.getElementById("rankList");
+      const scores = data.projects.map((project) => (project.total_files || 0) + (project.agent_total || 0) * 25);
+      const max = Math.max(1, ...scores);
+      rankList.innerHTML = "";
+      data.projects.slice(0, 50).forEach((project) => {
+        const item = document.createElement("div");
+        item.className = "rank-item";
+        const score = (project.total_files || 0) + (project.agent_total || 0) * 25;
+        const agents = agentSources
+          .map((source) => ({ source, count: project.agent_activity?.[source] || 0 }))
+          .filter((agent) => agent.count > 0);
+        item.innerHTML = `
+          <small>#${project.rank}</small>
+          <div>
+            <strong>${escapeHtml(project.name)}</strong>
+            <div class="bar" style="transform: scaleX(${score / max})"></div>
+            <div class="rank-agents">${agentBadges(agents)}</div>
+          </div>
+          <small>${fmt.format(project.total_files)} files</small>
+        `;
+        item.addEventListener("click", () => {
+          const targetDay = project.peak_day || project.last_day || selectedDate;
+          selectedDate = targetDay;
+          selectDay(targetDay);
+          document.querySelector(`[data-project="${CSS.escape(project.name)}"][data-date="${targetDay}"]`)?.scrollIntoView({ block: "center", inline: "center", behavior: "smooth" });
+        });
+        rankList.appendChild(item);
+      });
+    }
+
+    function renderSummary() {
+      const totalProjectFiles = sum(data.days.map((day) => day.visible_projects_total));
+      const activeDays = data.days.filter((day) => day.visible_projects_total > 0 || day.hermes.sessions > 0 || agentEventTotal(day) > 0).length;
+      const hermesSessions = sum(data.days.map((day) => day.hermes.sessions || 0));
+      const agentTotals = data.agent_totals || {};
+      const codexSessions = agentTotals.codex?.sessions || 0;
+      const claudeSessions = agentTotals.claude?.sessions || 0;
+      const opencodeSessions = agentTotals.opencode?.sessions || 0;
+      const agentSessions = codexSessions + claudeSessions + opencodeSessions;
+      const terminals = data.terminal_snapshot?.terminal_processes?.length || 0;
+      document.getElementById("rangeStamp").textContent = `${data.meta.range.start} -> ${data.meta.range.end}`;
+      document.getElementById("generatedStamp").textContent = `generated ${data.meta.generated_at}`;
+      document.getElementById("metricProjectFiles").textContent = fmt.format(totalProjectFiles);
+      document.getElementById("metricProjects").textContent = fmt.format(data.projects.length);
+      document.getElementById("metricDays").textContent = fmt.format(activeDays);
+      document.getElementById("metricHermes").textContent = fmt.format(hermesSessions);
+      document.getElementById("metricAgents").textContent = fmt.format(agentSessions);
+      document.getElementById("metricCodex").textContent = fmt.format(codexSessions);
+      document.getElementById("metricClaude").textContent = fmt.format(claudeSessions);
+      document.getElementById("metricOpenCode").textContent = fmt.format(opencodeSessions);
+      document.getElementById("metricTerminals").textContent = fmt.format(terminals);
+      document.getElementById("methodNotice").textContent = `${data.meta.rules.file_basis}. ${data.meta.notes.join(" ")}`;
+
+      const colors = [0, 1, 3, 8, 18, 40, data.scale.max_project_cell].map(projectIntensity);
+      document.getElementById("legendRamp").innerHTML = colors.map((color) => `<span style="background:${color}"></span>`).join("");
+    }
+
+    function latestActiveDay() {
+      for (let index = data.days.length - 1; index >= 0; index -= 1) {
+        const day = data.days[index];
+        if (day.visible_projects_total > 0 || day.hermes.sessions > 0 || agentEventTotal(day) > 0) return day.date;
+      }
+      return data.days[data.days.length - 1].date;
+    }
+
+    rowLimit.addEventListener("change", renderTimeline);
+    projectSearch.addEventListener("input", renderTimeline);
+    scaleMode.addEventListener("change", renderTimeline);
+    document.querySelectorAll("[data-source-toggle]").forEach((input) => {
+      input.addEventListener("change", () => {
+        renderSummary();
+        renderRankList();
+        renderTimeline();
+      });
+    });
+    document.getElementById("latestButton").addEventListener("click", () => {
+      selectDay(latestActiveDay());
+      document.querySelector(`[data-date="${selectedDate}"]`)?.scrollIntoView({ inline: "end", block: "nearest", behavior: "smooth" });
+    });
+
+    renderSummary();
+    renderRankList();
+    selectedDate = latestActiveDay();
+    renderTimeline();
+  </script>
+</body>
+</html>
