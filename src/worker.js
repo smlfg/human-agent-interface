@@ -6,11 +6,20 @@ const CONSENT_VERSION = "client-handoff-md-v0-2026-05-14";
 const DEFAULT_HARNESS_MODEL = "gpt-5.5";
 const HERO_EXPERIMENT_ID = "homepage-hero-2026-05-23";
 const HERO_VARIANTS = ["A_control", "B_offer_first", "C_proof_first"];
-const SITE_EVENTS = ["hero_impression", "hero_cta_click"];
+const SITE_EVENTS = ["hero_impression", "hero_cta_click", "cta_click"];
 const SITE_EVENT_TARGETS = [
   "",
-  "choose_path",
   "contact_fit_call",
+  "hero_choose_path",
+  "hero_fit",
+  "hero_fit_call",
+  "hero_product",
+  "hero_proof",
+  "nav_fit_call",
+  "router_agent_workflow",
+  "router_muenztelefon",
+  "router_orientation",
+  "choose_path",
   "contact_fit_call_nav",
   "contact_one_workflow",
   "fit",
