@@ -10,6 +10,7 @@ const SITE_EVENTS = ["hero_impression", "hero_cta_click", "cta_click"];
 const SITE_EVENT_TARGETS = [
   "",
   "contact_fit_call",
+  "intake_start",
   "hero_choose_path",
   "hero_fit",
   "hero_fit_call",
@@ -95,6 +96,10 @@ export default {
       return handleHomepage(request, env);
     }
 
+    if (request.method === "GET" && (url.pathname === "/intake" || url.pathname.startsWith("/intake/"))) {
+      return serveIntakeAsset(request, env, url);
+    }
+
     return env.ASSETS.fetch(request);
   },
 };
@@ -137,6 +142,18 @@ async function handleHomepage(request, env) {
     statusText: response.statusText,
     headers,
   });
+}
+
+function serveIntakeAsset(request, env, url) {
+  let assetPath = url.pathname;
+  if (assetPath === "/intake" || assetPath === "/intake/") {
+    assetPath = "/APP/intake/index.html";
+  } else if (assetPath.startsWith("/intake/")) {
+    assetPath = `/APP/intake/${assetPath.slice("/intake/".length)}`;
+  }
+
+  const assetUrl = new URL(assetPath, url.origin);
+  return env.ASSETS.fetch(new Request(assetUrl, request));
 }
 
 async function handleSiteEvent(request, env) {
