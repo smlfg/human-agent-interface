@@ -3,18 +3,72 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Human Agent Interface</title>
+    <title>Human Agent Interface (HAI) by Samuel Fleig — Agent Control & Human Ownership</title>
     <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="canonical" href="https://www.human-agent-interface.com/">
     <meta
       name="description"
-      content="Human Agent Interface turns messy AI work into a safe, scoped, agent-ready next action."
+      content="Human Agent Interface (HAI), created by Samuel Fleig, keeps agentic AI work observable, bounded, verifiable, and human-owned."
     >
-    <meta property="og:title" content="Human Agent Interface">
+    <meta property="og:title" content="Human Agent Interface (HAI) by Samuel Fleig">
     <meta
       property="og:description"
-      content="The next interface is not graphical. It is agentic."
+      content="An open-source approach for keeping agentic AI work observable, bounded, verifiable, and human-owned."
     >
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.human-agent-interface.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://www.human-agent-interface.com/samuel/#samuel-fleig",
+            "name": "Samuel Fleig",
+            "url": "https://www.human-agent-interface.com/samuel/",
+            "jobTitle": "AI Engineer",
+            "knowsAbout": [
+              "AI agents",
+              "agentic systems",
+              "AI harnesses",
+              "Model Context Protocol",
+              "human-agent interaction"
+            ],
+            "sameAs": [
+              "https://github.com/smlfg",
+              "https://x.com/Samuelflg1",
+              "https://www.linkedin.com/in/samuel-fleig-52610914b",
+              "https://medium.com/@smlflg"
+            ]
+          },
+          {
+            "@type": "CreativeWork",
+            "@id": "https://www.human-agent-interface.com/#human-agent-interface",
+            "name": "Human Agent Interface",
+            "alternateName": "HAI",
+            "url": "https://www.human-agent-interface.com/",
+            "creator": { "@id": "https://www.human-agent-interface.com/samuel/#samuel-fleig" },
+            "description": "Human Agent Interface (HAI) is an approach for keeping agentic AI work observable, bounded, verifiable, and human-owned.",
+            "subjectOf": [
+              { "@id": "https://github.com/smlfg/hai-mcp#software" },
+              { "@id": "https://www.human-agent-interface.com/proof/#proof" }
+            ]
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "@id": "https://github.com/smlfg/hai-mcp#software",
+            "name": "HAI-MCP",
+            "codeRepository": "https://github.com/smlfg/hai-mcp",
+            "url": "https://github.com/smlfg/hai-mcp",
+            "programmingLanguage": "Python",
+            "creator": { "@id": "https://www.human-agent-interface.com/samuel/#samuel-fleig" },
+            "isPartOf": { "@id": "https://www.human-agent-interface.com/#human-agent-interface" },
+            "description": "HAI-MCP is the model-agnostic MCP control-plane implementation of Human Agent Interface."
+          }
+        ]
+      }
+    </script>
     <style>
       :root {
         color-scheme: dark;
@@ -1342,10 +1396,10 @@
           <div class="hero-copy hero-variant" data-hero-variant="A_control">
             <p class="lead reveal">
               <span class="copy-block" data-lang-copy="en">
-                <strong>Human Agent Interface</strong> turns agent chaos into work a human can still own.
+                <strong>Human Agent Interface (HAI)</strong>, created by <a href="./samuel/">Samuel Fleig</a>, turns agent chaos into work a human can still own: observable, bounded, verifiable, and human-owned.
               </span>
               <span class="copy-block" data-lang-copy="de">
-                <strong>Human Agent Interface</strong> macht aus Agenten-Chaos wieder Arbeit, die ein Mensch steuern kann.
+                <strong>Human Agent Interface (HAI)</strong>, entwickelt von <a href="./samuel/">Samuel Fleig</a>, macht aus Agenten-Chaos wieder Arbeit, die ein Mensch steuern kann: beobachtbar, begrenzt, überprüfbar und menschlich verantwortet.
               </span>
             </p>
             <p class="reveal">
@@ -1801,8 +1855,9 @@
             </h2>
             <p class="body-copy reveal">
               <span class="copy-block" data-lang-copy="en">
-                He has already seen the later-stage version of the problem clients feel early:
-                more agents, more output, more dashboards, and less human ownership.
+                Samuel Fleig develops Human Agent Interface (HAI) from repeated work with terminal agents,
+                coding agents, harnesses, and owner-control artifacts. HAI-MCP is the open-source MCP
+                control-plane implementation of that method.
               </span>
               <span class="copy-block" data-lang-copy="de">
                 Ich habe die spätere Version des Problems schon gesehen: mehr Agents,
@@ -2056,7 +2111,7 @@
 
     <footer>
       <div class="section-inner">
-        <span>Human Agent Interface</span>
+        <span>Human Agent Interface (HAI) by Samuel Fleig</span>
         <span>
           <span class="lang-copy" data-lang-copy="en">CLI -> TUI -> GUI -> HAI</span>
           <span class="lang-copy" data-lang-copy="de">CLI -> TUI -> GUI -> HAI: Kontrolle über Agentenarbeit</span>

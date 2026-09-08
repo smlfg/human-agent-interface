@@ -1,0 +1,264 @@
+{
+  "entity_graph_goal": "Samuel Fleig -> Human Agent Interface (HAI) -> HAI-MCP",
+  "engines": [
+    "ChatGPT Search",
+    "Gemini",
+    "Google AI Mode",
+    "Perplexity"
+  ],
+  "queries": [
+    {
+      "id": "geo-01",
+      "language": "en",
+      "query_type": "person",
+      "query": "Who is Samuel Fleig?",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-02",
+      "language": "en",
+      "query_type": "person",
+      "query": "Who is Samuel Fleig AI engineer?",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-03",
+      "language": "en",
+      "query_type": "concept",
+      "query": "What is Human Agent Interface?",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-04",
+      "language": "en",
+      "query_type": "concept",
+      "query": "Who created Human Agent Interface?",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-05",
+      "language": "en",
+      "query_type": "software",
+      "query": "What is HAI-MCP?",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-06",
+      "language": "en",
+      "query_type": "person",
+      "query": "What has Samuel Fleig built?",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-07",
+      "language": "en",
+      "query_type": "concept",
+      "query": "Human Agent Interface AI agents",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-08",
+      "language": "en",
+      "query_type": "concept",
+      "query": "human ownership AI agents",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-09",
+      "language": "en",
+      "query_type": "category",
+      "query": "AI agent control plane",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-10",
+      "language": "en",
+      "query_type": "category",
+      "query": "tools for controlling autonomous AI agents",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-11",
+      "language": "de",
+      "query_type": "person",
+      "query": "Wer ist Samuel Fleig?",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-12",
+      "language": "de",
+      "query_type": "person",
+      "query": "Wer ist Samuel Fleig AI Engineer?",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-13",
+      "language": "de",
+      "query_type": "concept",
+      "query": "Was ist Human Agent Interface?",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-14",
+      "language": "de",
+      "query_type": "concept",
+      "query": "Wer hat Human Agent Interface entwickelt?",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-15",
+      "language": "de",
+      "query_type": "software",
+      "query": "Was ist HAI-MCP?",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-16",
+      "language": "de",
+      "query_type": "person",
+      "query": "Was hat Samuel Fleig gebaut?",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-17",
+      "language": "de",
+      "query_type": "concept",
+      "query": "Human Agent Interface KI-Agenten",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-18",
+      "language": "de",
+      "query_type": "concept",
+      "query": "menschliche Kontrolle KI-Agenten",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-19",
+      "language": "de",
+      "query_type": "category",
+      "query": "KI-Agent Control Plane",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    },
+    {
+      "id": "geo-20",
+      "language": "de",
+      "query_type": "concept",
+      "query": "Tools zur Kontrolle autonomer KI-Agenten",
+      "expected_entities": [
+        "Samuel Fleig",
+        "Human Agent Interface (HAI)",
+        "HAI-MCP"
+      ],
+      "expected_graph": "Samuel Fleig -> creator/developer of -> Human Agent Interface (HAI) -> implemented as -> HAI-MCP"
+    }
+  ],
+  "scoring_fields": {
+    "correct_samuel_identified": "0/1",
+    "samuel_hai_association": "0/1",
+    "hai_definition_accuracy": "0/1/2",
+    "hai_hai_mcp_association": "0/1",
+    "website_cited": "0/1",
+    "github_cited": "0/1",
+    "external_source_cited": "0/1",
+    "wrong_person_selected": "0/1",
+    "hallucinated_facts": "0/1",
+    "notes": "free text"
+  },
+  "schema_version": "1.1"
+}
