@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB05 · Aufgabe 4 · Potenzieren</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · INTERAKTIV</a><a class="back" href="../index.html">← Blatt 05</a></nav>
+  <header class="task-head"><div><span class="kicker">ZERLEGE · SPEICHERE · MISS</span><h1>Potenzieren mit BigInt</h1></div><div class="counter">PB05 · 04/04</div></header>
+
+  <section class="mission">
+    <div class="brief"><h2>Dein Mikro-Schritt</h2><p>Baue <strong>3<sup>13</sup></strong> durch Halbieren des Exponenten. Klicke jeweils den nächsten Exponenten der schnellen Rekursion.</p><p>Frage bei jedem Schritt: „Welches Teilresultat berechne ich genau einmal?“</p></div>
+    <div class="source-core">power_a: p Multiplikationen
+power_b: p halbieren → logarithmische Tiefe
+Basisfall: n⁰ = 1</div>
+  </section>
+
+  <section class="step">
+    <h2>1 · Rekursionspfad für 3¹³</h2>
+    <p class="prompt">Pfad: <strong id="path-label">13</strong> · nächster Exponent: <strong id="next-label">6</strong></p>
+    <div class="exponent-path" id="exponent-path" aria-label="Exponentenpfad"></div>
+    <div class="actions"><button class="action" id="reset-path" type="button">Pfad zurücksetzen</button><button class="action hint-btn" data-hint="hint-1" aria-expanded="false" type="button">Hinweis 1</button><button class="action hint-btn" data-hint="hint-2" aria-expanded="false" type="button">Hinweis 2</button></div>
+    <div class="hint" id="hint-1" hidden>Ganzzahlig halbieren: <code>13 → 6 → 3 → 1 → 0</code>.</div>
+    <div class="hint" id="hint-2" hidden>Berechne <code>half = power_b(n, p / 2)</code> einmal. Nutze danach <code>half * half</code> und bei ungeradem <code>p</code> zusätzlich <code>* n</code>.</div>
+    <div class="feedback" id="path-feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="compare-step" hidden>
+    <h2>2 · Vier Wege, zwei Wachstumsklassen</h2>
+    <div class="method-grid">
+      <article><h3><code>power_a_iterative</code></h3><p>Akkumulator startet bei 1; Schleife multipliziert p-mal mit n.</p></article>
+      <article><h3><code>power_a_recursive</code></h3><p>Basisfall p = 0; danach n · power_a(n, p − 1).</p></article>
+      <article><h3><code>power_a_tail</code></h3><p>Akkumulator wandert als Parameter in den nächsten Aufruf.</p></article>
+      <article class="fast"><h3><code>power_b</code></h3><p>Ein gespeichertes Halbresultat wird quadriert; p schrumpft auf p / 2.</p></article>
+    </div>
+    <p class="prompt">Welche Implementierung erfüllt die schnelle Rekurrenz wirklich?</p>
+    <div class="choices" role="group" aria-label="Implementierungsweg">
+      <button class="choice" data-path="zero" type="button"><code>if (p == 0) return 0;</code></button>
+      <button class="choice" data-path="twice" type="button"><code>power_b(n,p/2) * power_b(n,p/2)</code></button>
+      <button class="choice" data-path="cached" type="button"><code>half = power_b(n,p/2); half * half</code></button>
+    </div>
+    <div class="feedback" id="choice-feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step lab-box" id="lab-step" hidden>
+    <h2>3 · Code-Lab ohne Komplettlösung</h2>
+    <p>Ergänze nur die TODOs in <code>lab/powers.cpp</code>. Alle Multiplikationen laufen über <code>counted_multiply</code>, damit der Harness neben dem Ergebnis auch die Arbeit messen kann.</p>
+    <code class="command">cd uebungsblaetter-interaktiv/blatt-05/aufgabe-04/lab
+./run-tests.sh</code>
+    <p class="tiny">Geprüft werden alle 4 × 1025 Kombinationen <code>1 ≤ n ≤ 4</code>, <code>0 ≤ p ≤ 1024</code>. Der Starter kompiliert und ist absichtlich rot.</p>
+  </section>
+
+  <section class="step" id="gate-step" hidden>
+    <h2>4 · Abschluss-Gate</h2>
+    <div class="gate-grid"><label><code>power_a</code> <select id="runtime-a"><option value="">– wählen –</option><option value="linear">Θ(p)</option><option value="log">Θ(log p)</option></select></label><label><code>power_b</code> mit Cache <select id="runtime-b"><option value="">– wählen –</option><option value="linear">Θ(p)</option><option value="log">Θ(log p)</option></select></label></div>
+    <button class="action primary" id="check-runtime" type="button">Komplexität prüfen</button>
+    <div class="feedback" id="runtime-feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Beleg statt nur Ergebnis</h2><p>Der Testlauf muss sowohl <strong>4100/4100 Werte</strong> als auch den Unterschied der Multiplikationsanzahl melden: linear bei <code>power_a</code>, logarithmisch bei <code>power_b</code>.</p>
+    <label class="proof-check"><input id="tests-pass" type="checkbox"> Mein echter Lauf meldet alle Wert- und Komplexitätschecks als bestanden.</label>
+    <div class="state-row"><button class="state-btn" data-state="sitzt" type="button">✓ Sitzt</button><button class="state-btn" data-state="wackelt" type="button">↻ Wackelt</button></div><p class="tiny" id="state-feedback" aria-live="polite"></p>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-03/index.html">← Aufgabe 3</a><a href="../index.html">Blatt 05</a><a href="../../index.html">Gesamtübersicht</a><a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a><a href="../../blatt-06/aufgabe-01/index.html">Blatt 06 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

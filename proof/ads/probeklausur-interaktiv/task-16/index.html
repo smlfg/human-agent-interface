@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aufgabe 16 · 2-3-4-Baum bauen</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <script src="task.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Seitennavigation">
+      <a class="back" href="../index.html">← Übersicht</a>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF ↗</a>
+    </nav>
+
+    <header class="task-head">
+      <div>
+        <span class="kicker">Baumwerkstatt · Split statt Raten</span>
+        <h1>Baue den Zielbaum.</h1>
+      </div>
+      <span class="counter" aria-label="Aufgabe 16 von 17">16 / 17</span>
+    </header>
+
+    <section class="mission" aria-labelledby="mission-title">
+      <div class="brief">
+        <h2 id="mission-title">Deine Mission</h2>
+        <p>Ordne alle acht Buchstaben so, dass beim Einfügen exakt der gezeigte 2‑3‑4‑Baum entsteht.</p>
+        <p class="tiny"><strong>Prüfungsabgabe:</strong> eine gültige Einfügereihenfolge — plus nachvollziehbare Splits.</p>
+      </div>
+      <div class="target-card" aria-label="Zielbaum aus der Aufgabe">
+        <p class="eyebrow">ZIEL AUS DER AUFGABENSAMMLUNG</p>
+        <div class="target-tree" role="img" aria-label="Wurzel b l r mit vier Blättern a, e, m o und t">
+          <div class="tree-node root-node"><span>b</span><span>l</span><span>r</span></div>
+          <div class="target-branches" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <div class="target-leaves">
+            <div class="tree-node"><span>a</span></div>
+            <div class="tree-node"><span>e</span></div>
+            <div class="tree-node"><span>m</span><span>o</span></div>
+            <div class="tree-node"><span>t</span></div>
+          </div>
+        </div>
+        <p class="range-line"><span>&lt; b</span><span>b … l</span><span>l … r</span><span>&gt; r</span></p>
+      </div>
+    </section>
+
+    <div class="stepper">
+      <section class="step" id="strategy-step">
+        <h2>Wähle die Denkbewegung</h2>
+        <p class="prompt">Was ist der belastbare Weg zu einer Einfügereihenfolge?</p>
+        <div class="choices" role="group" aria-label="Strategie wählen">
+          <button class="choice" type="button" data-strategy="guess">Die Zielreihenfolge optisch erraten</button>
+          <button class="choice" type="button" data-strategy="split">Einfügen und volle Knoten vor dem Abstieg splitten</button>
+        </div>
+        <div id="strategy-feedback" class="feedback" aria-live="polite"></div>
+      </section>
+
+      <section class="step puzzle-step" id="puzzle-step" aria-labelledby="puzzle-title">
+        <h2 id="puzzle-title">Lege deine Reihenfolge</h2>
+        <p class="prompt">Klicke die Karten in Einfügereihenfolge. Du kannst den letzten Zug jederzeit zurücknehmen.</p>
+        <div id="letter-bank" class="letter-bank" aria-label="Verfügbare Buchstabenkarten"></div>
+        <div class="sequence-wrap">
+          <span class="sequence-label">Dein Versuch</span>
+          <output id="sequence" class="sequence" aria-live="polite">Noch leer</output>
+        </div>
+        <div class="tool-row">
+          <button id="undo" class="action" type="button" disabled>↶ Letzten zurück</button>
+          <button id="reset" class="action" type="button" disabled>Neu legen</button>
+          <button id="check" class="action primary" type="button" disabled>Baum bauen &amp; prüfen</button>
+        </div>
+        <div class="hint-controls">
+          <button class="hint-button" type="button" data-hint="1">Hinweis 1: Wohin schauen?</button>
+          <button class="hint-button" type="button" data-hint="2">Hinweis 2: Splitmechanik</button>
+        </div>
+        <div id="hint-1" class="hint">
+          <strong>Schau auf die Wurzel.</strong> Die Schlüssel <code>b</code>, <code>l</code> und <code>r</code> müssen durch Splits nach oben gelangen — nicht einfach als Wurzelkarten zuerst gelegt werden.
+        </div>
+        <div id="hint-2" class="hint">
+          <strong>2‑3‑4-Regel:</strong> Bevor du in einen vollen 4‑Knoten mit drei Schlüsseln hinabsteigst, splitte ihn: Der mittlere Schlüssel steigt zum Elternknoten, die beiden äußeren werden getrennte Kinder.
+        </div>
+        <div id="puzzle-feedback" class="feedback" aria-live="polite"></div>
+      </section>
+
+      <section class="step trace-step" id="trace-step" hidden>
+        <h2>Sieh dem Baum beim Wachsen zu</h2>
+        <p id="trace-note" class="trace-note" aria-live="polite"></p>
+        <div id="trace-tree" class="live-tree" aria-live="polite"></div>
+        <div class="trace-nav">
+          <button id="trace-prev" class="action" type="button">← davor</button>
+          <span id="trace-count" class="trace-count"></span>
+          <button id="trace-next" class="action" type="button">danach →</button>
+        </div>
+      </section>
+
+      <section class="step solution-step" id="solution-step">
+        <h2>Prüfungsabschluss</h2>
+        <p class="prompt">Erst dein Versuch, dann der Musterweg. Wenn du festhängst, darfst du ihn bewusst freigeben.</p>
+        <button id="reveal" class="action" type="button">Ich stecke fest: Musterweg freigeben</button>
+        <div id="solution" class="solution" hidden>
+          <p class="solution-line"><strong>Eine gültige Reihenfolge:</strong> <code>a l b e r t o m</code></p>
+          <ol class="split-story">
+            <li><code>a, l, b</code> füllen den ersten Knoten zu <strong>[a b l]</strong>.</li>
+            <li>Vor <code>e</code> wird <strong>[a b l]</strong> gesplittet: <strong>b steigt auf</strong>; Kinder [a] und [l]. Danach landet e rechts: [e l].</li>
+            <li><code>r</code> füllt rechts [e l r]. Vor <code>t</code> wird gesplittet: <strong>l steigt auf</strong>. t landet in [r t].</li>
+            <li><code>o</code> macht [o r t] voll. Vor <code>m</code> wird gesplittet: <strong>r steigt auf</strong>. m landet bei o: [m o].</li>
+          </ol>
+          <p class="exam-sentence">Abgabe: <strong>„Zum Beispiel <code>albertom</code>; die Schlüssel b, l und r steigen bei den drei Splits in die Wurzel auf.“</strong></p>
+        </div>
+      </section>
+    </div>
+
+    <section class="step status-step" aria-labelledby="status-title">
+      <h2 id="status-title">Wie fühlt sich Aufgabe 16 an?</h2>
+      <div class="state-row" role="group" aria-label="Lernstatus speichern">
+        <button class="state-btn" type="button" data-value="wackelt">Wackelt noch</button>
+        <button class="state-btn" type="button" data-value="sitzt">Sitzt</button>
+      </div>
+      <p id="state-feedback" class="tiny" aria-live="polite">Noch nicht markiert.</p>
+    </section>
+
+    <nav class="nav-bottom" aria-label="Aufgaben wechseln">
+      <a href="../task-15/index.html">← Aufgabe 15</a>
+      <a href="../index.html">Übersicht</a>
+      <a href="../task-17/index.html">Aufgabe 17 →</a>
+    </nav>
+  </main>
+</body>
+</html>

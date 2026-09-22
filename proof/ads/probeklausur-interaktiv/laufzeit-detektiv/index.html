@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ADS · Laufzeit-Detektiv</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="game.css">
+  <style>
+    .counter{white-space:nowrap;font-size:clamp(1.1rem,2.4vw,2rem)}
+    @media(max-width:520px){.topbar{align-items:flex-start;flex-wrap:wrap}.topbar .brand{order:-1;width:100%}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Navigation">
+      <a class="back" href="../index.html">← Probeklausur-Parcours</a>
+      <span class="brand">ADS · Zusatztraining</span>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Originalaufgaben ↗</a>
+    </nav>
+
+    <header class="task-head">
+      <div>
+        <span class="kicker">MINISPIEL · CODE → LAUFZEIT</span>
+        <h1>Werde Laufzeit-Detektiv.</h1>
+        <p class="lead">Du musst den Code nicht komplett verstehen. Finde nur die Spuren, die bestimmen, wie oft etwas passiert.</p>
+      </div>
+      <div class="counter" id="overall-progress" aria-live="polite">Einzel 0/15 · Duelle 0/20</div>
+    </header>
+
+    <section class="mode-switch" aria-label="Trainingsmodus" role="tablist">
+      <button class="mode-button" id="detective-mode-button" type="button" role="tab" aria-controls="detective-mode-panel" aria-selected="true" data-mode="detective">
+        <span>Einzelcode</span><small>15 Muster erkennen</small>
+      </button>
+      <button class="mode-button" id="duel-mode-button" type="button" role="tab" aria-controls="duel-mode-panel" aria-selected="false" data-mode="duels">
+        <span>A/B-Duelle</span><small>Learning 2.0 · 20 Vergleiche</small>
+      </button>
+    </section>
+
+    <div class="mode-panel" id="detective-mode-panel" role="tabpanel" aria-labelledby="detective-mode-button">
+      <section class="method-strip" aria-label="Laufzeit-Lesemethode">
+        <div><b>1</b><span><strong>Größe</strong>Was wächst?</span></div>
+        <div><b>2</b><span><strong>Motor</strong>Was wiederholt?</span></div>
+        <div><b>3</b><span><strong>Form</strong>Nacheinander, innen oder rekursiv?</span></div>
+        <div><b>4</b><span><strong>Klasse</strong>Erst jetzt Θ wählen.</span></div>
+      </section>
+
+      <section class="case-picker" aria-labelledby="case-picker-title">
+        <h2 id="case-picker-title">15 Fälle, immer dieselbe Lesemethode</h2>
+        <div class="case-tabs" id="case-tabs" role="tablist" aria-label="Laufzeitfälle"></div>
+      </section>
+
+      <section class="game-card" aria-labelledby="case-title">
+        <div class="game-heading">
+          <div>
+            <p class="eyebrow" id="case-kicker">FALL 1</p>
+            <h2 id="case-title">Einfacher Durchlauf</h2>
+            <p id="case-goal">Finde die Schleife und ihre Eingabegröße.</p>
+          </div>
+          <span class="case-progress" id="case-progress">0 / 3 Spuren</span>
+        </div>
+
+        <div class="detector-layout">
+          <div>
+            <div class="code-board" id="code-board" aria-label="Anklickbarer C++-Code"></div>
+            <p class="source-note" id="source-note"></p>
+          </div>
+
+          <aside class="case-file" aria-labelledby="clue-title">
+            <span class="case-label">AKTUELLE SPUR</span>
+            <h3 id="clue-title">Was suchst du?</h3>
+            <p id="clue-question"></p>
+            <ol class="clue-list" id="clue-list" aria-label="Spuren dieses Falls"></ol>
+          </aside>
+        </div>
+
+        <div id="clue-feedback" class="feedback" aria-live="polite"></div>
+        <div class="button-row">
+          <button class="action" id="hint-button" type="button">Kleiner Hinweis</button>
+          <button class="action" id="restart-button" type="button">Fall neu starten</button>
+          <button class="action" id="random-button" type="button">Zufälliger Fall ↝</button>
+        </div>
+
+        <section class="classification" id="classification" aria-labelledby="classification-title" hidden>
+          <span class="case-label">SPUREN GEFUNDEN</span>
+          <h3 id="classification-title">Welche Laufzeitaussage folgt daraus?</h3>
+          <p id="classification-prompt"></p>
+          <div class="runtime-choices" id="runtime-choices"></div>
+          <div id="runtime-feedback" class="feedback" aria-live="polite"></div>
+        </section>
+
+        <section class="conclusion" id="conclusion" aria-labelledby="conclusion-title" hidden>
+          <div>
+            <span class="case-label">DETEKTIVBERICHT</span>
+            <h3 id="conclusion-title">Muster erkannt.</h3>
+            <p id="conclusion-text"></p>
+            <p class="result-quality" id="result-quality"></p>
+          </div>
+          <button class="action primary" id="next-case" type="button">Nächster Fall →</button>
+        </section>
+      </section>
+    </div>
+
+    <div class="mode-panel" id="duel-mode-panel" role="tabpanel" aria-labelledby="duel-mode-button" hidden>
+      <section class="learning-lab" aria-labelledby="learning-lab-title">
+        <div class="learning-lab-head">
+          <div>
+            <span class="case-label">LEARNING 2.0</span>
+            <h2 id="learning-lab-title">Du bestimmst, wie viel Hilfe bleibt.</h2>
+            <p>Wähle fest oder lass die Seite nach sicheren Antworten schrittweise loslassen.</p>
+          </div>
+          <span class="assistance-status" id="assistance-status" aria-live="polite">Adaptiv · volle Spuren</span>
+        </div>
+
+        <fieldset class="learning-options">
+          <legend>Hilfestufe</legend>
+          <div class="learning-option-grid" role="group" aria-label="Hilfestufe wählen">
+            <button class="learning-option" type="button" data-learning-mode="guided" aria-pressed="false">
+              <strong>Geführt</strong><span>Spurfragen, Markierungen und Hinweise bleiben.</span>
+            </button>
+            <button class="learning-option" type="button" data-learning-mode="adaptive" aria-pressed="true">
+              <strong>Adaptiv</strong><span>Zwei saubere Duelle blenden eine Hilfestufe aus.</span>
+            </button>
+            <button class="learning-option" type="button" data-learning-mode="exam" aria-pressed="false">
+              <strong>Klausur</strong><span>Keine Hinweise und keine sichtbaren Code-Markierungen.</span>
+            </button>
+          </div>
+        </fieldset>
+
+        <fieldset class="learning-options">
+          <legend>Aufgabenbank</legend>
+          <div class="bank-switch" role="group" aria-label="Aufgabenbank wählen">
+            <button type="button" data-duel-bank="foundation" aria-pressed="false">Grundlagen · 10</button>
+            <button type="button" data-duel-bank="transfer" aria-pressed="true">Fokus schwer · 10 neu</button>
+            <button type="button" data-duel-bank="all" aria-pressed="false">Gemischt · 20</button>
+          </div>
+        </fieldset>
+
+        <p class="learning-explanation" id="learning-explanation" aria-live="polite">Adaptiv startet mit allen Spuren. Nach zwei fehlerfreien Duellen wird eine Hilfeebene entfernt; ein Fehler holt Unterstützung zurück.</p>
+      </section>
+
+      <section class="method-strip duel-method" aria-label="A-B-Vergleichsmethode">
+        <div><b>1</b><span><strong>Ergebnis</strong>Machen A und B dasselbe?</span></div>
+        <div><b>2</b><span><strong>Motoren</strong>Was wiederholt sich?</span></div>
+        <div><b>3</b><span><strong>Laufzeiten</strong>Best/Worst getrennt lesen.</span></div>
+        <div><b>4</b><span><strong>Urteil</strong>Wann ist welches besser?</span></div>
+      </section>
+
+      <section class="case-picker" aria-labelledby="duel-picker-title">
+        <h2 id="duel-picker-title">10 schwere Transfer-Duelle, immer dieselben vier Fragen</h2>
+        <div class="case-tabs" id="duel-tabs" role="tablist" aria-label="A-B-Laufzeitduelle"></div>
+      </section>
+
+      <section class="game-card duel-card" aria-labelledby="duel-title">
+        <div class="game-heading">
+          <div>
+            <p class="eyebrow" id="duel-kicker">DUELL 1</p>
+            <h2 id="duel-title">Zwei Schreibweisen, dieselbe Arbeit</h2>
+            <p id="duel-goal">Vergleiche erst das Ergebnis und dann die Laufzeit.</p>
+          </div>
+          <span class="case-progress" id="duel-progress">Schritt 1 / 4</span>
+        </div>
+
+        <div class="duel-code-grid" aria-label="Code A und Code B im Vergleich">
+          <article class="duel-code-card" id="duel-card-a">
+            <div class="duel-code-head"><span>CODE A</span><strong id="duel-label-a">Variante A</strong></div>
+            <div class="code-board" id="duel-code-a" aria-label="Anklickbarer Code A"></div>
+          </article>
+          <div class="versus" aria-hidden="true">VS</div>
+          <article class="duel-code-card" id="duel-card-b">
+            <div class="duel-code-head"><span>CODE B</span><strong id="duel-label-b">Variante B</strong></div>
+            <div class="code-board" id="duel-code-b" aria-label="Anklickbarer Code B"></div>
+          </article>
+        </div>
+        <p class="source-note" id="duel-source-note"></p>
+
+        <section class="classification duel-question" id="duel-question" aria-labelledby="duel-question-title">
+          <span class="case-label" id="duel-stage-label">SCHRITT 1 · ERGEBNIS</span>
+          <h3 id="duel-question-title">Machen beide Codes dasselbe?</h3>
+          <p id="duel-question-prompt"></p>
+          <div class="runtime-choices duel-choices" id="duel-choices"></div>
+          <div id="duel-feedback" class="feedback" aria-live="polite"></div>
+        </section>
+
+        <div class="button-row">
+          <button class="action" id="duel-hint-button" type="button">Kleiner Hinweis</button>
+          <button class="action" id="duel-restart-button" type="button">Duell neu starten</button>
+          <button class="action" id="duel-random-button" type="button">Zufälliges Duell ↝</button>
+        </div>
+
+        <section class="conclusion duel-conclusion" id="duel-conclusion" aria-labelledby="duel-conclusion-title" hidden>
+          <div>
+            <span class="case-label">KLAUSURBERICHT</span>
+            <h3 id="duel-conclusion-title">Vergleich vollständig.</h3>
+            <p class="exam-sentence" id="duel-exam-sentence"></p>
+            <p id="duel-conclusion-text"></p>
+            <p class="result-quality" id="duel-result-quality"></p>
+          </div>
+          <button class="action primary" id="next-duel" type="button">Nächstes Duell →</button>
+        </section>
+      </section>
+    </div>
+
+    <section class="transfer-note">
+      <h2>Das ist die ganze Grundidee.</h2>
+      <p><strong>Einmal</strong>, <strong>nacheinander</strong>, <strong>ineinander</strong>, <strong>halbieren</strong>, <strong>rekursiv</strong> oder <strong>früher Abbruch</strong>. Im A/B-Modus prüfst du zusätzlich, ob zwei Programme überhaupt dasselbe berechnen und unter welcher Eingabe eines besser ist.</p>
+      <p class="tiny">Ein gelöster Spielfall ist Training. Prüfungsfest wird er erst, wenn du dasselbe Muster später in neuem Code ohne Hinweis erkennst.</p>
+    </section>
+
+    <nav class="nav-bottom" aria-label="Seitennavigation">
+      <a href="../index.html">← Zur Übersicht</a>
+      <a href="../task-01/index.html">Mit Aufgabe 01 anwenden →</a>
+    </nav>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>

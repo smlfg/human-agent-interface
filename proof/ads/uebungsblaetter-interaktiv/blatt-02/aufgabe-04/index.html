@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 02 · Aufgabe 04 · Auswertungsreihenfolge</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · Übungsblätter</a><a class="back" href="../index.html">← Blatt 02</a></nav>
+
+  <header class="task-head">
+    <div><span class="kicker">ELEMENTARE OPERATIONEN · DAG</span><h1>Ein Ergebnis. Mehrere Abläufe.</h1></div><div class="counter">04 / 07</div>
+  </header>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Originalauftrag</h2>
+      <p>Berechne nach den Regeln der Mathematik den Wert des Ausdrucks. Entscheide, ob Ergebnis und Ablauf deterministisch sind, und gib wenn möglich zwei Ausführungsreihenfolgen elementarer Operationen an.</p>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF · Seite 2 ↗</a>
+    </div>
+    <div class="card first-action">
+      <p class="eyebrow">Erste Aktion · noch nicht ausrechnen</p>
+      <p class="expression" aria-label="9876 plus 1234 minus 666 mal 5 minus 6241032 geteilt durch Klammer auf 42 mal 42 Klammer zu">9876 + 1234 − 666 · 5 − <span class="fraction"><span>6241032</span><span>42 · 42</span></span></p>
+      <h2>Welche Operation darf sofort starten?</h2>
+      <div class="choices" id="first-choices">
+        <button class="choice" data-first="valid">666 · 5</button>
+        <button class="choice" data-first="valid">42 · 42</button>
+        <button class="choice" data-first="wrong">9876 + 1234 − 666</button>
+      </div>
+      <div class="feedback" id="first-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step" id="dag-step" hidden>
+    <h2>1 · Baue einen gültigen Ablauf</h2>
+    <p>Klicke eine Karte, deren Voraussetzungen erfüllt sind. Mehrere Karten können gleichzeitig ausführbar sein.</p>
+    <div class="dag" id="dag" aria-label="Abhängigkeitsgraph der elementaren Operationen"></div>
+    <div class="sequence"><strong>Deine Reihenfolge:</strong> <ol id="sequence" aria-live="polite"></ol></div>
+    <div class="actions"><button class="action" id="reset-run">Ablauf zurücksetzen</button></div>
+    <div class="feedback" id="dag-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="concept-step" hidden>
+    <h2>2 · Determinismus sauber trennen</h2>
+    <p class="prompt">Was folgt aus den unabhängigen Teiloperationen?</p>
+    <div class="choices concept-choices">
+      <button class="choice concept-choice" data-answer="wrong">Der Ablauf ist nicht deterministisch, also ist auch das Ergebnis nicht deterministisch.</button>
+      <button class="choice concept-choice" data-answer="correct">Der Ablauf ist nicht eindeutig; das mathematische Ergebnis bleibt deterministisch.</button>
+      <button class="choice concept-choice" data-answer="left">Man muss den ganzen Ausdruck strikt von links nach rechts rechnen.</button>
+    </div>
+    <div class="feedback" id="concept-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="orders-step" hidden>
+    <h2>3 · Zwei topologische Reihenfolgen</h2>
+    <p>Eine Reihenfolge ist gültig, wenn jede Operation erst nach ihren Voraussetzungen kommt.</p>
+    <div class="order-grid">
+      <div><span>Reihenfolge A</span><strong>M₁ → M₂ → D → A → S₁ → S₂</strong></div>
+      <div><span>Reihenfolge B</span><strong>A → M₁ → S₁ → M₂ → D → S₂</strong></div>
+    </div>
+    <p class="tiny">M₁: 666·5 · M₂: 42·42 · D: Division · A: Addition · S₁/S₂: die beiden Subtraktionen</p>
+    <button class="action primary" id="finish">Papierabschluss freischalten</button>
+  </section>
+
+  <section class="step help" aria-labelledby="help-title">
+    <h2 id="help-title">Hinweise</h2>
+    <div class="actions"><button class="action hint-btn" data-hint="hint-1">Hinweis 1 · Vorrang</button><button class="action hint-btn" data-hint="hint-2">Hinweis 2 · Abhängigkeit</button></div>
+    <div class="hint" id="hint-1" hidden>Punktrechnung und der Klammerinhalt kommen vor den Subtraktionen. Aber unabhängige Punktrechnungen dürfen untereinander ihre Plätze tauschen.</div>
+    <div class="hint" id="hint-2" hidden>Die Division braucht zuerst <strong>42·42</strong>. Die letzte Subtraktion braucht sowohl das linke Zwischenergebnis als auch den Quotienten.</div>
+  </section>
+
+  <section class="step solution">
+    <h2>Sauberer Papierabschluss</h2>
+    <p id="gate-copy">Noch gesperrt: Baue einen gültigen Ablauf und trenne Ergebnis- von Ablaufdeterminismus — oder decke den Musterweg bewusst auf.</p>
+    <button class="action" id="reveal">Lösung bewusst aufdecken</button>
+    <div id="solution" hidden>
+      <p><strong>Elementare Operationen:</strong> M₁=666·5=3330; M₂=42·42=1764; D=6241032÷1764=3538; A=9876+1234=11110; S₁=11110−3330=7780; S₂=7780−3538=<strong>4242</strong>.</p>
+      <p><strong>Ergebnis:</strong> deterministisch, exakt <strong>4242</strong>.</p>
+      <p><strong>Ablauf:</strong> nicht eindeutig. Zum Beispiel M₁→M₂→D→A→S₁→S₂ oder A→M₁→S₁→M₂→D→S₂.</p>
+      <p><strong>Unabhängige Kontrolle:</strong> 6241032/(42·42)=3538 und 9876+1234−666·5=7780; daher 7780−3538=4242.</p>
+    </div>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Kannst du Ergebnis und Ablauf trennen?</h2>
+    <p>Prüfungsartefakt: elementare Operationen, zwei topologische Reihenfolgen und das unabhängig kontrollierte exakte Ergebnis 4242.</p>
+    <div class="state-row"><button class="state-btn" data-state="sitzt">Sitzt</button><button class="state-btn" data-state="wackelt">Wackelt</button></div>
+    <div class="feedback" id="state-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-03/index.html">← Aufgabe 03</a><a href="../index.html">Blattübersicht</a><a href="../aufgabe-05/index.html">Aufgabe 05 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB07 · Aufgabe 3 · Linked Queue</title>
+  <link rel="stylesheet" href="../../styles.css"><link rel="stylesheet" href="task.css">
+</head>
+<body><main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · INTERAKTIV</a><a class="back" href="../index.html">← Blatt 07</a></nav>
+  <header class="task-head"><div><span class="kicker">ZEIGER · FIFO · O(1)</span><h1>Zwei Zeiger, keine Suche</h1></div><div class="counter">PB07 · 03/04</div></header>
+
+  <section class="mission">
+    <div class="brief"><h2>Dein Auftrag</h2><p>Baue eine String-Warteschlange als einfach verkettete Liste. <code>first</code> und <code>last</code> müssen Einfügen und Entfernen jeweils in <strong>O(1)</strong> ermöglichen.</p><p>Erste Aktion: Füge unten zwei Namen ein und beobachte beide Zeiger.</p></div>
+    <div class="rule-card"><strong>FIFO</strong><span><code>enter</code> hinten</span><span><code>leave</code> vorne</span><span>keine Traversierung</span></div>
+  </section>
+
+  <section class="step playground">
+    <h2>Pointer-Labor</h2>
+    <div class="controls"><label for="name">String</label><input id="name" value="Ada" autocomplete="off"><button id="enter" type="button">enter hinten</button><button id="leave" type="button">leave vorn</button><button id="reset" type="button">leeren</button></div>
+    <div class="pointer-board" aria-label="Visualisierung der verketteten Warteschlange">
+      <div class="pointer"><strong>first</strong><span id="first-pointer">nullptr</span></div>
+      <div class="nodes" id="nodes">∅</div>
+      <div class="pointer"><strong>last</strong><span id="last-pointer">nullptr</span></div>
+    </div>
+    <p class="stats"><strong>size:</strong> <span id="size">0</span> · <strong>letzter Schritt:</strong> <span id="steps">0 Pointer-Schritte</span></p>
+    <p class="feedback" id="op-feedback" role="status" aria-live="polite">Queue ist leer: beide Zeiger sind <code>nullptr</code>.</p>
+  </section>
+
+  <section class="step gate">
+    <h2>Leerer Übergang: der kritische Fall</h2>
+    <p>Die Queue enthält genau einen Knoten. Nach <code>leave()</code> wird <code>first = nullptr</code>. Was muss zusätzlich passieren?</p>
+    <div class="choices"><button class="choice" data-answer="keep"><code>last</code> unverändert lassen</button><button class="choice" data-answer="clear"><code>last = nullptr</code> setzen</button></div>
+    <div id="gate-feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+    <div class="hint-controls"><button class="action hint-btn" data-hint="hint-1" aria-expanded="false">Hinweis 1</button><button class="action hint-btn" data-hint="hint-2" aria-expanded="false">Hinweis 2</button></div>
+    <div class="hint" id="hint-1" hidden>Leer bedeutet: Es gibt weder einen ersten noch einen letzten Knoten.</div>
+    <div class="hint" id="hint-2" hidden>Nach <code>delete old_first</code> darf kein Zeiger mehr auf diesen Speicher zeigen. Sonst ist <code>last</code> dangling.</div>
+  </section>
+
+  <section class="step" id="lab" hidden>
+    <h2>Abschluss im C++-Lab</h2>
+    <div class="contracts"><article><code>lqueue_enter</code><strong>hinten</strong><span>last direkt nutzen</span></article><article><code>lqueue_leave</code><strong>vorn</strong><span>first direkt nutzen</span></article><article><code>is_empty / size</code><strong>O(1)</strong><span>Invariante pflegen</span></article></div>
+    <p>Bearbeite nur die TODOs in <code>lab/linkedqueue.cpp</code>. Header und Harness sind bereit; eine Komplettlösung wird nicht ausgeliefert.</p>
+    <pre><code>cd uebungsblaetter-interaktiv/blatt-07/aufgabe-03/lab
+./run-tests.sh</code></pre>
+    <p>Der Harness prüft die Abschluss-API <code>enter/leave/is_empty/size</code>, FIFO über mehrere Übergänge und Speicherfreigabe. Ein Lauf unter AddressSanitizer folgt, wenn der Compiler es unterstützt.</p>
+    <label class="proof-check"><input id="proof" type="checkbox"> FIFO- und Memory-Tests sind grün.</label>
+    <div class="state-row"><button class="state-btn" data-state="sitzt">✓ Sitzt</button><button class="state-btn" data-state="wackelt">↻ Wackelt</button></div><p class="tiny" id="state-feedback" aria-live="polite"></p>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-02/index.html">← Aufgabe 2</a><a href="../index.html">Blatt 07</a><a href="../../index.html">Gesamtübersicht</a><a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a><a href="../aufgabe-04/index.html">Aufgabe 4 →</a></nav>
+</main><script src="task.js"></script></body></html>

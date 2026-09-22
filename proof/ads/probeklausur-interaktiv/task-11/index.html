@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Aufgabe 11 · Baum-Rekursionswerkstatt</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Aufgabennavigation">
+    <a class="back" href="../index.html">← Übersicht</a>
+    <span class="brand">Baum-Rekursionswerkstatt</span>
+    <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF ↗</a>
+  </nav>
+
+  <header class="task-head">
+    <div><span class="kicker">6 Teilaufgaben · 1 Skelett</span><h1>Box. Stopp. Kinder.</h1></div>
+    <div class="counter">11 / 17</div>
+  </header>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Deine Mission</h2>
+      <p>Du löst drei Baumfunktionen und entlarvst drei kaputte Einfügefunktionen. Du musst nicht „C++ können“: Bei jeder Box fragst du dieselben drei Dinge.</p>
+      <ol><li><strong>Stopp?</strong> Bin ich hinter einem Blatt?</li><li><strong>Arbeit?</strong> Was mache ich mit dieser Box?</li><li><strong>Kinder?</strong> Einen Pfad oder beide Teilbäume?</li></ol>
+    </div>
+    <div class="starter" aria-label="Erste Aktion">
+      <div class="tree mini" aria-hidden="true"><span class="node root">7</span><span class="edge el"></span><span class="edge er"></span><span class="node left">4</span><span class="node right">—</span></div>
+      <p><strong>Dein einziger Startzug:</strong> Der rekursive Avatar landet rechts von 7 auf <code>nullptr</code>. Was muss passieren?</p>
+      <div class="choices">
+        <button class="choice" data-start="return"><code>return;</code></button>
+        <button class="choice" data-start="read"><code>n-&gt;val</code> lesen</button>
+        <button class="choice" data-start="children">Kinder besuchen</button>
+      </div>
+      <div class="feedback" id="startFeedback" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <div class="stepper">
+    <section class="step" id="incStep" hidden>
+      <h2>Alle ungeraden Werte erhöhen</h2>
+      <p class="prompt"><code>n-&gt;val</code> heißt „Zahl in der aktuellen Box“. Klicke top-down alle Boxen, die <code>baum_inc_odd1</code> verändern muss.</p>
+      <div class="tree-stage" id="oddTree" aria-label="Baum mit anklickbaren Knoten">
+        <svg viewBox="0 0 700 315" aria-hidden="true"><path d="M350 42L190 135M350 42L510 135M190 135L105 240M190 135L275 240M510 135L595 240"/></svg>
+        <button class="tree-node n7" data-value="7">7</button><button class="tree-node n4" data-value="4">4</button><button class="tree-node n10" data-value="10">10</button><button class="tree-node n3" data-value="3">3</button><button class="tree-node n5" data-value="5">5</button><button class="tree-node n13" data-value="13">13</button>
+      </div>
+      <p class="trace-strip">Verändert: <output id="oddOutput">—</output></p>
+      <button class="action primary" id="checkOdd">Auswahl prüfen</button>
+      <div class="feedback" id="oddFeedback" aria-live="polite"></div>
+      <div class="help-row"><button class="action hintBtn" data-hint="oddHint1">Hinweis 1</button><button class="action hintBtn" data-hint="oddHint2">Hinweis 2</button></div>
+      <div class="hint" id="oddHint1">Ungerade erkennst du an <code>val % 2 == 1</code>. Aber die Prüfung am aktuellen Knoten ersetzt nicht die Besuche seiner Kinder.</div>
+      <div class="hint" id="oddHint2">Hier werden <strong>7, 3, 5 und 13</strong> erhöht. Das Rekursionsskelett braucht nach dem Basisfall Aufrufe für <code>left</code> und <code>right</code>.</div>
+      <div class="skeleton" id="incSkeleton" hidden>
+        <label>Basisfall <select id="incBase"><option value="">— wählen —</option><option value="null">if (n == nullptr) return;</option><option value="leaf">if (n-&gt;left == nullptr) return;</option></select></label>
+        <label>Kinder <select id="incKids"><option value="">— wählen —</option><option value="both">inc(left); inc(right);</option><option value="left">nur inc(left);</option></select></label>
+        <label>Arbeit <select id="incWork"><option value="">— wählen —</option><option value="odd">if (val % 2 == 1) val += 1;</option><option value="all">val += 1;</option></select></label>
+        <button class="action primary" id="checkIncCode">Skelett prüfen</button>
+      </div>
+      <div class="feedback" id="incCodeFeedback" aria-live="polite"></div>
+    </section>
+
+    <section class="step locked" id="pathStep" aria-disabled="true">
+      <h2>Genau einen Paritätspfad laufen</h2>
+      <p class="prompt">Regel: <strong>ungerade → links</strong>, <strong>gerade → rechts</strong>. Klicke die besuchten Boxen in Reihenfolge. Der Start ist oben.</p>
+      <div class="tree-stage" id="pathTree" aria-label="Pfadbaum">
+        <svg viewBox="0 0 700 315" aria-hidden="true"><path d="M350 42L190 135M350 42L510 135M190 135L105 240M190 135L275 240M510 135L425 240M510 135L595 240"/></svg>
+        <button class="tree-node n7" data-path="7">7</button><button class="tree-node n4" data-path="4">4</button><button class="tree-node n10" data-path="10">10</button><button class="tree-node n3" data-path="3">3</button><button class="tree-node n5" data-path="5">5</button><button class="tree-node n8" data-path="8">8</button><button class="tree-node n12" data-path="12">12</button>
+      </div>
+      <p class="trace-strip">Pfad: <output id="pathOutput">—</output> · Länge: <output id="pathLength">0</output></p>
+      <div class="feedback" id="pathFeedback" aria-live="polite"></div>
+      <div class="help-row"><button class="action hintBtn" data-hint="pathHint1">Hinweis 1</button><button class="action hintBtn" data-hint="pathHint2">Hinweis 2</button></div>
+      <div class="hint" id="pathHint1">Die Zahl entscheidet nur die Richtung. Sie wird trotzdem zur Pfadlänge gezählt.</div>
+      <div class="hint" id="pathHint2"><code>7</code> ist ungerade: links zu 4. <code>4</code> ist gerade: rechts zu 5. <code>5</code> ist ungerade: links ist leer. Ergebnis: Länge 3.</div>
+      <div class="skeleton" id="pathSkeleton" hidden>
+        <label>Schleife <select id="pathLoop"><option value="">— wählen —</option><option value="node">while (n != nullptr)</option><option value="child">while (n-&gt;left != nullptr)</option></select></label>
+        <label>Zählen <select id="pathCount"><option value="">— wählen —</option><option value="each">res += 1; in jedem Durchlauf</option><option value="odd">nur ungerade Knoten zählen</option></select></label>
+        <label>Richtung <select id="pathDirection"><option value="">— wählen —</option><option value="rule">odd → left, else → right</option><option value="both">left und right besuchen</option></select></label>
+        <button class="action primary" id="checkPathCode">Pfadcode prüfen</button>
+      </div>
+      <div class="feedback" id="pathCodeFeedback" aria-live="polite"></div>
+    </section>
+
+    <section class="step locked" id="completeStep" aria-disabled="true">
+      <h2>Zur gleichen Höhe vervollständigen</h2>
+      <p class="prompt">Zielhöhe ist 3. Ergänze fehlende Boxen von oben nach unten mit Wert <code>0</code>. Klicke jede gestrichelte Position, die benötigt wird.</p>
+      <div class="complete-tree" aria-label="Unvollständiger Baum der Höhe drei">
+        <div class="level"><span class="fixed">9</span></div>
+        <div class="level two"><span class="fixed">4</span><button data-hole="r">+</button></div>
+        <div class="level four"><button data-hole="ll">+</button><span class="fixed">6</span><button data-hole="rl">+</button><button data-hole="rr">+</button></div>
+      </div>
+      <div class="feedback" id="completeFeedback" aria-live="polite"></div>
+      <div class="help-row"><button class="action hintBtn" data-hint="completeHint1">Hinweis 1</button><button class="action hintBtn" data-hint="completeHint2">Hinweis 2</button></div>
+      <div class="hint" id="completeHint1">„Vollständig“ ist hier laut Musterlösung: Bis zur vorhandenen Höhe hat jeder innere Knoten zwei Kinder. Die Höhe darf nicht wachsen.</div>
+      <div class="hint" id="completeHint2">Es fehlen vier Nullen: links-links, rechts sowie dessen zwei Kinder. Bei <code>height &lt;= 1</code> stoppst du, bevor neue Kinder entstehen.</div>
+      <div class="skeleton" id="completeSkeleton" hidden>
+        <label>Stopp <select id="completeBase"><option value="">— wählen —</option><option value="height">if (height &lt;= 1) return;</option><option value="null">if (n == nullptr) return;</option></select></label>
+        <label>Ergänzen <select id="completeCreate"><option value="">— wählen —</option><option value="missing">fehlendes left/right jeweils als {nullptr,0,nullptr}</option><option value="one">nur ein fehlendes Kind</option></select></label>
+        <label>Weiter <select id="completeKids"><option value="">— wählen —</option><option value="both">beide Kinder mit height-1</option><option value="same">beide Kinder mit height</option></select></label>
+        <button class="action primary" id="checkCompleteCode">Vervollständigung prüfen</button>
+      </div>
+      <div class="feedback" id="completeCodeFeedback" aria-live="polite"></div>
+    </section>
+
+    <section class="step locked" id="bugsStep" aria-disabled="true">
+      <h2>Drei kaputte Einfügefunktionen</h2>
+      <p class="prompt">Ordne jedem Code die Situation und den Defekt zu. <code>*&amp;</code> ist eine Referenz auf den echten Zeiger; ein normaler <code>*</code>-Zeiger in <code>n</code> ist nur eine lokale Kopie.</p>
+      <div class="bug-grid">
+        <article><h3>bad1 · <code>baum_node*&amp; n</code></h3><label>Defekt <select data-bug="1"><option value="">— wählen —</option><option value="root">Beim Abstieg wird der echte root-Zeiger überschrieben; alter Baum geht verloren.</option><option value="local">Nur lokale Variable ändert sich; nichts wird eingefügt.</option><option value="cycle">Neuer Knoten zeigt zurück zur Wurzel; Zyklus.</option></select></label></article>
+        <article><h3>bad2 · <code>baum_node* n</code></h3><label>Defekt <select data-bug="2"><option value="">— wählen —</option><option value="root">Beim Abstieg wird der echte root-Zeiger überschrieben; alter Baum geht verloren.</option><option value="local">Nur lokale Variable ändert sich; nichts wird eingefügt.</option><option value="cycle">Neuer Knoten zeigt zurück zur Wurzel; Zyklus.</option></select></label></article>
+        <article><h3>bad3 · <code>{nullptr,val,b-&gt;root}</code></h3><label>Defekt <select data-bug="3"><option value="">— wählen —</option><option value="root">Beim Abstieg wird der echte root-Zeiger überschrieben; alter Baum geht verloren.</option><option value="local">Nur lokale Variable ändert sich; nichts wird eingefügt.</option><option value="cycle">Bei nichtleerem Baum zeigt der neue Knoten zurück zur Wurzel; Höhe läuft endlos/Stackoverflow.</option></select></label></article>
+      </div>
+      <button class="action primary" id="checkBugs">Alle drei prüfen</button>
+      <div class="feedback" id="bugsFeedback" aria-live="polite"></div>
+      <div class="help-row"><button class="action hintBtn" data-hint="bugsHint1">Hinweis 1</button><button class="action hintBtn" data-hint="bugsHint2">Hinweis 2</button></div>
+      <div class="hint" id="bugsHint1">Frage bei jeder Zuweisung: Ändert sie den echten Baum, nur die lokale Variable oder erzeugt sie einen Rückweg?</div>
+      <div class="hint" id="bugsHint2">Zuordnung: bad1 → root verloren; bad2 → keine Einfügung; bad3 → Zyklus bei nichtleerem Baum.</div>
+    </section>
+
+    <section class="step locked" id="finishStep" aria-disabled="true">
+      <h2>Prüfungsabschluss</h2>
+      <p class="prompt">Formuliere das gemeinsame Skelett in einem Satz. Nenne ausdrücklich Basisfall und ob ein Pfad oder beide Teilbäume verfolgt werden.</p>
+      <label for="finalAnswer">Dein Klausursatz</label>
+      <textarea class="answer" id="finalAnswer" placeholder="Basisfall …; bei inc …; beim Paritätspfad …; bei complete …"></textarea>
+      <button class="action primary" id="checkFinish">Abschlussversuch speichern</button>
+      <div class="feedback" id="finishFeedback" aria-live="polite"></div>
+      <div class="solution-gate"><button class="action" id="revealSolution" disabled>Vollständige Musterlösung aufdecken</button><p class="tiny">Erst nach einem eigenen Abschlussversuch verfügbar.</p></div>
+      <div id="fullSolution" class="full-solution" hidden>
+        <h3>Quellennaher vollständiger Musterweg</h3>
+<pre class="code"><code>void baum_inc_odd1(baum_node* n) {
+    if (n == nullptr) return;
+    baum_inc_odd1(n-&gt;left);
+    baum_inc_odd1(n-&gt;right);
+    if (n-&gt;val % 2 == 1) n-&gt;val += 1;
+}
+void baum_inc_odd1(baum* b) {
+    baum_inc_odd1(b-&gt;root);
+}
+
+int baum_len_odd_even(baum* b) {
+    baum_node* n = b-&gt;root;
+    int res = 0;
+    while (n != nullptr) {
+        res += 1;
+        if (n-&gt;val % 2 == 1) n = n-&gt;left;
+        else n = n-&gt;right;
+    }
+    return res;
+}
+
+void baum_complete(baum_node* n, size_t height) {
+    if (height &lt;= 1) return;
+    if (n-&gt;left == nullptr)
+        n-&gt;left = new baum_node{nullptr, 0, nullptr};
+    if (n-&gt;right == nullptr)
+        n-&gt;right = new baum_node{nullptr, 0, nullptr};
+    baum_complete(n-&gt;left, height - 1);
+    baum_complete(n-&gt;right, height - 1);
+}
+void baum_complete(baum* b) {
+    baum_complete(b-&gt;root, baum_height(b));
+}</code></pre>
+        <h3>Warum die drei Versuche scheitern</h3>
+        <ol><li><strong>bad1:</strong> <code>n</code> referenziert zuerst <code>b-&gt;root</code>. <code>n = n-&gt;left</code> verändert dadurch den echten Zeiger und zerstört beim Abstieg den Baum; am Ende bleibt nur der neue Knoten als Wurzel.</li><li><strong>bad2:</strong> Der Abstieg verändert nur die lokale Zeigervariable. Die spätere Zuweisung hängt keinen Knoten in den Baum.</li><li><strong>bad3:</strong> Beim nichtleeren Baum zeigt <code>last-&gt;left</code> auf einen neuen Knoten, dessen rechter Zeiger zurück zur Wurzel zeigt. Der Zyklus lässt <code>baum_height</code> nicht terminieren (bis Stackoverflow).</li></ol>
+      </div>
+      <div class="state-row" aria-label="Lernstatus"><button class="state-btn" data-value="sitzt">Sitzt</button><button class="state-btn" data-value="wackelt">Wackelt</button></div>
+      <div class="feedback" id="stateFeedback" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <nav class="nav-bottom" aria-label="Weitere Aufgaben"><a href="../task-10/index.html">← Aufgabe 10</a><a href="../index.html">Übersicht</a><a href="../task-12/index.html">Aufgabe 12 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

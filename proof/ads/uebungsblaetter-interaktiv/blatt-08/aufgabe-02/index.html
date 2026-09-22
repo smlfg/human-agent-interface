@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB08 · Aufgabe 2 · Name im BST</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Hauptnavigation">
+      <a class="brand" href="../../index.html">ADS · INTERAKTIV</a>
+      <a class="back" href="../index.html">← Blatt 08</a>
+    </nav>
+
+    <header class="task-head">
+      <div><span class="kicker">VERGLEICHE · GEHE · ERHALTE</span><h1>Dein Name als Suchbaum</h1></div>
+      <div class="counter">PB08 · 02/07</div>
+    </header>
+
+    <section class="media-pre">
+    <div class="media-route-top">
+      <h2>Vorher ansehen</h2>
+      <span class="media-duration">Short · 1:07</span>
+    </div>
+    <p class="media-instruction">Anderes Wort als deine Aufgabe — bewusst. Die Mechanik überträgst du selbst.</p>
+    <video class="media-player short-player" controls preload="metadata" poster="../../../media-posters/pb08a02-short.webp" src="../../../notebooklm-study-pack/10_uebungsblaetter/blatt08/short_PB08A02_duplikate-bst.mp4">Dein Browser unterstützt Video nicht.</video>
+    <div class="recall-box"><strong>Sofort-Recall</strong>Dein Wort enthält einen Buchstaben doppelt — wie viele Knoten hat der Baum dafür?</div>
+  </section>
+
+  <section class="mission">
+      <div class="brief">
+        <h2>Der Papierauftrag, Schritt für Schritt</h2>
+        <p>Füge die Buchstaben deines Namens <strong>in Namensreihenfolge</strong> ein. Lösche sie danach in genau derselben Reihenfolge.</p>
+        <p>Erste Aktion: Name ändern oder direkt mit <strong>SAMUEL</strong> starten.</p>
+      </div>
+      <div class="rule-card"><strong>Unsere Duplikatregel</strong><span>Identische Schlüssel werden nicht erneut eingefügt.</span><span>Ein späteres Löschen desselben Buchstabens ist dann ein No-op.</span></div>
+    </section>
+
+    <section class="step setup" id="setup">
+      <label for="name-input">Name</label>
+      <div class="input-row">
+        <input id="name-input" value="SAMUEL" autocomplete="name" maxlength="24">
+        <button class="action" id="prepare" type="button">Folge vorbereiten</button>
+      </div>
+      <p class="tiny">Leerzeichen, Bindestriche und Ziffern werden ignoriert; Buchstaben werden großgeschrieben.</p>
+      <div class="sequence" id="sequence" aria-live="polite"></div>
+    </section>
+
+    <section class="step gate" id="gate" hidden>
+      <h2>Mechanik-Gate</h2>
+      <fieldset>
+        <legend>1. Welche Folge wird eingefügt?</legend>
+        <div class="choices" id="order-choices"></div>
+      </fieldset>
+      <fieldset>
+        <legend>2. Ein zu löschender Knoten hat zwei Kinder. Was bleibt erhalten?</legend>
+        <div class="choices">
+          <button class="choice" type="button" data-delete-rule="drop">Den Knoten samt einem Unterbaum entfernen</button>
+          <button class="choice" type="button" data-delete-rule="relink">Nachfolger einsetzen und beide Unterbäume korrekt verknüpfen</button>
+        </div>
+      </fieldset>
+      <div class="feedback" id="gate-feedback" role="status" aria-live="polite" hidden></div>
+      <button class="action primary" id="open-trace" type="button" disabled>Trace starten</button>
+      <div class="hint-controls">
+        <button class="action hint-btn" type="button" data-hint="hint-1" aria-expanded="false">Hinweis 1</button>
+        <button class="action hint-btn" type="button" data-hint="hint-2" aria-expanded="false">Hinweis 2</button>
+      </div>
+      <div class="hint" id="hint-1" hidden><strong>Avatar-Regel:</strong> Beginne an der Wurzel. Vergleiche den neuen Buchstaben nur mit der aktuellen Box: kleiner links, größer rechts.</div>
+      <div class="hint" id="hint-2" hidden><strong>Form statt Inhalt:</strong> Alphabetisches Sortieren vor dem Einfügen verändert die Baumform. Beim Zwei-Kinder-Löschen verwenden wir fest das Minimum des rechten Unterbaums.</div>
+    </section>
+
+    <section class="step trainer" id="trainer" hidden>
+      <div class="trainer-head">
+        <div><span class="phase" id="phase">EINFÜGEN</span><h2 id="instruction">Nächster Buchstabe</h2></div>
+        <span class="progress" id="progress"></span>
+      </div>
+      <div class="tree-wrap" id="tree" aria-live="polite"></div>
+      <p class="operation" id="operation"></p>
+      <button class="action primary" id="next-step" type="button">Nächsten Schritt zeigen</button>
+    </section>
+
+    <section class="step solution" id="solution" hidden>
+      <h2>Kontrollspur: alle Zustände top-down</h2>
+      <p>Jede Karte ist der Baum <em>nach</em> der genannten Operation. Der letzte Baum muss leer sein.</p>
+      <div class="timeline" id="timeline"></div>
+    </section>
+
+    <section class="step completion" id="completion" hidden>
+      <h2>Papierabschluss</h2>
+      <p>Zeichne die Zustände für deinen Namen ab. Markiere Duplikat-No-ops und schreibe: „Zwei Kinder → Inorder-Nachfolger; Unterbäume bleiben erhalten.“</p>
+      <label class="proof-check"><input id="paper-proof" type="checkbox"> Mein letzter Papierbaum ist leer und mein Trace stimmt.</label>
+      <div class="state-row">
+        <button class="state-btn" type="button" data-state="sitzt">✓ Sitzt</button>
+        <button class="state-btn" type="button" data-state="wackelt">↻ Wackelt</button>
+      </div>
+      <p class="tiny" id="state-feedback" aria-live="polite"></p>
+    </section>
+
+    <nav class="nav-bottom" aria-label="Aufgabennavigation">
+      <a href="../aufgabe-01/index.html">← Aufgabe 1</a>
+      <a href="../index.html">Blatt 08</a>
+      <a href="../../index.html">Gesamtübersicht</a>
+      <a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a>
+      <a href="../aufgabe-03/index.html">Aufgabe 3 →</a>
+    </nav>
+  </main>
+  <script src="task.js"></script>
+</body>
+</html>

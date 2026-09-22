@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB05 · Aufgabe 1 · Maximum Subarray</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · INTERAKTIV</a><a class="back" href="../index.html">← Blatt 05</a></nav>
+  <header class="task-head"><div><span class="kicker">TRACE · VERBESSERE · TESTE</span><h1>Maximum Subarray</h1></div><div class="counter">PB05 · 01/04</div></header>
+
+  <section class="mission">
+    <div class="brief"><h2>Dein Mikro-Schritt</h2><p>Klicke im Quellarray zuerst auf den <strong>Startindex 2</strong>. Baue danach die zusammenhängende Summe Element für Element auf.</p><p>Nicht die größten Einzelwerte sammeln: Die Teilfolge muss lückenlos sein.</p></div>
+    <div class="source-core">Gesucht: zusammenhängende, nichtleere Teilfolge
+Ergebnis: Startindex, Endindex, maximale Summe
+Lab: naive Θ(n³) + Summenwiederverwendung Θ(n²)</div>
+  </section>
+
+  <section class="step" id="trace-step">
+    <h2>1 · Am Quellarray entlang</h2>
+    <p class="prompt">Aktuelle Summe: <strong id="running-sum">0</strong> · Auswahl: <strong id="range-label">noch keine</strong></p>
+    <div class="array" id="source-array" aria-label="Quellarray"></div>
+    <div class="actions"><button class="action" id="reset-trace" type="button">Trace zurücksetzen</button><button class="action hint-btn" data-hint="hint-1" aria-expanded="false" type="button">Hinweis 1</button><button class="action hint-btn" data-hint="hint-2" aria-expanded="false" type="button">Hinweis 2</button></div>
+    <div class="hint" id="hint-1" hidden>Fixiere zuerst <code>i = 2</code>. Der Endindex <code>j</code> darf danach nur nach rechts wandern.</div>
+    <div class="hint" id="hint-2" hidden>Rechne: <code>59 → 85 → 32 → 90 → 187</code>. Auch das negative <code>−53</code> bleibt in der zusammenhängenden Folge.</div>
+    <div class="feedback" id="trace-feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="loops-step" hidden>
+    <h2>2 · Welche Schleife kann weg?</h2>
+    <div class="loop-compare">
+      <article><span class="loop-count">3 Schleifen</span><h3>Naiv</h3><p><code>i</code> wählt den Start, <code>j</code> das Ende, <code>k</code> summiert <em>jedes</em> Teilfeld erneut.</p><div class="trace-line">sum(i..j) = a[i] + … + a[j]</div></article>
+      <article><span class="loop-count">2 Schleifen</span><h3>Summe wiederverwenden</h3><p>Bei festem <code>i</code> gilt beim nächsten Ende: <code>sum += a[j]</code>.</p><div class="trace-line">sum(i..j) = sum(i..j−1) + a[j]</div></article>
+    </div>
+    <p class="prompt">Was ist die echte Verbesserung?</p>
+    <div class="choices" role="group" aria-label="Algorithmusverbesserung">
+      <button class="choice" data-path="empty" type="button">Beste Summe mit 0 starten; leere Folge gewinnt bei nur negativen Werten</button>
+      <button class="choice" data-path="resum" type="button">Nur Schleife umbenennen, aber jede Summe neu berechnen</button>
+      <button class="choice" data-path="reuse" type="button">Für jedes i sum = 0; mit wachsendem j nur a[j] addieren</button>
+    </div>
+    <div class="feedback" id="path-feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step lab-box" id="lab-step" hidden>
+    <h2>3 · Code-Lab ohne Komplettlösung</h2>
+    <p>Implementiere in <code>lab/maxsub.cpp</code> zuerst <code>max_subarray_naive</code>, dann <code>max_subarray_reuse</code>. Der Vertrag verlangt eine <strong>nichtleere</strong> Teilfolge; bei leerem Vektor ist <code>found == false</code>.</p>
+    <code class="command">cd uebungsblaetter-interaktiv/blatt-05/aufgabe-01/lab
+./run-tests.sh</code>
+    <p class="tiny">Der Starter kompiliert, meldet aber TODO-Fehler. Der Testtreiber prüft Indizes und Summe, inklusive Original-Fixtures.</p>
+  </section>
+
+  <section class="step" id="runtime-step" hidden>
+    <h2>4 · Abschluss-Gate</h2>
+    <div class="gate-grid">
+      <label>Naiver Algorithmus <select id="naive-runtime"><option value="">– wählen –</option><option value="n2">Θ(n²)</option><option value="n3">Θ(n³)</option></select></label>
+      <label>Summenwiederverwendung <select id="reuse-runtime"><option value="">– wählen –</option><option value="n">Θ(n)</option><option value="n2">Θ(n²)</option></select></label>
+    </div>
+    <button class="action primary" id="check-runtime" type="button">Laufzeiten prüfen</button>
+    <div class="feedback" id="runtime-feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Beleg statt Bauchgefühl</h2>
+    <p><code>maxsubsimple.dat</code>: Indizes <strong>2..6</strong>, Summe <strong>187</strong>. Die Tests prüfen außerdem <code>maxsub.dat</code>: <strong>1016..6585</strong>, Summe <strong>46610</strong>.</p>
+    <label class="proof-check"><input id="tests-pass" type="checkbox"> Mein echter Lauf meldet <strong>10/10 Tests bestanden</strong>.</label>
+    <div class="state-row"><button class="state-btn" data-state="sitzt" type="button">✓ Sitzt</button><button class="state-btn" data-state="wackelt" type="button">↻ Wackelt</button></div>
+    <p class="tiny" id="state-feedback" aria-live="polite"></p>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../index.html">← Blatt 05</a><a href="../../index.html">Gesamtübersicht</a><a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a><a href="../aufgabe-02/index.html">Aufgabe 2 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 08 · Aufgabe 06 · 2-3-4-Bäume</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · Übungsblätter</a><a class="back" href="../index.html">← Blatt 08</a></nav>
+
+  <header class="task-head"><div><span class="kicker">2-3-4-BAUM · TOP-DOWN-SPLIT</span><h1>Splitte, bevor du absteigst.</h1></div><div class="counter">06 / 07</div></header>
+
+  <section class="media-pre">
+    <div class="media-route-top">
+      <h2>Vorher ansehen</h2>
+      <span class="media-duration">Short · 1:07</span>
+    </div>
+    <p class="media-instruction">Andere Einfügefolge als deine Aufgabe — bewusst. Die Mechanik überträgst du selbst.</p>
+    <video class="media-player short-player" controls preload="metadata" poster="../../../media-posters/pb08a06-short.webp" src="../../../notebooklm-study-pack/10_uebungsblaetter/blatt08/short_PB08A06_praeventiver-split.mp4">Dein Browser unterstützt Video nicht.</video>
+    <div class="recall-box"><strong>Sofort-Recall</strong>Warum splittet man den vollen Knoten BEVOR man absteigt und nicht danach?</div>
+  </section>
+
+  <section class="mission">
+    <div class="brief">
+      <h2>Originalauftrag</h2>
+      <p>Füge <code>13, 20, 6, 15, 1, 25, 11</code> in einen leeren 2-3-4-Baum ein und zeichne nur Schritte mit struktureller Änderung. Füge danach <code>31</code> in den vorgegebenen Baum ein und zeichne das Resultat.</p>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original · Seite 2 ↗</a>
+    </div>
+    <div class="card first-action">
+      <p class="eyebrow">Erste Aktion · Folge abspielen</p>
+      <h2>Nächster Schlüssel: <output id="next-key">13</output></h2>
+      <div class="sequence" aria-label="Einfügereihenfolge"></div>
+      <button class="action primary" id="insert-next">13 einfügen</button>
+      <p class="microcopy">Orange markiert nur einen Split oder eine neue Ebene – nicht bloß einen neuen Schlüssel.</p>
+    </div>
+  </section>
+
+  <section class="step" id="sim-step">
+    <div class="section-title"><div><p class="eyebrow">Simulator 1</p><h2>Leerer Baum → sieben Schlüssel</h2></div><button class="action quiet" id="reset-sequence">Zurücksetzen</button></div>
+    <div class="tree-stage" id="sequence-tree" aria-label="Aktueller 2-3-4-Baum"></div>
+    <div class="feedback" id="sequence-feedback" aria-live="polite">Noch leer. Ein Knoten ist eine Box und enthält 1–3 geordnete Schlüssel.</div>
+    <div class="split-log" id="split-log"><strong>Zeichnungen fürs Blatt:</strong> Noch keine strukturelle Änderung.</div>
+  </section>
+
+  <section class="step help">
+    <h2>Hinweise</h2>
+    <div class="actions"><button class="action hint-btn" data-hint="hint-1">Hinweis 1 · volle Box</button><button class="action hint-btn" data-hint="hint-2">Hinweis 2 · Bereiche</button></div>
+    <div class="hint" id="hint-1" hidden>Ein 4-Knoten enthält drei Schlüssel. Vor dem Abstieg wird sein mittlerer Schlüssel zum Elternknoten befördert; links und rechts bleiben je ein 2-Knoten.</div>
+    <div class="hint" id="hint-2" hidden>Die Kinderbereiche müssen geordnet bleiben: vor dem ersten Schlüssel, zwischen je zwei Schlüsseln und nach dem letzten Schlüssel. Ein Schlüssel darf nie allein „nach oben geschoben“ werden, ohne seine angrenzenden Teilbäume passend mitzunehmen.</div>
+  </section>
+
+  <section class="step source-tree">
+    <p class="eyebrow">Simulator 2 · PDF-Baum rekonstruiert</p>
+    <h2>Wo beginnt das Einfügen von 31?</h2>
+    <p>Die Box <code>[11 | 15 | 23]</code> ist auf dem Suchweg bereits voll. Wähle den nächsten korrekten Schritt.</p>
+    <div class="tree-stage compact" id="pdf-tree" aria-label="Ausgangsbaum aus dem Aufgabenblatt"></div>
+    <div class="choices route-choices">
+      <button class="choice" data-route="late">Bis zum Blatt absteigen und erst dort volle Knoten splitten</button>
+      <button class="choice" data-route="move">23 nach oben verschieben, Kinder unverändert lassen</button>
+      <button class="choice" data-route="split">Vollen Knoten vor dem Abstieg an 15 splitten</button>
+    </div>
+    <div class="feedback" id="route-feedback" aria-live="polite" hidden></div>
+    <button class="action primary" id="continue-31" hidden>Nächsten Split ausführen</button>
+  </section>
+
+  <section class="step solution">
+    <h2>Lösungsgate</h2>
+    <p id="gate-copy">Noch gesperrt: Spiele die erste Folge ab und triff beim Einfügen von 31 die Splitentscheidung.</p>
+    <button class="action" id="reveal">Musterweg bewusst aufdecken</button>
+    <div id="solution" hidden>
+      <h3>Splitzustände und Resultat</h3>
+      <div class="answer-grid">
+        <article><h4>Folge: einzige Strukturänderung</h4><div class="mini-tree" id="sequence-answer"></div><p>Beim Einfügen von <strong>15</strong>: <code>[6|13|20]</code> wird gesplittet, <code>13</code> wird Wurzel. Die späteren Schlüssel füllen nur vorhandene Blätter.</p></article>
+        <article><h4>31: erster Split</h4><div class="mini-tree" id="split-one-answer"></div><p><code>15</code> steigt auf; die Teilbäume bleiben in ihren geordneten Bereichen.</p></article>
+        <article><h4>31: Resultatbaum</h4><div class="mini-tree" id="final-answer"></div><p>Das volle Blatt <code>[25|27|29]</code> gibt <code>27</code> an seinen Elternknoten ab. Danach wird <code>31</code> in <code>[29]</code> eingefügt.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Abschlussbeleg</h2>
+    <p>Du kannst die eine Strukturzeichnung der Folge benennen und den Resultatbaum für 31 zeichnen: Wurzel <code>[7|15]</code>, innere Ebene <code>[3] [11] [23|27]</code>, Blätter <code>[2] [5] [9] [13] [17|19|21] [25] [29|31]</code>.</p>
+    <div class="state-row"><button class="state-btn" data-state="sitzt">Sitzt</button><button class="state-btn" data-state="wackelt">Wackelt</button></div><div class="feedback" id="state-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-05/index.html">← Aufgabe 05</a><a href="../index.html">Blattübersicht</a><a href="../aufgabe-07/index.html">Aufgabe 07 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

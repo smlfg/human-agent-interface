@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 02 · Aufgabe 01 · Wörter inspizieren</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · Übungsblätter</a><a class="back" href="../index.html">← Blatt 02</a></nav>
+
+  <header class="task-head"><div><span class="kicker">DATEI · VEKTOR · LAUFZEIT</span><h1>Was steckt in der Wortliste?</h1></div><div class="counter">01 / 07</div></header>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Originalauftrag</h2>
+      <p>Lies den Dateipfad aus <code>argv[1]</code> und die Wörter mit <code>read_words</code>. Berechne Anzahl, Buchstaben gesamt, längste und kürzeste Wortlänge sowie 26 Anfangsbuchstaben-Zähler.</p>
+      <p>Messe die gesamte Berechnung <strong>vor</strong> der Ausgabe. Gib A–Z mit fünf Einträgen pro Zeile aus und vergleiche Übergabe per Kopie mit <code>const&amp;</code>.</p>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF · Seite 1 ↗</a>
+    </div>
+    <div class="card first-action">
+      <p class="eyebrow">Erste Aktion · bekannte Fixture</p>
+      <h2>Trenne diese Wörter durch Leerzeichen</h2>
+      <label for="words">Wortliste</label>
+      <textarea id="words" rows="3">Ada agent Baum apple Zoo</textarea>
+      <button class="action" id="analyze">Analysieren</button>
+      <div class="feedback" id="analysis-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step" id="result-step" hidden>
+    <h2>1 · Prüfe die Statistik</h2>
+    <div class="stats" id="stats"></div>
+    <p class="timing" id="timing"></p>
+    <div class="alphabet" id="alphabet" aria-label="Anfangsbuchstaben A bis Z"></div>
+    <p class="microcopy">Die Zeit wurde nach der Berechnung gestoppt; erst danach entstand diese Ausgabe.</p>
+    <fieldset>
+      <legend>Welche erwarteten Werte hat die Fixture?</legend>
+      <label><span>Wörter</span><input id="guess-count" inputmode="numeric"></label>
+      <label><span>Buchstaben gesamt</span><input id="guess-letters" inputmode="numeric"></label>
+      <label><span>längstes / kürzestes</span><input id="guess-range" placeholder="z. B. 8 / 2"></label>
+      <button class="action" id="check-fixture">Fixture prüfen</button>
+    </fieldset>
+    <div class="feedback" id="fixture-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step help" aria-labelledby="help-title">
+    <h2 id="help-title">Hinweise</h2>
+    <div class="actions"><button class="action hint-btn" data-hint="hint-1">Hinweis 1 · Minimum</button><button class="action hint-btn" data-hint="hint-2">Hinweis 2 · A–Z</button></div>
+    <div class="hint" id="hint-1" hidden>Bei einer nichtleeren Liste kann das Minimum mit der Länge des ersten Wortes starten. Für die <strong>leere</strong> Liste ist <code>shortest = 0</code> eine ausdrücklich festgelegte Lab-Konvention.</div>
+    <div class="hint" id="hint-2" hidden>Erst prüfen, ob ein Wort nicht leer ist. Dann das erste Zeichen ohne Beachtung der Großschreibung normalisieren und nur bei <code>A…Z</code> den Index <code>0…25</code> bilden.</div>
+  </section>
+
+  <section class="step solution">
+    <h2>2 · Übersetzung in C++</h2>
+    <p id="gate-copy">Noch gesperrt: Prüfe zuerst die bekannte Fixture — oder decke das Gerüst bewusst auf.</p>
+    <button class="action" id="reveal">Codegerüst bewusst aufdecken</button>
+    <div id="solution" hidden>
+      <p><strong>Datenweg:</strong> <code>argv[1]</code> → <code>read_words</code> → Timer starten → fünf Funktionen → Timer stoppen → Ausgabe.</p>
+      <pre><code>std::size_t word_count(const Words&amp; words);
+std::size_t total_letters(const Words&amp; words);
+std::array&lt;std::size_t, 26&gt; count_initials(const Words&amp; words);</code></pre>
+      <p>Im Ordner <code>lab/</code> wartet ein kompilierbarer Starter. Die Tests prüfen eine bekannte Fixture, leere Eingabe, Groß-/Kleinschreibung und nichtalphabetische Anfangszeichen.</p>
+      <pre><code>cd lab
+./run-tests.sh</code></pre>
+      <aside class="wrong-path"><strong>Blockierter Pfad:</strong> <code>tolower(first) - 'a'</code> ohne Leer-/Alphabetprüfung kann außerhalb der 26 Felder schreiben. Und Übergabe als <code>Words words</code> misst bei jedem Funktionsaufruf zusätzlich die Kopie des gesamten Vektors.</aside>
+    </div>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Abschlussbeleg</h2>
+    <p>Fertig, wenn deine eigene Fixture bekannte Werte liefert, <code>./run-tests.sh</code> grün ist, A–Z in Fünferzeilen erscheint und du den Timing-Unterschied zwischen Kopie und <code>const&amp;</code> erklären kannst.</p>
+    <div class="state-row"><button class="state-btn" data-state="sitzt">Sitzt</button><button class="state-btn" data-state="wackelt">Wackelt</button></div>
+    <div class="feedback" id="state-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../index.html">← Blattübersicht</a><a href="../../index.html">Gesamtübersicht</a><a href="../aufgabe-02/index.html">Aufgabe 02 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

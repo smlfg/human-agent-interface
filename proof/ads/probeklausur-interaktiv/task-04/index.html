@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Aufgabe 04 · Drei Produkt-Detektive</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <script src="task.js" defer></script>
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Seitennavigation">
+    <a class="back" href="../index.html">← Übersicht</a>
+    <span class="brand">ADS · Code-Labor</span>
+    <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF</a>
+  </nav>
+
+  <header class="task-head">
+    <div><span class="kicker">CODE-DETEKTIV</span><h1>Drei Wege zum Produkt?</h1></div>
+    <div class="counter">04 / 17</div>
+  </header>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Deine Mission</h2>
+      <p>Füttere drei Funktionen mit demselben Array. Finde erst den <strong>Unterschied</strong>, dann ihre Laufzeiten.</p>
+      <p class="micro"><strong>Erster Zug:</strong> Wähle unten den Testfall mit einer Null. Was erwartest du?</p>
+    </div>
+    <pre class="code" aria-label="Kern der drei Funktionen"><code>fun1: wenn a[i] != 0 → prod *= a[i]
+fun2: wenn a[i] == 0 → return 0
+      sonst          → prod *= a[i]
+fun3: wenn a[i] gerade → addiere prod genau a[i]-mal
+      sonst            → prod *= a[i]</code></pre>
+  </section>
+
+  <section class="step" id="lab">
+    <h2>Spuren sichern</h2>
+    <p class="prompt">Klicke einen Beweis-Testfall. Danach tippe auf jede Funktion, um ihren Rückgabewert aufzudecken.</p>
+    <div class="cases" role="group" aria-label="Testfall auswählen">
+      <button class="choice case" data-case="zero">[2, 0, 3] · Null-Falle</button>
+      <button class="choice case" data-case="clean">[2, 3, 5] · sauber</button>
+      <button class="choice case" data-case="negative">[-2, 3] · Negativ-Falle</button>
+    </div>
+    <div class="machines" aria-label="Funktionsausgaben">
+      <button class="machine" data-fn="f1" disabled><b>fun1</b><span>?</span><small>Spur aufdecken</small></button>
+      <button class="machine" data-fn="f2" disabled><b>fun2</b><span>?</span><small>Spur aufdecken</small></button>
+      <button class="machine" data-fn="f3" disabled><b>fun3</b><span>?</span><small>Spur aufdecken</small></button>
+    </div>
+    <div id="trace-feedback" class="feedback" aria-live="polite"></div>
+    <button class="action hint-btn" data-hint="hint1">Hinweis 1: Null verfolgen</button>
+    <div class="hint" id="hint1">Bei <code>fun1</code> wird eine Null <em>übersprungen</em>. Bei <code>fun2</code> beendet sie die Funktion sofort. Frage bei <code>fun3</code>: Wie oft läuft <code>j &lt; a[i]</code>?</div>
+    <button class="action hint-btn" data-hint="hint2">Hinweis 2: Addition übersetzen</button>
+    <div class="hint" id="hint2"><code>res += prod</code>, genau <code>a[i]</code>-mal, bedeutet für positive gerade Werte: <code>prod · a[i]</code>. Bei einer negativen geraden Zahl läuft die Schleife jedoch nullmal.</div>
+  </section>
+
+  <section class="step locked" id="runtime-step" aria-labelledby="runtime-title">
+    <h2 id="runtime-title">Laufzeit-Tresor</h2>
+    <p class="prompt">Ordne Best und Worst zu. Der typische Fehlweg „alle haben nur eine äußere Schleife, also Θ(n)“ wird hier geprüft.</p>
+    <fieldset id="runtime-quiz" disabled>
+      <legend>Wähle die vollständige korrekte Zuordnung.</legend>
+      <label><input type="radio" name="runtime" value="alln"> Alle drei: Best = Worst = Θ(n)</label>
+      <label><input type="radio" name="runtime" value="correct"> fun1: Θ(n)/Θ(n) · fun2: Θ(1)/Θ(n) · fun3: Θ(n)/wertabhängig</label>
+      <label><input type="radio" name="runtime" value="zero"> fun1: Θ(1)/Θ(n) · fun2: Θ(n)/Θ(n) · fun3: Θ(n²)/Θ(n²)</label>
+    </fieldset>
+    <button class="action primary" id="check-runtime" disabled>Zuordnung prüfen</button>
+    <div id="runtime-feedback" class="feedback" aria-live="polite"></div>
+  </section>
+
+  <section class="step locked" id="finish-step">
+    <h2>Prüfungssatz bauen</h2>
+    <p class="prompt">Vervollständige die gemeinsame Vorbedingung. Erst ein Versuch entsperrt den Musterweg.</p>
+    <label for="condition">Alle drei liefern sicher dasselbe Produkt, wenn …</label>
+    <textarea class="answer" id="condition" disabled placeholder="Dein Satz …"></textarea>
+    <button class="action primary" id="check-condition" disabled>Meinen Satz prüfen</button>
+    <div id="condition-feedback" class="feedback" aria-live="polite"></div>
+    <button class="action reveal" id="reveal" disabled>Musterweg aufdecken</button>
+    <div class="solution" id="solution" hidden>
+      <h3>Klausurabschluss</h3>
+      <ul>
+        <li><strong>Ausgabe:</strong> fun1 ignoriert Nullen; fun2 und fun3 ergeben bei Null 0. fun3 simuliert bei positiven geraden Werten die Multiplikation durch wiederholte Addition.</li>
+        <li><strong>Gemeinsame Vorbedingung:</strong> Alle Werte sind ungleich 0 und gerade Werte sind positiv. Die einfache klausurnahe Form lautet: alle Werte sind positiv.</li>
+        <li><strong>fun1:</strong> Best = Worst = Θ(n), weil jedes der n Elemente geprüft wird.</li>
+        <li><strong>fun2:</strong> Best = Θ(1) bei erster Null; Worst = Θ(n) ohne Null.</li>
+        <li><strong>fun3:</strong> Best = Θ(n) bei nur ungeraden Werten. Präzise: Θ(n + Σ positive gerade a[i]). Sind diese Werte O(n), ist der Worst Case Θ(n²); ohne Werteschranke ist der Worst Case nicht allein durch n begrenzt.</li>
+      </ul>
+      <p class="caveat"><strong>PDF-Präzisierung:</strong> Die Musterlösung nennt „alle Werte ungleich 0“. Das reicht für negativen geraden Input nicht: Bei <code>-2</code> läuft <code>j &lt; -2</code> kein einziges Mal.</p>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="status-title">
+    <h2 id="status-title">Wie sitzt es?</h2>
+    <div class="state-row" role="group" aria-label="Lernstatus">
+      <button class="state-btn" data-value="wackelt">Wackelt</button>
+      <button class="state-btn" data-value="sitzt">Sitzt</button>
+    </div>
+    <p id="state-feedback" class="tiny" aria-live="polite">Noch nicht markiert.</p>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgaben wechseln">
+    <a href="../task-03/index.html">← Aufgabe 03</a><a href="../index.html">Übersicht</a><a href="../task-05/index.html">Aufgabe 05 →</a>
+  </nav>
+</main>
+</body>
+</html>

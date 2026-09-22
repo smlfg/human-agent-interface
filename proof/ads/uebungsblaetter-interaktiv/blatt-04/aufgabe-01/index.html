@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB04 · Aufgabe 1 · Drei Sortierer</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Hauptnavigation">
+      <a class="brand" href="../../index.html">ADS · INTERAKTIV</a>
+      <a class="back" href="../index.html">← Blatt 04</a>
+    </nav>
+
+    <header class="task-head">
+      <div><span class="kicker">TIPPE · TESTE · VERGLEICHE</span><h1>Drei Sortierer</h1></div>
+      <div class="counter">PB04 · 01/04</div>
+    </header>
+
+    <section class="media-pre">
+      <div class="media-route-top">
+        <h2>Vorher ansehen</h2>
+        <span class="media-duration">Short · 1:09</span>
+      </div>
+      <p class="media-instruction">Anderes Feld als deine Aufgabe — bewusst. Die Mechanik überträgst du selbst.</p>
+      <video class="media-player short-player" controls preload="metadata" poster="../../../media-posters/pb04a01-short.webp" src="../../../notebooklm-study-pack/10_uebungsblaetter/blatt04/short_PB04A01_selection-vs-insertion.mp4">Dein Browser unterstützt Video nicht.</video>
+      <div class="recall-box"><strong>Sofort-Recall</strong>Warum hilft eine bereits sortierte Eingabe SelectionSort nicht?</div>
+    </section>
+
+    <section class="mission">
+      <div class="brief">
+        <h2>Dein Auftrag</h2>
+        <p>Implementiere <strong>SelectionSort</strong>, <strong>InsertionSort</strong> und <strong>MergeSort</strong> selbst im lokalen Lab.</p>
+        <p>Erster Mikro-Schritt: Öffne <code>lab/sorts.cpp</code> und bearbeite nur <strong>SelectionSort</strong>.</p>
+      </div>
+      <div class="source-core" aria-label="Geforderte Signaturen">void selection_sort(std::vector&lt;int&gt;&amp; a);
+void insertion_sort(std::vector&lt;int&gt;&amp; a);
+void merge_sort(std::vector&lt;int&gt;&amp; a);</div>
+    </section>
+
+    <section class="step">
+      <h2>1 · Mechanik vor Code</h2>
+      <div class="algo-grid">
+        <article class="algo-card selection"><span class="algo-tag">AUSWÄHLEN</span><h3>SelectionSort</h3><p>Suche im Restfeld das Minimum und tausche es an die nächste feste Position.</p><div class="mini-trace"><b>[4 2 3]</b><span>min im Rest: 2</span><b>[2 | 4 3]</b></div><p class="cost">immer Θ(n²)</p></article>
+        <article class="algo-card insertion"><span class="algo-tag">EINFÜGEN</span><h3>InsertionSort</h3><p>Nimm das nächste Element und schiebe es im bereits sortierten Präfix nach links.</p><div class="mini-trace"><b>[2 4 | 3]</b><span>3 wandert vor 4</span><b>[2 3 4]</b></div><p class="cost">best Θ(n), sonst Θ(n²)</p></article>
+        <article class="algo-card merge"><span class="algo-tag">TEILEN + MISCHEN</span><h3>MergeSort</h3><p>Teile bis zu Einzelelementen. Führe danach zwei <em>sortierte</em> Teilfelder geordnet zusammen.</p><div class="mini-trace"><b>[4 2] + [3 1]</b><span>rekursiv → [2 4] + [1 3]</span><b>merge → [1 2 3 4]</b></div><p class="cost">immer Θ(n log n)</p></article>
+      </div>
+    </section>
+
+    <section class="step" id="workflow">
+      <h2>2 · Welcher Test beweist Sortierung?</h2>
+      <p class="prompt">Wähle den nächsten sinnvollen Schritt nach einem Testlauf.</p>
+      <div class="choices" role="group" aria-label="Teststrategie">
+        <button class="choice" type="button" data-path="print">Nur die Beispielausgabe ansehen</button>
+        <button class="choice" type="button" data-path="check">Mit unabhängigen Erwartungen prüfen</button>
+        <button class="choice" type="button" data-path="merge">Bei MergeSort nur rekursiv teilen</button>
+      </div>
+      <div class="feedback" id="path-feedback" role="status" aria-live="polite" hidden></div>
+      <div class="hint-controls">
+        <button class="action hint-btn" type="button" data-hint="hint-1" aria-expanded="false">Hinweis 1</button>
+        <button class="action hint-btn" type="button" data-hint="hint-2" aria-expanded="false">Hinweis 2</button>
+      </div>
+      <div class="hint" id="hint-1" hidden><strong>Beobachten ist kein Beweis:</strong> Eine lange Zahlenzeile kann sortiert aussehen, obwohl Duplikate fehlen oder ein Randfall kaputt ist.</div>
+      <div class="hint" id="hint-2" hidden><strong>MergeSort:</strong> Splitten erzeugt nur kleine Teilprobleme. Sortiert wird das Gesamtfeld erst, wenn zwei sortierte Hälften korrekt zusammengeführt werden.</div>
+    </section>
+
+    <section class="step lab-box" id="lab-step" hidden>
+      <h2>3 · Lokaler Testworkflow</h2>
+      <ol class="workflow-list">
+        <li>Eine Funktion in <code>lab/sorts.cpp</code> bearbeiten.</li>
+        <li><code>cd lab &amp;&amp; ./run-tests.sh</code> ausführen.</li>
+        <li>Erst wenn Leerfeld, Duplikate, negative und vorsortierte Werte grün sind: nächste Funktion.</li>
+      </ol>
+      <code class="command">cd uebungsblaetter-interaktiv/blatt-04/aufgabe-01/lab
+./run-tests.sh</code>
+      <p class="tiny">Der Starter kompiliert, aber die Tests schlagen absichtlich fehl, bis du die TODOs implementierst.</p>
+    </section>
+
+    <section class="step" id="runtime-step" hidden>
+      <h2>4 · Laufzeitordnung erklären</h2>
+      <p class="prompt">Ordne die drei Aussagen den Verfahren zu.</p>
+      <div class="runtime-grid">
+        <label>SelectionSort <select data-runtime="selection"><option value="">– wählen –</option><option value="linear-best">Best Θ(n), Worst Θ(n²)</option><option value="quadratic">Best = Worst Θ(n²)</option><option value="nlogn">Best = Worst Θ(n log n)</option></select></label>
+        <label>InsertionSort <select data-runtime="insertion"><option value="">– wählen –</option><option value="linear-best">Best Θ(n), Worst Θ(n²)</option><option value="quadratic">Best = Worst Θ(n²)</option><option value="nlogn">Best = Worst Θ(n log n)</option></select></label>
+        <label>MergeSort <select data-runtime="merge"><option value="">– wählen –</option><option value="linear-best">Best Θ(n), Worst Θ(n²)</option><option value="quadratic">Best = Worst Θ(n²)</option><option value="nlogn">Best = Worst Θ(n log n)</option></select></label>
+      </div>
+      <button class="action primary" id="check-runtime" type="button">Ordnung prüfen</button>
+      <div class="feedback" id="runtime-feedback" role="status" aria-live="polite" hidden></div>
+    </section>
+
+    <section class="step completion" id="completion" hidden>
+      <h2>Lababschluss</h2>
+      <p>Fertig, wenn alle drei Funktionen die kleinen Korrektheitstests bestehen und du die Laufzeitordnung begründen kannst.</p>
+      <label class="proof-check"><input id="tests-pass" type="checkbox"> Mein lokaler Lauf meldet <strong>12/12 Tests bestanden</strong>.</label>
+      <div class="state-row">
+        <button class="state-btn" type="button" data-state="sitzt">✓ Sitzt</button>
+        <button class="state-btn" type="button" data-state="wackelt">↻ Wackelt</button>
+      </div>
+      <p class="tiny" id="state-feedback" aria-live="polite"></p>
+    </section>
+
+    <nav class="nav-bottom" aria-label="Aufgabennavigation">
+      <a href="../index.html">← Blatt 04</a>
+      <a href="../../index.html">Gesamtübersicht</a>
+      <a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a>
+      <a href="../aufgabe-02/index.html">Aufgabe 2 →</a>
+    </nav>
+  </main>
+  <script src="task.js"></script>
+</body>
+</html>

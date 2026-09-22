@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 03 · Aufgabe 03 · Vollständige Induktion</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation">
+    <a class="brand" href="../../index.html">ADS · Übungsblätter</a>
+    <a class="back" href="../index.html">← Blatt 03</a>
+  </nav>
+
+  <header class="task-head">
+    <div><span class="kicker">INDUKTION · FALTWERKSTATT</span><h1>Die Summe wächst.</h1></div>
+    <div class="counter">03 / 06</div>
+  </header>
+
+  <section class="media-pre">
+    <div class="media-route-top">
+      <h2>Vorher ansehen</h2>
+      <span class="media-duration">Short · 1:23</span>
+    </div>
+    <p class="media-instruction">Andere Summenformel als deine Aufgabe — bewusst. Die Mechanik überträgst du selbst.</p>
+    <video class="media-player short-player" controls preload="metadata" poster="../../../media-posters/pb03a03-short.webp" src="../../../notebooklm-study-pack/10_uebungsblaetter/blatt03/short_PB03A03_induktionsschritt.mp4">Dein Browser unterstützt Video nicht.</video>
+    <div class="recall-box"><strong>Sofort-Recall</strong>Warum genügt es nicht, die Formel für <code>i = 0, 1, 2, 3</code> zu testen?</div>
+  </section>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Originalauftrag</h2>
+      <p>Beweise mit vollständiger Induktion für alle ganzen <strong>i ≥ 0</strong>:</p>
+      <p class="formula" aria-label="Summe von k gleich null bis i über eins durch zwei hoch k ist gleich zwei minus eins durch zwei hoch i">∑<sub>k=0</sub><sup>i</sup> 1/2<sup>k</sup> = 2 − 1/2<sup>i</sup></p>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF · Seite 1 ↗</a>
+    </div>
+    <div class="card first-action">
+      <p class="eyebrow">Erste Aktion</p>
+      <h2>Was ist ein echter Induktionsbeweis?</h2>
+      <div class="choices" data-question="start">
+        <button class="choice" data-answer="numbers">Die Formel für i = 0, 1, 2, 3 testen.</button>
+        <button class="choice" data-answer="induction">IA, IV und den Schritt i → i+1 zeigen.</button>
+      </div>
+      <div class="feedback" id="start-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step fold" id="ia" hidden>
+    <button class="fold-title" aria-expanded="true" aria-controls="ia-body"><span>1 · Induktionsanfang</span><span>i = 0</span></button>
+    <div id="ia-body" class="fold-body">
+      <p class="prompt">Setze i = 0 auf beiden Seiten ein. Welcher Vergleich ist vollständig?</p>
+      <div class="choices">
+        <button class="choice ia-choice" data-correct="false">0 = 2 − 1</button>
+        <button class="choice ia-choice" data-correct="true">1/2⁰ = 2 − 1/2⁰, also 1 = 1</button>
+        <button class="choice ia-choice" data-correct="false">1/2 = 2 − 1/2</button>
+      </div>
+      <div class="feedback" id="ia-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step fold" id="iv" hidden>
+    <button class="fold-title" aria-expanded="true" aria-controls="iv-body"><span>2 · Induktionsvoraussetzung</span><span>für ein festes i ≥ 0</span></button>
+    <div id="iv-body" class="fold-body">
+      <p class="prompt">Welche Aussage darfst du im Schritt verwenden?</p>
+      <div class="choices">
+        <button class="choice iv-choice" data-correct="true">∑<sub>k=0</sub><sup>i</sup> 1/2<sup>k</sup> = 2 − 1/2<sup>i</sup></button>
+        <button class="choice iv-choice" data-correct="false">Die Gleichung stimmt, weil mehrere Zahlenbeispiele passen.</button>
+      </div>
+      <div class="feedback" id="iv-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step fold" id="is" hidden>
+    <button class="fold-title" aria-expanded="true" aria-controls="is-body"><span>3 · Induktionsschritt</span><span>i → i+1</span></button>
+    <div id="is-body" class="fold-body">
+      <p class="prompt">Klappe die Summe bei i+1 korrekt auf.</p>
+      <div class="choices equation-choices">
+        <button class="choice is-choice" data-answer="forgot">∑<sub>k=0</sub><sup>i+1</sup> 1/2<sup>k</sup> = ∑<sub>k=0</sub><sup>i</sup> 1/2<sup>k</sup></button>
+        <button class="choice is-choice" data-answer="correct">∑<sub>k=0</sub><sup>i+1</sup> 1/2<sup>k</sup> = ∑<sub>k=0</sub><sup>i</sup> 1/2<sup>k</sup> + 1/2<sup>i+1</sup></button>
+      </div>
+      <div class="feedback" id="is-feedback" aria-live="polite" hidden></div>
+      <div class="algebra" id="algebra" hidden>
+        <p><span class="tag">IV einsetzen</span> = 2 − 1/2<sup>i</sup> + 1/2<sup>i+1</sup></p>
+        <p><span class="tag">Nenner angleichen</span> = 2 − 2/2<sup>i+1</sup> + 1/2<sup>i+1</sup></p>
+        <p><span class="tag">Zusammenfassen</span> = 2 − 1/2<sup>i+1</sup> ✓</p>
+        <button class="action primary" id="finish">Beweisabschluss formulieren</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="step help" aria-labelledby="help-title">
+    <h2 id="help-title">Hinweise</h2>
+    <div class="actions">
+      <button class="action hint-btn" data-hint="hint-1">Hinweis 1 · Struktur</button>
+      <button class="action hint-btn" data-hint="hint-2">Hinweis 2 · Algebra</button>
+    </div>
+    <div class="hint" id="hint-1" hidden>Beim Wechsel von der oberen Grenze i zu i+1 kommt genau <strong>ein neuer Summand</strong> hinzu: 1/2<sup>i+1</sup>.</div>
+    <div class="hint" id="hint-2" hidden>Schreibe 1/2<sup>i</sup> als 2/2<sup>i+1</sup>. Dann haben die beiden Brüche denselben Nenner.</div>
+  </section>
+
+  <section class="step solution" id="solution-section">
+    <h2>Sauberer Papierabschluss</h2>
+    <p id="gate-copy">Noch gesperrt: Versuche den Beweisweg oder fordere die Lösung bewusst an.</p>
+    <button class="action" id="reveal">Lösung bewusst aufdecken</button>
+    <div id="solution" hidden>
+      <p><strong>IA (i = 0):</strong> ∑<sub>k=0</sub><sup>0</sup> 1/2<sup>k</sup> = 1 = 2 − 1 = 2 − 1/2<sup>0</sup>.</p>
+      <p><strong>IV:</strong> Für ein festes i ≥ 0 gelte ∑<sub>k=0</sub><sup>i</sup> 1/2<sup>k</sup> = 2 − 1/2<sup>i</sup>.</p>
+      <p><strong>IS:</strong> ∑<sub>k=0</sub><sup>i+1</sup> 1/2<sup>k</sup> = ∑<sub>k=0</sub><sup>i</sup> 1/2<sup>k</sup> + 1/2<sup>i+1</sup> = 2 − 1/2<sup>i</sup> + 1/2<sup>i+1</sup> = 2 − 2/2<sup>i+1</sup> + 1/2<sup>i+1</sup> = 2 − 1/2<sup>i+1</sup>.</p>
+      <p><strong>Schluss:</strong> Damit gilt die Behauptung nach vollständiger Induktion für alle ganzen i ≥ 0.</p>
+    </div>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Wie sitzt der Faltmechanismus?</h2>
+    <p>Prüfungsartefakt: IA, IV, IS und der Satz „Damit gilt … für alle ganzen i ≥ 0“.</p>
+    <div class="state-row">
+      <button class="state-btn" data-state="sitzt">Sitzt</button>
+      <button class="state-btn" data-state="wackelt">Wackelt</button>
+    </div>
+    <div class="feedback" id="state-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation">
+    <a href="../aufgabe-02/index.html">← Aufgabe 02</a>
+    <a href="../index.html">Blattübersicht</a>
+    <a href="../aufgabe-04/index.html">Aufgabe 04 →</a>
+  </nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Aufgabe 10 · Inorder-Werkstatt</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Aufgabennavigation">
+    <a class="back" href="../index.html">← Übersicht</a>
+    <span class="brand">Inorder-Werkstatt</span>
+    <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF ↗</a>
+  </nav>
+
+  <header class="task-head">
+    <div><span class="kicker">Baum + C++ · mechanisch lösbar</span><h1>Links. Ich. Rechts.</h1></div>
+    <div class="counter">10 / 17</div>
+  </header>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Deine Mission</h2>
+      <p>Implementiere <code>tree_inorder</code>, gib alle Werte in einer Zeile aus, erhöhe jeden Wert um 1 und gib erneut aus.</p>
+      <p><strong>Dein einziger Startzug:</strong> Stehe auf Knoten 8. Welcher Code-Schritt kommt zuerst?</p>
+    </div>
+    <div class="starter" aria-label="Erste Aktion">
+      <div class="mini-tree" aria-hidden="true"><span>8</span><i></i><b>4</b><b>12</b></div>
+      <div class="choices" id="startChoices">
+        <button class="choice" data-start="left">Zu <code>left</code></button>
+        <button class="choice" data-start="self"><code>td(el)</code> ausführen</button>
+        <button class="choice" data-start="right">Zu <code>right</code></button>
+      </div>
+      <div class="feedback" id="startFeedback" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <div class="stepper">
+    <section class="step" id="traceStep" hidden>
+      <h2>Folge dem Code, nicht dem Namen</h2>
+      <p class="prompt">Klicke immer den <strong>nächsten ausgeführten Knoten</strong>. Der Avatar startet an der Wurzel, läuft aber erst so weit links wie möglich.</p>
+      <div class="tree-stage">
+        <div class="avatar" id="avatar" aria-hidden="true">DU</div>
+        <svg class="branches" viewBox="0 0 700 330" aria-hidden="true">
+          <path d="M350 45 L190 135 M350 45 L510 135 M190 135 L105 245 M190 135 L275 245 M510 135 L425 245 M510 135 L595 245"/>
+        </svg>
+        <button class="node n8" data-node="8" aria-label="Knoten 8">8</button>
+        <button class="node n4" data-node="4" aria-label="Knoten 4">4</button>
+        <button class="node n12" data-node="12" aria-label="Knoten 12">12</button>
+        <button class="node n2" data-node="2" aria-label="Knoten 2">2</button>
+        <button class="node n6" data-node="6" aria-label="Knoten 6">6</button>
+        <button class="node n10" data-node="10" aria-label="Knoten 10">10</button>
+        <button class="node n14" data-node="14" aria-label="Knoten 14">14</button>
+      </div>
+      <div class="trace-strip"><span>Ausgabe:</span><output id="traceOutput">—</output></div>
+      <div class="feedback" id="traceFeedback" aria-live="polite"></div>
+      <div class="help-row">
+        <button class="action hintBtn" data-hint="traceHint1">Hinweis 1</button>
+        <button class="action hintBtn" data-hint="traceHint2">Hinweis 2</button>
+      </div>
+      <div class="hint" id="traceHint1">Inorder ist keine Blickrichtung. Spiele exakt drei Codezeilen: <strong>links aufrufen → Aktion hier → rechts aufrufen</strong>.</div>
+      <div class="hint" id="traceHint2">Von 8 gehst du zu 4, von 4 zu 2. Bei 2 ist links leer: erst jetzt wird <code>td(2)</code> ausgeführt. Dein erster Klick ist also <strong>2</strong>.</div>
+    </section>
+
+    <section class="step locked" id="codeStep" aria-disabled="true">
+      <h2>Baue die Rekursion</h2>
+      <p class="prompt"><code>n</code> ist die Box, auf der du gerade stehst. <code>n-&gt;left</code> heißt: „folge dem Zeiger zur linken Box“. Wähle die drei Zeilen in Ausführungsreihenfolge.</p>
+      <div class="code-builder" id="codeBuilder">
+        <label>1. vor der Aktion
+          <select id="line1"><option value="">— wählen —</option><option value="left">tree_inorder(n-&gt;left, td);</option><option value="self">td(n-&gt;el);</option><option value="right">tree_inorder(n-&gt;right, td);</option></select>
+        </label>
+        <label>2. am Knoten
+          <select id="line2"><option value="">— wählen —</option><option value="left">tree_inorder(n-&gt;left, td);</option><option value="self">td(n-&gt;el);</option><option value="right">tree_inorder(n-&gt;right, td);</option></select>
+        </label>
+        <label>3. nach der Aktion
+          <select id="line3"><option value="">— wählen —</option><option value="left">tree_inorder(n-&gt;left, td);</option><option value="self">td(n-&gt;el);</option><option value="right">tree_inorder(n-&gt;right, td);</option></select>
+        </label>
+        <button class="action primary" id="checkCode">Rekursion prüfen</button>
+      </div>
+      <div class="feedback" id="codeFeedback" aria-live="polite"></div>
+      <button class="action hintBtn" data-hint="codeHint">Mechanik zeigen</button>
+      <div class="hint" id="codeHint">Der Abbruch <code>if (n == nullptr) return;</code> verhindert, dass du in einer leeren Kindposition weiterläufst. Danach: <code>left</code>, <code>td(el)</code>, <code>right</code>.</div>
+    </section>
+
+    <section class="step locked" id="actionsStep" aria-disabled="true">
+      <h2>Wechsle nur die Aktion</h2>
+      <p class="prompt">Die Traversierung bleibt identisch. Was macht der übergebene Funktionszeiger <code>td</code> jeweils mit <code>T&amp; el</code>?</p>
+      <div class="action-cards">
+        <button class="action-card" data-action="show"><strong>Ausgeben</strong><code>cout &lt;&lt; el &lt;&lt; " ";</code></button>
+        <button class="action-card" data-action="add"><strong>Um 1 erhöhen</strong><code>el += 1;</code></button>
+      </div>
+      <div class="feedback" id="actionsFeedback" aria-live="polite">Öffne beide Karten.</div>
+      <p class="tiny"><code>T&amp;</code> ist entscheidend: Referenz = echte Zahl im Knoten verändern, nicht bloß eine Kopie.</p>
+    </section>
+
+    <section class="step locked" id="finishStep" aria-disabled="true">
+      <h2>Prüfungsabschluss</h2>
+      <p class="prompt">Trage die beiden Ausgabezeilen für unseren Baum ein: zuerst normal, dann nach <code>add1t</code>.</p>
+      <label for="before">Vorher</label><input id="before" class="answer-line" autocomplete="off" placeholder="z. B. 1 2 3">
+      <label for="after">Nachher</label><input id="after" class="answer-line" autocomplete="off" placeholder="nach +1">
+      <button class="action primary" id="checkFinish">Abschluss prüfen</button>
+      <div class="feedback" id="finishFeedback" aria-live="polite"></div>
+      <div class="solution-gate">
+        <button class="action" id="revealSolution" disabled>Vollständigen Musterweg aufdecken</button>
+        <p class="tiny">Wird nach deinem Abschlussversuch freigeschaltet.</p>
+      </div>
+      <div class="full-solution" id="fullSolution" hidden>
+        <h3>Quellennaher Musterweg</h3>
+<pre class="code"><code>void tree_inorder(tree_node* n, tree_do td) {
+    if (n == nullptr) return;
+    tree_inorder(n-&gt;left, td);
+    td(n-&gt;el);
+    tree_inorder(n-&gt;right, td);
+}
+
+void tree_inorder(tree* t, tree_do td) {
+    if (t-&gt;root == nullptr) return;
+    tree_inorder(t-&gt;root, td);
+}
+
+void showt(T&amp; el) { cout &lt;&lt; el &lt;&lt; " "; }
+void add1t(T&amp; el) { el += 1; }
+
+tree_inorder(&amp;t, showt);
+cout &lt;&lt; endl;
+tree_inorder(&amp;t, add1t);
+tree_inorder(&amp;t, showt);
+cout &lt;&lt; endl;</code></pre>
+        <p><strong>Ausgabe:</strong> <code>2 4 6 8 10 12 14</code>, danach <code>3 5 7 9 11 13 15</code>.</p>
+      </div>
+      <div class="state-row" aria-label="Lernstatus">
+        <button class="state-btn" data-value="sitzt">Sitzt</button>
+        <button class="state-btn" data-value="wackelt">Wackelt</button>
+      </div>
+      <div class="feedback" id="stateFeedback" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <nav class="nav-bottom" aria-label="Weitere Aufgaben">
+    <a href="../task-09/index.html">← Aufgabe 09</a><a href="../index.html">Übersicht</a><a href="../task-11/index.html">Aufgabe 11 →</a>
+  </nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

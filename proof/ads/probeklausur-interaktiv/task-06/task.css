@@ -1,0 +1,13 @@
+.micro{background:#fff8;padding:10px;border:2px dashed var(--ink)}
+.formula-sheet{background:#17231e;color:#edf5df;border:2px solid #08100c;padding:18px;box-shadow:var(--shadow);display:grid;align-content:center;gap:8px;overflow-wrap:anywhere}
+.formula-sheet p{margin:0;padding:7px;border-bottom:1px dashed #edf5df55}.formula-sheet p:last-child{border:0}
+.bench{margin:18px 0}.term-card{border:3px solid var(--ink);background:#fffdf7;padding:18px;box-shadow:5px 5px 0 var(--ink)}
+.term-card h3{font-size:1.55rem;margin-bottom:10px}.term-expression{font-size:clamp(1rem,2.4vw,1.35rem);font-weight:700;background:#f4eddb;padding:14px;overflow-wrap:anywhere}
+.term-progress{font-size:.78rem;color:var(--muted)}.choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:15px 0}
+.choice-grid button{min-height:62px}.tool-row{display:flex;flex-wrap:wrap;gap:10px}.tool-row+.hint{margin-top:12px}
+.notation{display:grid;gap:7px;background:#e7f0f7;border-left:7px solid var(--blue);padding:16px;line-height:1.5}.locked{border-style:dashed;opacity:.58}.locked.unlocked{border-style:solid;opacity:1}
+.claims{display:grid;gap:16px;margin-top:18px}.claim{border:2px solid var(--ink);padding:16px;background:#fffdf7}.claim h3{font-family:"DM Mono",monospace;margin-bottom:12px}.claim fieldset{border:0;padding:0;margin:0;display:flex;gap:14px}.claim label{border:2px solid var(--ink);padding:10px;background:#fff;cursor:pointer}
+.claim textarea{margin-top:12px;min-height:68px}.claim .action{margin-top:10px}.claim.done{border-left:9px solid var(--green)}
+.solution{margin-top:16px;padding:18px;border:3px solid var(--green);background:#e5f4e9;line-height:1.6}.solution li+li{margin-top:8px}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
+@media(max-width:700px){.choice-grid{grid-template-columns:1fr}.claim fieldset{flex-direction:column}.nav-bottom{flex-wrap:wrap}}

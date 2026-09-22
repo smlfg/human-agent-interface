@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB08 · Aufgabe 3 · Vector-Menge</title>
+  <link rel="stylesheet" href="../../styles.css"><link rel="stylesheet" href="task.css">
+</head>
+<body><main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · INTERAKTIV</a><a class="back" href="../index.html">← Blatt 08</a></nav>
+  <header class="task-head"><div><span class="kicker">SUCHEN · ENTSCHEIDEN · ÄNDERN</span><h1>Ein <code>vector&lt;int&gt;</code> wird zur Menge</h1></div><div class="counter">PB08 · 03/07</div></header>
+
+  <section class="media-pre">
+    <div class="media-route-top">
+      <h2>Vorher ansehen</h2>
+      <span class="media-duration">Short · 1:04</span>
+    </div>
+    <p class="media-instruction">Andere Werte als deine Aufgabe — bewusst. Die Mechanik überträgst du selbst.</p>
+    <video class="media-player short-player" controls preload="metadata" poster="../../../media-posters/pb08a03-short.webp" src="../../../notebooklm-study-pack/10_uebungsblaetter/blatt08/short_PB08A03_bool-semantik.mp4">Dein Browser unterstützt Video nicht.</video>
+    <div class="recall-box"><strong>Sofort-Recall</strong>Deine Funktion gibt <code>false</code> zurück — ist etwas schiefgelaufen?</div>
+  </section>
+
+  <section class="mission">
+    <div class="brief"><h2>Dein Auftrag</h2><p>Baue drei Funktionen, deren <code>bool</code> nicht „Operation lief“ bedeutet, sondern <strong>die Menge hat sich geändert</strong>.</p><p>Erste Aktion: Spiele unten dieselbe Zahl zweimal ein.</p></div>
+    <div class="rule-card"><strong>Mengen-Invariante</strong><span>Jeder Wert höchstens einmal.</span><span><code>true</code> genau bei Zustandsänderung.</span></div>
+  </section>
+
+  <section class="step playground">
+    <h2>Interaktive Mengenbox</h2>
+    <div class="controls"><label for="value">Zahl</label><input id="value" type="number" value="7"><button data-op="add">add</button><button data-op="contains">contains</button><button data-op="remove">remove</button></div>
+    <div class="set-box" id="set-box" aria-label="Aktuelle Menge">∅</div>
+    <p class="feedback" id="op-feedback" role="status" aria-live="polite">Noch keine Operation.</p>
+    <button class="action" id="reset" type="button">Menge leeren</button>
+  </section>
+
+  <section class="step gate">
+    <h2>API-Vertrag festnageln</h2>
+    <p>Wann muss <code>vis_remove(vis, 42)</code> <code>true</code> liefern?</p>
+    <div class="choices"><button class="choice" data-answer="always">Immer – remove wurde aufgerufen</button><button class="choice" data-answer="changed">Nur wenn 42 vorher enthalten war und entfernt wurde</button></div>
+    <div id="gate-feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+    <div class="hint-controls"><button class="action hint-btn" data-hint="hint-1" aria-expanded="false">Hinweis 1</button><button class="action hint-btn" data-hint="hint-2" aria-expanded="false">Hinweis 2</button></div>
+    <div class="hint" id="hint-1" hidden>Vergleiche Menge vor und nach dem Aufruf. Ist sie identisch, darf das Ergebnis nicht <code>true</code> sein.</div>
+    <div class="hint" id="hint-2" hidden><code>add</code>/<code>remove</code>: Rückgabe = „geändert?“. <code>contains</code>: Rückgabe = „enthalten?“.</div>
+  </section>
+
+  <section class="step" id="lab" hidden>
+    <h2>Jetzt im echten C++-Lab</h2>
+    <div class="contracts"><article><code>vis_add</code><strong>true</strong><span>nur neu eingefügt</span></article><article><code>vis_contains</code><strong>true</strong><span>Wert vorhanden</span></article><article><code>vis_remove</code><strong>true</strong><span>nur wirklich entfernt</span></article></div>
+    <p>Öffne <code>lab/vector_int_set.cpp</code>. Die Signaturen und TODOs stehen bereit; eine Komplettimplementierung wird bewusst nicht ausgeliefert.</p>
+    <pre><code>cd uebungsblaetter-interaktiv/blatt-08/aufgabe-03/lab
+./run-tests.sh</code></pre>
+    <p>Der Harness prüft Duplikate, fehlendes Entfernen und den offiziellen Kurslauf. <code>create_same_randints(10000, 1, 3000)</code> nutzt in <code>pbma.cpp</code> den festen Seed <code>1234567</code>: deshalb sind <strong>2418</strong> verschiedene Werte nach den ersten 5000 Adds und <strong>479</strong> nach den nächsten 5000 Removes reproduzierbare Orakelwerte, keine allgemeinen Wahrscheinlichkeitswerte.</p>
+    <label class="proof-check"><input id="proof" type="checkbox"> Mein Harness ist grün und beide Größen stimmen.</label>
+    <div class="state-row"><button class="state-btn" data-state="sitzt">✓ Sitzt</button><button class="state-btn" data-state="wackelt">↻ Wackelt</button></div><p class="tiny" id="state-feedback" aria-live="polite"></p>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-02/index.html">← Aufgabe 2</a><a href="../index.html">Blatt 08</a><a href="../../index.html">Gesamtübersicht</a><a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a><a href="../aufgabe-04/index.html">Aufgabe 4 →</a></nav>
+</main><script src="task.js"></script></body></html>

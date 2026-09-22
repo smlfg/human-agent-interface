@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aufgabe 08 · Stack-Werkstatt</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <script src="task.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Aufgabennavigation">
+      <a class="back" href="../index.html">← Übersicht</a>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF ↗</a>
+    </nav>
+
+    <header class="task-head">
+      <div><span class="kicker">STACK-WERKSTATT</span><h1>Oben rein. Oben raus.</h1></div>
+      <div class="counter" aria-label="Aufgabe 8 von 17">08 / 17</div>
+    </header>
+
+    <section class="mission" aria-labelledby="mission-title">
+      <div class="brief">
+        <h2 id="mission-title">Mission</h2>
+        <p>Baue <code>init</code>, <code>clear</code>, <code>push</code> und <code>pop</code> mit <strong>einer</strong> durchgehenden <code>tos</code>-Regel.</p>
+        <p class="tiny"><code>s-&gt;x</code> heißt: „Nimm beim Stack, auf den <code>s</code> zeigt, das Feld <code>x</code>.“</p>
+      </div>
+      <pre class="code" aria-label="Originaldeklaration"><code>struct stack {
+    int* vec;   // Array
+    int depth;  // maximale Elementzahl
+    int tos;    // top of stack
+};
+
+void stack_init(stack* s, int d);
+void stack_clear(stack* s);
+void stack_push(stack* s, int a);
+int  stack_pop(stack* s);</code></pre>
+    </section>
+
+    <section class="step" aria-labelledby="first-title">
+      <h2 id="first-title">Dein erster Zug</h2>
+      <p class="prompt">Der Stack ist leer. Welchen Wert bekommt <code>tos</code>, wenn <code>tos</code> immer den Index des obersten Elements bezeichnet?</p>
+      <div class="choices" id="tos-choices">
+        <button class="choice" type="button" data-value="0">tos = 0</button>
+        <button class="choice" type="button" data-value="-1">tos = −1</button>
+        <button class="choice" type="button" data-value="depth">tos = depth</button>
+      </div>
+      <div class="help-row">
+        <button class="action hint-button" type="button" data-hint="hint-1">Hinweis 1</button>
+        <button class="action hint-button" type="button" data-hint="hint-2">Hinweis 2</button>
+      </div>
+      <div id="hint-1" class="hint">Index 0 gehört schon zum ersten echten Element. Leer braucht daher einen Wächterwert davor.</div>
+      <div id="hint-2" class="hint"><code>tos = −1</code> bedeutet leer; nach dem ersten Push wird erst auf 0 erhöht und dann in <code>vec[0]</code> geschrieben.</div>
+      <div id="tos-feedback" class="feedback" role="status" aria-live="polite"></div>
+    </section>
+
+    <section id="play-step" class="step locked" aria-labelledby="play-title" aria-disabled="true">
+      <h2 id="play-title">Manipuliere den Stack</h2>
+      <p class="prompt">Tiefe 5. Schiebe Werte hinein und hole sie wieder heraus. Beobachte <code>tos</code>.</p>
+      <div class="stack-lab">
+        <div class="stack-machine" aria-label="Stack mit fünf Arrayplätzen">
+          <div class="tos-flag" id="tos-flag">tos = −1</div>
+          <ol class="stack-cells" id="stack-cells" reversed>
+            <li data-index="4"><span>4</span><b>leer</b></li><li data-index="3"><span>3</span><b>leer</b></li>
+            <li data-index="2"><span>2</span><b>leer</b></li><li data-index="1"><span>1</span><b>leer</b></li>
+            <li data-index="0"><span>0</span><b>leer</b></li>
+          </ol>
+        </div>
+        <div class="controls">
+          <label for="push-value">Wert</label>
+          <input id="push-value" type="number" value="17" inputmode="numeric">
+          <button id="push" class="action primary" type="button">push(value)</button>
+          <button id="pop" class="action" type="button">pop()</button>
+          <button id="reset" class="action" type="button">neu initialisieren</button>
+          <output id="operation-feedback" class="feedback show" aria-live="polite">Noch leer: tos = −1.</output>
+        </div>
+      </div>
+      <div class="fifo-trap">
+        <p><strong>Mechanik-Check:</strong> Nach <code>push(2)</code>, <code>push(4)</code>, <code>push(3)</code>: Was liefert der erste <code>pop()</code>?</p>
+        <div class="choices" id="lifo-choices"><button class="choice" type="button" data-value="2">2</button><button class="choice" type="button" data-value="3">3</button><button class="choice" type="button" data-value="4">4</button></div>
+        <div id="lifo-feedback" class="feedback" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="code-step" class="step locked" aria-labelledby="code-title" aria-disabled="true">
+      <h2 id="code-title">Vier Funktionen zusammensetzen</h2>
+      <p class="prompt">Wähle pro Lücke die Zeile, die zur Konvention „<code>tos</code> = Index des obersten Elements“ passt.</p>
+      <div class="code-puzzle">
+        <label><strong>init · leer markieren</strong><select data-key="init"><option value="">Zeile wählen …</option><option value="zero">s-&gt;tos = 0;</option><option value="minus">s-&gt;tos = -1;</option></select></label>
+        <label><strong>clear · Speicher freigeben</strong><select data-key="clear"><option value="">Zeile wählen …</option><option value="scalar">delete s-&gt;vec;</option><option value="array">delete[] s-&gt;vec;</option></select></label>
+        <label><strong>push · Overflow prüfen</strong><select data-key="overflow"><option value="">Zeile wählen …</option><option value="right">s-&gt;tos == s-&gt;depth - 1</option><option value="late">s-&gt;tos == s-&gt;depth</option></select></label>
+        <label><strong>push · Index und Schreiben</strong><select data-key="push"><option value="">Zeile wählen …</option><option value="right">s-&gt;vec[++s-&gt;tos] = a;</option><option value="mismatch">s-&gt;vec[s-&gt;tos++] = a;</option></select></label>
+        <label><strong>pop · Underflow prüfen</strong><select data-key="underflow"><option value="">Zeile wählen …</option><option value="right">s-&gt;tos == -1</option><option value="zero">s-&gt;tos == 0</option></select></label>
+        <label><strong>pop · oberstes Element</strong><select data-key="pop"><option value="">Zeile wählen …</option><option value="right">return s-&gt;vec[s-&gt;tos--];</option><option value="fifo">return s-&gt;vec[0];</option></select></label>
+      </div>
+      <div class="help-row"><button class="action hint-button" type="button" data-hint="hint-3">Hinweis 1</button><button class="action hint-button" type="button" data-hint="hint-4">Hinweis 2</button></div>
+      <div id="hint-3" class="hint"><code>++tos</code> erhöht vor dem Zugriff: −1 wird 0. <code>tos--</code> liest erst oben und senkt danach.</div>
+      <div id="hint-4" class="hint">Voll ist der Stack beim letzten gültigen Index <code>depth−1</code>. Leerer Stack: <code>tos == −1</code>. Array-Speicher wird mit <code>delete[]</code> freigegeben.</div>
+      <button id="check-code" class="action primary" type="button">Alle sechs Entscheidungen prüfen</button>
+      <div id="code-feedback" class="feedback" role="status" aria-live="polite"></div>
+    </section>
+
+    <section id="main-step" class="step locked" aria-labelledby="main-title" aria-disabled="true">
+      <h2 id="main-title">Teil (b): Endlosschleife traceen</h2>
+      <p class="prompt">Die Musterlösung pusht nacheinander <code>0, 1, 2, 3, 4</code> und poppt dann in <code>while(true)</code>. Welche Ausgabe entsteht vor dem Programmende?</p>
+      <label for="trace-answer">Ausgabe mit Leerzeichen</label>
+      <input id="trace-answer" type="text" autocomplete="off" placeholder="z. B. 0 1 2 3 4">
+      <button id="check-trace" class="action primary" type="button">Trace prüfen</button>
+      <div id="trace-feedback" class="feedback" role="status" aria-live="polite"></div>
+    </section>
+
+    <section id="solution-step" class="step locked" aria-labelledby="solution-title" aria-disabled="true">
+      <h2 id="solution-title">Prüfungsabschluss</h2>
+      <p>Erst nach deinem Versuch: vollständiger, konsistenter Code für beide Teilaufgaben.</p>
+      <button id="reveal-solution" class="action" type="button" disabled>Komplette Musterlösung aufdecken</button>
+      <div id="solution" hidden>
+        <h3>(a) Vier Stack-Funktionen</h3>
+        <pre class="code"><code>void stack_init(stack* s, int d) {
+    s-&gt;depth = d;
+    s-&gt;tos = -1;
+    s-&gt;vec = s-&gt;depth == 0 ? nullptr : new int[s-&gt;depth];
+}
+
+void stack_clear(stack* s) {
+    delete[] s-&gt;vec;
+    s-&gt;vec = nullptr;
+    s-&gt;tos = -1;
+    s-&gt;depth = 0;
+}
+
+void stack_push(stack* s, int a) {
+    if (s-&gt;tos == s-&gt;depth - 1)
+        throw std::runtime_error("stack overflow");
+    s-&gt;vec[++s-&gt;tos] = a;
+}
+
+int stack_pop(stack* s) {
+    if (s-&gt;tos == -1)
+        throw std::runtime_error("stack underflow");
+    return s-&gt;vec[s-&gt;tos--];
+}</code></pre>
+        <h3>(b) Inhalt von main()</h3>
+        <pre class="code"><code>stack s;
+stack_init(&amp;s, 5);
+for (int i = 0; i &lt; 5; ++i)
+    stack_push(&amp;s, i);
+
+while (true) {
+    int val = stack_pop(&amp;s);
+    cout &lt;&lt; val &lt;&lt; " ";
+}
+cout &lt;&lt; endl;</code></pre>
+        <p class="edge-note"><strong>Randfälle:</strong> Der sechste Push wirft <code>stack overflow</code>. Der sechste Pop wirft <code>stack underflow</code>; dadurch endet das Programm nach <code>4 3 2 1 0</code>. Bei Tiefe 0 setzt <code>init</code> den Arrayzeiger auf <code>nullptr</code>.</p>
+      </div>
+      <div class="state-row" aria-label="Eigenen Lernstatus setzen"><button class="state-btn" type="button" data-state="wackelt">Wackelt noch</button><button class="state-btn" type="button" data-state="sitzt">Sitzt</button></div>
+      <p id="state-feedback" class="tiny" aria-live="polite"></p>
+    </section>
+
+    <nav class="nav-bottom" aria-label="Zwischen Aufgaben wechseln"><a href="../task-07/index.html">← Aufgabe 07</a><a href="../index.html">Übersicht</a><a href="../task-09/index.html">Aufgabe 09 →</a></nav>
+  </main>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interaktives ADS-Training für binäre Suchbäume, Traversierungen und AVL-Rotationen.">
+  <title>Baum-Detektiv · ADS</title>
+  <link rel="stylesheet" href="game.css">
+</head>
+<body>
+  <a class="skip-link" href="#training">Direkt zum Trainingsfall</a>
+  <div class="page-shell">
+    <nav class="topbar" aria-label="Seitennavigation">
+      <a class="brand" href="../index.html">← Probeklausur-Werkstatt</a>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Lokale Aufgabensammlung ↗</a>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">Forstamt ADS · Akte 02</span>
+        <h1>Baum-<br><em>Detektiv.</em></h1>
+        <p class="hero-lead">Nicht raten, sondern Spuren lesen: erst die Baumstruktur, dann der kurze Code‑Übergang. Ein Fall nach dem anderen.</p>
+        <a class="start-action" href="#training">Ersten Baum prüfen <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero-board" aria-label="Lernmethode: Regel, Pfad, Operation, Prüfungssatz">
+        <svg viewBox="0 0 430 315" role="img" aria-labelledby="hero-tree-title hero-tree-desc">
+          <title id="hero-tree-title">Skizze eines Suchbaums</title>
+          <desc id="hero-tree-desc">Ein Baum mit Wurzel 8 und markiertem Suchpfad über 12 zu 10.</desc>
+          <path class="hero-edge" d="M215 55 L115 135 M215 55 L315 135 M115 135 L70 225 M115 135 L155 225 M315 135 L270 225 M315 135 L360 225"/>
+          <path class="hero-path" d="M215 55 L315 135 L270 225"/>
+          <g class="hero-node"><circle cx="215" cy="55" r="28"/><text x="215" y="63">8</text></g>
+          <g class="hero-node"><circle cx="115" cy="135" r="28"/><text x="115" y="143">4</text></g>
+          <g class="hero-node path"><circle cx="315" cy="135" r="28"/><text x="315" y="143">12</text></g>
+          <g class="hero-node"><circle cx="70" cy="225" r="28"/><text x="70" y="233">2</text></g>
+          <g class="hero-node"><circle cx="155" cy="225" r="28"/><text x="155" y="233">6</text></g>
+          <g class="hero-node path"><circle cx="270" cy="225" r="28"/><text x="270" y="233">10</text></g>
+          <g class="hero-node"><circle cx="360" cy="225" r="28"/><text x="360" y="233">14</text></g>
+        </svg>
+        <p><b>Merksatz:</b> Jeder Klick braucht einen Grund.</p>
+        <span class="case-stamp">STRUKTUR<br>VOR CODE</span>
+      </div>
+    </header>
+
+    <section class="wobble-strip" aria-labelledby="wobble-title">
+      <div>
+        <span class="section-number">00</span>
+        <h2 id="wobble-title">Deine drei offenen Spuren</h2>
+      </div>
+      <ul>
+        <li><b>Suchpfad ≠ ganzer Baum</b><span>Θ(h) sauber von Θ(k) trennen.</span></li>
+        <li><b>Pre- und PostOrder</b><span>Nicht am BST-Wert, sondern an der Besuchsregel lesen.</span></li>
+        <li><b>LR und RL zu Ende drehen</b><span>Beide Rotationen plus Prüfregel sicher anwenden.</span></li>
+      </ul>
+    </section>
+
+    <section class="module-section" aria-labelledby="modules-title">
+      <div class="section-heading">
+        <span class="section-number">01</span>
+        <div>
+          <span class="eyebrow">Drei Ermittlungsbereiche</span>
+          <h2 id="modules-title">Was du hier wirklich trainierst.</h2>
+        </div>
+      </div>
+      <div class="module-grid">
+        <button class="module-card" type="button" data-topic-jump="bst">
+          <span class="module-code">BST</span>
+          <h3>Suchpfade &amp; Eingriffe</h3>
+          <p>Links kleiner, rechts größer. Suchen, Maximum, Einfügen und Löschen mit Nachfolger.</p>
+          <span class="module-status" data-topic-status="bst">Transfer noch offen</span>
+        </button>
+        <button class="module-card" type="button" data-topic-jump="traversal">
+          <span class="module-code">DFS</span>
+          <h3>Besuchsreihenfolgen</h3>
+          <p>In-, Pre- und PostOrder werden aus der Position von „Besuchen“ abgeleitet.</p>
+          <span class="module-status" data-topic-status="traversal">Transfer noch offen</span>
+        </button>
+        <button class="module-card" type="button" data-topic-jump="avl">
+          <span class="module-code">AVL</span>
+          <h3>Rotationen</h3>
+          <p>Pfad lesen, LL/RR/LR/RL erkennen, Operationen ordnen und die BST-Regel prüfen.</p>
+          <span class="module-status" data-topic-status="avl">Transfer noch offen</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="control-deck" aria-labelledby="settings-title">
+      <div class="control-heading">
+        <span class="section-number">02</span>
+        <div>
+          <span class="eyebrow">Einsatzbesprechung</span>
+          <h2 id="settings-title">Wähle Hilfe und Fallbank.</h2>
+        </div>
+        <p id="adaptive-note">Adaptiv startet mit kleinen Hinweisen und zieht sie nach zwei sauberen Fällen zurück.</p>
+      </div>
+      <div class="control-grid">
+        <fieldset>
+          <legend>Lernmodus</legend>
+          <div class="segmented" data-control="learning-mode">
+            <button type="button" data-learning-mode="guided">Begleitet</button>
+            <button type="button" data-learning-mode="adaptive">Adaptiv</button>
+            <button type="button" data-learning-mode="exam">Prüfung</button>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Fallbank</legend>
+          <div class="segmented" data-control="bank">
+            <button type="button" data-bank="foundation">Fundament</button>
+            <button type="button" data-bank="transfer">Transfer</button>
+            <button type="button" data-bank="all">Alle</button>
+          </div>
+        </fieldset>
+      </div>
+      <div class="method-strip" aria-label="Vier Schritte der Baum-Ermittlung">
+        <span><b>1</b> Regel</span><i aria-hidden="true">→</i>
+        <span><b>2</b> Pfad</span><i aria-hidden="true">→</i>
+        <span><b>3</b> Operation</span><i aria-hidden="true">→</i>
+        <span><b>4</b> Prüfungssatz</span>
+      </div>
+    </section>
+
+    <main id="training" class="training" tabindex="-1">
+      <div class="training-heading">
+        <div>
+          <span class="section-number">03</span>
+          <span class="eyebrow">Aktuelle Fallakte</span>
+          <h2>Am Baum ermitteln.</h2>
+        </div>
+        <div class="training-score" aria-live="polite">
+          <b id="clean-count">0</b>
+          <span>sauber gelöst</span>
+        </div>
+      </div>
+
+      <div id="case-tabs" class="case-tabs" aria-label="Fälle auswählen"></div>
+
+      <article class="case-file" aria-labelledby="case-title">
+        <header class="case-head">
+          <div>
+            <span id="case-topic" class="case-topic">BST · Fundament</span>
+            <h3 id="case-title">Fall wird geladen …</h3>
+            <p id="case-brief"></p>
+          </div>
+          <div class="case-id-block">
+            <span>AKTE</span>
+            <b id="case-number">01</b>
+          </div>
+        </header>
+
+        <div id="support-banner" class="support-banner" hidden></div>
+
+        <div class="workbench">
+          <section class="tree-stage" aria-labelledby="stage-title">
+            <div class="stage-label">
+              <span id="stage-title">Baumskizze</span>
+              <span id="stage-caption">Klicke den Pfad.</span>
+            </div>
+            <svg id="tree-svg" viewBox="0 0 760 390" role="group" aria-label="Interaktiver Binärbaum"></svg>
+            <div id="tree-text" class="sr-only" aria-live="polite"></div>
+          </section>
+
+          <section class="action-panel" aria-label="Ermittlungsschritte">
+            <div id="action-panel"></div>
+            <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+            <section id="code-bridge" class="code-bridge" hidden>
+              <span class="bridge-label">Struktur → Code</span>
+              <h4 id="bridge-title">Jetzt erst der Codeblick.</h4>
+              <pre><code id="bridge-code"></code></pre>
+              <p id="bridge-note"></p>
+            </section>
+            <div class="help-row">
+              <button id="hint-button" class="text-button" type="button">Hinweis öffnen</button>
+              <span id="mode-indicator">Adaptiv · Hilfestufe 1</span>
+            </div>
+            <button id="next-button" class="next-button" type="button" hidden>Nächste Fallakte →</button>
+          </section>
+        </div>
+
+        <footer class="case-source">
+          <b>Quellenspur</b>
+          <span id="case-source">Lokale ADS-Unterlagen</span>
+        </footer>
+      </article>
+    </main>
+
+    <section class="source-ledger" aria-labelledby="source-title">
+      <span class="section-number">04</span>
+      <div>
+        <span class="eyebrow">Quellentreue</span>
+        <h2 id="source-title">Was Original ist – und was Training.</h2>
+        <p>Die Aufgabenkerne stammen aus der lokalen ADS-Aufgabensammlung und ADSPB08. Zusätzliche 4–5‑Knoten-Fälle sind klar als <b>Lernvariante</b> markiert. Sie üben denselben Mechanismus, behaupten aber nicht, eine Professorenaufgabe zu sein.</p>
+      </div>
+      <a href="/proof/ads/source-materials-not-included.html">Lernstand ansehen ↗</a>
+    </section>
+
+    <footer class="page-footer">
+      <p><b>Ziel:</b> Du kannst nicht nur „AVL“ sagen. Du kannst am Bild begründen, welcher Pfad, welche Rotation und welche Prüfregel gilt.</p>
+      <a href="../index.html">← Zurück zur Probeklausur-Werkstatt</a>
+    </footer>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>

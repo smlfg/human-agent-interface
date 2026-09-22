@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 08 · Aufgabe 05 · Mengenoperationen</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · Übungsblätter</a><a class="back" href="../index.html">← Blatt 08</a></nav>
+
+  <header class="task-head"><div><span class="kicker">MENGEN · IN-PLACE-UPDATE</span><h1>Welche Menge darf sich ändern?</h1></div><div class="counter">05 / 07</div></header>
+
+  <section class="media-pre">
+    <div class="media-route-top">
+      <h2>Vorher ansehen</h2>
+      <span class="media-duration">Short · 1:01</span>
+    </div>
+    <p class="media-instruction">Andere Mengen als deine Aufgabe — bewusst. Die Mechanik überträgst du selbst.</p>
+    <video class="media-player short-player" controls preload="metadata" poster="../../../media-posters/pb08a05-short.webp" src="../../../notebooklm-study-pack/10_uebungsblaetter/blatt08/short_PB08A05_update-semantik.mp4">Dein Browser unterstützt Video nicht.</video>
+    <div class="recall-box"><strong>Sofort-Recall</strong>Nach <code>intersectupdate(A, B)</code> — was steht jetzt in B?</div>
+  </section>
+
+  <section class="mission">
+    <div class="brief">
+      <h2>Originalauftrag</h2>
+      <p>Erweitere das <code>intset</code> um Vereinigung, Schnitt und Differenz. Jede Funktion schreibt das Ergebnis in <code>is1</code>; <code>is2</code> bleibt Eingabe.</p>
+      <p>Der Modus <code>menge</code> erzeugt 90.000 Zufallszahlen in <code>1…30000</code>, baut daraus <code>a</code>, <code>b</code>, <code>c</code> und gibt neun Kardinalitäten plus Laufzeit aus.</p>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original · Seite 2 ↗</a>
+    </div>
+    <div class="card first-action">
+      <p class="eyebrow">Erste Aktion · Ergebnis anklicken</p>
+      <h2><code>A := A \ B</code></h2>
+      <div class="set-equation"><div><b>A</b><span>{1, 2, 4}</span></div><span>\</span><div><b>B</b><span>{2, 3, 4}</span></div></div>
+      <p>Welche Menge muss danach in <code>A</code> stehen?</p>
+      <div class="choices"><button class="choice result-choice" data-answer="right">{1}</button><button class="choice result-choice" data-answer="reverse">{3}</button><button class="choice result-choice" data-answer="symmetric">{1, 3}</button></div>
+      <div class="feedback" id="result-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step" id="venn-step" hidden>
+    <h2>1 · Drei Operationen, ein Ziel</h2>
+    <p>Wähle eine Operation. Die farbig markierten Zonen zeigen den neuen Inhalt von <code>is1</code>.</p>
+    <div class="op-buttons" role="group" aria-label="Mengenoperation wählen"><button class="op active" data-op="union">unionupdate</button><button class="op" data-op="intersect">intersectupdate</button><button class="op" data-op="difference">differenceupdate</button></div>
+    <div class="venn" id="venn" data-op="union" aria-label="Venn-Diagramm"><div class="circle left"><span>nur is1</span></div><div class="circle right"><span>nur is2</span></div><span class="overlap">beide</span></div>
+    <p class="feedback good" id="op-copy">Vereinigung: links, Mitte und rechts werden in <code>is1</code> übernommen.</p>
+    <p class="mutation"><strong>Nachher:</strong> <code id="after-is1">is1 = {1, 2, 3, 4}</code> · <code>is2 = {2, 3, 4}</code> bleibt unverändert.</p>
+  </section>
+
+  <section class="step help">
+    <h2>Hinweise</h2>
+    <div class="actions"><button class="action hint-btn" data-hint="hint-1">Hinweis 1 · Vertrag</button><button class="action hint-btn" data-hint="hint-2">Hinweis 2 · sicher löschen</button></div>
+    <div class="hint" id="hint-1" hidden>Denke jede Signatur als Zuweisung: <code>is1 := …</code>. Erstelle für Tests vor jedem Aufruf frische Mengen; ein Update verändert den nächsten Versuch sonst mit.</div>
+    <div class="hint" id="hint-2" hidden>Bei Schnitt und Differenz verschwinden Elemente aus <code>is1</code>. Lösche nicht über einen Iterator/Node weiter, den du gerade ungültig gemacht hast. Sammle Kandidaten zuerst oder sichere den nächsten Traversierungsschritt.</div>
+  </section>
+
+  <section class="step solution">
+    <h2>2 · Implementierungs-Gate</h2>
+    <p id="gate-copy">Noch gesperrt: Löse zuerst die kleine Differenz — oder decke den Vertrag nach einem Versuch bewusst auf.</p>
+    <button class="action" id="reveal">Vertrag bewusst aufdecken</button>
+    <div id="solution" hidden>
+      <div class="contract-grid"><div><code>unionupdate</code><span>alle aus <code>is2</code> in <code>is1</code> ergänzen</span></div><div><code>intersectupdate</code><span>aus <code>is1</code> entfernen, was nicht in <code>is2</code> liegt</span></div><div><code>differenceupdate</code><span>aus <code>is1</code> entfernen, was in <code>is2</code> liegt</span></div></div>
+      <p><strong>Blockierte Fehlwege:</strong> <code>is2</code> mutieren; Differenz als <code>is2 \ is1</code> oder symmetrische Differenz rechnen; beim Traversieren von <code>is1</code> den aktuellen Knoten löschen und danach über ihn weiterlaufen.</p>
+    </div>
+  </section>
+
+  <section class="step lab" id="lab-step" hidden>
+    <h2>3 · C++-Lab: Operationen selbst ergänzen</h2>
+    <p><code>lab/intset.hpp</code> ist nur ein kleiner Adapter, damit du hier ausschließlich die drei TODOs in <code>set_ops.cpp</code> bearbeitest.</p>
+    <pre><code>cd lab
+./run-tests.sh</code></pre>
+    <p>Die Tests verwenden kleine, exakt prüfbare Sets und prüfen zusätzlich, dass <code>is2</code> unverändert bleibt. Sie starten absichtlich rot, bis deine Operationen stimmen.</p>
+    <div class="benchmark">
+      <h3>Benchmarkoutput richtig lesen</h3>
+      <p>Zu erzeugen sind <strong>neun Messwerte</strong>: <code>|a∪b| |a∪c| |b∪c|</code>, <code>|a∩b| |a∩c| |b∩c|</code>, <code>|a\b| |a\c| |b\c|</code> — plus benötigte Zeit. Das Blatt nennt keine festen neun Sollzahlen; sie hängen von <code>create_same_randints</code> ab.</p>
+    </div>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Abschlussbeleg</h2>
+    <p>Fertig, wenn die kleinen Sets korrekt sind, <code>is2</code> unverändert bleibt, <code>./run-tests.sh</code> grün wird und du die neun Quellmesswerte als selbst zu erzeugenden Benchmarkoutput erklären kannst.</p>
+    <div class="state-row"><button class="state-btn" data-state="sitzt">Sitzt</button><button class="state-btn" data-state="wackelt">Wackelt</button></div><div class="feedback" id="state-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-04/index.html">← Aufgabe 04</a><a href="../index.html">Blattübersicht</a><a href="../aufgabe-06/index.html">Aufgabe 06 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

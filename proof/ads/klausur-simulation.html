@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Agentenfreie ADS-Trainingssimulation: 35-Minuten-Mini oder konstruierte 90-Minuten-Runde.">
+  <title>ADS Klausur-Simulation · 35 oder 90 Minuten</title>
+  <link rel="stylesheet" href="klausur-rescue.css">
+  <script src="klausur-simulation.js" defer></script>
+</head>
+<body class="simulation-page">
+  <main class="page-shell">
+    <nav class="topbar" aria-label="Hauptnavigation">
+      <a class="brand" href="klausur-roadmap.html">← Klausur-Roadmap</a>
+      <div class="top-actions">
+        <a href="probeklausur-interaktiv/index.html">17er-Training</a>
+        <a href="klausur-roadmap.html#lernzettel">Lernzettel</a>
+      </div>
+    </nav>
+
+    <header class="simulation-hero">
+      <span class="kicker">Ohne Agent · ohne Pause · mit Auswertung</span>
+      <h1>Jetzt zählt dein eigener Start.</h1>
+      <p class="lead">Wähle eine Runde, lege Papier bereit und starte erst dann den Timer. Antworten werden lokal gespeichert. Nach Abgabe oder Zeitablauf erscheinen Musterwege, Trainingspunkte und Reparaturfelder.</p>
+      <p class="exam-warning"><strong>Saubere Einordnung:</strong> Beide Sets sind von uns konstruierte Transferaufgaben aus lokalen Kursmustern. Nur <strong>90 Minuten, 80 Punkte und keine Hilfsmittel</strong> sind als realer Prüfungsrahmen belegt. Aufgabenmix und Trainingspunkte sind nicht offiziell.</p>
+    </header>
+
+    <section class="mode-grid" aria-label="Simulationsmodus wählen">
+      <article class="mode-card" id="mode-card-mini">
+        <span class="certainty near">Kerntransfer</span>
+        <h2>35-Minuten-Mini</h2>
+        <p>Vier neue Varianten: Schleifen, Liste/Pointer, lineare Rekurrenz und ein kleiner Heap-Trace.</p>
+        <div class="mode-meta"><span>35 Trainingspunkte</span><span>4 Aufgaben</span><span>keine Pause</span></div>
+        <p class="tiny" id="mini-mode-state">Noch nicht gestartet.</p>
+        <button class="mode-button" type="button" data-select-mode="mini">Mini auswählen →</button>
+      </article>
+
+      <article class="mode-card" id="mode-card-full">
+        <span class="certainty unknown">Konstruiert</span>
+        <h2>90-Minuten-Runde</h2>
+        <p>Sechs Blöcke über Code/Laufzeit, Mini-Code, Sortieren/Heap, Bäume, 2-3-4/Hashing und Greedy.</p>
+        <div class="mode-meta"><span>80 Trainingspunkte</span><span>6 Aufgaben</span><span>keine Pause</span></div>
+        <p class="tiny" id="full-mode-state">Noch nicht gestartet.</p>
+        <button class="mode-button" type="button" data-select-mode="full">90 Minuten auswählen →</button>
+      </article>
+    </section>
+
+    <section class="exam-panel" id="exam-panel" hidden>
+      <div class="exam-toolbar">
+        <div>
+          <div class="timer" id="timer">35:00</div>
+          <span class="autosave-note" id="autosave-note">Noch nicht gestartet</span>
+        </div>
+        <div>
+          <div class="exam-progress" aria-label="Verbleibende Zeit"><i id="timer-progress"></i></div>
+          <p class="tiny" id="exam-rule">Timer startet erst nach deinem Klick.</p>
+        </div>
+        <div class="exam-actions">
+          <button class="secondary-action" id="start-exam" type="button">Timer starten</button>
+          <button class="submit-button" id="submit-exam" type="button" hidden>Abgeben</button>
+          <button class="reset-button" id="reset-exam" type="button">Runde zurücksetzen</button>
+        </div>
+      </div>
+
+      <div class="paper-card prestart-note" id="prestart-note">
+        <h2>Aufgaben bleiben bis zum Start verdeckt.</h2>
+        <p>Lege Papier und Stift bereit. Der Startknopf zeigt das Set und setzt gleichzeitig die nicht pausierbare Uhr in Gang.</p>
+      </div>
+
+      <div class="exam-view" id="exam-mini" data-mode="mini" hidden>
+        <div class="task-stack">
+          <article class="exam-task" data-task="m1" data-max="10">
+            <header class="task-heading">
+              <span class="task-index">M1</span>
+              <div><h3>Schleifen mit Notausgang</h3><span class="source-note">Konstruierter Transfer nach <a href="/proof/ads/source-materials-not-included.html">A1</a> und <a href="/proof/ads/source-materials-not-included.html">A4</a> der Aufgabensammlung.</span></div>
+              <span class="task-points">10 P</span>
+            </header>
+            <pre class="code-block"><code>int countPairs(int a[], int n) {
+  int c = 0;
+  for (int i = 0; i &lt; n; ++i) {
+    if (a[i] &lt; 0) return c;
+    for (int j = i + 1; j &lt; n; ++j)
+      if (a[i] &lt; a[j]) ++c;
+  }
+  return c;
+}</code></pre>
+            <ol class="question-list">
+              <li>Was zählt <code>c</code>?</li>
+              <li>Nenne eine konkrete Best-Case-Eingabe und die Laufzeit.</li>
+              <li>Nenne eine Worst-Case-Eingabe, zähle die zentralen Vergleiche und gib Θ an.</li>
+            </ol>
+            <textarea class="exam-answer" data-answer="m1" placeholder="Antwort mit Eingabegröße, zentraler Operation, Zählterm und Klasse …"></textarea>
+            <section class="solution-panel" data-solution="m1" hidden>
+              <h4>Musterweg &amp; Rubrik</h4>
+              <ul><li>c zählt Paare <code>i&lt;j</code> mit <code>a[i]&lt;a[j]</code> bis zum ersten negativen Element. (3 P)</li><li>Best: <code>a[0]&lt;0</code>; sofortiger Rücksprung, Θ(1). (3 P)</li><li>Worst: kein negativer Wert, etwa streng steigend; Vergleiche <code>(n−1)+…+1=n(n−1)/2</code>, Θ(n²). (4 P)</li></ul>
+            </section>
+          </article>
+
+          <article class="exam-task" data-task="m2" data-max="9">
+            <header class="task-heading">
+              <span class="task-index">M2</span>
+              <div><h3>Pointer-Fahrt</h3><span class="source-note">Konstruierter Transfer nach <a href="/proof/ads/source-materials-not-included.html">Aufgabensammlung A2</a>.</span></div>
+              <span class="task-points">9 P</span>
+            </header>
+            <pre class="code-block"><code>int evenSum(Node* p) {
+  int s = 0;
+  while (p != nullptr) {
+    if (p-&gt;value % 2 == 0) s += p-&gt;value;
+    p = p-&gt;next;
+  }
+  return s;
+}</code></pre>
+            <p>Gegeben ist <code>head → 5 → −2 → 7 → 4 → nullptr</code>.</p>
+            <ol class="question-list"><li>Trace <code>p</code> und <code>s</code> nach jedem Knoten.</li><li>Welcher Wert wird zurückgegeben?</li><li>Best und Worst für eine Liste der Länge k?</li></ol>
+            <textarea class="exam-answer" data-answer="m2" placeholder="Knoten | s … danach Laufzeitbegründung"></textarea>
+            <section class="solution-panel" data-solution="m2" hidden>
+              <h4>Musterweg &amp; Rubrik</h4>
+              <ul><li>s: 0 nach 5, −2 nach −2, −2 nach 7, 2 nach 4; Rückgabe 2. (3 P)</li><li><code>p=p-&gt;next</code> besucht jeden der vier Knoten genau einmal. (2 P)</li><li>Bei fester Listenlänge k gibt es keinen frühen Abbruch: Best = Worst = Θ(k). (4 P)</li></ul>
+            </section>
+          </article>
+
+          <article class="exam-task" data-task="m3" data-max="9">
+            <header class="task-heading">
+              <span class="task-index">M3</span>
+              <div><h3>Eine lineare Rekurrenz</h3><span class="source-note">Konstruierter Transfer nach <a href="/proof/ads/source-materials-not-included.html">Aufgabensammlung A3</a>.</span></div>
+              <span class="task-points">9 P</span>
+            </header>
+            <pre class="code-block"><code>int h(int n) {
+  if (n &lt;= 1) return 1;
+  return n + h(n - 1);
+}</code></pre>
+            <ol class="question-list"><li>Berechne <code>h(4)</code>.</li><li>Stelle Basisfall und Laufzeitrekurrenz auf.</li><li>Rolle die Rekurrenz aus und nenne die asymptotische Laufzeit.</li></ol>
+            <textarea class="exam-answer" data-answer="m3" placeholder="h(4)=…; T(1)=…; T(n)=…; daher …"></textarea>
+            <section class="solution-panel" data-solution="m3" hidden>
+              <h4>Musterweg &amp; Rubrik</h4>
+              <ul><li><code>h(4)=4+3+2+1=10</code>. (2 P)</li><li><code>T(1)=c₀</code>, <code>T(n)=T(n−1)+c</code>. (3 P)</li><li>Nach n−1 Einsetzungen: <code>c₀+(n−1)c</code>; damit Θ(n). Funktionswert und Laufzeit nicht verwechseln. (4 P)</li></ul>
+            </section>
+          </article>
+
+          <article class="exam-task" data-task="m4" data-max="7">
+            <header class="task-heading">
+              <span class="task-index">M4</span>
+              <div><h3>Min-Heap: delete-min</h3><span class="source-note">Konstruierter Transfer nach <a href="/proof/ads/source-materials-not-included.html">Übungsblatt 4, HeapSort</a>.</span></div>
+              <span class="task-points">7 P</span>
+            </header>
+            <p>Arraydarstellung des Min-Heaps: <code>[2, 5, 4, 11, 8, 7, 9]</code>.</p>
+            <ol class="question-list"><li>Entferne das Minimum.</li><li>Notiere jeden Arrayzustand beim Bubble-down.</li><li>Nenne Best- und Worst-Case-Laufzeit in Abhängigkeit von n.</li></ol>
+            <textarea class="exam-answer" data-answer="m4" placeholder="Start → letztes Element nach oben → Tauschzustände → Ergebnis; Θ(…) "></textarea>
+            <section class="solution-panel" data-solution="m4" hidden>
+              <h4>Musterweg &amp; Rubrik</h4>
+              <ul><li>2 entfernen, 9 nach oben: <code>[9,5,4,11,8,7]</code>; mit kleinerem Kind 4 tauschen: <code>[4,5,9,11,8,7]</code>; dann mit 7: <code>[4,5,7,11,8,9]</code>. (4 P)</li><li>Endheap korrekt und Form/Eigenschaft erhalten. (2 P)</li><li>Best Θ(1) bei sofort erfüllter Heap-Eigenschaft; Worst Θ(log n) entlang der Höhe. (1 P)</li></ul>
+            </section>
+          </article>
+        </div>
+      </div>
+
+      <div class="exam-view" id="exam-full" data-mode="full" hidden>
+        <div class="task-stack">
+          <article class="exam-task" data-task="f1" data-max="18">
+            <header class="task-heading">
+              <span class="task-index">F1</span>
+              <div><h3>Code, Fälle, Laufzeit</h3><span class="source-note">Konstruierter Transfer nach <a href="/proof/ads/source-materials-not-included.html">A1</a> und <a href="/proof/ads/source-materials-not-included.html">A4</a> der Aufgabensammlung.</span></div>
+              <span class="task-points">18 P</span>
+            </header>
+            <pre class="code-block"><code>bool hasDuplicate(int a[], int n) {
+  for (int i = 0; i &lt; n; ++i)
+    for (int j = i + 1; j &lt; n; ++j)
+      if (a[i] == a[j]) return true;
+  return false;
+}</code></pre>
+            <ol class="question-list"><li>Was macht die Funktion?</li><li>Konkreter Best Case inklusive Vergleichen und Θ?</li><li>Konkreter Worst Case, exakte Vergleichssumme und Θ?</li><li>Formuliere einen klausurtauglichen Begründungssatz.</li></ol>
+            <textarea class="exam-answer" data-answer="f1" placeholder="Funktionsergebnis, Best-Input, Worst-Input, Zählterm, Satz …"></textarea>
+            <section class="solution-panel" data-solution="f1" hidden><h4>Musterweg &amp; Rubrik</h4><ul><li>Prüft, ob zwei Arrayelemente gleich sind. (3 P)</li><li>Best: <code>a[0]==a[1]</code>; ein Vergleich, Θ(1). (5 P)</li><li>Worst: alle Werte verschieden; <code>(n−1)+…+1=n(n−1)/2</code>, Θ(n²). (6 P)</li><li>Satz nennt Eingabe, zentrale Operation, Häufigkeit und Klasse. (4 P)</li></ul></section>
+          </article>
+
+          <article class="exam-task" data-task="f2" data-max="14">
+            <header class="task-heading">
+              <span class="task-index">F2</span>
+              <div><h3>Array-Stack: 5–15 Zeilen C++</h3><span class="source-note">Konstruierter Transfer nach <a href="/proof/ads/source-materials-not-included.html">Aufgabensammlung A8</a>.</span></div>
+              <span class="task-points">14 P</span>
+            </header>
+            <pre class="code-block"><code>struct Stack {
+  int* data;
+  int capacity;
+  int size;      // Anzahl gespeicherter Werte
+};
+
+bool push(Stack&amp; s, int value) { /* ergänzen */ }
+bool pop(Stack&amp; s, int&amp; out)   { /* ergänzen */ }</code></pre>
+            <p>Implementiere beide Funktionen. Bei voll/leer soll <code>false</code> zurückkommen, sonst <code>true</code>. <code>out</code> erhält den entfernten Wert.</p>
+            <textarea class="exam-answer" data-answer="f2" placeholder="bool push(...) { … }
+
+bool pop(...) { … }"></textarea>
+            <section class="solution-panel" data-solution="f2" hidden><h4>Musterweg &amp; Rubrik</h4><pre>bool push(Stack&amp; s, int value) {
+  if (s.size == s.capacity) return false;
+  s.data[s.size++] = value;
+  return true;
+}
+bool pop(Stack&amp; s, int&amp; out) {
+  if (s.size == 0) return false;
+  out = s.data[--s.size];
+  return true;
+}</pre><ul><li>Konsistente size-Konvention und Grenzen. (4 P)</li><li>push korrekt. (5 P)</li><li>pop korrekt, out vor Rückgabe gesetzt. (5 P)</li></ul></section>
+          </article>
+
+          <article class="exam-task" data-task="f3" data-max="12">
+            <header class="task-heading">
+              <span class="task-index">F3</span>
+              <div><h3>Sortieren &amp; Heap</h3><span class="source-note">Transfer nach <a href="/proof/ads/source-materials-not-included.html">A1</a> und <a href="/proof/ads/source-materials-not-included.html">Übungsblatt 4</a>.</span></div>
+              <span class="task-points">12 P</span>
+            </header>
+            <ol class="question-list"><li>SelectionSort auf <code>[5,2,4,1,3]</code>: Notiere die Arrays nach den ersten zwei äußeren Runden sowie die Gesamtzahl der Vergleiche.</li><li>Min-Heap <code>[1,4,3,9,7,8,5]</code>: führe einmal <code>delete-min</code> mit allen Zuständen aus und nenne Best/Worst.</li></ol>
+            <textarea class="exam-answer" data-answer="f3" placeholder="Selection Runde 1/2 … Vergleiche …
+Heapzustände …"></textarea>
+            <section class="solution-panel" data-solution="f3" hidden><h4>Musterweg &amp; Rubrik</h4><ul><li>Selection: nach Runde 1 <code>[1,2,4,5,3]</code>; nach Runde 2 unverändert <code>[1,2,4,5,3]</code>. (4 P)</li><li>Insgesamt 4+3+2+1=10 Vergleiche, Θ(n²). (2 P)</li><li>Heap: 1 entfernen, 5 hoch → <code>[5,4,3,9,7,8]</code> → mit 3 tauschen → <code>[3,4,5,9,7,8]</code>. (4 P)</li><li><code>delete-min</code>: Best Θ(1), Worst Θ(log n) über einen Wurzel-Blatt-Pfad. (2 P)</li></ul></section>
+          </article>
+
+          <article class="exam-task" data-task="f4" data-max="16">
+            <header class="task-heading">
+              <span class="task-index">F4</span>
+              <div><h3>BST &amp; InOrder-Code</h3><span class="source-note">Transfer nach <a href="/proof/ads/source-materials-not-included.html">Aufgabensammlung A10</a> und <a href="/proof/ads/source-materials-not-included.html">Übungsblatt 8</a>.</span></div>
+              <span class="task-points">16 P</span>
+            </header>
+            <p>Füge in einen leeren BST ein: <code>8, 3, 10, 1, 6, 14, 4, 7, 13</code>.</p>
+            <ol class="question-list"><li>Zeichne oder beschreibe den Baum.</li><li>InOrder-Ausgabe?</li><li>Suchpfad zu 7?</li><li>Schreibe eine rekursive InOrder-Funktion mit <code>nullptr</code>-Basisfall. Laufzeit?</li></ol>
+            <textarea class="exam-answer" data-answer="f4" placeholder="Baum/Eltern-Kind-Kanten …
+InOrder … Pfad …
+void inorder(...) { … }; Laufzeit …"></textarea>
+            <section class="solution-panel" data-solution="f4" hidden><h4>Musterweg &amp; Rubrik</h4><ul><li>Wurzel 8; links 3 mit 1 und 6(4,7); rechts 10 mit rechtem 14(linkes 13). (4 P)</li><li>InOrder: 1,3,4,6,7,8,10,13,14. (3 P)</li><li>Suchpfad: 8 → 3 → 6 → 7. (2 P)</li><li><code>if(n==nullptr)return; inorder(n-&gt;left); visit(n); inorder(n-&gt;right);</code> (5 P)</li><li>Besucht jeden Knoten: Θ(n). (2 P)</li></ul></section>
+          </article>
+
+          <article class="exam-task" data-task="f5" data-max="12">
+            <header class="task-heading">
+              <span class="task-index">F5</span>
+              <div><h3>2-3-4-Split &amp; Hashing</h3><span class="source-note">Transfer nach <a href="/proof/ads/source-materials-not-included.html">A15</a>, <a href="/proof/ads/source-materials-not-included.html">A16</a> und <a href="/proof/ads/source-materials-not-included.html">A17</a>.</span></div>
+              <span class="task-points">12 P</span>
+            </header>
+            <ol class="question-list"><li>Ein voller 2-3-4-Knoten enthält <code>[10|20|30]</code>. Zeige den Split und nenne zwei Invarianten.</li><li>Hashtabelle Größe 7, <code>h(x)=x%7</code>; belegt: Index 0→14, 2→9, 3→17. Füge 16 mit linearem Sondieren <code>+1,+2,…</code> ein. Besuchsfolge, Zielindex, Sondierungszahl (Start zählt nicht)?</li></ol>
+            <textarea class="exam-answer" data-answer="f5" placeholder="Split … Invarianten …
+Hashstart … Besuchsfolge … Ziel … Sondierungen …"></textarea>
+            <section class="solution-panel" data-solution="f5" hidden><h4>Musterweg &amp; Rubrik</h4><ul><li>20 steigt zum Elternknoten; Kinder werden <code>[10]</code> und <code>[30]</code>. (5 P)</li><li>Invarianten z. B. sortierte Schlüssel, passende Kinderbereiche, 1–3 Schlüssel, Blätter gleiche Tiefe. (2 P)</li><li><code>16%7=2</code>: 2 belegt → 3 belegt → 4 frei; Ziel 4, zwei Sondierungen. (5 P)</li></ul></section>
+          </article>
+
+          <article class="exam-task" data-task="f6" data-max="8">
+            <header class="task-heading">
+              <span class="task-index">F6</span>
+              <div><h3>Greedy-Gegenbeispiel</h3><span class="source-note">Konstruierter Transfer nach <a href="/proof/ads/source-materials-not-included.html">Übungsblatt 6</a> und Vorlesungsstoff Greedy/Backtracking.</span></div>
+              <span class="task-points">8 P</span>
+            </header>
+            <p>Münzen <code>{1,3,4}</code>, Zielsumme 6. Greedy nimmt immer die größte noch passende Münze.</p>
+            <ol class="question-list"><li>Welche Lösung findet Greedy?</li><li>Gib eine bessere Lösung an.</li><li>Warum widerlegt das die allgemeine Optimalität?</li><li>Was würde Backtracking anders tun?</li></ol>
+            <textarea class="exam-answer" data-answer="f6" placeholder="Greedy … besser … Begründung … Backtracking …"></textarea>
+            <section class="solution-panel" data-solution="f6" hidden><h4>Musterweg &amp; Rubrik</h4><ul><li>Greedy: 4+1+1, also drei Münzen. (2 P)</li><li>Optimal: 3+3, zwei Münzen. (2 P)</li><li>Eine konkrete Instanz mit schlechterem Greedy-Ergebnis reicht als Gegenbeispiel zur allgemeinen Optimalität. (2 P)</li><li>Backtracking verzweigt über Alternativen, verwirft unpassende Pfade und kann 3+3 finden. (2 P)</li></ul></section>
+          </article>
+        </div>
+      </div>
+
+      <section class="post-submit" id="post-submit" hidden>
+        <span class="kicker">Auswertung · kein Bestehensurteil</span>
+        <h2>Markiere, was du wirklich gezeigt hast.</h2>
+        <p>Vergib pro Aufgabe nur die Punkte aus der sichtbaren Rubrik und markiere Fehlerarten. Das Ergebnis ist ein interner Trainingsscore — keine Prognose für die echte Klausur.</p>
+        <div class="score-display" id="score-display">0 / 35</div>
+        <p id="score-message">Noch keine Selbstpunkte eingetragen.</p>
+        <div id="repair-section">
+          <h3>Zwei Reparaturen vor der 90-Minuten-Runde</h3>
+          <p>Löse jeweils einen <strong>veränderten</strong> Fall ohne Musterweg und hake erst danach ab.</p>
+          <div class="repair-list" id="repair-list"></div>
+        </div>
+        <div class="mission-actions">
+          <a class="primary-action" href="probeklausur-interaktiv/index.html">Fehler im Training reparieren →</a>
+          <a class="secondary-action" href="klausur-roadmap.html">Zur Roadmap</a>
+        </div>
+      </section>
+    </section>
+
+    <footer class="footer-note">
+      Autosave: <code>ads-klausur-simulation-v1</code> in diesem Browser. Es gibt keinen Pause-Knopf und keine Agentenverbindung. „Zurücksetzen“ betrifft nur den gewählten Simulationsmodus und verlangt eine Bestätigung.
+    </footer>
+  </main>
+</body>
+</html>

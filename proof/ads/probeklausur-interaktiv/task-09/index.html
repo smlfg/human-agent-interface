@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aufgabe 09 · Verkettete Liste</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <script src="task.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="task-head">
+      <div><span class="kicker">Pointer-Werkstatt</span><h1>Liste, ohne Knoten zu verlieren</h1></div>
+      <div class="counter">09 / 17</div>
+    </header>
+
+    <nav class="crumbs" aria-label="Aufgabennavigation">
+      <a href="../index.html">Übersicht</a><a href="../task-08/index.html">← Aufgabe 08</a>
+      <a href="/proof/ads/source-materials-not-included.html">Original-PDF</a><a href="../task-10/index.html">Aufgabe 10 →</a>
+    </nav>
+
+    <section class="mission" aria-labelledby="mission-title">
+      <div class="brief">
+        <h2 id="mission-title">Mission</h2>
+        <p>Implementiere die fehlenden Listenfunktionen auf Papier. Dein Sicherheitsgesetz: <strong>Erst den Restweg sichern, dann <code>head</code> verändern.</strong></p>
+      </div>
+      <pre class="code"><code>struct liste_node {
+    int ele;
+    liste_node* next;
+};
+struct liste {
+    liste_node* head;
+    size_t len;
+};</code></pre>
+    </section>
+
+    <div class="stepper">
+      <section class="step" id="alphabet-step" aria-labelledby="alphabet-title">
+        <h2 id="alphabet-title">Ein Symbol übersetzen</h2>
+        <p class="prompt"><code>lis-&gt;head-&gt;next</code> bedeutet …</p>
+        <div class="choices" id="alphabet-choices">
+          <button class="choice" type="button" data-value="right">der Nachfolger des ersten Knotens</button>
+          <button class="choice" type="button" data-value="node">der Wert des ersten Knotens</button>
+          <button class="choice" type="button" data-value="calc">eine Rechnung mit head und next</button>
+        </div>
+        <div class="help-row"><button class="action hint-button" type="button" data-hint="hint-a1">Hinweis 1</button><button class="action hint-button" type="button" data-hint="hint-a2">Hinweis 2</button></div>
+        <div class="hint" id="hint-a1"><code>-&gt;</code> heißt: „Gehe zu dem Objekt, auf das der Zeiger zeigt, und nimm sein Feld …“</div>
+        <div class="hint" id="hint-a2"><code>lis → head</code> führt zum ersten Knoten; dessen Feld <code>next</code> führt zum zweiten Knoten.</div>
+        <div class="feedback" id="alphabet-feedback" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="step locked" id="pointer-step" aria-labelledby="pointer-title" aria-disabled="true">
+        <h2 id="pointer-title">Den Restweg retten</h2>
+        <p class="prompt">Die Liste ist <code>7 → 18 → 43 → null</code>. Du willst den ersten Knoten löschen. Klicke die Codezeilen in sicherer Reihenfolge.</p>
+        <div class="pointer-board" aria-label="Visualisierte verkettete Liste">
+          <span class="head-tag">head</span>
+          <div class="node doomed"><b>7</b><small>next</small></div><span class="arrow">→</span>
+          <div class="node"><b>18</b><small>next</small></div><span class="arrow">→</span>
+          <div class="node"><b>43</b><small>next</small></div><span class="arrow">→ null</span>
+        </div>
+        <ol class="trace-log" id="trace-log" aria-live="polite"><li>Noch keine Zeile ausgeführt.</li></ol>
+        <div class="line-bank">
+          <button class="choice line-choice" type="button" data-line="save"><code>todel = lis-&gt;head;</code></button>
+          <button class="choice line-choice" type="button" data-line="advance"><code>lis-&gt;head = lis-&gt;head-&gt;next;</code></button>
+          <button class="choice line-choice danger" type="button" data-line="overwrite"><code>lis-&gt;head = nullptr;</code></button>
+          <button class="choice line-choice" type="button" data-line="delete"><code>delete todel;</code></button>
+        </div>
+        <button class="action" id="reset-trace" type="button">Trace zurücksetzen</button>
+        <div class="feedback" id="pointer-feedback" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="step locked" id="operation-step" aria-labelledby="operation-title" aria-disabled="true">
+        <h2 id="operation-title">Liste direkt manipulieren</h2>
+        <p class="prompt">Arbeite wie im <code>main</code>: Führe die Operationen aus und beobachte, welche Pointer sich ändern.</p>
+        <div class="list-lab">
+          <div class="list-state" id="list-state" aria-live="polite"></div>
+          <div class="operation-buttons" id="operation-buttons">
+            <button class="action primary" type="button" data-op="back17">pushback(17)</button>
+            <button class="action" type="button" data-op="back42" disabled>pushback(42)</button>
+            <button class="action" type="button" data-op="back666" disabled>pushback(666)</button>
+            <button class="action" type="button" data-op="front6" disabled>pushfront(6)</button>
+          </div>
+          <p class="tiny" id="operation-note">Start: <code>head = nullptr</code>, <code>len = 0</code>.</p>
+        </div>
+        <p class="prompt">Nach diesen vier Aufrufen: Welche Zeile implementiert <code>pushfront(lis, t)</code> ohne die Restliste zu verlieren?</p>
+        <div class="choices" id="front-choices">
+          <button class="choice" type="button" data-value="right"><code>head = new node{t, head};</code></button>
+          <button class="choice" type="button" data-value="lost"><code>head = new node{t, nullptr};</code></button>
+          <button class="choice" type="button" data-value="value"><code>head-&gt;ele = t;</code></button>
+        </div>
+        <div class="feedback" id="front-feedback" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="step locked" id="code-step" aria-labelledby="code-title" aria-disabled="true">
+        <h2 id="code-title">Kernfunktionen zusammensetzen</h2>
+        <p class="prompt">Wähle jeweils die mechanisch passende Zeile. Es geht um eine <strong>tiefe Kopie</strong>: neue Knoten, gleiche Werte.</p>
+        <div class="code-puzzle">
+          <label><b>init · leer</b><select data-key="init"><option value="">Zeile wählen …</option><option value="right">head=nullptr; len=0;</option><option value="bad">head=new node; len=1;</option></select></label>
+          <label><b>clear · vor delete</b><select data-key="clear"><option value="">Zeile wählen …</option><option value="right">todel=head; head=head-&gt;next;</option><option value="bad">delete head; head=head-&gt;next;</option></select></label>
+          <label><b>pushfront · neuer next</b><select data-key="front"><option value="">Zeile wählen …</option><option value="right">new node{t, head}</option><option value="bad">new node{t, nullptr}</option></select></label>
+          <label><b>pushback · letzten finden</b><select data-key="back"><option value="">Zeile wählen …</option><option value="right">while (n-&gt;next != nullptr)</option><option value="bad">while (n != nullptr)</option></select></label>
+          <label><b>assign · Kopie</b><select data-key="assign"><option value="">Zeile wählen …</option><option value="right">new node{sn-&gt;ele, nullptr}</option><option value="bad">dst-&gt;head = src-&gt;head</option></select></label>
+          <label><b>size · O(1)</b><select data-key="size"><option value="">Zeile wählen …</option><option value="right">return lis-&gt;len;</option><option value="bad">Knoten jedes Mal zählen</option></select></label>
+        </div>
+        <div class="help-row"><button class="action hint-button" type="button" data-hint="hint-c1">Hinweis 1</button><button class="action hint-button" type="button" data-hint="hint-c2">Hinweis 2</button></div>
+        <div class="hint" id="hint-c1">Bei <code>clear</code> darfst du nach <code>delete head</code> nicht mehr <code>head-&gt;next</code> lesen. Sichere oder verschiebe den Zeiger zuerst.</div>
+        <div class="hint" id="hint-c2">Bei tiefer Kopie werden keine Knotenzeiger geteilt. <code>src</code> wird nur gelesen; für <code>dst</code> entsteht pro Quellknoten ein <code>new</code>.</div>
+        <button class="action primary" id="check-code" type="button">Sechs Entscheidungen prüfen</button>
+        <div class="feedback" id="code-feedback" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="step locked" id="trace-step" aria-labelledby="main-title" aria-disabled="true">
+        <h2 id="main-title">Prüfungs-Trace aus dem Original</h2>
+        <p class="prompt"><code>lis</code> ist nach dem Erhöhen <code>[7 18 43 667]</code>. <code>lisb</code> und <code>lisc</code> sind tiefe Kopien. Danach:</p>
+        <pre class="code"><code>liste_append(&amp;lis, &amp;lisb);       // Ausgabe 5
+liste_clear(&amp;lis);
+lis = liste_plus(&amp;lisc, &amp;lisc); // Ausgabe 6</code></pre>
+        <label for="trace-five">Ausgabe 5 (nur Werte)</label>
+        <input id="trace-five" class="short-answer" type="text" autocomplete="off" placeholder="z. B. 1 2 3">
+        <label for="trace-six">Ausgabe 6 (nur Werte)</label>
+        <input id="trace-six" class="short-answer" type="text" autocomplete="off" placeholder="z. B. 1 2 3">
+        <button class="action primary" id="check-main-trace" type="button">Beide Ausgaben prüfen</button>
+        <div class="feedback" id="main-feedback" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="step locked" id="solution-step" aria-labelledby="solution-title" aria-disabled="true">
+        <h2 id="solution-title">Prüfungsabschluss</h2>
+        <p>Du hast Pointerbewegung und Listen-Trace produziert. Jetzt darfst du den vollständigen Musterweg mit allen geforderten Funktionen vergleichen.</p>
+        <button class="action" id="reveal-solution" type="button" disabled>Komplette Lösung aufdecken</button>
+        <div id="solution" hidden>
+          <h3>Initialisierung, tiefe Kopie und Zuweisung</h3>
+          <pre class="code"><code>void liste_init(liste* lis) {
+    lis-&gt;head = nullptr;
+    lis-&gt;len = 0;
+}
+
+void liste_init(liste* lis, const liste* src) {
+    lis-&gt;head = nullptr;
+    lis-&gt;len = 0;
+    liste_assign(lis, src);
+}
+
+void liste_assign(liste* dst, const liste* src) {
+    liste_clear(dst);
+    liste_node* sn = src-&gt;head;
+    liste_node* n;
+    while (sn != nullptr) {
+        if (dst-&gt;head == nullptr)
+            dst-&gt;head = n = new liste_node{sn-&gt;ele, nullptr};
+        else {
+            n-&gt;next = new liste_node{sn-&gt;ele, nullptr};
+            n = n-&gt;next;
+        }
+        sn = sn-&gt;next;
+    }
+    dst-&gt;len = src-&gt;len;
+}</code></pre>
+          <h3>Löschen, Push und Size</h3>
+          <pre class="code"><code>void liste_clear(liste* lis) {
+    while (lis-&gt;head != nullptr) {
+        liste_node* todel = lis-&gt;head;
+        lis-&gt;head = lis-&gt;head-&gt;next;
+        delete todel;
+    }
+    lis-&gt;len = 0;
+}
+
+void liste_pushfront(liste* lis, T t) {
+    lis-&gt;len += 1;
+    lis-&gt;head = new liste_node{t, lis-&gt;head};
+}
+
+void liste_pushback(liste* lis, T t) {
+    if (lis-&gt;head == nullptr) liste_pushfront(lis, t);
+    else {
+        lis-&gt;len += 1;
+        liste_node* n = lis-&gt;head;
+        while (n-&gt;next != nullptr) n = n-&gt;next;
+        n-&gt;next = new liste_node{t, nullptr};
+    }
+}
+
+size_t liste_size(const liste* lis) {
+    return lis-&gt;len;
+}</code></pre>
+          <h3>Anhängen und Plus</h3>
+          <pre class="code"><code>void liste_append(liste* lis, const liste* src) {
+    if (lis-&gt;head == nullptr) {
+        liste_assign(lis, src);
+        return;
+    }
+    liste_node* tail = lis-&gt;head;
+    while (tail-&gt;next != nullptr) tail = tail-&gt;next;
+    for (liste_node* n = src-&gt;head; n != nullptr; n = n-&gt;next) {
+        tail-&gt;next = new liste_node{n-&gt;ele, nullptr};
+        lis-&gt;len += 1;
+        tail = tail-&gt;next;
+    }
+}
+
+liste liste_plus(const liste* src1, const liste* src2) {
+    liste dst;
+    liste_init(&amp;dst);
+    liste_assign(&amp;dst, src1);
+    liste_append(&amp;dst, src2);
+    return dst;
+}</code></pre>
+          <p class="edge-note"><strong>Prüfungssatz:</strong> Jeder überschriebene oder gelöschte Zeiger braucht vorher einen weiterhin erreichbaren Weg zur Restliste. Kopieren heißt hier neue Knoten anlegen, nicht nur <code>head</code> teilen.</p>
+        </div>
+        <div class="state-row" aria-label="Eigenen Lernstatus setzen"><button class="state-btn" type="button" data-state="wackelt">Wackelt noch</button><button class="state-btn" type="button" data-state="sitzt">Sitzt</button></div>
+        <p class="tiny" id="state-feedback" aria-live="polite"></p>
+      </section>
+    </div>
+
+    <nav class="nav-bottom" aria-label="Zwischen Aufgaben wechseln"><a href="../task-08/index.html">← Aufgabe 08</a><a href="../index.html">Übersicht</a><a href="../task-10/index.html">Aufgabe 10 →</a></nav>
+  </main>
+</body>
+</html>

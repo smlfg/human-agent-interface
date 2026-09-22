@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="HAI proof from real ADS study sessions: a human block, bounded agent tooling, and visible transfer in practice.">
+  <title>Proof: ADS Study with Agents | Human Agent Interface</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f7f1df;
+      --muted: #b7ad97;
+      --copper: #ff9f5f;
+      --cyan: #83dbc8;
+      --signal: #a7ff4f;
+      --line: rgba(247, 241, 223, 0.16);
+      --panel: rgba(247, 241, 223, 0.055);
+      --void: #080806;
+      --max: 1120px;
+      --pad: clamp(18px, 4vw, 56px);
+      --display: Georgia, "Times New Roman", serif;
+      --body: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
+      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--void);
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(167, 255, 79, 0.05), transparent 22rem),
+        linear-gradient(120deg, rgba(255, 159, 95, 0.055), transparent 36rem),
+        linear-gradient(180deg, #080806 0%, #11100d 45%, #070806 100%);
+      font-family: var(--body);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.22;
+      background-image:
+        linear-gradient(rgba(247, 241, 223, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(247, 241, 223, 0.03) 1px, transparent 1px);
+      background-size: 72px 72px;
+      z-index: 1;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .shell {
+      width: min(var(--max), calc(100% - 36px));
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .topbar {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 10;
+      padding: 14px var(--pad) 0;
+      pointer-events: none;
+    }
+
+    .topbar-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 10px 14px;
+      border: 1px solid rgba(247, 241, 223, 0.13);
+      background: rgba(8, 8, 6, 0.75);
+      backdrop-filter: blur(12px);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      pointer-events: auto;
+    }
+
+    .brand {
+      opacity: 0.9;
+    }
+
+    .brand strong {
+      color: var(--ink);
+      letter-spacing: 0.05em;
+      margin-left: 8px;
+    }
+
+    .topbar a:hover {
+      color: var(--ink);
+    }
+
+    main {
+      padding: 130px 0 84px;
+      animation: rise 0.7s ease-out;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      color: var(--copper);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 34px;
+      height: 1px;
+      content: "";
+      background: var(--copper);
+    }
+
+    h1 {
+      max-width: 1000px;
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(2.8rem, 8vw, 5.2rem);
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      text-wrap: balance;
+    }
+
+    .lead {
+      max-width: 700px;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2vw, 1.28rem);
+    }
+
+    .kicker {
+      margin-top: 24px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .story {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    .story-card {
+      position: relative;
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      min-height: 220px;
+      overflow: hidden;
+      animation: rise 0.8s ease-out;
+      animation-fill-mode: both;
+    }
+
+    .story-card:nth-child(1) { animation-delay: 0.04s; border-color: rgba(167, 255, 79, 0.35); }
+    .story-card:nth-child(2) { animation-delay: 0.09s; border-color: rgba(131, 219, 200, 0.35); }
+    .story-card:nth-child(3) { animation-delay: 0.14s; border-color: rgba(255, 159, 95, 0.35); }
+    .story-card:nth-child(4) { animation-delay: 0.19s; border-color: rgba(255, 255, 255, 0.35); }
+
+    .story-card h2 {
+      margin: 0 0 10px;
+      font-family: var(--mono);
+      color: var(--ink);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .story-card p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 55ch;
+    }
+
+    .story-card strong {
+      color: var(--ink);
+    }
+
+    .proof-grid {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .proof-card {
+      display: block;
+      position: relative;
+      padding: 22px;
+      border: 1px solid var(--line);
+      background: rgba(8, 8, 6, 0.65);
+      min-height: 220px;
+      transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .proof-card::after {
+      content: "↗";
+      position: absolute;
+      right: 18px;
+      bottom: 16px;
+      color: var(--muted);
+      font-family: var(--mono);
+      transition: transform 0.16s ease;
+    }
+
+    .proof-card:hover::after,
+    .proof-card:focus-visible::after {
+      transform: translate(2px, -2px);
+    }
+
+    .proof-card:hover,
+    .proof-card:focus-visible {
+      transform: translateY(-4px);
+      border-color: rgba(247, 241, 223, 0.45);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    .proof-card h3 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(1.45rem, 2.9vw, 2rem);
+      letter-spacing: -0.01em;
+      line-height: 1.05;
+      text-wrap: balance;
+    }
+
+    .proof-card p {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .proof-card .meta {
+      margin-top: 14px;
+      color: var(--signal);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .proof-card:nth-child(1) .meta,
+    .proof-card:nth-child(1) h3 {
+      color: #a7ff4f;
+    }
+
+    .proof-card:nth-child(2) .meta,
+    .proof-card:nth-child(2) h3 {
+      color: #83dbc8;
+    }
+
+    .proof-card:nth-child(3) .meta,
+    .proof-card:nth-child(3) h3 {
+      color: #ff9f5f;
+    }
+
+    .proof-card:nth-child(4) .meta,
+    .proof-card:nth-child(4) h3 {
+      color: #f6d08a;
+    }
+
+    .proof-card:nth-child(5) .meta,
+    .proof-card:nth-child(5) h3 {
+      color: #f4bbff;
+    }
+
+    .proof-card:nth-child(6) .meta,
+    .proof-card:nth-child(6) h3 {
+      color: #7ad7ff;
+    }
+
+    .note {
+      margin-top: 34px;
+      padding: 18px 20px;
+      border-left: 2px solid var(--signal);
+      background: rgba(167, 255, 79, 0.05);
+      color: var(--muted);
+      font-size: 0.97rem;
+    }
+
+    .note strong {
+      color: var(--ink);
+    }
+
+    .line {
+      margin-top: 42px;
+      height: 1px;
+      background: var(--line);
+      width: min(100%, 300px);
+    }
+
+    .boundary {
+      margin-top: 32px;
+      display: grid;
+      gap: 10px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .boundary strong {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    footer {
+      margin-top: 38px;
+      padding: 24px 0;
+      border-top: 1px solid var(--line);
+      color: #776f60;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 920px) {
+      .story,
+      .proof-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="../">← Back to HAI Proof</a>
+      <a href="../../">HAI Home</a>
+    </div>
+  </div>
+
+  <main>
+    <section class="shell">
+      <p class="eyebrow">Study proof / Human Agent Interface</p>
+      <h1>Samuel did not ask an agent to learn for him.</h1>
+      <p class="lead">
+        He used the tools as a bounded learning assistant so he could rebuild the conditions for deep work himself.
+      </p>
+
+      <p class="kicker">The chain: block, bounded helper, human transfer.</p>
+      <div class="story">
+        <article class="story-card">
+          <h2>1. Real learning block</h2>
+          <p>
+            <strong>The workload was real:</strong> exam preparation in Algorithms and Data Structures with mixed tasks, time pressure, and transfer friction.
+            The first step was to stabilise one clear block: "Was ist die nächste Aufgabe, die ich wirklich heute lösen kann?".
+          </p>
+        </article>
+        <article class="story-card">
+          <h2>2. Agent builds the learning room</h2>
+          <p>
+            The agent helped generate structure, feedback loops, and interaction affordances for exercises. The role was bounded to:
+            scaffolding, consistency checks, and progress visibility.
+            No closed-loop tutoring, no hidden grading, no automatic final answers.
+          </p>
+        </article>
+        <article class="story-card">
+          <h2>3. Samuel does the work</h2>
+          <p>
+            The learning step stayed human-owned. Samuel still had to derive invariants, choose approaches, validate edge cases, and transfer patterns.
+            This is the proof surface: how often he could complete tasks by thinking through evidence instead of copying.
+          </p>
+        </article>
+        <article class="story-card">
+          <h2>4. Visible evidence</h2>
+          <p>
+            The result is a public trail of interactions and interactions that are still interactive and honest.
+            Below are the concrete ADS artifacts that are safe to show publicly.
+          </p>
+        </article>
+      </div>
+
+      <div class="line" aria-hidden="true"></div>
+
+      <p class="kicker">ADS public collection</p>
+      <div class="proof-grid">
+        <a class="proof-card" href="probeklausur-interaktiv/">
+          <span class="meta">Proof-of-knowledge loop</span>
+          <h3>Probeklausur interaktiv</h3>
+          <p>Interaktive Klausurstruktur in aufeinanderfolgenden Schritten: lesen, entscheiden, lösen, prüfen.</p>
+        </a>
+        <a class="proof-card" href="uebungsblaetter-interaktiv/">
+          <span class="meta">Adaptive exercise lab</span>
+          <h3>Interaktive Übungsblätter</h3>
+          <p>Mehrere Blätter mit Aufgaben, Kontrollpunkten und kleinen Hilfestufen, die Lernen aktiv halten.</p>
+        </a>
+        <a class="proof-card" href="klausur-roadmap.html">
+          <span class="meta">Learning map</span>
+          <h3>Klausur-Roadmap</h3>
+          <p>Eigenes Ordnungsschema für Wiederholung, Fokus und Transfer statt linearer Lernhölle.</p>
+        </a>
+        <a class="proof-card" href="probeklausur-interaktiv/laufzeit-detektiv/">
+          <span class="meta">Live lab: runtime</span>
+          <h3>Laufzeit-Detektiv</h3>
+          <p>Konkrete Rechenwege und Laufzeitüberlegungen als nachvollziehbarer Übungsraum.</p>
+        </a>
+        <a class="proof-card" href="probeklausur-interaktiv/baum-detektiv/">
+          <span class="meta">Live lab: trees</span>
+          <h3>Baum-Detektiv</h3>
+          <p>Strukturen, Traversierung und Entscheidungen mit sichtbarem, geführtem Vorgehen.</p>
+        </a>
+        <a class="proof-card" href="klausur-simulation.html">
+          <span class="meta">Exam transfer check</span>
+          <h3>Klausur-Simulation</h3>
+          <p>Komprimierte Transferaufgaben, bei denen Hilfen zurücktreten und die eigene Lösung trägt.</p>
+        </a>
+      </div>
+
+      <p class="note">
+        <strong>Hinweis:</strong> Diese Seite dient als öffentlicher Lernnachweis. Quellenverweise auf Original-PDFs, Rohmaterialien und
+        Kursdateien sind bewusst nicht veröffentlicht; der Fokus liegt auf den interaktiven Lernoberflächen.
+      </p>
+
+      <p class="boundary">
+        <strong>Boundary:</strong> Kein autonomer Tutor, keine Notenansprüche, kein privates Gesprächslog. Nur ein begrenzter, reproduzierbarer Lernraum.
+      </p>
+
+      <footer>
+        Human Agent Interface / ADS Study Proof
+      </footer>
+    </section>
+  </main>
+</body>
+</html>

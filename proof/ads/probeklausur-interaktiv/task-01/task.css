@@ -1,0 +1,22 @@
+.translation{margin-top:1.2rem;padding-top:1rem;border-top:2px dashed var(--ink)}
+.first-move{box-shadow:var(--shadow)}
+.hint-controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.hint-button{background:#e7f0f7}
+.locked{opacity:.58;filter:grayscale(.45)}
+.locked::after{content:"ERST DEN SCHRITT DAVOR";position:absolute;right:18px;top:18px;padding:5px 8px;background:var(--ink);color:var(--cream);font-size:.7rem;transform:rotate(1deg)}
+.rounds{display:grid;grid-template-columns:repeat(5,minmax(100px,1fr));gap:12px;margin:20px 0}
+.round{min-height:100px;border:2px solid var(--ink);background:#fffdf7;cursor:pointer;box-shadow:3px 3px 0 var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.round span{font-size:.8rem}.round b{font:800 2rem "Fraunces",Georgia,serif}.round.revealed{background:var(--sun);transform:translateY(-4px)}
+.trace-total{display:inline-block;margin:0;padding:9px 12px;border:2px solid var(--ink);font-weight:700;background:#fff}
+label{display:block;font-weight:700;margin-bottom:8px}
+#check-answer{margin-top:12px}
+.solution-lock{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:18px;padding-top:18px;border-top:2px dashed var(--ink)}
+.solution-lock span{font-size:.8rem;color:var(--muted)}
+.solution{margin-top:16px;padding:18px;border:2px solid var(--green);background:#d8f0df;line-height:1.65}
+.status-card{border-left:10px solid var(--sun)}
+.state-btn[aria-pressed="true"]{outline:4px solid var(--blue);outline-offset:3px}
+button:focus-visible,a:focus-visible,textarea:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
+button:disabled,textarea:disabled{cursor:not-allowed}
+@media(max-width:760px){.rounds{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:460px){.rounds{grid-template-columns:repeat(2,1fr)}.locked::after{position:static;display:inline-block;margin-top:14px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB03 · Aufgabe 1 · Formales Big-O</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Hauptnavigation">
+      <a class="brand" href="../../index.html">ADS · INTERAKTIV</a>
+      <a class="back" href="../index.html">← Blatt 03</a>
+    </nav>
+
+    <header class="task-head">
+      <div><span class="kicker">FORMAL STATT BAUCHGEFÜHL</span><h1>Big-O bezeugen</h1></div>
+      <div class="counter">PB03 · 01/06</div>
+    </header>
+
+    <section class="media-pre">
+      <div class="media-route-top">
+        <h2>Vorher ansehen</h2>
+        <span class="media-duration">Short · 1:09</span>
+      </div>
+      <p class="media-instruction">Andere Zahlen als deine Aufgabe — bewusst. Die Mechanik überträgst du selbst.</p>
+      <video class="media-player short-player" controls preload="metadata" poster="../../../media-posters/pb03a01-short.webp" src="../../../notebooklm-study-pack/10_uebungsblaetter/blatt03/short_PB03A01_big-o-zeugen.mp4">Dein Browser unterstützt Video nicht.</video>
+      <div class="recall-box"><strong>Sofort-Recall</strong>Reicht es, wenn die Ungleichung nur für <code>n = n₀</code> stimmt?</div>
+    </section>
+
+    <section class="mission">
+      <div class="brief">
+        <h2>Dein Auftrag</h2>
+        <p><strong>f(n) = 3n + 17</strong><br><strong>g(n) = 2n</strong></p>
+        <p>Finde konkrete Werte für <strong>c</strong> und <strong>n₀</strong>, die den formalen Beweis tragen.</p>
+      </div>
+      <div class="source-core" aria-label="Big-O-Definition">f ∈ O(g) ⇔ ∃ c ≥ 0 : ∃ n₀ ≥ 0 : ∀ n ≥ n₀ : f(n) ≤ c · g(n)</div>
+    </section>
+
+    <section class="step" id="witness-step">
+      <h2>1 · Wähle deine Zeugen</h2>
+      <p class="prompt">Welche konkrete Wahl funktioniert? Trage beide Zahlen ein und prüfe sie.</p>
+      <div class="witness-grid">
+        <label>c <input id="c-input" type="number" min="0" step="0.5" inputmode="decimal" autocomplete="off"></label>
+        <label>n₀ <input id="n0-input" type="number" min="0" step="1" inputmode="numeric" autocomplete="off"></label>
+        <button class="action primary" id="check-witness" type="button">Wahl prüfen</button>
+      </div>
+      <div class="feedback" id="witness-feedback" role="status" aria-live="polite" hidden></div>
+      <div class="hint-controls">
+        <button class="action hint-btn" type="button" data-hint="hint-1">Hinweis 1</button>
+        <button class="action hint-btn" type="button" data-hint="hint-2">Hinweis 2</button>
+      </div>
+      <div class="hint" id="hint-1" hidden><strong>Quantoren auf Deutsch:</strong> Du darfst erst ein festes c und ein festes n₀ wählen. Danach muss die Aussage für <em>jedes</em> n ab n₀ stimmen.</div>
+      <div class="hint" id="hint-2" hidden><strong>Umformen:</strong> 3n + 17 ≤ 2cn. Wähle c größer als 3/2; dann kann der verbleibende Abstand den konstanten Term 17 aufnehmen.</div>
+    </section>
+
+    <section class="step" id="proof-step" hidden>
+      <h2>2 · Schließe den ∀-Schritt</h2>
+      <p class="prompt" id="proof-prompt"></p>
+      <fieldset class="proof-options">
+        <legend>Welche Begründung vollendet den formalen Beweis?</legend>
+        <label><input type="radio" name="proof" value="label"> Beide Funktionen sind linear, also ist f ∈ O(g).</label>
+        <label><input type="radio" name="proof" value="sample"> Die Ungleichung stimmt für n = n₀; das genügt.</label>
+        <label><input type="radio" name="proof" value="forall"> Für jedes n ≥ n₀ gilt 3n + 17 ≤ 3n + n = 4n = c · 2n.</label>
+      </fieldset>
+      <button class="action primary" id="check-proof" type="button">Begründung prüfen</button>
+      <div class="feedback" id="proof-feedback" role="status" aria-live="polite" hidden></div>
+    </section>
+
+    <section class="step" id="solution-gate">
+      <h2>Musterweg</h2>
+      <p class="prompt">Bleibt gesperrt, bis du eine eigene Wahl geprüft hast – oder du öffnest ihn bewusst.</p>
+      <button class="action" id="reveal-solution" type="button">Musterweg bewusst zeigen</button>
+      <div class="solution" id="solution" hidden>
+        <p>Wähle <strong>c = 2</strong> und <strong>n₀ = 17</strong>. Beide Werte sind nichtnegativ.</p>
+        <p>Für alle n ≥ 17 gilt:</p>
+        <div class="source-core">f(n) = 3n + 17 ≤ 3n + n = 4n = 2 · (2n) = c · g(n).</div>
+        <p>Damit existieren passende c und n₀, und die geforderte Ungleichung gilt für jedes n ≥ n₀. Also f ∈ O(g).</p>
+      </div>
+    </section>
+
+    <section class="step completion" id="completion" hidden>
+      <h2>Prüfungsabschluss</h2>
+      <p>Du hast konkrete Zeugen gewählt und den ∀-Schritt gezeigt. Kannst du diesen Vierzeiler ohne Vorlage schreiben?</p>
+      <div class="state-row">
+        <button class="state-btn" type="button" data-state="sitzt">✓ Sitzt</button>
+        <button class="state-btn" type="button" data-state="wackelt">↻ Wackelt</button>
+      </div>
+      <p class="tiny" id="state-feedback" aria-live="polite"></p>
+    </section>
+
+    <nav class="nav-bottom" aria-label="Aufgabennavigation">
+      <a href="../index.html">← Blatt 03</a>
+      <a href="../../index.html">Gesamtübersicht</a>
+      <a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a>
+      <a href="../aufgabe-02/index.html">Aufgabe 2 →</a>
+    </nav>
+  </main>
+  <script src="task.js"></script>
+</body>
+</html>

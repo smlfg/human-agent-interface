@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 03 · Aufgabe 06 · Wachstum und Hardware</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · Übungsblätter</a><a class="back" href="../index.html">← Blatt 03</a></nav>
+
+  <header class="task-head">
+    <div><span class="kicker">WACHSTUM · RECHNERMYTHEN</span><h1>Eine Milliarde mal schneller. Wie viel größer wird n?</h1></div><div class="counter">06 / 06</div>
+  </header>
+
+  <section class="media-pre">
+    <div class="media-route-top">
+      <h2>Vorher ansehen</h2>
+      <span class="media-duration">Short · 1:14</span>
+    </div>
+    <p class="media-instruction">Kleinerer Speedup als deine Aufgabe — bewusst. Die Mechanik überträgst du selbst.</p>
+    <video class="media-player short-player" controls preload="metadata" poster="../../../media-posters/pb03a06-short.webp" src="../../../notebooklm-study-pack/10_uebungsblaetter/blatt03/short_PB03A06_wachstum-hardware.mp4">Dein Browser unterstützt Video nicht.</video>
+    <div class="recall-box"><strong>Sofort-Recall</strong>Dein Rechner wird tausendmal schneller — wie viel größer wird das lösbare <code>n</code> bei <code>2ⁿ</code>?</div>
+  </section>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Originalauftrag</h2>
+      <p>Ein exponentieller Algorithmus schafft auf dem alten Rechner <strong>n=60 in zwei Tagen</strong>. Der neue Rechner hat 1000 Prozessoren × 1000 Kerne × 1000-fache Kerngeschwindigkeit.</p>
+      <p>Vergleiche erreichbares n und die Zeit für n=120. Danach: Ein <strong>n⁶</strong>-Algorithmus benötigt für n=60 etwas über zwei Tage — wie lange für n=120?</p>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF · Seite 2 ↗</a>
+    </div>
+    <div class="card first-action">
+      <p class="eyebrow">Erste Aktion · nur den Rechner zählen</p>
+      <h2>Wie groß ist der Speedup?</h2>
+      <div class="factor-chain"><span>1000 Prozessoren</span><b>×</b><span>1000 Kerne</span><b>×</b><span>1000× schneller</span></div>
+      <div class="choices" data-question="speedup"><button class="choice" data-answer="million">10⁶</button><button class="choice" data-answer="billion">10⁹</button><button class="choice" data-answer="trillion">10¹²</button></div>
+      <div class="feedback" id="speedup-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step" id="growth-step" hidden>
+    <h2>1 · Speedup in Eingabegröße übersetzen</h2>
+    <p>Ziehe den Regler. Links siehst du den zusätzlichen Aufwand <code>2^Δn</code>, rechts das Hardwarebudget <code>10⁹</code>.</p>
+    <label class="slider-label" for="delta">Δn = <output id="delta-output">20</output></label>
+    <input id="delta" type="range" min="0" max="35" value="20">
+    <div class="meter" aria-hidden="true"><i id="meter-fill"></i></div>
+    <p class="ratio" id="growth-readout" aria-live="polite"></p>
+    <button class="action primary" id="solve-delta">Grenze exakt berechnen</button>
+    <div class="feedback" id="delta-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="double-step" hidden>
+    <h2>2 · n verdoppeln: 60 → 120</h2>
+    <p class="prompt">Welche Rechnung hält den neuen Rechner korrekt im Vergleich?</p>
+    <div class="choices equation-choices">
+      <button class="choice double-choice" data-answer="linear">2 Tage × 2 ÷ 10⁹</button>
+      <button class="choice double-choice" data-answer="missing-hardware">2 Tage × 2⁶⁰</button>
+      <button class="choice double-choice" data-answer="correct">2 Tage × 2⁶⁰ ÷ 10⁹</button>
+    </div>
+    <div class="feedback" id="double-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="polynomial-step" hidden>
+    <h2>3 · Der n⁶-Algorithmus</h2>
+    <p>Auf dem alten Rechner dauert n=60 etwas über zwei Tage. Setze den Wachstumsfaktor für n=120 zusammen.</p>
+    <div class="calc-row"><span>(120 / 60)⁶</span><span>=</span><input id="poly-answer" type="number" min="0" inputmode="numeric" aria-label="Wachstumsfaktor"><button class="action" id="check-poly">Faktor prüfen</button></div>
+    <div class="feedback" id="poly-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step help" aria-labelledby="help-title"><h2 id="help-title">Hinweise</h2><div class="actions"><button class="action hint-btn" data-hint="hint-1">Hinweis 1 · Gleiches Zeitbudget</button><button class="action hint-btn" data-hint="hint-2">Hinweis 2 · Quotienten</button></div><div class="hint" id="hint-1" hidden>Bei gleicher Zeit darf der neue Rechner <code>10⁹</code>-mal mehr Arbeit erledigen: <code>2^(n_neu−60)=10⁹</code>. Löse nach der Differenz auf.</div><div class="hint" id="hint-2" hidden>Konstanten verschwinden im Quotienten: <code>T(120)/T(60)=2⁶⁰</code> exponentiell, aber <code>(120/60)⁶=2⁶</code> polynomiell.</div></section>
+
+  <section class="step solution">
+    <h2>Sauberer Papierabschluss</h2>
+    <p id="gate-copy">Noch gesperrt: Bestimme die n-Grenze und beide Laufzeitfaktoren — oder decke den Musterweg bewusst auf.</p>
+    <button class="action" id="reveal">Lösung bewusst aufdecken</button>
+    <div id="solution" hidden>
+      <p><strong>Hardware:</strong> 1000·1000·1000 = 10⁹-facher Speedup.</p>
+      <p><strong>Zwei-Tage-Grenze:</strong> <code>2^(n−60)=10⁹</code>, also <code>n=60+log₂(10⁹)≈89,897</code>. Bei ganzzahliger Problemgröße ist <strong>n=89</strong> maximal; n=90 bräuchte 2³⁰ &gt; 10⁹.</p>
+      <p><strong>Exponentiell, n=120:</strong> Gegenüber n=60 wächst die Arbeit um <code>2⁶⁰≈1,153·10¹⁸</code>. Auf dem neuen Rechner: <code>2 Tage·2⁶⁰/10⁹≈2,306·10⁹ Tage≈6,31 Mio. Jahre</code>.</p>
+      <p><strong>Polynomiell, n=120:</strong> <code>T(120)/T(60)=(120/60)⁶=2⁶=64</code>. Aus etwas über zwei Tagen werden <strong>etwas über 128 Tage</strong> auf dem alten Rechner.</p>
+    </div>
+  </section>
+
+  <section class="step completion" id="completion" hidden><h2>Kannst du Wachstum statt n skalieren?</h2><p>Prüfungsbeleg: Hardwarefaktor, Logarithmus-Schritt, exponentieller Quotient mit Hardwaredivision und polynomieller Quotient.</p><div class="state-row"><button class="state-btn" data-state="sitzt">Sitzt</button><button class="state-btn" data-state="wackelt">Wackelt</button></div><div class="feedback" id="state-feedback" aria-live="polite" hidden></div></section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-05/index.html">← Aufgabe 05</a><a href="../index.html">Blattübersicht</a><a href="../../index.html">Gesamtübersicht →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

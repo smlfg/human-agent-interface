@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 01 · Aufgabe 04 · Kleinster Vektorwert</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · Übungsblätter</a><a class="back" href="../index.html">← Blatt 01</a></nav>
+  <header class="task-head"><div><span class="kicker">VEKTOR · LINEARER SCAN</span><h1>Ein Minimum, das auch leer funktioniert</h1></div><div class="counter">04 / 04</div></header>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Originalauftrag</h2>
+      <p>Implementiere <code>int kleinste(const vector&lt;int&gt;&amp; a)</code>. Sie liefert den kleinsten Wert; für einen leeren Vektor den größten <code>int</code>-Wert.</p>
+      <p>Header und Implementierung liegen getrennt in <code>kleinste.hpp</code> und <code>kleinste.cpp</code>. Das Lab bildet den offiziellen GTest-Vertrag ohne Zusatzbibliothek ab.</p>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF · Seite 1 ↗</a>
+    </div>
+    <div class="card first-action">
+      <p class="eyebrow">Erste Aktion · Startwert</p>
+      <h2>Welcher Startwert funktioniert auch für <code>[]</code> und <code>[4, 9]</code>?</h2>
+      <div class="choices" id="start-question">
+        <button class="choice" data-answer="front"><code>a[0]</code></button>
+        <button class="choice" data-answer="zero"><code>0</code></button>
+        <button class="choice" data-answer="max"><code>numeric_limits&lt;int&gt;::max()</code></button>
+      </div>
+      <div class="feedback" id="start-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step" id="scan-step" hidden>
+    <h2>1 · Scanne den Vektor</h2>
+    <p>Aktueller Vektor: <code>[4, -2, 5, -3, 17]</code></p>
+    <div class="scan-board"><div><span class="scan-label">Minimum</span><strong id="minimum">INT_MAX</strong></div><div><span class="scan-label">Nächster Wert</span><strong id="candidate">4</strong></div></div>
+    <p>Vergleiche den nächsten Wert mit dem bisherigen Minimum.</p>
+    <div class="actions"><button class="action" id="keep">Minimum behalten</button><button class="action" id="replace">Durch Wert ersetzen</button></div>
+    <div class="feedback" id="scan-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step help" aria-labelledby="help-title">
+    <h2 id="help-title">Hinweise</h2>
+    <div class="actions"><button class="action hint-btn" data-hint="hint-1">Hinweis 1 · Invariante</button><button class="action hint-btn" data-hint="hint-2">Hinweis 2 · C++</button></div>
+    <div class="hint" id="hint-1" hidden>Nach jedem besuchten Element enthält <code>minimum</code> den kleinsten Wert des bisher gescannten Präfixes.</div>
+    <div class="hint" id="hint-2" hidden><code>&lt;limits&gt;</code> stellt <code>std::numeric_limits&lt;int&gt;::max()</code> bereit. Eine Range-for-Schleife besucht nur vorhandene Elemente — bei <code>[]</code> bleibt der Startwert stehen.</div>
+  </section>
+
+  <section class="step solution">
+    <h2>2 · Übersetzung in C++</h2>
+    <p id="gate-copy">Noch gesperrt: Wähle zuerst einen sicheren Startwert und scanne den Beispielvektor — oder decke das Gerüst bewusst auf.</p>
+    <button class="action" id="reveal">Codegerüst bewusst aufdecken</button>
+    <div id="solution" hidden>
+      <pre><code>int kleinste(const std::vector&lt;int&gt;&amp; a) {
+    int minimum = /* TODO: leer-sicherer Startwert */;
+    for (int wert : a) {
+        // TODO: minimum bei Bedarf aktualisieren
+    }
+    return minimum;
+}</code></pre>
+      <p>Kein Sonderzugriff auf <code>a[0]</code> ist nötig. Der <code>const</code>-Verweis vermeidet eine Kopie und verhindert Änderungen am Eingabevektor.</p>
+      <pre><code>cd lab
+./run-tests.sh</code></pre>
+    </div>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Abschlussbeleg</h2>
+    <p>Fertig, wenn Signatur und Header stimmen und die Tests für leer, nur positive, gemischte negative sowie einen Einzelwert grün sind.</p>
+    <div class="state-row"><button class="state-btn" data-state="sitzt">Sitzt</button><button class="state-btn" data-state="wackelt">Wackelt</button></div>
+    <div class="feedback" id="state-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-03/index.html">← Aufgabe 03</a><a href="../index.html">Blattübersicht</a><span aria-current="page">Ende Blatt 01</span></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

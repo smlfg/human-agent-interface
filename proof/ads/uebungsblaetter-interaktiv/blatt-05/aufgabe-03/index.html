@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB05 · Aufgabe 3 · Rekursive BigInt-Arithmetik</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · INTERAKTIV</a><a class="back" href="../index.html">← Blatt 05</a></nav>
+  <header class="task-head"><div><span class="kicker">VORZEICHEN · REKURSION · MESSEN</span><h1>BigInt — nur einen Schritt bewegen</h1></div><div class="counter">PB05 · 03/04</div></header>
+
+  <section class="mission">
+    <div class="brief"><h2>Dein Mikro-Schritt</h2><p>Bringe bei <code>add(−6, 5)</code> den <strong>ersten</strong> Parameter einen Schritt näher an <code>0</code>. Der zweite muss die Summe ausgleichen.</p></div>
+    <div class="source-core">Erlaubt in add / mult / pm:
+rekursive Aufrufe · ++ · -- · Konstante 0
+
+Nicht erlaubt: Schleifen · + · − · * · / · andere Zahlenkonstanten</div>
+  </section>
+
+  <section class="step">
+    <h2>1 · Welcher Rekursionsschritt bewahrt die Summe?</h2>
+    <div class="choices" role="group" aria-label="Rekursionsschritt für negative Addition">
+      <button class="choice" data-add="loop" type="button"><code>add(--m, ++n)</code></button>
+      <button class="choice" data-add="stuck" type="button"><code>add(++m, ++n)</code></button>
+      <button class="choice" data-add="correct" type="button"><code>add(++m, --n)</code></button>
+    </div>
+    <div class="actions"><button class="action hint-btn" data-hint="hint-1" aria-expanded="false" type="button">Hinweis 1</button><button class="action hint-btn" data-hint="hint-2" aria-expanded="false" type="button">Hinweis 2</button></div>
+    <div class="hint" id="hint-1" hidden>Der erste Parameter ist negativ. Welcher erlaubte Operator bewegt <code>−6</code> in Richtung <code>0</code>?</div>
+    <div class="hint" id="hint-2" hidden>Wenn <code>m</code> um eins steigt, muss <code>n</code> um eins fallen: <code>−6 + 5 = −5 + 4</code>.</div>
+    <div class="feedback" id="add-feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="sign-step" hidden>
+    <h2>2 · Vorzeichenfälle schließen</h2>
+    <p class="prompt">Wähle für jeden Fall die Transformation, die zur Basis <code>0</code> fortschreitet.</p>
+    <div class="sign-grid">
+      <label><span><code>pm(x)</code>, x &lt; 0</span><select data-rule="pm-neg"><option value="">– wählen –</option><option value="bad">pm(--x), dann --</option><option value="ok">pm(++x), dann ++</option></select></label>
+      <label><span><code>pm(x)</code>, x &gt; 0</span><select data-rule="pm-pos"><option value="">– wählen –</option><option value="ok">pm(--x), dann --</option><option value="bad">pm(++x), dann ++</option></select></label>
+      <label><span><code>mult(x,y)</code>, x &lt; 0</span><select data-rule="mult-neg"><option value="">– wählen –</option><option value="bad">Vorzeichen ignorieren</option><option value="ok">Beide mit pm umdrehen</option></select></label>
+    </div>
+    <button class="action primary" id="check-signs" type="button">Regeln prüfen</button>
+    <div class="feedback" id="sign-feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step lab-box" id="lab-step" hidden>
+    <h2>3 · Dein echtes C++-Lab</h2>
+    <p>Ergänze nur die drei TODO-Funktionen in <code>lab/recursive_bigint.cpp</code>. Der Adapter bildet die benötigte BigInt-API lokal ab; deine Funktionssignaturen bleiben identisch.</p>
+    <code class="command">cd uebungsblaetter-interaktiv/blatt-05/aufgabe-03/lab
+./run-tests.sh</code>
+    <p class="tiny">Der Starter kompiliert, schlägt aber absichtlich fehl. Der Lauf prüft alle fünf Zahlenpaare, zusätzliche Vorzeichen-/Nullfälle und danach statisch verbotene Operatoren, Schleifen und Zahlenkonstanten.</p>
+  </section>
+
+  <section class="step" id="measure-step" hidden>
+    <h2>4 · Was misst die Aufgabenreihe?</h2>
+    <p>Für jedes <code>x ∈ {10,…,100}</code> werden alle geordneten Paare aus <code>[−x..x]²</code> getestet.</p>
+    <div class="choices" role="group" aria-label="Messinterpretation">
+      <button class="choice" data-measure="linear" type="button">Die Zahl der Paare wächst nur linear mit x.</button>
+      <button class="choice" data-measure="constant" type="button">BigInt macht die Rekursion praktisch konstant.</button>
+      <button class="choice" data-measure="correct" type="button">Schon die Paarzahl wächst quadratisch; rekursive Schrittzahl kommt zusätzlich dazu.</button>
+    </div>
+    <div class="feedback" id="measure-feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Abschluss-Beleg</h2>
+    <p><strong>Addition:</strong> Rekursionstiefe proportional zu <code>|m|</code>. <strong>Multiplikation:</strong> wiederholte rekursive Addition; deutlich stärkeres Wachstum. Die Gesamtmessung vermischt außerdem Algorithmuskosten mit der wachsenden Zahl <code>(2x+1)²</code> an Paaren.</p>
+    <p>Pflichtpaare: <code>(5,10)</code>, <code>(−6,5)</code>, <code>(2,−9)</code>, <code>(−4,−4)</code>, <code>(142,369)</code>.</p>
+    <label class="proof-check"><input id="tests-pass" type="checkbox"> Mein echter Lauf meldet <strong>alle Tests bestanden</strong> und <strong>statischer Check: PASS</strong>.</label>
+    <div class="state-row"><button class="state-btn" data-state="sitzt" type="button">✓ Sitzt</button><button class="state-btn" data-state="wackelt" type="button">↻ Wackelt</button></div>
+    <p class="tiny" id="state-feedback" aria-live="polite"></p>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-02/index.html">← Aufgabe 2</a><a href="../index.html">Blatt 05</a><a href="../../index.html">Gesamtübersicht</a><a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a><a href="../aufgabe-04/index.html">Aufgabe 4 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

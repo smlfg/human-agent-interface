@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 01 · Aufgabe 03 · PGM binarisieren</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · Übungsblätter</a><a class="back" href="../index.html">← Blatt 01</a></nav>
+
+  <header class="task-head"><div><span class="kicker">PGM · SCHWELLWERT</span><h1>Aus Grau wird 0 oder V</h1></div><div class="counter">03 / 04</div></header>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Originalauftrag</h2>
+      <p>Schreibe <code>binarisieren</code>: Eingabe-PGM und Ausgabe-PGM sind Pflichtparameter, der Schwellwert in Prozent ist optional und standardmäßig 50.</p>
+      <p><code>pbma</code> liefert <code>[Breite, Höhe, V, Pixel…]</code>. Für jeden Pixel gilt: <code>v &lt; s · V</code> wird schwarz (<code>0</code>), sonst weiß (<code>V</code>).</p>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF · Seite 1 ↗</a>
+    </div>
+    <div class="card first-action">
+      <p class="eyebrow">Erste Aktion · Grenzwert</p>
+      <h2>V = 100, s = 25 %: Was wird aus v = 25?</h2>
+      <div class="choices" id="boundary-question">
+        <button class="choice" data-answer="black">0 (schwarz)</button>
+        <button class="choice" data-answer="white">100 (weiß)</button>
+        <button class="choice" data-answer="factor">Vergleiche mit 25 · 100</button>
+      </div>
+      <div class="feedback" id="boundary-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step" id="lab-step" hidden>
+    <h2>1 · Kleines Bild selbst binarisieren</h2>
+    <div class="threshold-row"><label for="threshold">Schwellwert <strong><output id="threshold-output">50 %</output></strong></label><input id="threshold" type="range" min="0" max="100" value="50" step="5"></div>
+    <p>PGM-Vektor: <code id="vector-copy">[3, 2, 100, 0, 24, 25, 49, 50, 100]</code></p>
+    <div class="raster-pair">
+      <div><h3>Eingabe v</h3><div class="pixel-grid" id="input-grid" aria-label="Eingabepixel"></div></div>
+      <div><h3>Deine Ausgabe</h3><div class="pixel-grid editable" id="output-grid" aria-label="Ausgabepixel, zum Umschalten anklicken"></div></div>
+    </div>
+    <p class="microcopy">Klicke jeden Ausgabepixel: <code>0 ↔ V</code>. Metadaten <code>[Breite, Höhe, V]</code> bleiben unverändert.</p>
+    <button class="action" id="check-grid">Raster prüfen</button>
+    <div class="feedback" id="grid-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step help" aria-labelledby="help-title">
+    <h2 id="help-title">Hinweise</h2>
+    <div class="actions"><button class="action hint-btn" data-hint="hint-1">Hinweis 1 · Prozent</button><button class="action hint-btn" data-hint="hint-2">Hinweis 2 · Schleife</button></div>
+    <div class="hint" id="hint-1" hidden><code>25 % = 25 / 100.0 = 0.25</code>. Der absolute Schwellwert ist dann <code>0.25 · V</code>.</div>
+    <div class="hint" id="hint-2" hidden>Die ersten drei Werte sind Metadaten. Beginne die Pixel-Schleife bei Index <code>3</code> und ersetze jeden Wert durch genau <code>0</code> oder <code>V = img[2]</code>.</div>
+  </section>
+
+  <section class="step solution">
+    <h2>2 · Übersetzung in C++</h2>
+    <p id="gate-copy">Noch gesperrt: Entscheide zuerst den Grenzwert und binarisiere das kleine Raster — oder decke das Gerüst bewusst auf.</p>
+    <button class="action" id="reveal">Codegerüst bewusst aufdecken</button>
+    <div id="solution" hidden>
+      <p><strong>Datenweg:</strong> CLI → <code>read_pgm(input)</code> → Pixel ab Index 3 verändern → <code>save_pgm(output, img)</code>.</p>
+      <pre><code>double s = prozent / 100.0;
+int V = img[2];
+for (size_t i = 3; i &lt; img.size(); ++i) {
+    // TODO: exakt v &lt; s * V prüfen
+}</code></pre>
+      <p>Im Ordner <code>lab/</code> wartet ein kompilierbarer Starter ohne Komplettlösung. Der Testtreiber prüft Layout, 0 %, 100 %, den exakten Grenzwert, den Default 50 sowie CLI-Ein-/Ausgabe.</p>
+      <pre><code>cd lab
+./run-tests.sh</code></pre>
+    </div>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Abschlussbeleg</h2>
+    <p>Fertig, wenn dein Raster stimmt und dein eigenes Lab mit Pflichtpfaden, optionalem Default 50 und allen Grenzfalltests grün wird.</p>
+    <div class="state-row"><button class="state-btn" data-state="sitzt">Sitzt</button><button class="state-btn" data-state="wackelt">Wackelt</button></div>
+    <div class="feedback" id="state-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-02/index.html">← Aufgabe 02</a><a href="../index.html">Blattübersicht</a><a href="../aufgabe-04/index.html">Aufgabe 04 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

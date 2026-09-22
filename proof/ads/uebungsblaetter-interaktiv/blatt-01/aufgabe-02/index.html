@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 01 · Aufgabe 02 · Kleinste Zahl</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <script src="task.js" defer></script>
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Seitennavigation">
+    <a class="brand" href="../../index.html">ADS · Übungsblätter</a>
+    <a class="back" href="../index.html">← Blatt 01</a>
+  </nav>
+
+  <header class="task-head">
+    <div><span class="kicker">Datei → Vektor → Minimum</span><h1>Das Minimum beim Lesen mitführen</h1></div>
+    <div class="counter">Aufgabe 02</div>
+  </header>
+
+  <section class="mission">
+    <div class="brief">
+      <h2>Originalauftrag, kompakt</h2>
+      <p><code>kleinstezahl</code> erhält optional einen Dateinamen, liest mit <code>pbma::read_ints</code> in einen <code>vector&lt;int&gt;</code> und gibt die kleinste Zahl aus. Ohne Argument gilt <code>zahlen.dat</code>.</p>
+      <p class="tiny">Abschluss: Kommandozeilenvertrag erklären und das Lab gegen echte Dateien testen.</p>
+    </div>
+
+    <div class="step first-action">
+      <h2>1 · Scanne selbst</h2>
+      <label for="numbers">Kleine Zahlenliste (Ganzzahlen, durch Leerzeichen getrennt)</label>
+      <div class="input-row">
+        <input id="numbers" value="8 5 11 3 7" autocomplete="off">
+        <button id="resetScan" class="action" type="button">Neu laden</button>
+      </div>
+      <div id="scanStrip" class="scan-strip" aria-label="Zahlenfolge"></div>
+      <div class="minimum-panel">
+        <span>Laufendes Minimum</span>
+        <strong id="runningMin">–</strong>
+      </div>
+      <button id="scanNext" class="action primary" type="button">Nächste Zahl prüfen</button>
+      <p id="scanFeedback" class="feedback" aria-live="polite">Starte bei der ersten Zahl – nicht bei einem erfundenen Wert.</p>
+    </div>
+  </section>
+
+  <section class="step help-zone">
+    <h2>2 · Hilfe, gestuft</h2>
+    <div class="actions">
+      <button class="action" type="button" data-hint="hint1">Hinweis 1</button>
+      <button class="action" type="button" data-hint="hint2">Hinweis 2</button>
+    </div>
+    <p id="hint1" class="hint" hidden>Ein Minimum muss aus den gelesenen Daten stammen. Welche Zahl kennst du sicher, sobald der Vektor nicht leer ist?</p>
+    <p id="hint2" class="hint" hidden>Trenne zwei Verträge: <code>args.pos(0, "zahlen.dat")</code> bestimmt den Namen; <code>read_ints(filename)</code> liefert den Vektor. Danach initialisierst du aus dessen erstem Element und vergleichst den Rest.</p>
+  </section>
+
+  <section id="gate" class="step solution-gate">
+    <h2>3 · Falschen Pfad blockieren</h2>
+    <p>Welche Initialisierung funktioniert sowohl für ausschließlich positive als auch ausschließlich negative Dateien?</p>
+    <div class="choice-grid">
+      <button type="button" data-choice="zero">Minimum = 0</button>
+      <button type="button" data-choice="first">Minimum = erstes gelesene Element</button>
+      <button type="button" data-choice="filename">Minimum = Dateiname</button>
+    </div>
+    <p id="gateFeedback" class="feedback" aria-live="polite" hidden></p>
+  </section>
+
+  <section id="labStep" class="step lab" hidden>
+    <h2>4 · Echter Lab-Abschluss</h2>
+    <p>Öffne <code>lab/smallest_file.cpp</code>, ersetze nur das markierte TODO und führe aus:</p>
+    <pre><code>cd uebungsblaetter-interaktiv/blatt-01/aufgabe-02/lab
+./run-tests.sh</code></pre>
+    <p>Der Runner kompiliert mit C++20 und startet dein Programm mit positiven und negativen Fixture-Dateien sowie ohne Argument im Default-Datei-Arbeitsverzeichnis.</p>
+  </section>
+
+  <section class="step completion">
+    <h2>Selbsteinschätzung</h2>
+    <p>Markiere erst nach dem Dateitest: Sitzt der CLI-/Dateivertrag und stammt dein Startminimum aus den Daten?</p>
+    <div class="state-row">
+      <button class="state-btn" type="button" data-state="sitzt">Sitzt</button>
+      <button class="state-btn" type="button" data-state="wackelt">Wackelt</button>
+    </div>
+    <p id="stateFeedback" class="feedback" aria-live="polite" hidden></p>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation">
+    <a href="../aufgabe-01/index.html">← Aufgabe 01</a>
+    <a href="/proof/ads/source-materials-not-included.html">Original-PDF</a>
+    <a href="../aufgabe-03/index.html">Aufgabe 03 →</a>
+  </nav>
+</main>
+</body>
+</html>

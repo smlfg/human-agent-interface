@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 02 · Aufgabe 05 · Schleifentrace</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation">
+    <a class="brand" href="../../index.html">ADS · Übungsblätter</a>
+    <a class="back" href="../index.html">← Blatt 02</a>
+  </nav>
+
+  <header class="task-head">
+    <div><span class="kicker">SCHLEIFENTRACE · UNGERADE SCHRITTE</span><h1>Führe aus. Dann erkenne die Funktion.</h1></div>
+    <div class="counter">05 / 07</div>
+  </header>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Originalauftrag</h2>
+      <p>Berechne für <strong>n = 10</strong> den Rückgabewert und notiere in jedem Schleifendurchlauf <strong>x</strong> und <strong>d</strong>. Prüfe danach n ∈ {8, 9, 15, 16, 17}, Terminierung und berechnete Funktion.</p>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF · Seite 2 ↗</a>
+    </div>
+    <div class="card first-action">
+      <p class="eyebrow">Erste Aktion · n = 10</p>
+      <pre><code>d, x = 1, 1
+while x &lt;= n:
+    d += 2
+    x += d
+return (d-1)/2</code></pre>
+      <p>Die Bedingung ist wahr. Was passiert im ersten Durchlauf?</p>
+      <div class="choices">
+        <button class="choice first-choice" data-path="correct">erst d=3, dann x=4</button>
+        <button class="choice first-choice" data-path="old-d">erst x=2 mit dem alten d, dann d=3</button>
+        <button class="choice first-choice" data-path="late-check">erst aktualisieren, danach x≤n prüfen</button>
+      </div>
+      <div class="feedback" id="first-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step" id="trace-step" hidden>
+    <h2>1 · Trace n = 10</h2>
+    <p>Die Zeile zeigt den Zustand <strong>nach</strong> dem jeweiligen Schleifenrumpf. Wähle immer den nächsten korrekten Zustand.</p>
+    <div class="trace" id="trace"><div class="trace-row head"><span>Durchlauf</span><span>d</span><span>x</span></div><div class="trace-row"><span>Start</span><strong>1</strong><strong>1</strong></div></div>
+    <div class="choices trace-choices" id="trace-choices"></div>
+    <div class="feedback" id="trace-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="function-step" hidden>
+    <h2>2 · Was berechnet der Algorithmus?</h2>
+    <p>Nach dem Trace gilt x=16&gt;10 und der Rückgabewert ist 3. Welche Funktion passt auch an den Quadratgrenzen?</p>
+    <div class="choices">
+      <button class="choice function-choice" data-answer="ceil">⌈√n⌉</button>
+      <button class="choice function-choice" data-answer="floor">⌊√n⌋</button>
+      <button class="choice function-choice" data-answer="odd">die Anzahl ungerader Zahlen ≤ n</button>
+    </div>
+    <div class="feedback" id="function-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step help" aria-labelledby="help-title">
+    <h2 id="help-title">Hinweise</h2>
+    <div class="actions"><button class="action hint-btn" data-hint="hint-1" aria-expanded="false">Hinweis 1 · Reihenfolge</button><button class="action hint-btn" data-hint="hint-2" aria-expanded="false">Hinweis 2 · Quadrate</button></div>
+    <div class="hint" id="hint-1" hidden>Im Rumpf wird <strong>zuerst d um 2 erhöht</strong>. Erst der neue d-Wert wird danach zu x addiert.</div>
+    <div class="hint" id="hint-2" hidden>Die x-Werte am Schleifenkopf sind 1, 4, 9, 16, 25, … — also Quadrate. Die Schleife läuft noch, wenn das aktuelle Quadrat genau n ist.</div>
+  </section>
+
+  <section class="step solution">
+    <h2>Papierabschluss</h2>
+    <p id="gate-copy">Noch gesperrt: Trace n=10 vollständig ausführen und die Funktion erkennen — oder nach einem Versuch bewusst aufdecken.</p>
+    <button class="action" id="reveal">Lösung bewusst aufdecken</button>
+    <div id="solution" hidden>
+      <div class="result-grid"><div><span>n</span><b>8</b><b>9</b><b>10</b><b>15</b><b>16</b><b>17</b></div><div><span>return</span><b>2</b><b>3</b><b>3</b><b>3</b><b>4</b><b>4</b></div></div>
+      <p><strong>Trace n=10:</strong> Start (d,x)=(1,1), danach (3,4), (5,9), (7,16); Rückgabe (7−1)/2=3.</p>
+      <p><strong>Terminierung:</strong> d ist stets positiv und wächst pro Durchlauf um 2. Daher wächst x strikt und überschreitet jedes endliche n nach endlich vielen Schritten. Für n&lt;1 endet die Schleife sofort.</p>
+      <p><strong>Funktion:</strong> Nach k Durchläufen gilt d=2k+1 und x=(k+1)². Beim Ende ist k²≤n&lt;(k+1)²; zurückgegeben wird k=<strong>⌊√n⌋</strong> (für den vorgesehenen Bereich n≥0).</p>
+    </div>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Sitzt der Schleifentrace?</h2>
+    <p>Prüfungsartefakt: alle sechs Rückgaben, Trace für n=10, Terminierungsargument und ⌊√n⌋.</p>
+    <div class="state-row"><button class="state-btn" data-state="sitzt">Sitzt</button><button class="state-btn" data-state="wackelt">Wackelt</button></div>
+    <div class="feedback" id="state-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-04/index.html">← Aufgabe 04</a><a href="../index.html">Blattübersicht</a><a href="../aufgabe-06/index.html">Aufgabe 06 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

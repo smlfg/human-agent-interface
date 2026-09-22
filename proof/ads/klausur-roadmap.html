@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kanonische ADS-Klausurroadmap: Prüfungsbild, 17er-Aufgabentraining, Lernzettel und Simulation.">
+  <title>ADS Klausur-Roadmap · 16.–20.07.2026</title>
+  <link rel="stylesheet" href="klausur-rescue.css">
+  <script src="klausur-roadmap.js" defer></script>
+</head>
+<body class="roadmap-page">
+  <main class="page-shell">
+    <nav class="topbar screen-only" aria-label="Hauptnavigation">
+      <a class="brand" href="index.html">← ADS Lernkompass</a>
+      <div class="top-actions">
+        <a href="probeklausur-interaktiv/index.html">17er-Training</a>
+        <a href="klausur-simulation.html">Simulation</a>
+        <a href="#lernzettel">Lernzettel</a>
+      </div>
+    </nav>
+
+    <header class="hero-grid screen-only">
+      <div>
+        <span class="kicker">Ein Weg · ein nächster Schritt</span>
+        <h1>Du kannst das. Jetzt wird geroutet.</h1>
+        <p class="lead">Das 17er-Aufgabentraining ist dein Lernkern. Die Hilfen machen die Aufgaben handhabbar; diese Seite klärt nur noch, <strong>was zuerst kommt</strong>, wann du simulierst und was du geschlossen abrufen musst.</p>
+        <p class="hero-note"><strong>Aktueller Befund:</strong> „So schwer ist es dann doch nicht.“ Das ist relevante Evidenz. Nicht wieder bei null anfangen — im funktionierenden Aufgabenloop weitergehen.</p>
+      </div>
+
+      <aside class="paper-card progress-card" aria-label="Fortschritt im 17er-Training">
+        <div class="progress-top">
+          <div class="progress-ring" id="progress-ring" data-progress="0/17" aria-label="0 von 17 Aufgaben angefasst"></div>
+          <div class="progress-copy">
+            <strong id="progress-title">Fortschritt wird gelesen …</strong>
+            <span class="microcopy">Nur lokal in diesem Browser. Der fachliche Langzeitstand bleibt in <code>lernstand/soll-ist.md</code>.</span>
+          </div>
+        </div>
+        <div class="status-legend">
+          <span class="status-chip sits" id="sits-count">0 sitzt</span>
+          <span class="status-chip wobbles" id="wobbles-count">0 wackelt</span>
+          <span class="status-chip open" id="open-count">17 offen</span>
+        </div>
+      </aside>
+    </header>
+
+    <section class="section-block screen-only" aria-labelledby="facts-title">
+      <div class="section-heading">
+        <h2 id="facts-title">Was dich wirklich erwartet</h2>
+        <p>Belegte Fakten, klausurnahe Hinweise und Unbekanntes bleiben sichtbar getrennt. Keine erfundene Sicherheit.</p>
+      </div>
+      <div class="fact-grid">
+        <article class="fact-card">
+          <span class="fact-label">Bestätigt</span>
+          <strong>80 Punkte · 90 Minuten</strong>
+          <p>80 Punkte/90 Minuten: Vorlesungsfolien und Modulkatalog. Termin 20.07.2026 · 13:15 Uhr · H1006: lokaler Prüfungsplan.</p>
+        </article>
+        <article class="fact-card alert">
+          <span class="fact-label">Bestätigt</span>
+          <strong>Keine Hilfsmittel</strong>
+          <p><code>Symbole.pdf</code> ist ein Informationsblatt, keine nachgewiesene Formelsammlung. Der Lernzettel unten ist nur zum Einprägen.</p>
+        </article>
+        <article class="fact-card">
+          <span class="fact-label">Klausurnah</span>
+          <strong>17 Übungsaufgaben</strong>
+          <p><code>Probeklausur.pdf</code> ist eine Aufgabensammlung mit Lösungen und ohne Vollständigkeitsanspruch — keine echte Alt- oder Probeklausur.</p>
+        </article>
+        <article class="fact-card alert">
+          <span class="fact-label">Unbekannt</span>
+          <strong>Reale Gewichtung</strong>
+          <p>Aufgabenzahl, Themenpunkte und Bestehensgrenze sind lokal nicht belegt. Häufigkeiten unten sind Trainingssignale, keine Prognose.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-block screen-only" aria-labelledby="now-title">
+      <div class="section-heading">
+        <h2 id="now-title">Dein nächster Zug</h2>
+        <p>Kein neuer Diagnose-Marathon. Öffne genau die nächste Aufgabe und nutze dort die gestuften Hilfen.</p>
+      </div>
+      <div class="now-grid">
+        <article class="paper-card mission-card">
+          <div class="task-number" id="next-task-number">01</div>
+          <h3 id="next-task-title">SelectionSort sezieren</h3>
+          <p id="next-task-copy">Code in Deutsch übersetzen, Vergleiche zählen, Best und Worst mit einem Satz begründen.</p>
+          <div class="mission-actions">
+            <a class="primary-action" id="primary-task-link" href="probeklausur-interaktiv/task-01/index.html">Jetzt Aufgabe 1 lernen →</a>
+            <a class="text-action" href="probeklausur-interaktiv/index.html">Alle 17 Aufgaben ansehen</a>
+          </div>
+        </article>
+
+        <ol class="route-list" aria-label="Akutroute Aufgaben 1 bis 3">
+          <li data-route-task="01">
+            <span class="route-number">1</span>
+            <span><strong>SelectionSort</strong><br><small>Schleifen → Summe → Θ(n²)</small></span>
+            <span class="route-state">offen</span>
+          </li>
+          <li data-route-task="02">
+            <span class="route-number">2</span>
+            <span><strong>Pointer &amp; Liste</strong><br><small><code>-></code> lesen → Knoten zählen → Θ(k)</small></span>
+            <span class="route-state">offen</span>
+          </li>
+          <li data-route-task="03">
+            <span class="route-number">3</span>
+            <span><strong>Lineare Rekurrenz</strong><br><small>Basis → ausrollen → geschlossene Form</small></span>
+            <span class="route-state">offen</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section-block screen-only" aria-labelledby="gates-title">
+      <div class="section-heading">
+        <h2 id="gates-title">Wann du prüfungsnah arbeitest</h2>
+        <p>Die Gates sind Lernempfehlungen, keine Sperren. Ein bewusster Test ist erlaubt; unbewusstes Springen nicht.</p>
+      </div>
+      <div class="gate-grid">
+        <article class="gate-card is-closed" id="mini-gate">
+          <span class="gate-status" id="mini-gate-status">noch nicht empfohlen</span>
+          <h3>35-Minuten-Mini</h3>
+          <p>Empfohlen, sobald A1–A3 vollständig bis zum korrekten Abschluss gelöst und als <strong>Sitzt</strong> markiert sind: Schleifenzählen, Pointerlesen, lineare Rekurrenz.</p>
+          <button class="secondary-action gate-launch" type="button" data-mode="mini">Mini-Simulation öffnen →</button>
+          <div class="gate-confirm" id="mini-confirm">
+            <label><input type="checkbox"> <span>Ich starte bewusst zur Diagnose, obwohl der Kern noch nicht vollständig markiert ist.</span></label>
+            <a class="primary-action" href="klausur-simulation.html#mini">Trotzdem starten</a>
+          </div>
+        </article>
+
+        <article class="gate-card is-closed" id="full-gate">
+          <span class="gate-status" id="full-gate-status">noch nicht empfohlen</span>
+          <h3>90-Minuten-Simulation</h3>
+          <p>Empfohlen nach abgegebener und vollständig bewerteter Mini-Simulation plus zwei schriftlich gelösten, veränderten Transferfällen. Keine Bestehensprognose.</p>
+          <button class="secondary-action gate-launch" type="button" data-mode="full">90 Minuten öffnen →</button>
+          <div class="gate-confirm" id="full-confirm">
+            <label><input type="checkbox"> <span>Ich überspringe das empfohlene Gate bewusst und nutze die Runde nur als Standorttest.</span></label>
+            <a class="primary-action" href="klausur-simulation.html#full">Trotzdem starten</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-block screen-only" aria-labelledby="days-title">
+      <div class="section-heading">
+        <h2 id="days-title">Vier Tage, kein Materialchaos</h2>
+        <p>Der Browserfortschritt entscheidet innerhalb eines Blocks, die Reihenfolge bleibt fix. Wenn etwas schon sitzt, geht es weiter.</p>
+      </div>
+      <div class="day-grid">
+        <article class="day-card today">
+          <span class="date">Do · 16.07.</span>
+          <h3>Code → Laufzeit</h3>
+          <ul>
+            <li>A1 SelectionSort</li>
+            <li>A2 Pointer/Liste</li>
+            <li>A3 Rekurrenz</li>
+            <li>je ein Prüfungssatz</li>
+          </ul>
+        </article>
+        <article class="day-card">
+          <span class="date">Fr · 17.07.</span>
+          <h3>Fälle &amp; Mini-Code</h3>
+          <ul>
+            <li>A4/A5 Funktionen</li>
+            <li>A6/A7 Big-O</li>
+            <li>A8/A9 Stack/Liste</li>
+            <li>5–15 Zeilen schreiben</li>
+          </ul>
+        </article>
+        <article class="day-card">
+          <span class="date">Sa · 18.07.</span>
+          <h3>Strukturen &amp; Mini</h3>
+          <ul>
+            <li>A10–A12 Bäume/BST</li>
+            <li>A13–A17 Rest</li>
+            <li>35-Minuten-Mini</li>
+            <li>zwei Fehler wählen</li>
+          </ul>
+        </article>
+        <article class="day-card">
+          <span class="date">So · 19.07.</span>
+          <h3>Reparatur &amp; 90</h3>
+          <ul>
+            <li>zwei Transferfälle</li>
+            <li>90 Minuten ohne Hilfe</li>
+            <li>Fehler statt Note</li>
+            <li>Closed-Book-Abruf</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-block screen-only" aria-labelledby="signals-title">
+      <div class="section-heading">
+        <h2 id="signals-title">Was die 17 Aufgaben trainieren</h2>
+        <p><strong>Nicht als Klausurwahrscheinlichkeit lesen.</strong> Das ist nur die Verteilung in der lokalen Aufgabensammlung.</p>
+      </div>
+      <table class="frequency-table">
+        <thead><tr><th>Aufgabenfamilie</th><th>Aufgaben</th><th>Anzahl</th><th>Signal in der Sammlung</th></tr></thead>
+        <tbody>
+          <tr><td>Laufzeit, Codeanalyse, Big-O</td><td>A1–A7</td><td>7</td><td><span class="frequency-bar"><i style="width:100%"></i></span></td></tr>
+          <tr><td>Binärbaum/BST</td><td>A10–A12</td><td>3</td><td><span class="frequency-bar"><i style="width:43%"></i></span></td></tr>
+          <tr><td>Lineare ADTs implementieren</td><td>A8–A9</td><td>2</td><td><span class="frequency-bar"><i style="width:29%"></i></span></td></tr>
+          <tr><td>Rekursion</td><td>A13–A14</td><td>2</td><td><span class="frequency-bar"><i style="width:29%"></i></span></td></tr>
+          <tr><td>2-3-4-Bäume</td><td>A15–A16</td><td>2</td><td><span class="frequency-bar"><i style="width:29%"></i></span></td></tr>
+          <tr><td>Hashing/Sondieren</td><td>A17</td><td>1</td><td><span class="frequency-bar"><i style="width:14%"></i></span></td></tr>
+        </tbody>
+      </table>
+      <p class="tiny">Kursstoff wie breiteres Sortieren/Heap, Greedy und Backtracking kommt in Übungsblättern und Folien vor, obwohl er in den 17 Aufgaben kaum oder nicht vertreten ist. Deshalb enthält die 90-Minuten-Runde Transferanteile.</p>
+    </section>
+
+    <section class="section-block screen-only" aria-labelledby="media-title">
+      <div class="section-heading">
+        <h2 id="media-title">Kurze Videoanker: Begriffe</h2>
+        <p>Kein Podcastpfad. Erst selbst versuchen; nur bei einer konkreten Lücke maximal 68 Sekunden ansehen und sofort zur Aufgabe zurück.</p>
+      </div>
+      <div class="media-grid">
+        <a class="media-card" href="notebooklm-study-pack/01_big-o-komplexitaet/short_S01_big-o.mp4">
+          <span class="media-duration">1:06</span><span><strong>S01 · Big-O als obere Schranke</strong><br><small>Wenn die Bedeutung von O unscharf ist.</small></span>
+        </a>
+        <a class="media-card" href="notebooklm-study-pack/01_big-o-komplexitaet/short_S02_best-average-worst.mp4">
+          <span class="media-duration">0:58</span><span><strong>S02 · Best, Average, Worst</strong><br><small>Wenn du den passenden Eingabefall nicht findest.</small></span>
+        </a>
+        <a class="media-card" href="notebooklm-study-pack/01_big-o-komplexitaet/short_S03_komplexitaetsklassen.mp4">
+          <span class="media-duration">1:08</span><span><strong>S03 · Komplexitätsklassen</strong><br><small>Wenn die Wachstumsreihenfolge fehlt.</small></span>
+        </a>
+        <a class="media-card" href="probeklausur-interaktiv/index.html">
+          <span class="media-duration">AKTIV</span><span><strong>Zurück ins 17er-Training</strong><br><small>Hilfen öffnen, einen Zug machen, Sitzt/Wackelt markieren.</small></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section-block screen-only" aria-labelledby="luecken-title">
+      <div class="section-heading">
+        <h2 id="luecken-title">Deine drei belegten Lücken</h2>
+        <p>Nicht geraten, sondern aus der Lernsession vom 16.07. abgelesen (<code>lernstand/EineStundeLernenErfolg.txt</code>). Das sind die Stellen, an denen du in 56 Minuten nachweislich danebenlagst — teilweise zweimal.</p>
+      </div>
+      <div class="media-grid">
+        <a class="media-card" href="notebooklm-study-pack/11_klausurluecken/short_L01_nm-vs-n2.mp4">
+          <span class="media-duration">1:09</span><span><strong>L01 · n·m ist nicht n²</strong><br><small>Zweimal falsch: Zwei verschachtelte Schleifen lösen bei dir automatisch „n²“ aus. Entscheidend ist, ob die innere über dieselbe Größe läuft.</small></span>
+        </a>
+        <a class="media-card" href="notebooklm-study-pack/11_klausurluecken/short_L02_kette-vs-verzweigung.mp4">
+          <span class="media-duration">1:26</span><span><strong>L02 · Kette gegen Verzweigung</strong><br><small>„Nein, was? Das verstehe ich nicht.“ — Ein Aufruf ergibt n, zwei ergeben 2ⁿ. Bei derselben Verkleinerung um 1.</small></span>
+        </a>
+        <a class="media-card" href="notebooklm-study-pack/11_klausurluecken/short_L03_k-vs-h.mp4">
+          <span class="media-duration">1:07</span><span><strong>L03 · k gegen h</strong><br><small>„Dreimal falsch geklickt.“ — Traversierung besucht alle k Knoten, Suche läuft nur einen Pfad der Höhe h. Außer der Baum entartet.</small></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section-block" id="lernzettel" aria-labelledby="sheet-title">
+      <div class="section-heading screen-only">
+        <h2 id="sheet-title">Zweiseitiger ADS-Lernzettel</h2>
+        <p>Zum Abrufen und Faltenlernen. Laut Vorlesungsfolien sind in der Klausur keine Hilfsmittel erlaubt.</p>
+      </div>
+      <div class="sheet-intro screen-only">
+        <p><strong>Nicht als Klausurhilfsmittel zugelassen.</strong> Vor der Simulation aus dem Gedächtnis rekonstruieren, dann abgleichen.</p>
+        <button class="secondary-action" id="print-sheet" type="button">Nur diese 2 Seiten drucken</button>
+      </div>
+
+      <div class="sheet-pages">
+        <article class="sheet-page">
+          <header class="sheet-page-header">
+            <h3>ADS Lernzettel · 1/2</h3>
+            <strong>Code → Arbeit → Laufzeit</strong>
+          </header>
+          <p class="print-warning">Lernzettel – in der Klausur nicht als Hilfsmittel zugelassen.</p>
+          <div class="sheet-columns">
+            <section class="sheet-box">
+              <h4>C++-Decoder</h4>
+              <table>
+                <tr><td><code>T* p</code></td><td><code>p</code> zeigt auf ein T</td></tr>
+                <tr><td><code>p->x</code></td><td>Feld x des gezeigten Objekts</td></tr>
+                <tr><td><code>a[i]</code></td><td>Element an Index i</td></tr>
+                <tr><td><code>nullptr</code>/<code>0</code></td><td>kein gültiger Knoten</td></tr>
+                <tr><td><code>++i</code></td><td>i um 1 erhöhen</td></tr>
+                <tr><td><code>x % m</code></td><td>Rest von x geteilt durch m</td></tr>
+                <tr><td><code>return x</code></td><td>Funktion endet mit x</td></tr>
+                <tr><td><code>new</code>/<code>delete</code></td><td>anlegen/freigeben</td></tr>
+              </table>
+            </section>
+            <section class="sheet-box">
+              <h4>Laufzeit-Rezept</h4>
+              <ol>
+                <li>Eingabegröße benennen: n, k, Höhe h …</li>
+                <li>Zentrale Operation markieren.</li>
+                <li>Schleifen/rekursive Aufrufe zählen.</li>
+                <li>Best/Worst durch konkrete Eingaben begründen.</li>
+                <li>Term vereinfachen; Klasse plus Satz nennen.</li>
+              </ol>
+              <p><strong>Klausursatz:</strong> „Der Vergleich läuft …-mal. Da …, gilt im Best/Worst Case Θ(…).“</p>
+            </section>
+            <section class="sheet-box">
+              <h4>Zählen</h4>
+              <pre>Nacheinander:  T₁ + T₂ → Maximum dominiert
+Unabhängig verschachtelt: T₁ · T₂
+1+2+…+(n−1) = n(n−1)/2 ∈ Θ(n²)
+Halbieren bis 1: log₂(n) Schritte
+Frühes return: Best/Worst getrennt</pre>
+            </section>
+            <section class="sheet-box">
+              <h4>Rekurrenz-Muster</h4>
+              <pre>T(n)=T(n−1)+c   → Θ(n)
+T(n)=T(n/2)+c   → Θ(log n)
+T(n)=2T(n−1)+c  → Θ(2ⁿ)</pre>
+              <p><strong>Immer:</strong> Basisfall angeben, 2–3-mal einsetzen, Form ohne T(…) hinschreiben.</p>
+            </section>
+            <section class="sheet-box">
+              <h4>Wachstumsordnung</h4>
+              <pre>1 < log n < n < n log n < n² < n³ < 2ⁿ < n!</pre>
+              <ul>
+                <li>Konstanten fallen weg.</li>
+                <li>Dominanter Term bleibt.</li>
+                <li>O ist Schranke, nicht automatisch Worst Case.</li>
+                <li>Θ beschreibt passende obere und untere Schranke.</li>
+              </ul>
+            </section>
+            <section class="sheet-box">
+              <h4>Sortieren: Mindestwissen</h4>
+              <table>
+                <tr><th>Verfahren</th><th>Best</th><th>Worst</th></tr>
+                <tr><td>Selection</td><td>n²</td><td>n²</td></tr>
+                <tr><td>Insertion</td><td>n</td><td>n²</td></tr>
+                <tr><td>Merge</td><td>n log n</td><td>n log n</td></tr>
+                <tr><td>Quick</td><td>n log n</td><td>n²</td></tr>
+                <tr><td>Heap</td><td>n log n</td><td>n log n</td></tr>
+                <tr><td>Counting</td><td>n+k</td><td>n+k</td></tr>
+              </table>
+            </section>
+          </div>
+        </article>
+
+        <article class="sheet-page">
+          <header class="sheet-page-header">
+            <h3>ADS Lernzettel · 2/2</h3>
+            <strong>Datenstrukturen → Teilpunkte</strong>
+          </header>
+          <p class="print-warning">Lernzettel – in der Klausur nicht als Hilfsmittel zugelassen.</p>
+          <div class="sheet-columns">
+            <section class="sheet-box">
+              <h4>Array, Liste, Stack, Queue</h4>
+              <ul>
+                <li>Arrayzugriff per Index: Θ(1).</li>
+                <li>Liste vollständig laufen: Θ(k); <code>p=p->next</code>.</li>
+                <li>Stack = LIFO; push/pop am Top: Θ(1).</li>
+                <li>Queue = FIFO; enqueue hinten, dequeue vorne: Θ(1) mit Zeigern.</li>
+                <li>Pointer ändern: alten Rest erst sichern, dann umhängen, dann löschen.</li>
+              </ul>
+            </section>
+            <section class="sheet-box">
+              <h4>BST &amp; Traversierung</h4>
+              <pre>BST: links kleiner | Knoten | rechts größer
+InOrder:  links – Knoten – rechts
+PreOrder: Knoten – links – rechts
+PostOrder: links – rechts – Knoten</pre>
+              <p>Search/Insert/Delete: Θ(h), balanciert Θ(log n), entartet Θ(n). Zwei Kinder löschen: Vorgänger oder Nachfolger übernehmen.</p>
+            </section>
+            <section class="sheet-box">
+              <h4>Rekursives Baum-Skelett</h4>
+              <pre>f(node* n) {
+  if (n == nullptr) return BASIS;
+  L = f(n->left);
+  R = f(n->right);
+  return KOMBINIERE(n,L,R);
+}</pre>
+              <p>Höhe mit leer=0: <code>1+max(L,R)</code>. Anzahl: <code>1+L+R</code>.</p>
+            </section>
+            <section class="sheet-box">
+              <h4>Heap</h4>
+              <ul>
+                <li>Min-Heap: Eltern ≤ Kinder; Form ist vollständig.</li>
+                <li>Einfügen: hinten + bubble-up; Best Θ(1), Worst Θ(log n).</li>
+                <li>delete-min: letztes nach oben + bubble-down; Best Θ(1), Worst Θ(log n).</li>
+                <li>Minimum ansehen Θ(1), Heapbau Θ(n), HeapSort Θ(n log n).</li>
+                <li>Beim bubble-down mit dem kleineren Kind tauschen.</li>
+              </ul>
+            </section>
+            <section class="sheet-box">
+              <h4>2-3-4 &amp; Hashing</h4>
+              <ul>
+                <li>2-3-4: 1–3 Schlüssel; sortiert; alle Blätter gleiche Tiefe.</li>
+                <li>Vollen Knoten splitten: Mitte steigt auf, Ränder werden Kinder.</li>
+                <li>Hashstart meist <code>x mod m</code>.</li>
+                <li>Lineares/quadratisches Sondieren: jeden besuchten Index zeigen.</li>
+                <li>Hashing erwartet Θ(1), bei Kollisionen Worst Θ(n).</li>
+              </ul>
+            </section>
+            <section class="sheet-box">
+              <h4>Prüfungsantwort &amp; Teilpunkte</h4>
+              <ol>
+                <li>Vorbedingung/Eingabegröße nennen.</li>
+                <li>Mechanik oder Invariante nennen.</li>
+                <li>Zwischenzustände sichtbar hinschreiben.</li>
+                <li>Ergebnis mit Begründungssatz abschließen.</li>
+                <li>Wenn unsicher: Skelett, Basisfall, Schleifenzahl oder korrekten ersten Schritt notieren.</li>
+              </ol>
+              <p><strong>Nicht verwechseln:</strong> Funktionswert ≠ Laufzeit; Ergebniswachstum ≠ Aufrufzahl; „O(n²)“ ohne Zählargument verschenkt Begründung.</p>
+            </section>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer-note screen-only">
+      Quellen: <a href="/proof/ads/source-materials-not-included.html">Vorlesungsfolien, S. 3</a> · <a href="/proof/ads/source-materials-not-included.html">Aufgabensammlung, S. 1</a> · kanonische Detailroadmap: <code>lernstand/klausur_rescue_roadmap_2026-07-16.md</code>. Browserstatus ist nur Navigation; <code>lernstand/soll-ist.md</code> bleibt der fachliche Tracker. Der lokale ADS-Agent startet niemals automatisch.
+    </footer>
+  </main>
+</body>
+</html>

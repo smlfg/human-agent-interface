@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aufgabe 17 · Hash-Sondieren</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <script src="task.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Seitennavigation">
+      <a class="back" href="../index.html">← Übersicht</a>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF</a>
+    </nav>
+
+    <header class="task-head">
+      <div><span class="kicker">Hash-Werkstatt</span><h1>Welche Sonde verirrt sich?</h1></div>
+      <div class="counter">17 / 17</div>
+    </header>
+
+    <section class="mission" aria-labelledby="mission-title">
+      <div class="brief">
+        <h2 id="mission-title">Deine Mission</h2>
+        <p>Füge drei Zahlen so ein, dass quadratisches Sondieren am Ende <strong>mehr</strong> Versuche braucht als lineares.</p>
+        <p class="tiny">Prüfungsabgabe: Zahlenfolge, beide Besuchsfolgen, Endindizes und Sondierungszahlen.</p>
+      </div>
+      <div class="card original-core">
+        <h2>Originalkern, entschlüsselt</h2>
+        <p><code>h(val) = val % 11</code> heißt: Der Rest beim Teilen durch 11 ist der Startindex.</p>
+        <p><strong>Linear:</strong> vom Start aus <code>+1, −1, +2, −2, …</code><br>
+          <strong>Quadratisch:</strong> <code>+1², −1², +2², −2², …</code></p>
+        <p>Schon belegt: <strong>1→23, 3→25, 7→29, 9→31</strong>.</p>
+      </div>
+    </section>
+
+    <div class="stepper">
+      <section class="step" id="step1">
+        <h2>Artefakt knacken</h2>
+        <p class="prompt">Die PDF-Textkopie zeigt „243“. Was steht im gesetzten PDF wirklich?</p>
+        <div class="choices" role="group" aria-label="Zahlenfolge auswählen">
+          <button class="choice" type="button" data-sequence="243">eine Zahl: 243</button>
+          <button class="choice" type="button" data-sequence="2,4,3">drei Zahlen: 2, 4, 3</button>
+        </div>
+        <button class="action hint-button" type="button" data-hint="hint1">Hinweis 1</button>
+        <button class="action hint-button" type="button" data-hint="hint2">Hinweis 2</button>
+        <div class="hint" id="hint1">Die Aufgabe verlangt ausdrücklich <em>drei Zahlen und eine Reihenfolge</em>.</div>
+        <div class="hint" id="hint2">Im PDF stehen zwischen den blauen Ziffern sichtbare Abstände: <code>2 4 3</code>.</div>
+        <div class="feedback" id="sequence-feedback" aria-live="polite"></div>
+      </section>
+
+      <section class="step locked" id="step2" aria-labelledby="probe-title">
+        <h2 id="probe-title">Sonden selbst fahren</h2>
+        <p class="prompt">2 und 4 landen ohne Kollision. Jetzt kommt <strong>3</strong>. Wähle eine Methode und klicke immer den nächsten besuchten Index.</p>
+        <div class="probe-toolbar">
+          <button class="choice mode" type="button" data-mode="linear">linear ±i</button>
+          <button class="choice mode" type="button" data-mode="quadratic">quadratisch ±i²</button>
+          <button class="action" id="reset-trace" type="button">Trace leeren</button>
+        </div>
+        <div class="hash-layout">
+          <ol class="hash-table" id="hash-table" aria-label="Hashtabelle mit Indizes 0 bis 10"></ol>
+          <div class="trace-board">
+            <p><strong>Aktiver Trace:</strong> <span id="trace-output">Wähle zuerst eine Methode.</span></p>
+            <p id="probe-count">Sondierungen: –</p>
+            <p class="tiny">Der Startindex zählt nicht als Sondierung. Jeder danach geprüfte Index zählt – auch der freie Zielplatz.</p>
+          </div>
+        </div>
+        <div class="feedback" id="trace-feedback" aria-live="polite"></div>
+      </section>
+
+      <section class="step locked" id="step3">
+        <h2>Prüfungsabschluss</h2>
+        <p class="prompt">Trage die beiden Resultate ein. Besuchsfolgen inklusive Start- und Zielindex, mit Kommas oder Pfeilen.</p>
+        <div class="answer-grid">
+          <fieldset><legend>Linear</legend>
+            <label>Besuchsfolge <input id="linear-path" autocomplete="off" placeholder="z. B. 3 → …"></label>
+            <label>Endindex <input id="linear-index" inputmode="numeric"></label>
+            <label>Sondierungen <input id="linear-probes" inputmode="numeric"></label>
+          </fieldset>
+          <fieldset><legend>Quadratisch</legend>
+            <label>Besuchsfolge <input id="quad-path" autocomplete="off" placeholder="z. B. 3 → …"></label>
+            <label>Endindex <input id="quad-index" inputmode="numeric"></label>
+            <label>Sondierungen <input id="quad-probes" inputmode="numeric"></label>
+          </fieldset>
+        </div>
+        <button class="action primary" id="check-final" type="button">Abgabe prüfen</button>
+        <button class="action" id="reveal-solution" type="button">Musterweg bewusst aufdecken</button>
+        <div class="feedback" id="final-feedback" aria-live="polite"></div>
+        <div class="solution" id="solution" hidden>
+          <h3>Vollständiger Musterweg</h3>
+          <p><strong>Folge:</strong> 2, 4, 3. Die 2 landet bei Index 2, die 4 bei Index 4 – jeweils mit 0 Sondierungen.</p>
+          <p><strong>Linear für 3:</strong> 3 (belegt) → 4 (belegt) → 2 (belegt) → 5 (frei): Endindex 5, drei Sondierungen.</p>
+          <p><strong>Quadratisch für 3:</strong> 3 (belegt) → 4 (belegt) → 2 (belegt) → 7 (belegt) → 10 (frei): Endindex 10, vier Sondierungen.</p>
+          <p>Quadratisch ist hier also um genau eine Sondierung schlechter.</p>
+        </div>
+      </section>
+    </div>
+
+    <section class="card status-card" aria-labelledby="status-title">
+      <h2 id="status-title">Wie sitzt Aufgabe 17?</h2>
+      <div class="state-row">
+        <button class="state-btn" type="button" data-value="sitzt">Sitzt</button>
+        <button class="state-btn" type="button" data-value="wackelt">Wackelt</button>
+      </div>
+      <p id="state-feedback" class="tiny" aria-live="polite"></p>
+    </section>
+
+    <nav class="nav-bottom" aria-label="Aufgabennavigation">
+      <a href="../task-16/index.html">← Aufgabe 16</a>
+      <a href="../index.html">Zur Übersicht →</a>
+    </nav>
+  </main>
+</body>
+</html>

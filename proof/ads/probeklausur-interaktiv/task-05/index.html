@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Aufgabe 05 · Summenwerkstatt</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <script src="task.js" defer></script>
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Seitennavigation">
+    <a class="back" href="../index.html">← Übersicht</a>
+    <span class="brand">ADS · Summenwerkstatt</span>
+    <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF</a>
+  </nav>
+
+  <header class="task-head">
+    <div><span class="kicker">ZWEI MASCHINEN · EINE SUMME?</span><h1>Zähle die Arbeit, nicht nur die Plätze.</h1></div>
+    <div class="counter">05 / 17</div>
+  </header>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Deine Mission</h2>
+      <p>Beide Maschinen bekommen dasselbe Array. Finde heraus, ob sie dasselbe <strong>Ergebnis</strong> liefern — und warum ihre <strong>Arbeit</strong> trotzdem verschieden ist.</p>
+      <p class="micro"><strong>Erster Zug:</strong> Verändere genau eine Zahl. Beobachte sofort, was mit den Einzelschritten passiert.</p>
+    </div>
+    <pre class="code" aria-label="Kern der beiden Funktionen"><code>fun1: val = val + a[i]
+
+fun2: solange v &gt; 0: val += 1; v -= 1
+      solange v &lt; 0: val -= 1; v += 1</code></pre>
+  </section>
+
+  <section class="step" id="workbench" aria-labelledby="workbench-title">
+    <h2 id="workbench-title">Array unter Strom</h2>
+    <p class="prompt">Drehe an den drei Werten. <code>fun2</code> zerlegt jede Zahl in <code>+1</code>- oder <code>−1</code>-Schritte.</p>
+    <div class="array-controls" aria-label="Arraywerte verändern">
+      <div class="number-card"><span>a[0]</span><button class="nudge" data-index="0" data-delta="-1" aria-label="a null um eins verringern">−</button><output id="value-0">2</output><button class="nudge" data-index="0" data-delta="1" aria-label="a null um eins erhöhen">+</button></div>
+      <div class="number-card"><span>a[1]</span><button class="nudge" data-index="1" data-delta="-1" aria-label="a eins um eins verringern">−</button><output id="value-1">−1</output><button class="nudge" data-index="1" data-delta="1" aria-label="a eins um eins erhöhen">+</button></div>
+      <div class="number-card"><span>a[2]</span><button class="nudge" data-index="2" data-delta="-1" aria-label="a zwei um eins verringern">−</button><output id="value-2">3</output><button class="nudge" data-index="2" data-delta="1" aria-label="a zwei um eins erhöhen">+</button></div>
+    </div>
+    <div class="meters" aria-live="polite">
+      <div class="meter"><span>Rückgabe beider Funktionen</span><strong id="sum-meter">4</strong><small id="sum-expression">2 − 1 + 3</small></div>
+      <div class="meter hot"><span>Innere Schritte von fun2</span><strong id="step-meter">6</strong><small id="step-expression">|2| + |−1| + |3|</small></div>
+    </div>
+    <div class="step-tape" id="step-tape" aria-label="Einzelschritte von fun2"></div>
+    <button class="action primary" id="lock-array">Dieses Array untersuchen</button>
+    <div id="array-feedback" class="feedback" aria-live="polite"></div>
+    <button class="action hint-btn" data-hint="hint1" aria-expanded="false">Hinweis 1: Was macht v?</button>
+    <div class="hint" id="hint1"><code>v</code> ist nur eine Arbeitskopie von <code>a[i]</code>. Jede Runde bewegt <code>v</code> um genau 1 Richtung 0 — und <code>val</code> um denselben Schritt Richtung <code>a[i]</code>.</div>
+    <button class="action hint-btn" data-hint="hint2" aria-expanded="false">Hinweis 2: Eine Zahl komplett traceen</button>
+    <div class="hint" id="hint2">Für <code>a[i] = −3</code>: <code>v: −3 → −2 → −1 → 0</code> und gleichzeitig <code>val</code> dreimal <code>−= 1</code>. Netto wird also <code>−3</code> addiert.</div>
+  </section>
+
+  <section class="step locked" id="meaning-step" aria-labelledby="meaning-title">
+    <h2 id="meaning-title">Gleiches Ergebnis?</h2>
+    <p class="prompt">Was gilt für beliebige positive, negative und Null-Werte?</p>
+    <fieldset id="meaning-quiz" disabled>
+      <legend>Wähle eine Aussage.</legend>
+      <label><input type="radio" name="meaning" value="different-negative"> Bei negativen Zahlen liefern sie verschiedene Summen.</label>
+      <label><input type="radio" name="meaning" value="same"> Beide berechnen die Summe aller Arraywerte.</label>
+      <label><input type="radio" name="meaning" value="absolute"> fun2 berechnet die Summe der Beträge.</label>
+    </fieldset>
+    <button class="action primary" id="check-meaning" disabled>Aussage prüfen</button>
+    <div id="meaning-feedback" class="feedback" aria-live="polite"></div>
+  </section>
+
+  <section class="step locked" id="size-step" aria-labelledby="size-title">
+    <h2 id="size-title">Die n-Falle knacken</h2>
+    <p class="prompt">Zwei Arrays haben beide <code>n = 3</code>. Welcher Schluss ist korrekt?</p>
+    <div class="duel" aria-label="Arrays gleicher Länge vergleichen">
+      <div><code>[1, 1, 1]</code><span>fun2: 3 innere Schritte</span></div>
+      <div><code>[100, 100, 100]</code><span>fun2: 300 innere Schritte</span></div>
+    </div>
+    <fieldset id="size-quiz" disabled>
+      <legend>Wähle die präzise Laufzeitaussage.</legend>
+      <label><input type="radio" name="size" value="only-n"> fun1 und fun2 sind vollständig durch Θ(n) beschrieben.</label>
+      <label><input type="radio" name="size" value="quadratic"> fun2 ist immer Θ(n²), weil es zwei Schleifenebenen gibt.</label>
+      <label><input type="radio" name="size" value="value-aware"> fun1 ist Θ(n); fun2 ist wertabhängig: Θ(n + Σ|a[i]|).</label>
+    </fieldset>
+    <button class="action primary" id="check-size" disabled>Laufzeit prüfen</button>
+    <div id="size-feedback" class="feedback" aria-live="polite"></div>
+  </section>
+
+  <section class="step locked" id="finish-step" aria-labelledby="finish-title">
+    <h2 id="finish-title">Prüfungssatz bauen</h2>
+    <p class="prompt">Wann erwartest du bei <code>fun2</code> die höhere Laufzeit? Formuliere einen Satz. Erst dein Versuch öffnet den Musterweg.</p>
+    <label for="condition">fun2 läuft gegenüber fun1 besonders lange, wenn …</label>
+    <textarea class="answer" id="condition" disabled placeholder="Dein Satz …"></textarea>
+    <button class="action primary" id="check-condition" disabled>Meinen Satz prüfen</button>
+    <div id="condition-feedback" class="feedback" aria-live="polite"></div>
+    <button class="action reveal" id="reveal" disabled>Musterweg aufdecken</button>
+    <div class="solution" id="solution" hidden tabindex="-1">
+      <h3>Klausurabschluss</h3>
+      <ul>
+        <li><strong>Gleiches Ergebnis:</strong> Beide berechnen <code>Σ a[i]</code>. fun2 ersetzt jede Addition von <code>a[i]</code> durch genau <code>|a[i]|</code> viele Schritte von <code>±1</code>.</li>
+        <li><strong>fun1:</strong> <code>Θ(n)</code>, denn jedes der n Elemente verursacht konstant viel Arbeit.</li>
+        <li><strong>fun2 präzise:</strong> <code>Θ(n + Σ|a[i]|)</code>. Große Beträge — positiv oder negativ — erzeugen viele Schleifendurchläufe.</li>
+        <li><strong>Vergleich:</strong> Bei großen Beträgen ist fun2 langsamer; bei durch eine Konstante beschränkten Beträgen sind beide <code>Θ(n)</code>.</li>
+        <li><strong>Eingabegröße:</strong> Nur n ist für fun2 nicht aussagekräftig genug. Passender sind zusätzlich <code>Σ|a[i]|</code> oder, im üblichen Bitkostenmodell, die Gesamtzahl signifikanter Bits der Werte.</li>
+      </ul>
+      <p class="source-note"><strong>Einordnung zur PDF-Lösung:</strong> Die Musterlösung nennt bei festgelegter Eingabegröße n beide Funktionen <code>O(n)</code>, weist aber selbst darauf hin, dass die Werte bzw. ihre Bitgrößen als alternative Eingabegröße geeigneter sind. Die wertabhängige Summe macht genau diesen versteckten Aufwand sichtbar.</p>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="status-title">
+    <h2 id="status-title">Wie sitzt es?</h2>
+    <div class="state-row" role="group" aria-label="Lernstatus">
+      <button class="state-btn" data-value="wackelt">Wackelt</button>
+      <button class="state-btn" data-value="sitzt">Sitzt</button>
+    </div>
+    <p id="state-feedback" class="tiny" aria-live="polite">Noch nicht markiert.</p>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgaben wechseln">
+    <a href="../task-04/index.html">← Aufgabe 04</a><a href="../index.html">Übersicht</a><a href="../task-06/index.html">Aufgabe 06 →</a>
+  </nav>
+</main>
+</body>
+</html>

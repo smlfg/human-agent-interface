@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 03 · Aufgabe 04 · Rekurrenz aufrollen</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation">
+    <a class="brand" href="../../index.html">ADS · Übungsblätter</a>
+    <a class="back" href="../index.html">← Blatt 03</a>
+  </nav>
+
+  <header class="task-head">
+    <div><span class="kicker">REKURRENZ · QUADRATWERKSTATT</span><h1>Aus ungeraden Schritten wird ein Quadrat.</h1></div>
+    <div class="counter">04 / 06</div>
+  </header>
+
+  <section class="media-pre">
+    <div class="media-route-top">
+      <h2>Vorher ansehen</h2>
+      <span class="media-duration">Short · 1:14</span>
+    </div>
+    <p class="media-instruction">Andere Rekurrenz als deine Aufgabe — bewusst. Die Mechanik überträgst du selbst.</p>
+    <video class="media-player short-player" controls preload="metadata" poster="../../../media-posters/pb03a04-short.webp" src="../../../notebooklm-study-pack/10_uebungsblaetter/blatt03/short_PB03A04_rekurrenz-aufrollen.mp4">Dein Browser unterstützt Video nicht.</video>
+    <div class="recall-box"><strong>Sofort-Recall</strong>Ist eine Wertetabelle mit vier Treffern schon ein Beweis?</div>
+  </section>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Originalauftrag</h2>
+      <p>Gegeben ist <strong>f(n) = f(n−1) + (2n−1)</strong> für n &gt; 0 und <strong>f(0)=0</strong>.</p>
+      <p>Berechne f(1) bis f(5), finde eine geschlossene Form und beweise sie mit vollständiger Induktion.</p>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF · Seite 2 ↗</a>
+    </div>
+    <div class="card first-action">
+      <p class="eyebrow">Erste Aktion</p>
+      <h2>Rolle genau einen Schritt auf.</h2>
+      <p class="formula">f(1) = f(0) + (2·1−1) =</p>
+      <div class="choices" data-question="first">
+        <button class="choice" data-value="0">0</button>
+        <button class="choice" data-value="1">1</button>
+        <button class="choice" data-value="2">2</button>
+      </div>
+      <div class="feedback" id="first-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step" id="trace" hidden>
+    <h2>1 · Die Rekurrenz fünfmal ausführen</h2>
+    <p>Der vorherige Funktionswert bleibt stehen; addiert wird jeweils die nächste ungerade Zahl.</p>
+    <div class="trace-grid" id="trace-grid" aria-label="Rekurrenzwerte">
+      <div class="trace-card done"><span>n = 1</span><strong>0 + 1 = 1</strong></div>
+      <div class="trace-card active" data-n="2"><span>n = 2</span><strong>f(2) = ?</strong><button class="action trace-next">Nächsten Wert berechnen</button></div>
+    </div>
+    <div class="feedback" id="trace-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="form-step" hidden>
+    <h2>2 · Muster zur geschlossenen Form machen</h2>
+    <p class="prompt">Die Werte sind 1, 4, 9, 16, 25. Welche Formel enthält keinen rekursiven Selbstbezug?</p>
+    <div class="choices">
+      <button class="choice form-choice" data-answer="values">f(n) sind für n=1,…,5 die Quadratzahlen.</button>
+      <button class="choice form-choice" data-answer="linear">f(n) = 2n−1</button>
+      <button class="choice form-choice" data-answer="square">f(n) = n² für alle n ≥ 0</button>
+    </div>
+    <div class="feedback" id="form-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="induction" hidden>
+    <h2>3 · Induktionsschritt n → n+1</h2>
+    <div class="proof-strip"><span><b>IA:</b> f(0)=0=0²</span><span><b>IV:</b> f(n)=n²</span></div>
+    <p class="prompt">Welche Rekurrenz gilt beim neuen Index n+1?</p>
+    <div class="choices equation-choices">
+      <button class="choice induction-choice" data-answer="old">f(n+1) = f(n) + (2n−1)</button>
+      <button class="choice induction-choice" data-answer="correct">f(n+1) = f(n) + (2(n+1)−1)</button>
+    </div>
+    <div class="feedback" id="induction-feedback" aria-live="polite" hidden></div>
+    <div class="algebra" id="algebra" hidden>
+      <p><span>IV einsetzen</span>f(n+1) = n² + 2(n+1) − 1</p>
+      <p><span>Vereinfachen</span>= n² + 2n + 1</p>
+      <p><span>Binom</span>= (n+1)² ✓</p>
+      <button class="action primary" id="finish">Beweisweg abschließen</button>
+    </div>
+  </section>
+
+  <section class="step help" aria-labelledby="help-title">
+    <h2 id="help-title">Hinweise</h2>
+    <div class="actions">
+      <button class="action hint-btn" data-hint="hint-1">Hinweis 1 · Aufrollen</button>
+      <button class="action hint-btn" data-hint="hint-2">Hinweis 2 · Schrittindex</button>
+    </div>
+    <div class="hint" id="hint-1" hidden>Die Zuwächse sind <strong>1, 3, 5, 7, 9</strong>. Addiere jeden zum unmittelbar vorherigen f-Wert.</div>
+    <div class="hint" id="hint-2" hidden>Setze in <strong>2n−1</strong> für den Schritt zu f(n+1) überall <strong>n+1</strong> ein: 2(n+1)−1.</div>
+  </section>
+
+  <section class="step solution">
+    <h2>Sauberer Papierabschluss</h2>
+    <p id="gate-copy">Noch gesperrt: Rolle Werte auf und versuche die Formel — oder decke den Musterweg bewusst auf.</p>
+    <button class="action" id="reveal">Lösung bewusst aufdecken</button>
+    <div id="solution" hidden>
+      <p><strong>Werte:</strong> f(1)=1, f(2)=4, f(3)=9, f(4)=16, f(5)=25.</p>
+      <p><strong>Geschlossene Form:</strong> f(n)=n² für alle n≥0.</p>
+      <p><strong>IA:</strong> Für n=0 gilt f(0)=0=0².</p>
+      <p><strong>IV:</strong> Für ein festes n≥0 gelte f(n)=n².</p>
+      <p><strong>IS:</strong> f(n+1)=f(n)+(2(n+1)−1)=n²+2n+2−1=n²+2n+1=(n+1)².</p>
+      <p><strong>Schluss:</strong> Damit gilt f(n)=n² nach vollständiger Induktion für alle n≥0.</p>
+    </div>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Sitzt der Quadratmechanismus?</h2>
+    <p>Prüfungsartefakt: fünf Werte, geschlossene Form sowie IA, IV und vollständiger IS.</p>
+    <div class="state-row"><button class="state-btn" data-state="sitzt">Sitzt</button><button class="state-btn" data-state="wackelt">Wackelt</button></div>
+    <div class="feedback" id="state-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation">
+    <a href="../aufgabe-03/index.html">← Aufgabe 03</a><a href="../index.html">Blattübersicht</a><a href="../aufgabe-05/index.html">Aufgabe 05 →</a>
+  </nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

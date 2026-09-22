@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 04 · Aufgabe 04 · QuickSort-Papiertrace</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · Übungsblätter</a><a class="back" href="../index.html">← Blatt 04</a></nav>
+
+  <header class="task-head">
+    <div><span class="kicker">QUICKSORT · AUF PAPIER</span><h1>Pivot für Pivot zum vollständigen Trace</h1></div><div class="counter">04 / 04</div>
+  </header>
+
+  <section class="media-pre">
+    <div class="media-route-top">
+      <h2>Vorher ansehen</h2>
+      <span class="media-duration">Short · 1:08</span>
+    </div>
+    <p class="media-instruction">Anderes Feld als deine Aufgabe — bewusst. Die Mechanik überträgst du selbst.</p>
+    <video class="media-player short-player" controls preload="metadata" poster="../../../media-posters/pb04a04-short.webp" src="../../../notebooklm-study-pack/10_uebungsblaetter/blatt04/short_PB04A04_pivotwahl.mp4">Dein Browser unterstützt Video nicht.</video>
+    <div class="recall-box"><strong>Sofort-Recall</strong>Bei gerader Feldlänge — welches der beiden mittleren Elemente wird das Pivot?</div>
+  </section>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Originalauftrag</h2>
+      <p>Sortiere <code>23, 7, 2, 21, 16, 25, 12, 17</code> mit QuickSort. Pivot ist das mittlere Element — bei gerader Länge das Element links von der Mitte.</p>
+      <p>Jedes Pivot separat notieren, die Überlappungsstelle markieren und für jedes neue Pivot eine Zeile zeichnen.</p>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF · Seite 2 ↗</a>
+    </div>
+    <div class="card first-action">
+      <p class="eyebrow">Erste Aktion · nur Position zählen</p>
+      <h2>Welches ist das erste Pivot?</h2>
+      <div class="sequence" aria-label="Ausgangsfolge"><span>23</span><span>7</span><span>2</span><span class="middle">21</span><span>16</span><span>25</span><span>12</span><span>17</span></div>
+      <div class="choices" id="first-question">
+        <button class="choice" data-answer="median">16 · Wertmedian</button>
+        <button class="choice" data-answer="right">16 · rechts der Mitte</button>
+        <button class="choice" data-answer="correct">21 · links der Mitte</button>
+      </div>
+      <div class="feedback" id="first-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step" id="trace-step" hidden>
+    <div class="step-heading"><div><p class="eyebrow">Ein Mikro-Schritt je Zeile</p><h2>Wähle das Pivot des markierten Teilarrays</h2></div><div class="progress" id="progress">0 / 7</div></div>
+    <p>Nicht nach Größe sortieren: Zähle im aktuellen Teilarray die Positionen. Nach jeder Wahl zeigt die Zeile den Zustand nach der Partition.</p>
+    <div class="trace" id="trace" aria-label="QuickSort-Papiertrace"></div>
+    <div class="pivot-work" id="pivot-work">
+      <p id="work-copy"></p>
+      <div class="choices compact" id="pivot-choices"></div>
+      <button class="text-trap" id="keep-pivot">Pivot einfach im Teilarray stehen lassen</button>
+    </div>
+    <div class="feedback" id="trace-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step help" aria-labelledby="help-title">
+    <h2 id="help-title">Hinweise</h2>
+    <div class="actions"><button class="action hint-btn" data-hint="hint-1">Hinweis 1 · Pivotposition</button><button class="action hint-btn" data-hint="hint-2">Hinweis 2 · Zeiger</button></div>
+    <div class="hint" id="hint-1" hidden>Für Indizes <code>li…re</code> gilt <code>m = li + (re − li) / 2</code> mit Ganzzahldivision. Bei vier Elementen ist also das zweite das Pivot.</div>
+    <div class="hint" id="hint-2" hidden>Links stoppt bei <code>≥ Pivot</code>, rechts bei <code>≤ Pivot</code>. Tauschen, dann beide Zeiger weiterschieben. Kreuzen sie sich, liegt die Überlappungsstelle zwischen ihnen; treffen sie sich, wird genau diese Position markiert.</div>
+  </section>
+
+  <section class="step solution">
+    <h2>Vollständiger Papierabschluss</h2>
+    <p id="gate-copy">Noch gesperrt: Wähle erst ein Pivot oder decke den Musterweg bewusst auf.</p>
+    <button class="action" id="reveal">Musterweg bewusst aufdecken</button>
+    <div id="solution" hidden>
+      <p><strong>Pivotfolge nach Quellkonvention:</strong> <code>21 → 2 → 17 → 16 → 7 → 21 → 25</code>. Jede Zeile verwendet die Positionsmitte ihres aktuellen rekursiven Bereichs.</p>
+      <div class="solution-trace" id="solution-trace"></div>
+      <p><strong>Endfolge:</strong> <code>2, 7, 12, 16, 17, 21, 23, 25</code>.</p>
+      <p><strong>Prüfung:</strong> Jede linke Partition enthält nur Werte <code>≤ Pivot</code>, jede rechte nur Werte <code>≥ Pivot</code>. Die Rekursion folgt den Zeigergrenzen nach der Überlappung; der Pivotwert wird nicht als „Wertmedian“ gesucht.</p>
+    </div>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Abschlussbeleg</h2>
+    <p>Erledigt, wenn du die sieben Pivotzeilen samt Überlappungsmarken ohne Hilfe reproduzierst und die sortierte Endfolge begründest.</p>
+    <div class="state-row"><button class="state-btn" data-state="sitzt">Sitzt</button><button class="state-btn" data-state="wackelt">Wackelt</button></div>
+    <div class="feedback" id="state-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-03/index.html">← Aufgabe 03</a><a href="../index.html">Blattübersicht</a><a href="../../index.html">Gesamtübersicht →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

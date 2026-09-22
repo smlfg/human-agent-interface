@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bäume in ADS — von Knoten zu Komplexität</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-body: 'Literata', Georgia, serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+      --bg: #faf6f1;
+      --surface: #ffffff;
+      --surface-2: #f4efe8;
+      --surface-3: #ebe4da;
+      --border: rgba(80, 60, 40, 0.12);
+      --border-bright: rgba(80, 60, 40, 0.22);
+      --text: #2a2118;
+      --text-dim: #6f5e4e;
+      --text-bright: #1a140e;
+
+      --accent: #a9441b;
+      --accent-dim: rgba(169, 68, 27, 0.10);
+      --green: #4a7c59;
+      --green-dim: rgba(74, 124, 89, 0.12);
+      --amber: #b87d12;
+      --amber-dim: rgba(184, 125, 18, 0.12);
+      --blue: #2c5f7c;
+      --blue-dim: rgba(44, 95, 124, 0.12);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a1510;
+        --surface: #221b14;
+        --surface-2: #2b2219;
+        --surface-3: #352a1f;
+        --border: rgba(230, 210, 180, 0.10);
+        --border-bright: rgba(230, 210, 180, 0.18);
+        --text: #eaddcf;
+        --text-dim: #a99a89;
+        --text-bright: #f7efe6;
+
+        --accent: #e07a4d;
+        --accent-dim: rgba(224, 122, 77, 0.14);
+        --green: #7bbd8e;
+        --green-dim: rgba(123, 189, 142, 0.14);
+        --amber: #e5b458;
+        --amber-dim: rgba(229, 180, 88, 0.14);
+        --blue: #7fb3d3;
+        --blue-dim: rgba(127, 179, 211, 0.14);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-wrap: break-word;
+      background-image:
+        radial-gradient(ellipse at 50% 0%, var(--accent-dim) 0%, transparent 55%),
+        radial-gradient(circle at 10% 10%, var(--blue-dim) 0%, transparent 35%),
+        radial-gradient(circle at 90% 80%, var(--green-dim) 0%, transparent 35%);
+    }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 0 48px;
+      padding: 40px;
+    }
+
+    .main { min-width: 0; }
+
+    .toc {
+      position: sticky;
+      top: 28px;
+      align-self: start;
+      padding: 16px 0;
+      grid-row: 1 / -1;
+      max-height: calc(100dvh - 56px);
+      overflow-y: auto;
+    }
+
+    .toc::-webkit-scrollbar { width: 3px; }
+    .toc::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+
+    .toc-title {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      padding: 0 0 12px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .toc a {
+      display: block;
+      font-size: 11px;
+      color: var(--text-dim);
+      text-decoration: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      border-left: 2px solid transparent;
+      transition: all 0.15s;
+      line-height: 1.4;
+      margin-bottom: 2px;
+    }
+
+    .toc a:hover { color: var(--text); background: var(--surface-2); }
+    .toc a.active { color: var(--text); border-left-color: var(--accent); }
+
+    @media (max-width: 1000px) {
+      .wrap { grid-template-columns: 1fr; padding: 0 20px 40px; }
+      .toc {
+        position: sticky;
+        top: 0;
+        z-index: 200;
+        max-height: none;
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 0;
+        margin: 0 -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+        grid-row: auto;
+      }
+      .toc::-webkit-scrollbar { display: none; }
+      .toc-title { display: none; }
+      .toc a {
+        white-space: nowrap;
+        flex-shrink: 0;
+        border-left: none;
+        border-bottom: 2px solid transparent;
+        border-radius: 4px 4px 0 0;
+        padding: 7px 12px;
+        font-size: 11px;
+      }
+      .toc a.active { border-left: none; border-bottom-color: var(--accent); background: var(--surface); }
+      .main { padding-top: 24px; }
+      .sec-head { scroll-margin-top: 60px; }
+    }
+
+    h1, h2, h3 { margin: 0; color: var(--text-bright); line-height: 1.2; }
+
+    .hero {
+      padding: 60px 0 48px;
+      max-width: 720px;
+    }
+
+    .hero__pretitle {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+
+    .hero__title {
+      font-size: clamp(38px, 6vw, 64px);
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .hero__subtitle {
+      font-size: 19px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .sec-head {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin: 56px 0 24px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sec-head__num {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .sec-head__title {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .lead {
+      font-size: 18px;
+      color: var(--text-bright);
+      margin-bottom: 28px;
+      max-width: 680px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .ve-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      animation: fadeUp 0.5s ease-out both;
+      animation-delay: calc(var(--i, 0) * 0.06s);
+    }
+
+    .ve-card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06); }
+
+    .ve-card--accent { border-left: 3px solid var(--accent); }
+    .ve-card--green { border-left: 3px solid var(--green); }
+    .ve-card--blue { border-left: 3px solid var(--blue); }
+    .ve-card--amber { border-left: 3px solid var(--amber); }
+    .ve-card--hero { background: var(--surface-2); }
+    .ve-card--recessed { background: var(--surface-2); }
+
+    .ve-card__label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+    }
+
+    .ve-card__title {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-bright);
+    }
+
+    .ve-card p, .ve-card li { font-size: 14px; color: var(--text); margin: 0; }
+
+    .tree {
+      display: grid;
+      gap: 18px;
+      justify-items: center;
+      margin: 24px 0;
+      padding: 28px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      position: relative;
+    }
+
+    .tree::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, var(--accent-dim), transparent 60%);
+      pointer-events: none;
+      border-radius: 12px;
+    }
+
+    .level {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tree-node {
+      min-width: 48px;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border-bright);
+      border-radius: 10px;
+      background: var(--surface);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      position: relative;
+    }
+
+    .tree-node--root { border-color: var(--accent); background: var(--accent-dim); font-weight: 700; }
+    .tree-node--leaf { border-color: var(--green); background: var(--green-dim); }
+    .tree-node--multi { min-width: 72px; }
+    .tree-node--split { border-color: var(--blue); background: var(--blue-dim); }
+
+    .level-connector {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .level-connector svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .connector-line { stroke: var(--border-bright); stroke-width: 1.5; fill: none; }
+
+    .tree-caption {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      text-align: center;
+      margin-top: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tree-rule {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .tree-rule span { padding: 3px 8px; border-radius: 4px; background: var(--surface-3); }
+
+    .bst-rule {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 20px;
+      align-items: center;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .bst-rule__side {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      background: var(--surface-3);
+      text-align: center;
+    }
+
+    .bst-rule__arrow {
+      color: var(--text-dim);
+      font-size: 20px;
+    }
+
+    .flow-arrow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 8px 0;
+    }
+
+    .node-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .node-row .tree-node { margin: 0; }
+
+    .code-block {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.6;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-x: auto;
+      color: var(--text-bright);
+    }
+
+    .complexity-flow {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .complexity-step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      animation: fadeUp 0.5s ease-out both;
+      animation-delay: calc(var(--i, 0) * 0.08s);
+    }
+
+    .complexity-step__value {
+      font-family: var(--font-mono);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-bright);
+      margin-bottom: 6px;
+    }
+
+    .complexity-step__label {
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .complexity-step__arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      font-size: 22px;
+    }
+
+    @media (max-width: 720px) {
+      .complexity-step__arrow { transform: rotate(90deg); padding: 8px 0; }
+    }
+
+    .fallen-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin: 20px 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .fallen-table th, .fallen-table td {
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .fallen-table th {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-dim);
+      background: var(--surface-2);
+    }
+
+    .fallen-table tr:last-child td { border-bottom: none; }
+
+    .fallen-table .false { color: var(--accent); border-left: 3px solid var(--accent); }
+    .fallen-table .true { color: var(--green); border-left: 3px solid var(--green); }
+
+    .quiz-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      counter-reset: quiz;
+    }
+
+    .quiz-list li {
+      position: relative;
+      padding: 16px 16px 16px 52px;
+      margin-bottom: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+    }
+
+    .quiz-list li::before {
+      counter-increment: quiz;
+      content: counter(quiz) ".";
+      position: absolute;
+      left: 18px;
+      top: 14px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .answer-key {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .answer-key h4 {
+      margin: 0 0 12px;
+      font-size: 16px;
+      color: var(--text-bright);
+    }
+
+    .answer-key ol { margin: 0; padding-left: 22px; }
+    .answer-key li { margin-bottom: 8px; font-size: 14px; }
+
+    .retrieval-box {
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 28px;
+    }
+
+    .retrieval-box h3 {
+      font-size: 18px;
+      margin-bottom: 14px;
+      color: var(--text-bright);
+    }
+
+    .tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--surface-3);
+      color: var(--text-dim);
+      margin-right: 4px;
+    }
+
+    .explain-back {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .viz-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 24px 0;
+    }
+
+    .viz-compare__panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .viz-compare__panel--bad { border-top: 4px solid var(--accent); }
+    .viz-compare__panel--good { border-top: 4px solid var(--green); }
+
+    .viz-compare__title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+    }
+
+    .svg-tree { width: 100%; height: auto; max-width: 320px; margin: 0 auto; }
+    .svg-tree text {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+    .svg-tree .node rect, .svg-tree .node circle {
+      fill: var(--surface);
+      stroke: var(--border-bright);
+      stroke-width: 1.5;
+    }
+    .svg-tree .node.root rect, .svg-tree .node.root circle { fill: var(--accent-dim); stroke: var(--accent); stroke-width: 2; }
+    .svg-tree .node.leaf rect, .svg-tree .node.leaf circle { fill: var(--green-dim); stroke: var(--green); }
+    .svg-tree .node.split rect, .svg-tree .node.split circle { fill: var(--blue-dim); stroke: var(--blue); }
+    .svg-tree .edge { stroke: var(--border-bright); stroke-width: 1.5; fill: none; }
+    .svg-tree .highlight { stroke: var(--accent); stroke-width: 2.5; }
+    .svg-tree .label { font-size: 11px; fill: var(--text-dim); }
+
+    .step-flow {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin: 24px 0;
+      overflow-x: auto;
+    }
+
+    .step-flow__step {
+      flex: 1;
+      min-width: 160px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      position: relative;
+    }
+
+    .step-flow__arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 8px;
+      color: var(--text-dim);
+      font-size: 20px;
+    }
+
+    .step-flow__num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .step-flow__title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-bright);
+    }
+
+    .step-flow__desc {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .visual-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 16px 0;
+      padding: 12px 16px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .mini-diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .path-trace {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      padding: 12px 16px;
+      background: var(--surface-2);
+      border-radius: 8px;
+      display: inline-block;
+      margin-top: 12px;
+    }
+
+    .path-trace span { color: var(--accent); font-weight: 700; }
+
+    .split-demo {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .split-demo__audio {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 14px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .split-demo__audio-note {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin: 8px 0 0;
+    }
+
+    .split-demo__stage {
+      min-height: 240px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .split-demo__controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .split-demo__btn {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface-2);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .split-demo__btn:hover { background: var(--surface-3); }
+    .split-demo__btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .split-demo__btn--active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+    .split-demo__text {
+      font-size: 14px;
+      color: var(--text-dim);
+      margin-top: 16px;
+      min-height: 44px;
+    }
+
+    .split-svg { width: 100%; height: auto; max-width: 420px; }
+    .split-svg text {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 500;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+    .split-svg .node rect {
+      fill: var(--surface);
+      stroke: var(--border-bright);
+      stroke-width: 1.5;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .split-svg .node.root rect { fill: var(--accent-dim); stroke: var(--accent); stroke-width: 2; }
+    .split-svg .node.split rect { fill: var(--blue-dim); stroke: var(--blue); stroke-width: 2; }
+    .split-svg .node.middle rect { fill: var(--amber-dim); stroke: var(--amber); stroke-width: 2.5; }
+    .split-svg .edge { stroke: var(--border-bright); stroke-width: 1.5; fill: none; opacity: 0; transition: opacity 0.5s ease; }
+    .split-svg .edge--show { opacity: 1; }
+    .split-svg .label { font-size: 11px; fill: var(--text-dim); }
+    .split-svg .arrow { fill: var(--accent); opacity: 0; transition: opacity 0.4s ease; }
+    .split-svg .arrow--show { opacity: 1; }
+    .split-svg .key-label { font-size: 13px; fill: var(--text-dim); opacity: 0; transition: opacity 0.4s ease; }
+    .split-svg .key-label--show { opacity: 1; }
+    .split-svg .ghost { opacity: 0.25; }
+
+    .split-demo__progress {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .split-demo__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border-bright);
+      transition: background 0.2s;
+    }
+
+    .split-demo__dot--active { background: var(--accent); }
+
+    .visual-board {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin: 28px 0 46px;
+    }
+
+    .visual-tile {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      min-width: 0;
+      box-shadow: 0 12px 32px rgba(40, 28, 18, 0.06);
+    }
+
+    .visual-tile__title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .visual-tile__note {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin: 10px 0 0;
+    }
+
+    .mini-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-width: 260px;
+      margin: 0 auto;
+    }
+
+    .mini-svg text {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      fill: var(--text);
+    }
+
+    .mini-svg .muted { fill: var(--text-dim); font-size: 9px; }
+    .mini-svg .edge { stroke: var(--border-bright); stroke-width: 1.5; fill: none; }
+    .mini-svg .hot { stroke: var(--accent); stroke-width: 2.5; fill: none; }
+    .mini-svg .node-fill { fill: var(--surface-2); stroke: var(--border-bright); stroke-width: 1.5; }
+    .mini-svg .root-fill { fill: var(--accent-dim); stroke: var(--accent); stroke-width: 2; }
+    .mini-svg .leaf-fill { fill: var(--green-dim); stroke: var(--green); stroke-width: 1.7; }
+    .mini-svg .blue-fill { fill: var(--blue-dim); stroke: var(--blue); stroke-width: 1.7; }
+    .mini-svg .amber-fill { fill: var(--amber-dim); stroke: var(--amber); stroke-width: 1.7; }
+
+    @media (max-width: 1000px) {
+      .visual-board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 680px) {
+      .visual-board { grid-template-columns: 1fr; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="toc" id="toc">
+  <div class="toc-title">Inhalt</div>
+  <a href="#mental-model">Mentales Modell</a>
+  <a href="#schaubilder">Schaubilder</a>
+  <a href="#begriffe">Begriffe</a>
+  <a href="#bst">Suchbaum</a>
+  <a href="#zweidreivier">2-3-4-Baum</a>
+  <a href="#split">Insert & Split</a>
+  <a href="#delete">Löschen</a>
+  <a href="#complexity">Komplexität</a>
+  <a href="#fallen">Fallen</a>
+  <a href="#testat">Testat & Drill</a>
+</nav>
+
+<main class="main">
+
+  <header class="hero">
+    <div class="hero__pretitle">Algorithmen & Datenstrukturen</div>
+    <h1 class="hero__title">Bäume in ADS</h1>
+    <p class="hero__subtitle">Von Knoten zu Komplexität: ein visuelles Cheat Sheet für Begriffe, Operationen und typische Klausurfragen.</p>
+  </header>
+
+  <section id="schaubilder" class="sec-head" aria-label="Schaubilder">
+    <span class="sec-head__num">00</span>
+    <h2 class="sec-head__title">Schaubilder zuerst</h2>
+  </section>
+  <p class="lead">Erst sehen, dann benennen. Diese sechs Bilder sind die Karte für die ganze Seite.</p>
+
+  <div class="visual-board">
+    <div class="visual-tile">
+      <div class="visual-tile__title">1 · Anatomie</div>
+      <svg class="mini-svg" viewBox="0 0 220 170" aria-label="Baumanatomie">
+        <path class="edge" d="M110 32 L55 82 M110 32 L165 82 M165 82 L135 132 M165 82 L195 132"/>
+        <rect class="root-fill" x="88" y="14" width="44" height="32" rx="8"/><text x="110" y="30">10</text>
+        <rect class="node-fill" x="35" y="66" width="40" height="32" rx="8"/><text x="55" y="82">5</text>
+        <rect class="node-fill" x="143" y="66" width="44" height="32" rx="8"/><text x="165" y="82">20</text>
+        <rect class="leaf-fill" x="115" y="116" width="40" height="32" rx="8"/><text x="135" y="132">15</text>
+        <rect class="leaf-fill" x="175" y="116" width="40" height="32" rx="8"/><text x="195" y="132">30</text>
+        <text class="muted" x="110" y="160">Wurzel oben · Blätter unten</text>
+      </svg>
+      <p class="visual-tile__note">Wurzel, Kanten, innere Knoten, Blätter.</p>
+    </div>
+
+    <div class="visual-tile">
+      <div class="visual-tile__title">2 · Suchpfad</div>
+      <svg class="mini-svg" viewBox="0 0 220 170" aria-label="Suchpfad im BST">
+        <path class="edge" d="M110 32 L55 82 M110 32 L165 82 M165 82 L135 132 M165 82 L195 132"/>
+        <path class="hot" d="M110 32 L165 82 L135 132"/>
+        <rect class="root-fill" x="88" y="14" width="44" height="32" rx="8"/><text x="110" y="30">10</text>
+        <rect class="node-fill" x="35" y="66" width="40" height="32" rx="8"/><text x="55" y="82">5</text>
+        <rect class="amber-fill" x="143" y="66" width="44" height="32" rx="8"/><text x="165" y="82">20</text>
+        <rect class="leaf-fill" x="115" y="116" width="40" height="32" rx="8"/><text x="135" y="132">15</text>
+        <rect class="node-fill" x="175" y="116" width="40" height="32" rx="8"/><text x="195" y="132">30</text>
+        <text class="muted" x="110" y="160">Suche 15: rechts → links</text>
+      </svg>
+      <p class="visual-tile__note">Ein Vergleich pro Ebene, nicht alle Knoten.</p>
+    </div>
+
+    <div class="visual-tile">
+      <div class="visual-tile__title">3 · 2-3-4-Knoten</div>
+      <svg class="mini-svg" viewBox="0 0 240 170" aria-label="2-3-4-Knoten Suchbereiche">
+        <rect class="blue-fill" x="62" y="50" width="116" height="34" rx="8"/><text x="120" y="67">5 | 12 | 30</text>
+        <path class="edge" d="M75 84 L35 122 M105 84 L90 122 M135 84 L150 122 M165 84 L205 122"/>
+        <circle class="leaf-fill" cx="35" cy="122" r="16"/><text x="35" y="122">&lt;5</text>
+        <circle class="leaf-fill" cx="90" cy="122" r="16"/><text x="90" y="122">A</text>
+        <circle class="leaf-fill" cx="150" cy="122" r="16"/><text x="150" y="122">B</text>
+        <circle class="leaf-fill" cx="205" cy="122" r="16"/><text x="205" y="122">&gt;30</text>
+        <text class="muted" x="120" y="24">3 Schlüssel → 4 Suchbereiche</text>
+        <text class="muted" x="120" y="154">A=5..12 · B=12..30</text>
+      </svg>
+      <p class="visual-tile__note">Das Knotenlimit kommt aus den Suchbereichen.</p>
+    </div>
+
+    <div class="visual-tile">
+      <div class="visual-tile__title">4 · Split</div>
+      <svg class="mini-svg" viewBox="0 0 240 170" aria-label="Split eines vollen Knotens">
+        <rect class="blue-fill" x="58" y="18" width="124" height="34" rx="8"/><text x="120" y="35">10 | 15 | 20</text>
+        <path class="hot" d="M120 54 L120 84"/>
+        <text class="muted" x="166" y="70">15 hoch</text>
+        <rect class="root-fill" x="98" y="84" width="44" height="32" rx="8"/><text x="120" y="100">15</text>
+        <path class="edge" d="M120 116 L75 142 M120 116 L165 142"/>
+        <rect class="leaf-fill" x="55" y="128" width="40" height="28" rx="8"/><text x="75" y="142">10</text>
+        <rect class="leaf-fill" x="145" y="128" width="40" height="28" rx="8"/><text x="165" y="142">20</text>
+      </svg>
+      <p class="visual-tile__note">Mitte hoch, kleiner links, größer rechts.</p>
+    </div>
+
+    <div class="visual-tile">
+      <div class="visual-tile__title">5 · Delete-Problem</div>
+      <svg class="mini-svg" viewBox="0 0 240 170" aria-label="Löschen aus Blatt">
+        <rect class="node-fill" x="32" y="34" width="72" height="34" rx="8"/><text x="68" y="51">10|20</text>
+        <text class="muted" x="68" y="88">−20</text>
+        <path class="edge" d="M104 51 L135 51"/>
+        <rect class="leaf-fill" x="136" y="34" width="44" height="34" rx="8"/><text x="158" y="51">10</text>
+        <text class="muted" x="120" y="112">aber:</text>
+        <rect class="amber-fill" x="44" y="126" width="44" height="30" rx="8"/><text x="66" y="141">10</text>
+        <text class="muted" x="108" y="141">−10 →</text>
+        <rect class="root-fill" x="152" y="126" width="44" height="30" rx="8"/><text x="174" y="141">[]</text>
+      </svg>
+      <p class="visual-tile__note">Leer ist verboten: dann leihen oder verschmelzen.</p>
+    </div>
+
+    <div class="visual-tile">
+      <div class="visual-tile__title">6 · Laufzeitbild</div>
+      <svg class="mini-svg" viewBox="0 0 240 170" aria-label="Komplexität über Höhe">
+        <path class="edge" d="M72 30 L42 62 M72 30 L102 62 M42 62 L28 96 M42 62 L56 96 M102 62 L88 96 M102 62 L116 96"/>
+        <rect class="root-fill" x="58" y="18" width="28" height="24" rx="6"/><text x="72" y="30">8</text>
+        <rect class="node-fill" x="28" y="50" width="28" height="24" rx="6"/><text x="42" y="62">4</text>
+        <rect class="node-fill" x="88" y="50" width="28" height="24" rx="6"/><text x="102" y="62">12</text>
+        <circle class="leaf-fill" cx="28" cy="96" r="12"/><text x="28" y="96">2</text>
+        <circle class="leaf-fill" cx="56" cy="96" r="12"/><text x="56" y="96">6</text>
+        <circle class="leaf-fill" cx="88" cy="96" r="12"/><text x="88" y="96">10</text>
+        <circle class="leaf-fill" cx="116" cy="96" r="12"/><text x="116" y="96">14</text>
+        <path class="hot" d="M174 24 L174 52 L174 80 L174 108"/>
+        <rect class="root-fill" x="160" y="12" width="28" height="24" rx="6"/><text x="174" y="24">2</text>
+        <rect class="node-fill" x="160" y="40" width="28" height="24" rx="6"/><text x="174" y="52">4</text>
+        <rect class="node-fill" x="160" y="68" width="28" height="24" rx="6"/><text x="174" y="80">6</text>
+        <rect class="leaf-fill" x="160" y="96" width="28" height="24" rx="6"/><text x="174" y="108">8</text>
+        <text class="muted" x="72" y="142">O(log n)</text>
+        <text class="muted" x="174" y="142">O(n)</text>
+      </svg>
+      <p class="visual-tile__note">Die Höhe h entscheidet: balanciert vs. Liste.</p>
+    </div>
+  </div>
+
+  <section id="mental-model" class="sec-head" aria-label="Mentales Modell">
+    <span class="sec-head__num">01</span>
+    <h2 class="sec-head__title">Mentales Modell</h2>
+  </section>
+  <p class="lead">Ein Baum ist eine Hierarchie: oben ein Startpunkt, darunter verzweigte Entscheidungen. Jede Verzweigung führt zu einem Teilproblem.</p>
+  <div class="card-grid">
+    <div class="ve-card ve-card--hero" style="--i:0">
+      <div class="ve-card__label">Kernidee</div>
+      <div class="ve-card__title">Baum = verzweigte Entscheidung</div>
+      <p>Wie ein Dateisystem: ein Ordner enthält weitere Ordner oder Dateien. Eine Ebene tiefer = eine Entscheidung mehr.</p>
+    </div>
+    <div class="ve-card ve-card--accent" style="--i:1">
+      <div class="ve-card__label">Leitfrage</div>
+      <div class="ve-card__title">Was ist hier das Blatt?</div>
+      <p>Jedes Mal, wenn du einen Baum siehst, finde zuerst Wurzel und Blätter. Der Rest ergibt sich daraus.</p>
+    </div>
+  </div>
+
+  <section id="begriffe" class="sec-head" aria-label="Grundbegriffe">
+    <span class="sec-head__num">02</span>
+    <h2 class="sec-head__title">Grundbegriffe</h2>
+  </section>
+  <p class="lead">Lerne die Begriffe am konkreten Baum, nicht aus einer abstrakten Definition.</p>
+
+  <div class="visual-legend">
+    <div class="legend-item"><span class="legend-dot" style="background:var(--accent)"></span> Wurzel</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--text-dim)"></span> Innerer Knoten</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span> Blatt</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--border-bright); border:1px solid var(--text-dim)"></span> Kante</div>
+  </div>
+
+  <div class="mini-diagram">
+    <svg class="svg-tree" viewBox="0 0 360 240">
+      <line class="edge" x1="180" y1="40" x2="90" y2="110"/>
+      <line class="edge" x1="180" y1="40" x2="270" y2="110"/>
+      <line class="edge" x1="270" y1="110" x2="220" y2="180"/>
+      <line class="edge" x1="270" y1="110" x2="320" y2="180"/>
+
+      <g class="node root" transform="translate(180,40)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>10</text></g>
+      <g class="node" transform="translate(90,110)"><rect x="-18" y="-18" width="36" height="36" rx="8"/><text>5</text></g>
+      <g class="node" transform="translate(270,110)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>20</text></g>
+      <g class="node leaf" transform="translate(220,180)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>15</text></g>
+      <g class="node leaf" transform="translate(320,180)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>30</text></g>
+
+      <text class="label" x="180" y="220">Höhe = 2 Kanten · Tiefe(15) = 2 Kanten · Blätter = 15, 30</text>
+    </svg>
+  </div>
+
+  <div class="viz-compare">
+    <div class="viz-compare__panel viz-compare__panel--good">
+      <div class="viz-compare__title">Kante</div>
+      <svg class="svg-tree" viewBox="0 0 200 120">
+        <line class="edge" x1="100" y1="30" x2="100" y2="90"/>
+        <g class="node" transform="translate(100,30)"><rect x="-18" y="-15" width="36" height="30" rx="6"/><text>10</text></g>
+        <g class="node leaf" transform="translate(100,90)"><rect x="-18" y="-15" width="36" height="30" rx="6"/><text>5</text></g>
+      </svg>
+      <p style="font-size:13px; color:var(--text-dim); margin-top:10px;">Eine einzelne Verbindung zwischen zwei Knoten.</p>
+    </div>
+    <div class="viz-compare__panel viz-compare__panel--good" style="border-top-color:var(--blue);">
+      <div class="viz-compare__title">Suchpfad</div>
+      <svg class="svg-tree" viewBox="0 0 320 180">
+        <line class="edge" x1="160" y1="35" x2="80" y2="95"/>
+        <line class="edge" x1="160" y1="35" x2="240" y2="95"/>
+        <line class="edge" x1="240" y1="95" x2="240" y2="155"/>
+        <line class="edge highlight" x1="160" y1="35" x2="240" y2="95"/>
+        <line class="edge highlight" x1="240" y1="95" x2="240" y2="155"/>
+        <g class="node root" transform="translate(160,35)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>10</text></g>
+        <g class="node" transform="translate(80,95)"><rect x="-18" y="-18" width="36" height="36" rx="8"/><text>5</text></g>
+        <g class="node" transform="translate(240,95)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>20</text></g>
+        <g class="node leaf" transform="translate(240,155)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>30</text></g>
+      </svg>
+      <p style="font-size:13px; color:var(--text-dim); margin-top:10px;">Folge von Knoten, die wir beim Suchen besuchen: 10 → 20 → 30.</p>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="ve-card ve-card--green" style="--i:0"><div class="ve-card__label">Definition</div><div class="ve-card__title">Knoten</div><p>Eine Box, die einen Wert speichert und 0, 1 oder mehr Kinder haben kann.</p></div>
+    <div class="ve-card ve-card--green" style="--i:1"><div class="ve-card__label">Definition</div><div class="ve-card__title">Kante</div><p>Eine einzelne Verbindung zwischen zwei Knoten.</p></div>
+    <div class="ve-card ve-card--accent" style="--i:2"><div class="ve-card__label">Definition</div><div class="ve-card__title">Wurzel</div><p>Oberster Knoten, hat keinen Elternknoten.</p></div>
+    <div class="ve-card ve-card--blue" style="--i:3"><div class="ve-card__label">Definition</div><div class="ve-card__title">Blatt</div><p>Knoten ohne Kinder.</p></div>
+    <div class="ve-card ve-card--amber" style="--i:4"><div class="ve-card__label">Definition</div><div class="ve-card__title">Höhe</div><p>Längster Weg von Wurzel zu einem Blatt, gemessen in <strong>Kanten</strong>.</p></div>
+    <div class="ve-card ve-card--amber" style="--i:5"><div class="ve-card__label">Definition</div><div class="ve-card__title">Tiefe</div><p>Abstand eines Knotens von der Wurzel, gemessen in <strong>Kanten</strong>.</p></div>
+  </div>
+
+  <div class="mini-diagram">
+    <div class="code-block" style="text-align:left; max-width: 440px; margin: 0 auto;">        Tiefe 0
+          [10]      <- Wurzel
+         /    \
+Tiefe 1 [5]  [20]   <- Kanten verbinden die Knoten
+            /  \
+Tiefe 2  [15][30]  <- Blätter</div>
+  </div>
+
+  <section id="bst" class="sec-head" aria-label="Suchbaum">
+    <span class="sec-head__num">03</span>
+    <h2 class="sec-head__title">Binärer Suchbaum</h2>
+  </section>
+  <p class="lead">Links kleiner, rechts größer. Diese Regel lässt die Suche ganze Teilbäume überspringen.</p>
+
+  <div class="mini-diagram">
+    <svg class="svg-tree" viewBox="0 0 320 180">
+      <line class="edge" x1="160" y1="40" x2="80" y2="110"/>
+      <line class="edge" x1="160" y1="40" x2="240" y2="110"/>
+
+      <g class="node root" transform="translate(160,40)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>10</text></g>
+      <g class="node" transform="translate(80,110)"><rect x="-18" y="-18" width="36" height="36" rx="8"/><text>5</text></g>
+      <g class="node" transform="translate(240,110)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>20</text></g>
+
+      <text class="label" x="80" y="150">alles &lt; 10</text>
+      <text class="label" x="240" y="150">alles &gt; 10</text>
+    </svg>
+    <div class="path-trace">Suchpfad nach <span>18</span>: 10 → 20 → links (18 &lt; 20)</div>
+  </div>
+
+  <div class="viz-compare">
+    <div class="viz-compare__panel viz-compare__panel--bad">
+      <div class="viz-compare__title">Falsch: ungeordnet</div>
+      <svg class="svg-tree" viewBox="0 0 220 160">
+        <line class="edge" x1="110" y1="35" x2="50" y2="95"/>
+        <line class="edge" x1="110" y1="35" x2="170" y2="95"/>
+        <g class="node root" transform="translate(110,35)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>10</text></g>
+        <g class="node" transform="translate(50,95)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>15</text></g>
+        <g class="node" transform="translate(170,95)"><rect x="-18" y="-18" width="36" height="36" rx="8"/><text>3</text></g>
+      </svg>
+      <p style="font-size:13px; color:var(--text-dim); margin-top:10px;">Suche kann Teilbäume nicht überspringen.</p>
+    </div>
+    <div class="viz-compare__panel viz-compare__panel--good">
+      <div class="viz-compare__title">Richtig: Suchbaum</div>
+      <svg class="svg-tree" viewBox="0 0 220 160">
+        <line class="edge" x1="110" y1="35" x2="50" y2="95"/>
+        <line class="edge" x1="110" y1="35" x2="170" y2="95"/>
+        <g class="node root" transform="translate(110,35)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>10</text></g>
+        <g class="node" transform="translate(50,95)"><rect x="-18" y="-18" width="36" height="36" rx="8"/><text>5</text></g>
+        <g class="node" transform="translate(170,95)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>15</text></g>
+      </svg>
+      <p style="font-size:13px; color:var(--text-dim); margin-top:10px;">Ein Vergleich pro Ebene halbiert den Rest.</p>
+    </div>
+  </div>
+
+  <div class="ve-card ve-card--blue" style="--i:0">
+    <div class="ve-card__label">Regel</div>
+    <div class="ve-card__title">Suchbaum-Invariante</div>
+    <p>Für jeden Knoten gilt: alle Werte im linken Teilbaum sind kleiner, alle im rechten Teilbaum sind größer.</p>
+    <div class="explain-back">Ich kann das erklären, wenn ich an einem konkreten Baum jeden Schritt der Suche nachvollziehen kann.</div>
+  </div>
+
+  <section id="zweidreivier" class="sec-head" aria-label="2-3-4-Baum">
+    <span class="sec-head__num">04</span>
+    <h2 class="sec-head__title">2-3-4-Knoten</h2>
+  </section>
+  <p class="lead">Ein Knoten darf 1, 2 oder 3 Schlüssel enthalten. Die Anzahl Schlüssel bestimmt die Anzahl Kinder.</p>
+
+  <div class="node-row">
+    <div class="tree-node tree-node--multi">10<br><span class="tag">1 key</span></div>
+    <div class="tree-node tree-node--multi">10 | 20<br><span class="tag">2 keys</span></div>
+    <div class="tree-node tree-node--multi">10 | 20 | 30<br><span class="tag">3 keys</span></div>
+  </div>
+
+  <div class="mini-diagram">
+    <svg class="svg-tree" viewBox="0 0 480 170">
+      <text class="label" x="80" y="20">1 Schlüssel</text>
+      <line class="edge" x1="80" y1="50" x2="40" y2="100"/>
+      <line class="edge" x1="80" y1="50" x2="120" y2="100"/>
+      <g class="node" transform="translate(80,50)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>10</text></g>
+      <g class="node leaf" transform="translate(40,100)"><circle r="16"/><text>&lt;</text></g>
+      <g class="node leaf" transform="translate(120,100)"><circle r="16"/><text>&gt;</text></g>
+
+      <text class="label" x="240" y="20">2 Schlüssel</text>
+      <line class="edge" x1="220" y1="50" x2="170" y2="100"/>
+      <line class="edge" x1="240" y1="50" x2="240" y2="100"/>
+      <line class="edge" x1="260" y1="50" x2="310" y2="100"/>
+      <g class="node" transform="translate(240,50)"><rect x="-34" y="-18" width="68" height="36" rx="8"/><text>10|20</text></g>
+      <g class="node leaf" transform="translate(170,100)"><circle r="16"/><text>&lt;</text></g>
+      <g class="node leaf" transform="translate(240,100)"><circle r="16"/><text>·</text></g>
+      <g class="node leaf" transform="translate(310,100)"><circle r="16"/><text>&gt;</text></g>
+
+      <text class="label" x="400" y="20">3 Schlüssel</text>
+      <line class="edge" x1="360" y1="50" x2="330" y2="100"/>
+      <line class="edge" x1="380" y1="50" x2="380" y2="100"/>
+      <line class="edge" x1="400" y1="50" x2="430" y2="100"/>
+      <line class="edge" x1="420" y1="50" x2="480" y2="100"/>
+      <g class="node" transform="translate(400,50)"><rect x="-42" y="-18" width="84" height="36" rx="8"/><text>10|20|30</text></g>
+      <g class="node leaf" transform="translate(330,100)"><circle r="16"/><text>&lt;</text></g>
+      <g class="node leaf" transform="translate(380,100)"><circle r="16"/><text>·</text></g>
+      <g class="node leaf" transform="translate(430,100)"><circle r="16"/><text>·</text></g>
+      <g class="node leaf" transform="translate(480,100)"><circle r="16"/><text>&gt;</text></g>
+
+      <text class="label" x="240" y="150">Schlüssel + 1 = maximale Anzahl Kinder</text>
+    </svg>
+  </div>
+
+  <div class="code-block">Schlüssel + 1 = maximale Anzahl Kinder
+1 key → 2 Kinder  |  2 keys → 3 Kinder  |  3 keys → 4 Kinder</div>
+
+  <div class="ve-card ve-card--hero" style="--i:0; margin-top: 20px;">
+    <div class="ve-card__label">Warum maximal 4 Kinder?</div>
+    <div class="ve-card__title">Die 2-3-4-Regel</div>
+    <p>Ein Knoten mit <strong>3 Schlüsseln</strong> hat <strong>4 Bereiche</strong>, in die ein neuer Wert fallen kann. Mehr Bereiche gibt es nicht, weil ein Schlüssel nur zwischen zwei Bereichen steht.</p>
+    <div class="code-block" style="margin-top:12px;">[10 | 20 | 30]
+  ↓  ↓  ↓  ↓
+ &lt;10  10-20  20-30  &gt;30
+ → 4 Bereiche → 4 Kinder möglich
+
+[10 | 20 | 30 | 40]
+  ↓  ↓  ↓  ↓  ↓
+ &lt;10 10-20 20-30 30-40 &gt;40
+ → 5 Bereiche → 5 Kinder nötig → verboten</div>
+  </div>
+
+  <div class="viz-compare" style="margin-top: 20px;">
+    <div class="viz-compare__panel viz-compare__panel--good">
+      <div class="viz-compare__title">Erlaubt</div>
+      <div class="node-row" style="justify-content:center; margin:0;">
+        <div class="tree-node tree-node--multi">10 | 20 | 30</div>
+      </div>
+      <p style="font-size:13px; color:var(--text-dim); margin-top:12px;">3 Schlüssel erzeugen 4 Suchbereiche – genau passend.</p>
+    </div>
+    <div class="viz-compare__panel viz-compare__panel--bad">
+      <div class="viz-compare__title">Verboten</div>
+      <div class="node-row" style="justify-content:center; margin:0;">
+        <div class="tree-node tree-node--multi" style="border-color:var(--accent); background:var(--accent-dim);">10 | 15 | 20 | 25</div>
+      </div>
+      <p style="font-size:13px; color:var(--text-dim); margin-top:12px;">4 Schlüssel erzeugen 5 Suchbereiche, maximal 4 erlaubt.</p>
+    </div>
+  </div>
+
+  <section id="split" class="sec-head" aria-label="Insert und Split">
+    <span class="sec-head__num">05</span>
+    <h2 class="sec-head__title">Insert & Split</h2>
+  </section>
+  <p class="lead">Einfügen legt sortiert hinzu. Ist der Knoten voll, wird gesplittet: die Mitte steigt auf.</p>
+
+  <h3 style="margin: 24px 0 12px; font-size: 16px; color: var(--text-dim);">1. Einfügen mit Platz</h3>
+  <div class="step-flow">
+    <div class="step-flow__step"><div class="step-flow__num">1</div><div class="step-flow__title">Start</div><div class="step-flow__desc">[10 | 20]</div></div>
+    <div class="step-flow__arrow">→</div>
+    <div class="step-flow__step"><div class="step-flow__num">2</div><div class="step-flow__title">+ 15 einfügen</div><div class="step-flow__desc">sortiert</div></div>
+    <div class="step-flow__arrow">→</div>
+    <div class="step-flow__step"><div class="step-flow__num">3</div><div class="step-flow__title">Ergebnis</div><div class="step-flow__desc">[10 | 15 | 20]</div></div>
+  </div>
+
+  <h3 style="margin: 24px 0 12px; font-size: 16px; color: var(--text-dim);">2. Split am Beispiel [4 | 9 | 15] — interaktiv</h3>
+
+  <div class="split-demo">
+    <div class="split-demo__audio">
+      <audio controls preload="metadata" style="width:100%; max-width: 420px;">
+        <source src="../Split-Mechanik_im_2-3-4-Baum.m4a" type="audio/mp4">
+        Dein Browser unterstützt das Audio-Element nicht.
+      </audio>
+      <p class="split-demo__audio-note">‚Split-Mechanik im 2-3-4-Baum‘ — Audio-Erklärung zur Animation</p>
+    </div>
+
+    <div class="split-demo__stage">
+      <svg class="split-svg" viewBox="0 0 420 280" id="splitSvg">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="var(--accent)"/>
+          </marker>
+        </defs>
+
+        <line class="edge" id="e1" x1="210" y1="70" x2="120" y2="150"/>
+        <line class="edge" id="e2" x1="210" y1="70" x2="300" y2="150"/>
+
+        <g class="node split" id="nFull" transform="translate(210,70)"><rect x="-46" y="-18" width="92" height="36" rx="8"/><text>4|9|15</text></g>
+
+        <g class="node middle" id="nMiddle" transform="translate(210,70)" style="opacity:0;"><rect x="-18" y="-18" width="36" height="36" rx="8"/><text>9</text></g>
+
+        <g class="node" id="nLeftGhost" transform="translate(120,150)" style="opacity:0;"><rect x="-18" y="-18" width="36" height="36" rx="8"/><text>4</text></g>
+        <g class="node" id="nRightGhost" transform="translate(300,150)" style="opacity:0;"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>15</text></g>
+
+        <g class="node root" id="nRoot" transform="translate(210,70)" style="opacity:0;"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>9</text></g>
+        <g class="node" id="nLeft" transform="translate(120,150)" style="opacity:0;"><rect x="-18" y="-18" width="36" height="36" rx="8"/><text>4</text></g>
+        <g class="node" id="nRight" transform="translate(300,150)" style="opacity:0;"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>15</text></g>
+
+        <path class="arrow" id="arrowUp" d="M 210,55 L 210,25" marker-end="url(#arrowhead)" style="opacity:0;"/>
+        <path class="arrow" id="arrowLeft" d="M 195,88 L 140,135" marker-end="url(#arrowhead)" style="opacity:0;"/>
+        <path class="arrow" id="arrowRight" d="M 225,88 L 280,135" marker-end="url(#arrowhead)" style="opacity:0;"/>
+
+        <text class="key-label" id="labelMiddle" x="210" y="50">Mitte</text>
+        <text class="key-label" id="labelLeft" x="120" y="185">kleiner als 9</text>
+        <text class="key-label" id="labelRight" x="300" y="185">größer als 9</text>
+
+        <text class="label" x="210" y="260" id="splitStepLabel">Schritt 0: Start</text>
+      </svg>
+    </div>
+
+    <div class="split-demo__controls">
+      <button class="split-demo__btn split-demo__btn--active" data-step="0">Start</button>
+      <button class="split-demo__btn" data-step="1">1. Mitte finden</button>
+      <button class="split-demo__btn" data-step="2">2. Mitte hoch</button>
+      <button class="split-demo__btn" data-step="3">3. Rest teilen</button>
+      <button class="split-demo__btn" data-step="4">4. Fertig</button>
+    </div>
+
+    <div class="split-demo__progress">
+      <span class="split-demo__dot split-demo__dot--active" data-dot="0"></span>
+      <span class="split-demo__dot" data-dot="1"></span>
+      <span class="split-demo__dot" data-dot="2"></span>
+      <span class="split-demo__dot" data-dot="3"></span>
+      <span class="split-demo__dot" data-dot="4"></span>
+    </div>
+
+    <div class="split-demo__text" id="splitDemoText">
+      Wir haben einen vollen Knoten [4 | 9 | 15]. Er enthält bereits 3 Schlüssel — mehr passen nicht hinein.
+    </div>
+  </div>
+
+  <div class="mini-diagram">
+    <svg class="svg-tree" viewBox="0 0 340 220">
+      <text class="label" x="170" y="20">Vor dem Split</text>
+      <g class="node split" transform="translate(170,55)"><rect x="-46" y="-18" width="92" height="36" rx="8"/><text>4|9|15</text></g>
+
+      <text class="label" x="170" y="210">Nach dem Split</text>
+      <line class="edge" x1="170" y1="125" x2="100" y2="175"/>
+      <line class="edge" x1="170" y1="125" x2="240" y2="175"/>
+      <g class="node root" transform="translate(170,125)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>9</text></g>
+      <g class="node" transform="translate(100,175)"><rect x="-18" y="-18" width="36" height="36" rx="8"/><text>4</text></g>
+      <g class="node" transform="translate(240,175)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>15</text></g>
+    </svg>
+  </div>
+
+  <h3 style="margin: 24px 0 12px; font-size: 16px; color: var(--text-dim);">3. Einfügen in einen vollen Knoten</h3>
+  <div class="step-flow">
+    <div class="step-flow__step"><div class="step-flow__num">1</div><div class="step-flow__title">Voll</div><div class="step-flow__desc">[10 | 15 | 20]</div></div>
+    <div class="step-flow__arrow">→</div>
+    <div class="step-flow__step"><div class="step-flow__num">2</div><div class="step-flow__title">+ 25</div><div class="step-flow__desc">passt nicht mehr</div></div>
+    <div class="step-flow__arrow">→</div>
+    <div class="step-flow__step"><div class="step-flow__num">3</div><div class="step-flow__title">Split</div><div class="step-flow__desc">Mitte 15 hoch</div></div>
+    <div class="step-flow__arrow">→</div>
+    <div class="step-flow__step"><div class="step-flow__num">4</div><div class="step-flow__title">Neu einfügen</div><div class="step-flow__desc">25 rechts</div></div>
+  </div>
+
+  <div class="mini-diagram">
+    <svg class="svg-tree" viewBox="0 0 340 220">
+      <text class="label" x="170" y="20">Vor dem Split</text>
+      <g class="node split" transform="translate(170,55)"><rect x="-46" y="-18" width="92" height="36" rx="8"/><text>10|15|20</text></g>
+
+      <text class="label" x="170" y="210">Nach dem Split + Einfügen von 25</text>
+      <line class="edge" x1="170" y1="125" x2="100" y2="175"/>
+      <line class="edge" x1="170" y1="125" x2="240" y2="175"/>
+      <g class="node root" transform="translate(170,125)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>15</text></g>
+      <g class="node" transform="translate(100,175)"><rect x="-22" y="-18" width="44" height="36" rx="8"/><text>10</text></g>
+      <g class="node split" transform="translate(240,175)"><rect x="-34" y="-18" width="68" height="36" rx="8"/><text>20|25</text></g>
+    </svg>
+  </div>
+
+  <div class="ve-card ve-card--accent" style="--i:0">
+    <div class="ve-card__label">Merksatz</div>
+    <div class="ve-card__title">Einfügen vs. Splitten</div>
+    <p><strong>Einfügen</strong> = sortiert in die passende Box legen.<br><strong>Splitten</strong> = voller Knoten wird geteilt; die Mitte steigt zum Elternknoten auf.</p>
+  </div>
+
+  <section id="delete" class="sec-head" aria-label="Löschen">
+    <span class="sec-head__num">06</span>
+    <h2 class="sec-head__title">Löschen aus Blättern</h2>
+  </section>
+  <p class="lead">Löschen ist einfach, solange der Knoten danach nicht leer wird. Sonst muss repariert werden.</p>
+
+  <div class="viz-compare">
+    <div class="viz-compare__panel viz-compare__panel--good">
+      <div class="viz-compare__title">Einfacher Fall</div>
+      <div class="node-row" style="justify-content:center; margin:0;">
+        <div class="tree-node tree-node--multi">10 | 20</div>
+      </div>
+      <div class="flow-arrow"><span>− 20</span><span>→</span></div>
+      <div class="node-row" style="justify-content:center; margin:0;">
+        <div class="tree-node tree-node--multi">10</div>
+      </div>
+      <p style="font-size:13px; color:var(--text-dim); margin-top:12px;">Knoten bleibt gültig.</p>
+    </div>
+    <div class="viz-compare__panel viz-compare__panel--bad">
+      <div class="viz-compare__title">Reparatur nötig</div>
+      <div class="node-row" style="justify-content:center; margin:0;">
+        <div class="tree-node tree-node--multi">10</div>
+      </div>
+      <div class="flow-arrow"><span>− 10</span><span>→</span></div>
+      <div class="node-row" style="justify-content:center; margin:0;">
+        <div class="tree-node" style="border-color:var(--accent); background:var(--accent-dim);">[]</div>
+      </div>
+      <p style="font-size:13px; color:var(--text-dim); margin-top:12px;">Leerer Knoten verletzt die Baumregel.</p>
+    </div>
+  </div>
+
+  <div class="mini-diagram">
+    <div class="code-block" style="text-align:left; max-width: 520px; margin: 0 auto;">Reparatur-Strategien:
+
+Fall A: Geschwister hat > 1 Schlüssel
+        [8]           [9]
+       /   \    →    /   \
+    [6|7]  [10]   [6]  [7|10]
+        leihen / rotieren
+
+Fall B: Geschwister hat nur 1 Schlüssel
+        [8]           []
+       /   \    →    [6|8|10]
+     [6]   [10]     verschmelzen</div>
+  </div>
+
+  <section id="complexity" class="sec-head" aria-label="Komplexität">
+    <span class="sec-head__num">07</span>
+    <h2 class="sec-head__title">Komplexität</h2>
+  </section>
+  <p class="lead">Suche kostet O(h), weil pro Ebene genau eine Entscheidung fällt. Die Frage ist: wie groß ist h?</p>
+
+  <div class="code-block">n = Anzahl gespeicherter Werte
+h = Höhe des Baums = Anzahl Kanten von Wurzel bis tiefstes Blatt</div>
+
+  <div class="ve-card ve-card--hero" style="--i:0;">
+    <div class="ve-card__label">Warum O(log n)?</div>
+    <div class="ve-card__title">Halbieren pro Ebene</div>
+    <p>In einem balancierten Baum hat jeder Knoten etwa 2 Kinder. Jede Ebene verdoppelt die Anzahl möglicher Plätze. Umgekehrt: bei <code>n</code> Werten brauchen wir nur etwa log₂(n) Ebenen.</p>
+    <div class="code-block" style="margin-top:12px;">Ebene 0: 1 Knoten
+Ebene 1: 2 Knoten
+Ebene 2: 4 Knoten
+Ebene 3: 8 Knoten
+...
+Ebene h: 2^h Knoten
+
+Wenn n Werte gespeichert sind: n ≈ 2^h
+Auflösen nach h: h ≈ log₂(n)
+Also: Suche braucht O(h) = O(log n) Schritte</div>
+  </div>
+
+  <div class="complexity-flow">
+    <div class="complexity-step" style="--i:0"><div class="complexity-step__value">n Werte</div><div class="complexity-step__label">Anzahl gespeicherter Elemente</div></div>
+    <div class="complexity-step__arrow">→</div>
+    <div class="complexity-step" style="--i:1"><div class="complexity-step__value">h Ebenen</div><div class="complexity-step__label">Höhe des Baums</div></div>
+    <div class="complexity-step__arrow">→</div>
+    <div class="complexity-step" style="--i:2"><div class="complexity-step__value">1 Schritt/Ebene</div><div class="complexity-step__label">Entscheidung pro Level</div></div>
+    <div class="complexity-step__arrow">→</div>
+    <div class="complexity-step" style="--i:3"><div class="complexity-step__value">O(h)</div><div class="complexity-step__label">Gesamtkosten der Suche</div></div>
+  </div>
+
+  <div class="viz-compare" style="margin-top: 20px;">
+    <div class="viz-compare__panel viz-compare__panel--good">
+      <div class="viz-compare__title">Balanciert — O(log n)</div>
+      <svg class="svg-tree" viewBox="0 0 240 160">
+        <line class="edge" x1="120" y1="30" x2="60" y2="80"/>
+        <line class="edge" x1="120" y1="30" x2="180" y2="80"/>
+        <line class="edge" x1="60" y1="80" x2="35" y2="130"/>
+        <line class="edge" x1="60" y1="80" x2="85" y2="130"/>
+        <line class="edge" x1="180" y1="80" x2="155" y2="130"/>
+        <line class="edge" x1="180" y1="80" x2="205" y2="130"/>
+        <g class="node root" transform="translate(120,30)"><rect x="-18" y="-15" width="36" height="30" rx="6"/><text>8</text></g>
+        <g class="node" transform="translate(60,80)"><rect x="-18" y="-15" width="36" height="30" rx="6"/><text>4</text></g>
+        <g class="node" transform="translate(180,80)"><rect x="-18" y="-15" width="36" height="30" rx="6"/><text>12</text></g>
+        <g class="node leaf" transform="translate(35,130)"><rect x="-14" y="-12" width="28" height="24" rx="5"/><text>2</text></g>
+        <g class="node leaf" transform="translate(85,130)"><rect x="-14" y="-12" width="28" height="24" rx="5"/><text>6</text></g>
+        <g class="node leaf" transform="translate(155,130)"><rect x="-14" y="-12" width="28" height="24" rx="5"/><text>10</text></g>
+        <g class="node leaf" transform="translate(205,130)"><rect x="-14" y="-12" width="28" height="24" rx="5"/><text>14</text></g>
+      </svg>
+      <p style="font-size:13px; color:var(--text-dim); margin-top:10px;">Jede Ebene verdoppelt die Kapazität.</p>
+    </div>
+    <div class="viz-compare__panel viz-compare__panel--bad">
+      <div class="viz-compare__title">Entartet — O(n)</div>
+      <svg class="svg-tree" viewBox="0 0 240 200">
+        <line class="edge" x1="120" y1="25" x2="120" y2="65"/>
+        <line class="edge" x1="120" y1="65" x2="120" y2="105"/>
+        <line class="edge" x1="120" y1="105" x2="120" y2="145"/>
+        <line class="edge" x1="120" y1="145" x2="120" y2="185"/>
+        <g class="node root" transform="translate(120,25)"><rect x="-18" y="-15" width="36" height="30" rx="6"/><text>2</text></g>
+        <g class="node" transform="translate(120,65)"><rect x="-18" y="-15" width="36" height="30" rx="6"/><text>4</text></g>
+        <g class="node" transform="translate(120,105)"><rect x="-18" y="-15" width="36" height="30" rx="6"/><text>6</text></g>
+        <g class="node" transform="translate(120,145)"><rect x="-18" y="-15" width="36" height="30" rx="6"/><text>8</text></g>
+        <g class="node leaf" transform="translate(120,185)"><rect x="-18" y="-15" width="36" height="30" rx="6"/><text>10</text></g>
+      </svg>
+      <p style="font-size:13px; color:var(--text-dim); margin-top:10px;">Baum ist eine verkettete Liste.</p>
+    </div>
+  </div>
+
+  <div class="card-grid" style="margin-top: 20px;">
+    <div class="ve-card ve-card--green" style="--i:0"><div class="ve-card__label">Balanciert</div><div class="ve-card__title">h ≈ log₂(n)</div><p>Suche: <strong>O(log n)</strong>. Jede Ebene halbiert den Rest.</p></div>
+    <div class="ve-card ve-card--accent" style="--i:1"><div class="ve-card__label">Entartet</div><div class="ve-card__title">h ≈ n</div><p>Suche: <strong>O(n)</strong>. Baum sieht aus wie eine verkettete Liste.</p></div>
+    <div class="ve-card ve-card--blue" style="--i:2"><div class="ve-card__label">2-3-4-Baum</div><div class="ve-card__title">h = O(log n)</div><p>Insert/Delete halten den Baum balanciert: <strong>O(log n)</strong>.</p></div>
+  </div>
+
+  <div class="ve-card ve-card--hero" style="--i:3; margin-top: 20px;">
+    <div class="ve-card__label">Big-O-Check</div>
+    <div class="ve-card__title">Bevor du O(log n) schreibst</div>
+    <ol style="padding-left: 20px; margin: 10px 0 0;">
+      <li>Was ist <code>n</code>?</li>
+      <li>Was ist der zentrale Schritt?</li>
+      <li>Wie viele Ebenen muss ich maximal runter?</li>
+      <li>Was ist <code>h</code>?</li>
+      <li>Ist <code>h</code> eher log n oder n?</li>
+    </ol>
+  </div>
+
+  <section id="fallen" class="sec-head" aria-label="Typische Fallen">
+    <span class="sec-head__num">08</span>
+    <h2 class="sec-head__title">Typische Fallen</h2>
+  </section>
+  <p class="lead">Diese falschen Denkspuren tauchen in Testaten und Klausuren immer wieder auf.</p>
+
+  <table class="fallen-table">
+    <thead>
+      <tr><th>Falsche Spur</th><th>Korrektur</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="false">[10 | 15 | 20] sind drei Knoten.</td><td class="true">Das ist ein Knoten mit drei Schlüsseln.</td></tr>
+      <tr><td class="false">Einfügen heißt hinten anhängen.</td><td class="true">Einfügen heißt sortiert einsortieren.</td></tr>
+      <tr><td class="false">2-3-4-Knoten mit vier Schlüsseln ist okay.</td><td class="true">Vier Schlüssel erzeugen fünf Suchbereiche, maximal vier erlaubt.</td></tr>
+      <tr><td class="false">Suche ist immer O(log n).</td><td class="true">Suche ist O(h). Nur wenn h = log n, wird daraus O(log n).</td></tr>
+    </tbody>
+  </table>
+
+  <section id="testat" class="sec-head" aria-label="Testat und Klausurdrill">
+    <span class="sec-head__num">09</span>
+    <h2 class="sec-head__title">Testat-Check & Klausurdrill</h2>
+  </section>
+  <p class="lead">Nicht nur lesen – aktiv abrufen. Erkläre jeden Begriff mit eigenen Worten.</p>
+
+  <div class="ve-card ve-card--blue" style="--i:0">
+    <div class="ve-card__label">Testat-Check</div>
+    <div class="ve-card__title">Schnellfragen</div>
+    <ol class="quiz-list" style="margin-top: 12px;">
+      <li>Was ist ein Knoten?</li>
+      <li>Was ist ein Blatt?</li>
+      <li>Warum ist <code>[10 | 20 | 30]</code> in einem 2-3-4-Baum noch erlaubt?</li>
+      <li>Warum ist <code>[10 | 15 | 20 | 25]</code> verboten?</li>
+      <li>Was passiert beim Split von <code>[4 | 9 | 15]</code>?</li>
+      <li>Warum ist Suche in balancierten Bäumen O(log n)?</li>
+      <li>Wann wird ein Baum zu O(n)?</li>
+    </ol>
+  </div>
+
+  <div class="ve-card ve-card--accent" style="--i:1; margin-top: 20px;">
+    <div class="ve-card__label">10-Minuten-Klausurdrill</div>
+    <div class="ve-card__title">Aufgaben</div>
+    <ol class="quiz-list" style="margin-top: 12px;">
+      <li>Markiere im Baum <code>10 / 5 / 20</code> Wurzel, Blätter und Höhe.</li>
+      <li>Wie viele Suchbereiche hat <code>[5 | 12 | 30]</code>?</li>
+      <li>Was passiert bei <code>[10 | 20] + 15</code>?</li>
+      <li>Was passiert bei <code>[4 | 9 | 15]</code> beim Split?</li>
+      <li>Warum ist Suche in einem balancierten Baum O(log n)?</li>
+    </ol>
+
+    <div class="answer-key">
+      <h4>Lösungsskizze</h4>
+      <ol>
+        <li><strong>Wurzel 10</strong>, Blätter <strong>5 und 20</strong>, Höhe <strong>1</strong> (Kanten) oder <strong>2</strong> (Knoten).</li>
+        <li><strong>Vier</strong> Suchbereiche.</li>
+        <li>Sortiert einfügen: <code>[10 | 15 | 20]</code>.</li>
+        <li><strong>9</strong> geht hoch, <strong>4</strong> links, <strong>15</strong> rechts.</li>
+        <li>Pro Ebene eine Entscheidung; balancierter Baum hat etwa log₂(n) Ebenen.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="retrieval-box">
+    <h3>Ich kann das erklären, wenn …</h3>
+    <ul style="padding-left: 20px; margin: 0;">
+      <li>ich einen beliebigen Mini-Baum in Wurzel, Blätter, Höhe und Tiefe zerlegen kann.</li>
+      <li>ich an einem 2-3-4-Knoten die Anzahl Kinder aus den Schlüsseln ableiten kann.</li>
+      <li>ich Insert und Split am konkreten Beispiel Schritt für Schritt trace.</li>
+      <li>ich Big-O mit <code>n</code>, <code>h</code> und dem zentralen Schritt begründe.</li>
+    </ul>
+  </div>
+
+</main>
+</div>
+
+<script>
+(function() {
+  const toc = document.getElementById('toc');
+  const links = toc.querySelectorAll('a');
+  const sections = [];
+  links.forEach(link => {
+    const id = link.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el) sections.push({ id, el, link });
+  });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const match = sections.find(s => s.el === entry.target);
+        if (match) {
+          match.link.classList.add('active');
+          if (window.innerWidth <= 1000) {
+            match.link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          }
+        }
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+
+  sections.forEach(s => observer.observe(s.el));
+
+  links.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const id = link.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', '#' + id);
+      }
+    });
+  });
+})();
+</script>
+
+<script>
+(function() {
+  const splitStates = [
+    {
+      label: 'Schritt 0: Start',
+      text: 'Wir haben einen vollen Knoten [4 | 9 | 15]. Er enthält bereits 3 Schlüssel — mehr passen nicht hinein.',
+      setup: () => {
+        document.getElementById('nFull').style.opacity = '1';
+        document.getElementById('nFull').classList.remove('ghost');
+        document.getElementById('nMiddle').style.opacity = '0';
+        document.getElementById('nRoot').style.opacity = '0';
+        document.getElementById('nLeft').style.opacity = '0';
+        document.getElementById('nRight').style.opacity = '0';
+        document.getElementById('nLeftGhost').style.opacity = '0';
+        document.getElementById('nRightGhost').style.opacity = '0';
+        document.getElementById('e1').classList.remove('edge--show');
+        document.getElementById('e2').classList.remove('edge--show');
+        document.getElementById('arrowUp').classList.remove('arrow--show');
+        document.getElementById('arrowLeft').classList.remove('arrow--show');
+        document.getElementById('arrowRight').classList.remove('arrow--show');
+        document.getElementById('labelMiddle').classList.remove('key-label--show');
+        document.getElementById('labelLeft').classList.remove('key-label--show');
+        document.getElementById('labelRight').classList.remove('key-label--show');
+      }
+    },
+    {
+      label: 'Schritt 1: Mitte finden',
+      text: 'Bei 3 Schlüsseln ist der mittlere Schlüssel die Mitte. Hier ist das die 9. Sie wird hervorgehoben.',
+      setup: () => {
+        splitStates[0].setup();
+        document.getElementById('nFull').classList.add('ghost');
+        const nMiddle = document.getElementById('nMiddle');
+        nMiddle.style.opacity = '1';
+        nMiddle.setAttribute('transform', 'translate(210, 70)');
+        document.getElementById('labelMiddle').classList.add('key-label--show');
+      }
+    },
+    {
+      label: 'Schritt 2: Mitte hoch',
+      text: 'Die 9 steigt zum Elternknoten auf. Sie wird zur neuen Wurzel dieses Teilbaums. Der Pfeil zeigt die Bewegung nach oben.',
+      setup: () => {
+        splitStates[1].setup();
+        document.getElementById('nFull').style.opacity = '0';
+        document.getElementById('nMiddle').style.opacity = '0';
+        document.getElementById('arrowUp').classList.add('arrow--show');
+        const nRoot = document.getElementById('nRoot');
+        nRoot.style.opacity = '1';
+        nRoot.setAttribute('transform', 'translate(210, 40)');
+      }
+    },
+    {
+      label: 'Schritt 3: Rest teilen',
+      text: 'Alles kleiner als 9 kommt links (4), alles größer als 9 kommt rechts (15). Die Pfeile zeigen, wohin die Werte wandern.',
+      setup: () => {
+        splitStates[2].setup();
+        document.getElementById('nLeftGhost').style.opacity = '0.2';
+        document.getElementById('nRightGhost').style.opacity = '0.2';
+        document.getElementById('arrowLeft').classList.add('arrow--show');
+        document.getElementById('arrowRight').classList.add('arrow--show');
+        const nLeft = document.getElementById('nLeft');
+        const nRight = document.getElementById('nRight');
+        nLeft.style.opacity = '1';
+        nRight.style.opacity = '1';
+        document.getElementById('labelLeft').classList.add('key-label--show');
+        document.getElementById('labelRight').classList.add('key-label--show');
+      }
+    },
+    {
+      label: 'Schritt 4: Fertig',
+      text: 'Der Split ist abgeschlossen. Aus einem vollen Knoten [4 | 9 | 15] wurde ein kleiner Baum mit 9 als Wurzel und [4] sowie [15] als Kindern.',
+      setup: () => {
+        splitStates[3].setup();
+        document.getElementById('e1').classList.add('edge--show');
+        document.getElementById('e2').classList.add('edge--show');
+        document.getElementById('arrowUp').classList.remove('arrow--show');
+        document.getElementById('arrowLeft').classList.remove('arrow--show');
+        document.getElementById('arrowRight').classList.remove('arrow--show');
+        document.getElementById('nLeftGhost').style.opacity = '0';
+        document.getElementById('nRightGhost').style.opacity = '0';
+      }
+    }
+  ];
+
+  const btns = document.querySelectorAll('.split-demo__btn');
+  const dots = document.querySelectorAll('.split-demo__dot');
+  const label = document.getElementById('splitStepLabel');
+  const text = document.getElementById('splitDemoText');
+
+  function setActiveStep(step) {
+    splitStates[step].setup();
+    label.textContent = splitStates[step].label;
+    text.textContent = splitStates[step].text;
+    btns.forEach(b => b.classList.remove('split-demo__btn--active'));
+    dots.forEach(d => d.classList.remove('split-demo__dot--active'));
+    btns[step].classList.add('split-demo__btn--active');
+    dots[step].classList.add('split-demo__dot--active');
+  }
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const step = parseInt(btn.dataset.step, 10);
+      setActiveStep(step);
+    });
+  });
+
+  setActiveStep(0);
+})();
+</script>
+
+</body>
+</html>

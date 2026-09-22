@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aufgabe 14 · Rekursion entzaubern</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <script src="task.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Seitennavigation">
+      <a class="back" href="../index.html">← Übersicht</a>
+      <span class="brand">Rekursions-Werkbank</span>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF ↗</a>
+    </nav>
+
+    <header class="task-head">
+      <div>
+        <span class="kicker">Mission 14 · Code komprimieren</span>
+        <h1>Was bleibt übrig?</h1>
+      </div>
+      <div class="counter" aria-label="Aufgabe 14 von 17">14 / 17</div>
+    </header>
+
+    <section class="mission" aria-labelledby="mission-title">
+      <article class="brief">
+        <h2 id="mission-title">Deine Mission</h2>
+        <p>Du musst nicht „Rekursion können“. Lass zwei konkrete Eingaben laufen, erkenne die wiederholte Operation und ersetze sie durch eine Zeile.</p>
+        <p class="tiny"><strong>Prüfungsauftrag:</strong> Bedeutung beider Funktionen nennen und jeweils einfach, nicht-rekursiv implementieren.</p>
+      </article>
+      <pre class="code" aria-label="Originalcode"><code>double F1(double x, unsigned int n) {
+  if (n == 0) return 0;
+  return x + F1(x, n - 1);
+}
+
+double F2(int n) {
+  if (n &lt; 2) return 0;
+  return 1 + F2(n / 2);
+}</code></pre>
+    </section>
+
+    <aside class="decoder" aria-label="C++ Kurzuebersetzung">
+      <strong>C++ → Alltag:</strong>
+      <span><code>return</code> = Ergebnis zurückgeben</span>
+      <span><code>n - 1</code> = eine Runde verbrauchen</span>
+      <span><code>n / 2</code> = bei <code>int</code> abrunden</span>
+    </aside>
+
+    <div class="stepper">
+      <section class="step active" id="step1" aria-labelledby="step1-title">
+        <h2 id="step1-title">Zieh F1 durch die Maschine</h2>
+        <p class="prompt"><code>F1(3, 4)</code>: Tippe auf „Nächster Aufruf“. Was bleibt am Ende als Rechnung stehen?</p>
+        <div class="machine" aria-live="polite">
+          <div class="input-tag">x = 3</div>
+          <div id="f1Trace" class="trace-line">F1(3, 4)</div>
+          <button class="action primary" id="f1Next" type="button">Nächster Aufruf →</button>
+        </div>
+        <label for="f1Pattern">Jetzt das Muster, nicht nur den Trace:</label>
+        <input id="f1Pattern" class="short-answer" type="text" autocomplete="off" placeholder="F1(x, n) = …">
+        <div class="button-row">
+          <button class="action" id="checkF1" type="button">Muster prüfen</button>
+          <button class="hint-toggle" data-hint="hintF1a" type="button">Hinweis 1</button>
+          <button class="hint-toggle" data-hint="hintF1b" type="button">Hinweis 2</button>
+        </div>
+        <div class="hint" id="hintF1a">Zähle, wie oft <code>x</code> nach dem vollständigen Aufklappen vorkommt.</div>
+        <div class="hint" id="hintF1b"><code>x + x + x + …</code> ist eine bekannte Grundrechenart.</div>
+        <div class="feedback" id="feedbackF1" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="step locked" id="step2" aria-labelledby="step2-title" aria-disabled="true">
+        <div class="lock-note">Öffnet sich nach deinem F1-Versuch.</div>
+        <h2 id="step2-title">Halbiere F2 sichtbar</h2>
+        <p class="prompt">Wähle für <code>F2(13)</code> nacheinander den nächsten ganzzahligen Wert. Jeder richtige Zug erzeugt ein <code>+1</code>.</p>
+        <div class="halve-board">
+          <div id="halvePath" class="number-path" aria-live="polite"><span>13</span></div>
+          <div id="halveChoices" class="choices" aria-label="Nächsten Wert wählen"></div>
+        </div>
+        <label for="f2Pattern">Was zählt die Funktion insgesamt?</label>
+        <input id="f2Pattern" class="short-answer" type="text" autocomplete="off" placeholder="z. B. Anzahl der …">
+        <div class="button-row">
+          <button class="action" id="checkF2" type="button">Bedeutung prüfen</button>
+          <button class="hint-toggle" data-hint="hintF2a" type="button">Hinweis 1</button>
+          <button class="hint-toggle" data-hint="hintF2b" type="button">Hinweis 2</button>
+        </div>
+        <div class="hint" id="hintF2a">13 → 6 → 3 → 1. Wie oft konntest du durch 2 teilen?</div>
+        <div class="hint" id="hintF2b">Der Zweierlogarithmus beantwortet „Wie oft halbieren?“; bei ganzen Zahlen wird abgerundet.</div>
+        <div class="feedback" id="feedbackF2" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="step locked" id="step3" aria-labelledby="step3-title" aria-disabled="true">
+        <div class="lock-note">Öffnet sich nach deinem F2-Versuch.</div>
+        <h2 id="step3-title">Prüfungsabschluss</h2>
+        <p class="prompt">Schreibe beide nicht-rekursiven Rückgabezeilen. Es zählt die Bedeutung, nicht perfektes Tippen.</p>
+        <label for="f1Code">F1: eine direkte Zeile</label>
+        <input id="f1Code" class="code-answer" type="text" spellcheck="false" placeholder="return …;">
+        <label for="f2Code">F2: eine direkte Zeile</label>
+        <input id="f2Code" class="code-answer" type="text" spellcheck="false" placeholder="return …;">
+        <div class="button-row">
+          <button class="action primary" id="checkFinal" type="button">Code abgeben</button>
+          <button class="action" id="revealSolution" type="button">Musterweg aufdecken</button>
+        </div>
+        <div class="feedback" id="finalFeedback" role="status" aria-live="polite"></div>
+        <div class="solution" id="solution" hidden>
+          <h3>Musterweg</h3>
+          <p><strong>F1:</strong> <code>x</code> wird <code>n</code>-mal addiert, also <code>n * x</code>.</p>
+          <pre class="code"><code>double F1sol(double x, unsigned int n) {
+  return n * x;
+}
+
+double F2sol(int n) {
+  return (int)log2(n);
+}</code></pre>
+          <p class="tiny">Für positive ganze <code>n</code> gilt: F2 = ⌊log₂(n)⌋. Der Basisfall liefert auch für <code>n = 0</code> den Wert 0; die Logarithmusform ist dort nicht definiert.</p>
+        </div>
+      </section>
+    </div>
+
+    <section class="step status-card" aria-labelledby="status-title">
+      <h2 id="status-title">Wie sitzt Aufgabe 14?</h2>
+      <div class="state-row" role="group" aria-label="Lernstatus wählen">
+        <button class="state-btn" data-value="sitzt" type="button">Sitzt</button>
+        <button class="state-btn" data-value="wackelt" type="button">Wackelt</button>
+      </div>
+      <p id="stateFeedback" class="tiny" aria-live="polite">Noch nicht markiert.</p>
+    </section>
+
+    <nav class="nav-bottom" aria-label="Aufgabennavigation">
+      <a href="../task-13/index.html">← Aufgabe 13</a>
+      <a href="../index.html">Übersicht</a>
+      <a href="../task-15/index.html">Aufgabe 15 →</a>
+    </nav>
+  </main>
+</body>
+</html>
