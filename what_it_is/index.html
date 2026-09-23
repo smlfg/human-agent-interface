@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090a08">
   <link rel="canonical" href="https://www.human-agent-interface.com/what_it_is/">
   <title>What is Human Agent Interface (HAI)? — Samuel Fleig</title>
   <meta name="description" content="Human Agent Interface (HAI), created by Samuel Fleig, is an approach for keeping agentic AI work observable, bounded, verifiable, and human-owned.">
@@ -31,10 +32,36 @@
     h2 { margin-top:44px; border-top:1px solid var(--line); padding-top:24px; }
     .lead { font-size:1.25rem; color:#fff8e6; }
     code { background:rgba(247,241,223,.08); padding:.15em .35em; }
+    nav.site-nav { position: sticky; top: 0; z-index: 60; display:flex; flex-wrap:wrap; gap:14px; align-items:center; padding:18px 22px; background:rgba(9,10,8,.88); backdrop-filter:saturate(150%) blur(14px); -webkit-backdrop-filter:saturate(150%) blur(14px); border-bottom:1px solid rgba(247,241,223,.18); font-size:.92rem; }
+    nav.site-nav a { color:#f7f1df; text-decoration:none; }
+    nav.site-nav a:hover { color:#a7ff4f; }
+    nav.site-nav a.nav-primary { margin-left:auto; color:#a7ff4f; border:1px solid #a7ff4f; padding:8px 14px; }
+    .closing-cta { max-width:840px; margin:0 auto; padding:56px 22px; border-top:1px solid rgba(247,241,223,.18); }
+    .closing-eyebrow { color:#b7ad97; text-transform:uppercase; letter-spacing:.08em; font-size:.78rem; margin:0 0 8px; }
+    .closing-cta h2 { margin:0 0 10px; }
+    .closing-cta p { color:#b7ad97; }
+    .closing-actions { margin:18px 0 0; }
+    .closing-actions a { display:inline-block; margin:0 10px 10px 0; padding:12px 18px; text-decoration:none; border:1px solid rgba(247,241,223,.18); color:#f7f1df; }
+    .closing-actions a.closing-primary { border-color:#a7ff4f; color:#a7ff4f; }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 200; padding: 12px 18px; background: #090a08; color: #f7f1df; border: 1px solid #a7ff4f; text-decoration: none; }
+    .skip-link:focus { left: 10px; top: 10px; }
+    [id] { scroll-margin-top: 88px; }
+    nav a[aria-current="page"] { color: #a7ff4f; }
+    @view-transition { navigation: auto; }
   </style>
 </head>
 <body>
-  <main>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav class="site-nav" aria-label="Site navigation">
+    <a href="../index.html">Home</a>
+    <a href="../what_it_is/" aria-current="page">Method</a>
+    <a href="../product/">Offer</a>
+    <a href="../fit/" data-site-event="cta_click" data-event-target="nav_fit">Fit</a>
+    <a href="../proof/">Proof</a>
+    <a href="../samuel/">Samuel</a>
+    <a class="nav-primary" href="../fit/" data-site-event="cta_click" data-event-target="nav_fit">Check fit</a>
+  </nav>
+  <main id="main">
     <p class="eyebrow">Canonical definition</p>
     <h1>What is Human Agent Interface (HAI)?</h1>
 
@@ -60,6 +87,16 @@
       <li><a href="/proof/">HAI proof of practice</a></li>
       <li><a href="https://github.com/smlfg/hai-mcp">HAI-MCP on GitHub</a></li>
     </ul>
+
+    <section class="closing-cta">
+      <p class="closing-eyebrow">Next step</p>
+      <h2>Does HAI fit your workflow?</h2>
+      <p>Check the human fit first. Two minutes, no booking pressure.</p>
+      <p class="closing-actions">
+        <a class="closing-primary" data-site-event="cta_click" data-event-target="door_fit" href="../fit/">Check if HAI fits you</a>
+        <a class="closing-secondary" data-site-event="cta_click" data-event-target="door_product" href="../product/">What you actually get</a>
+      </p>
+    </section>
   </main>
 </body>
 </html>

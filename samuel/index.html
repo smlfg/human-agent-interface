@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090a08">
   <link rel="canonical" href="https://www.human-agent-interface.com/samuel/">
   <meta
     name="description"
@@ -893,9 +894,35 @@
         transition-duration: 0.001ms !important;
       }
     }
+
+    .samuel-summary { margin:24px 0 0; padding:20px; border:1px solid rgba(247,241,223,.18); }
+    .samuel-summary-lead { margin:0 0 14px; }
+    .samuel-summary-points span { display:inline-block; margin:0 8px 8px 0; padding:6px 10px; border:1px solid rgba(247,241,223,.18); color:#b7ad97; font-size:.82rem; }
+    .samuel-start { margin:18px 0 0; color:#b7ad97; }
+    .samuel-start a { display:inline-block; margin:0 10px 8px 0; color:#a7ff4f; text-decoration:underline; text-underline-offset:3px; }
+    .samuel-deep { margin:52px 0 0; padding-top:22px; border-top:1px solid rgba(247,241,223,.18); color:#757d6e; font-size:.88rem; }
+    .samuel-deep-label { display:block; margin-bottom:6px; color:#a7ff4f; font-family:"IBM Plex Mono","SFMono-Regular",Consolas,monospace; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; }
+    .samuel-closing { margin-top:56px; padding-top:28px; border-top:1px solid rgba(247,241,223,.18); }
+    .samuel-closing-eyebrow { margin:0 0 8px; color:#b7ad97; text-transform:uppercase; letter-spacing:.08em; font-size:.78rem; }
+    .samuel-closing-actions { margin:16px 0 0; }
+    .samuel-closing-actions a { display:inline-block; margin:0 10px 10px 0; padding:12px 18px; text-decoration:none; border:1px solid rgba(247,241,223,.18); color:#f7f1df; }
+    .samuel-closing-actions a.samuel-closing-primary { border-color:#a7ff4f; color:#a7ff4f; }
+
+    @view-transition { navigation: auto; }
+
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 200; padding: 12px 18px; background: #090a08; color: #f7f1df; border: 1px solid #a7ff4f; text-decoration: none; }
+    .skip-link:focus { left: 10px; top: 10px; }
+    [id] { scroll-margin-top: 88px; }
+
+    /* .topbar is already position: fixed; .topbar-inner already has a semi-opaque dark bg + blur.
+       Only add the explicit readable bottom border. */
+    .topbar-inner { border-bottom: 1px solid rgba(247,241,223,.18); }
+
+    nav a[aria-current="page"] { color: #a7ff4f; }
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#top">Skip to content</a>
   <div class="site-shell">
     <div class="grain" aria-hidden="true"></div>
 
@@ -907,8 +934,9 @@
         </a>
         <nav class="nav" aria-label="Site navigation">
           <a href="../what_it_is/">Method</a>
+          <a data-site-event="cta_click" data-event-target="nav_fit" href="../fit/">Fit</a>
           <a href="../proof/">Proof</a>
-          <a href="../samuel/">Samuel</a>
+          <a href="../samuel/" aria-current="page">Samuel</a>
           <a href="computer-day-audit-2026/">Activity Audit</a>
           <a href="../product/">Offer</a>
           <a href="#contact">Contact</a>
@@ -923,6 +951,20 @@
           <div>
             <p class="eyebrow">About Samuel Fleig</p>
             <h1 id="hero-title">I build Human Agent Interfaces because I needed them myself.</h1>
+            <div class="samuel-summary">
+              <p class="samuel-summary-lead">I build Human Agent Interfaces because I needed them myself. This page is the origin story and the personal path behind HAI — read the first block, and go deeper only if you want the long version.</p>
+              <p class="samuel-summary-points">
+                <span>AI Engineer</span>
+                <span>Builds local agent harnesses</span>
+                <span>Keeps the human as owner</span>
+              </p>
+            </div>
+            <p class="samuel-start">
+              Start where it matters instead:
+              <a data-site-event="cta_click" data-event-target="door_method" href="../what_it_is/">What is HAI, exactly?</a>
+              <a data-site-event="cta_click" data-event-target="door_fit" href="../fit/">Does it fit you?</a>
+              <a data-site-event="cta_click" data-event-target="door_proof" href="../proof/">Is this real?</a>
+            </p>
             <p class="hero-lede">
               HAI did not start as branding. It came from real work inside agentic systems:
               terminal agents, coding agents, harnesses, control layers, and the overload that appears when
@@ -970,6 +1012,11 @@
           </aside>
         </div>
       </section>
+
+      <p class="samuel-deep">
+        <span class="samuel-deep-label">The longer path</span>
+        Everything below is the origin material behind the summary above.
+      </p>
 
       <section id="weg" lang="de" aria-labelledby="weg-title">
         <div class="section-inner split">
@@ -1282,6 +1329,15 @@
             >Bring one messy agent workflow</a>
           </aside>
         </div>
+      </section>
+
+      <section class="samuel-closing">
+        <p class="samuel-closing-eyebrow">Next step</p>
+        <h2>Bring one messy agent workflow.</h2>
+        <p class="samuel-closing-actions">
+          <a class="samuel-closing-primary" data-site-event="cta_click" data-event-target="door_fit" href="../fit/">Check if HAI fits you</a>
+          <a data-site-event="cta_click" data-event-target="door_product" href="../product/">What you actually get</a>
+        </p>
       </section>
     </main>
 

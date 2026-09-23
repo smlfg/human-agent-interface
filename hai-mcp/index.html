@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090a08">
   <link rel="canonical" href="https://www.human-agent-interface.com/hai-mcp/">
   <title>HAI-MCP — MCP Control Plane for Human Agent Interface by Samuel Fleig</title>
   <meta name="description" content="HAI-MCP is the open-source, model-agnostic Model Context Protocol control-plane implementation of Human Agent Interface (HAI), created by Samuel Fleig.">
@@ -59,7 +60,7 @@
     body { margin:0; min-width:320px; color:var(--ink); background:radial-gradient(circle at 20% 0%, rgba(167,255,79,.12), transparent 28rem), linear-gradient(180deg,#090a08,#11100d); font-family:Aptos,"Segoe UI",sans-serif; line-height:1.55; }
     a { color:inherit; }
     .shell { width:min(920px, calc(100% - 40px)); margin:0 auto; padding:32px 0 80px; }
-    nav { display:flex; justify-content:space-between; gap:16px; align-items:center; margin-bottom:72px; color:var(--muted); font-family:"IBM Plex Mono", monospace; font-size:.78rem; text-transform:uppercase; }
+    nav { position: sticky; top: 0; z-index: 60; display:flex; justify-content:space-between; gap:16px; align-items:center; margin-bottom:72px; padding:14px 0; background:rgba(9,10,8,.88); backdrop-filter:saturate(150%) blur(14px); -webkit-backdrop-filter:saturate(150%) blur(14px); border-bottom:1px solid rgba(247,241,223,.18); color:var(--muted); font-family:"IBM Plex Mono", monospace; font-size:.78rem; text-transform:uppercase; }
     nav a { text-decoration:none; }
     .brand { color:var(--signal); }
     h1 { max-width:820px; margin:0; font-family:Georgia,"Times New Roman",serif; font-size:clamp(3.2rem, 9vw, 6.6rem); line-height:.92; font-weight:500; }
@@ -78,12 +79,18 @@
     .button { display:inline-flex; min-height:44px; align-items:center; padding:0 16px; border:1px solid rgba(167,255,79,.45); text-decoration:none; color:var(--ink); background:rgba(167,255,79,.08); font-weight:700; }
     footer { margin-top:64px; color:var(--muted); font-family:"IBM Plex Mono", monospace; font-size:.75rem; text-transform:uppercase; }
     @media (max-width:720px) { .meta { grid-template-columns:1fr; } nav { align-items:flex-start; flex-direction:column; } }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 200; padding: 12px 18px; background: #090a08; color: #f7f1df; border: 1px solid #a7ff4f; text-decoration: none; }
+    .skip-link:focus { left: 10px; top: 10px; }
+    [id] { scroll-margin-top: 88px; }
+    nav a[aria-current="page"] { color: #a7ff4f; }
+    @view-transition { navigation: auto; }
   </style>
 </head>
 <body>
-  <main class="shell">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <main id="main" class="shell">
     <nav aria-label="Site navigation">
-      <a class="brand" href="/">Human Agent Interface</a>
+      <a class="brand" href="/" aria-current="page">Human Agent Interface</a>
       <a href="/samuel/">Samuel Fleig</a>
       <a href="/what_it_is/">What is HAI?</a>
       <a href="https://github.com/smlfg/hai-mcp">GitHub</a>

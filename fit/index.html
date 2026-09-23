@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#090a08">
     <title>Human Fit | Human Agent Interface</title>
     <meta
       name="description"
@@ -81,7 +82,10 @@
         justify-content: space-between;
         gap: 18px;
         padding: 20px clamp(18px, 4vw, 56px);
-        background: linear-gradient(180deg, rgba(8, 9, 6, 0.82), rgba(8, 9, 6, 0));
+        background: rgba(9,10,8,.88);
+        backdrop-filter: saturate(150%) blur(14px);
+        -webkit-backdrop-filter: saturate(150%) blur(14px);
+        border-bottom: 1px solid rgba(247,241,223,.18);
       }
 
       .brand,
@@ -604,10 +608,43 @@
           transition-duration: 0.001ms !important;
         }
       }
+
+      .nav-links a.nav-cta {
+        padding: 9px 14px;
+        border: 1px solid rgba(167, 255, 79, 0.44);
+        background: rgba(167, 255, 79, 0.09);
+        color: var(--ink);
+      }
+
+      .nav-links a.nav-cta:hover,
+      .nav-links a.nav-cta:focus-visible {
+        color: var(--ink);
+        border-color: rgba(167, 255, 79, 0.8);
+        background: rgba(167, 255, 79, 0.16);
+      }
+
+      .fit-glance { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin:28px 0 8px; }
+      .fit-glance-item { border:1px solid rgba(247,241,223,.18); padding:16px; }
+      .fit-glance-label { display:block; margin-bottom:6px; color:#a7ff4f; font-family:"IBM Plex Mono","SFMono-Regular",Consolas,monospace; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; }
+      .fit-glance-item p { margin:0; color:#b7ad97; }
+      .fit-cta { margin:22px 0 0; }
+      .fit-cta a, .fit-closing-actions a { display:inline-block; margin:0 10px 10px 0; padding:12px 18px; text-decoration:none; border:1px solid rgba(247,241,223,.18); color:#f7f1df; }
+      .fit-cta a.fit-cta-primary { border-color:#a7ff4f; color:#a7ff4f; }
+      .fit-closing { margin-top:56px; padding-top:28px; border-top:1px solid rgba(247,241,223,.18); }
+      .fit-closing-eyebrow { margin:0 0 8px; color:#b7ad97; text-transform:uppercase; letter-spacing:.08em; font-size:.78rem; }
+      .fit-closing-actions { margin:16px 0 0; }
+
+      .skip-link { position: absolute; left: -9999px; top: 0; z-index: 200; padding: 12px 18px; background: #090a08; color: #f7f1df; border: 1px solid #a7ff4f; text-decoration: none; }
+      .skip-link:focus { left: 10px; top: 10px; }
+      [id] { scroll-margin-top: 88px; }
+      nav a[aria-current="page"] { color: #a7ff4f; }
+
+      @view-transition { navigation: auto; }
     </style>
   </head>
   <body>
-    <main class="site-shell">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <main id="main" class="site-shell">
       <nav class="nav" aria-label="Main navigation">
         <a class="brand" href="../index.html" aria-label="Human Agent Interface home">
           <span class="brand-mark">HAI</span>
@@ -615,9 +652,17 @@
         </a>
         <div class="nav-links">
           <a href="../index.html">Home</a>
-          <a href="../product/">Products</a>
-          <a href="../what_it_is/">Where HAI comes from</a>
-          <a href="../samuel/">Samuel's work</a>
+          <a data-site-event="cta_click" data-event-target="nav_method" href="../what_it_is/">Method</a>
+          <a data-site-event="cta_click" data-event-target="nav_product" href="../product/">Offer</a>
+          <a data-site-event="cta_click" data-event-target="nav_fit" href="../fit/" aria-current="page">Fit</a>
+          <a data-site-event="cta_click" data-event-target="nav_proof" href="../proof/">Proof</a>
+          <a data-site-event="cta_click" data-event-target="nav_samuel" href="../samuel/">Samuel</a>
+          <a
+            class="nav-cta"
+            data-site-event="cta_click"
+            data-event-target="nav_fit_call"
+            href="mailto:samuel@human-agent-interface.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A"
+          >Book 20 min fit call</a>
         </div>
       </nav>
 
@@ -626,6 +671,27 @@
           <div>
             <p class="kicker">The missing fit</p>
             <h1 id="hero-title">The interface must fit the human.</h1>
+
+            <div class="fit-glance">
+              <div class="fit-glance-item">
+                <span class="fit-glance-label">Who this is for</span>
+                <p>People who already run agent workflows and want to keep ownership of the work.</p>
+              </div>
+              <div class="fit-glance-item">
+                <span class="fit-glance-label">What happens</span>
+                <p>You bring one messy agent workflow. We scope it down to one verifiable next action.</p>
+              </div>
+              <div class="fit-glance-item">
+                <span class="fit-glance-label">How long</span>
+                <p>20 minutes to check fit. No slides, no pitch deck.</p>
+              </div>
+            </div>
+
+            <p class="fit-cta">
+              <a class="fit-cta-primary" data-site-event="cta_click" data-event-target="fit" href="mailto:samuel@human-agent-interface.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A">Book 20 min fit call</a>
+              <a class="fit-cta-secondary" data-site-event="cta_click" data-event-target="door_product" href="../product/">What you actually get</a>
+            </p>
+
             <p class="lead">
               There is no universal agent workflow. Different people think, decide, trust,
               lose focus, and get overwhelmed differently. <strong>HAI adapts the agentic
@@ -778,6 +844,15 @@
             </div>
           </div>
         </div>
+      </section>
+
+      <section class="fit-closing">
+        <p class="fit-closing-eyebrow">Not sure yet?</p>
+        <h2>Read the definition or check the proof first.</h2>
+        <p class="fit-closing-actions">
+          <a data-site-event="cta_click" data-event-target="door_method" href="../what_it_is/">What is HAI, exactly?</a>
+          <a data-site-event="cta_click" data-event-target="door_proof" href="../proof/">Is this real?</a>
+        </p>
       </section>
     </main>
 
