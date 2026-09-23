@@ -1,8 +1,11 @@
 <!doctype html>
-<html lang="en">
+<!-- Klarheits-Pass (lokal): EIN Hero statt A/B/C. B_offer_first gewaehlt, weil es
+     "was bekomme ich konkret" beantwortet. Live laeuft das Experiment weiter. -->
+<html lang="en" data-hero-variant="B_offer_first">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#090a08">
     <title>Human Agent Interface (HAI) by Samuel Fleig — Agent Control & Human Ownership</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="canonical" href="https://www.human-agent-interface.com/">
@@ -175,14 +178,26 @@
       }
 
       .nav {
-        position: absolute;
+        position: fixed;
         inset: 0 0 auto;
-        z-index: 12;
+        z-index: 60;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 18px;
         padding: 24px clamp(18px, 4vw, 56px);
+        background: transparent;
+        border-bottom: 1px solid transparent;
+        transition: background 200ms ease, border-color 200ms ease, padding 200ms ease;
+      }
+
+      .nav.is-scrolled {
+        padding-top: 13px;
+        padding-bottom: 13px;
+        background: rgba(9, 10, 8, 0.84);
+        border-bottom-color: var(--line-soft);
+        backdrop-filter: saturate(150%) blur(14px);
+        -webkit-backdrop-filter: saturate(150%) blur(14px);
       }
 
       .nav-actions {
@@ -1092,15 +1107,13 @@
         flex-wrap: wrap;
       }
 
+      /* Bewusst OHNE Scroll-Effekt: Inhalt ist sofort sichtbar — maximale "snappy".
+         Hier lag vorher ein 700ms-Reveal, der nie feuerte, weil opacity nie 0 war
+         (der Observer setzte is-visible, das CSS war aber schon voll sichtbar).
+         Effekt zurückholen: .reveal { opacity: 0; transform: translateY(12px); }
+         + html.js-Gate + .js .reveal.is-visible { opacity: 1; transform: none; } */
       .reveal {
         opacity: 1;
-        transform: translateY(0);
-        transition: opacity 700ms ease, transform 700ms ease;
-      }
-
-      .js .reveal.is-visible {
-        opacity: 1;
-        transform: translateY(0);
       }
 
       @media (max-width: 900px) {
@@ -1269,6 +1282,414 @@
           transition-duration: 0.001ms !important;
         }
       }
+      /* ---------- Klarheits-Pass: Türen + Sekundär-CTA ---------- */
+      .doors {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(auto-fit, minmax(186px, 1fr));
+        margin-top: 26px;
+      }
+
+      .door {
+        display: grid;
+        gap: 7px;
+        align-content: start;
+        padding: 18px;
+        border: 1px solid var(--line-soft);
+        background: var(--panel);
+        text-decoration: none;
+        transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+      }
+
+      .door:hover,
+      .door:focus-visible {
+        border-color: var(--signal);
+        background: var(--panel-strong);
+        transform: translateY(-2px);
+      }
+
+      .door-q {
+        font-size: 1.02rem;
+        font-weight: 600;
+        line-height: 1.25;
+        color: var(--ink);
+      }
+
+      .door-a {
+        font-size: 0.86rem;
+        color: var(--muted);
+      }
+
+      .door-go {
+        margin-top: 2px;
+        color: var(--signal);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .door-go::after {
+        content: " →";
+      }
+
+      .hero-secondary {
+        margin: 12px 0 0;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      .hero-secondary a {
+        color: var(--signal);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      /* ---------- Bediengefühl Ebene 1 ---------- */
+      @view-transition {
+        navigation: auto;
+      }
+
+      [id] {
+        scroll-margin-top: 88px;
+      }
+
+      .skip-link {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        z-index: 100;
+        padding: 12px 18px;
+        background: var(--void);
+        color: var(--ink);
+        border: 1px solid var(--signal);
+        text-decoration: none;
+      }
+
+      .skip-link:focus {
+        left: 10px;
+        top: 10px;
+      }
+
+      .nav-link[aria-current="page"] {
+        color: var(--signal);
+      }
+
+      /* ---------- Mega-Menü (Cloudflare-Muster: 4 Nomen + Panel + CTA) ---------- */
+      .hainav-menu {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+      }
+
+      .hainav-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        min-height: 38px;
+        padding: 0 12px;
+        border: 1px solid transparent;
+        background: none;
+        color: var(--ink);
+        font: inherit;
+        font-size: 0.86rem;
+        cursor: pointer;
+        transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+      }
+
+      .hainav-trigger:hover,
+      .hainav-item.is-open .hainav-trigger {
+        color: var(--signal);
+        border-color: var(--line-soft);
+        background: var(--panel);
+      }
+
+      .hainav-chevron {
+        width: 6px;
+        height: 6px;
+        border-right: 1px solid currentColor;
+        border-bottom: 1px solid currentColor;
+        transform: translateY(-2px) rotate(45deg);
+        transition: transform 160ms ease;
+      }
+
+      .hainav-item.is-open .hainav-chevron {
+        transform: translateY(1px) rotate(-135deg);
+      }
+
+      .hainav-panel {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 70;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-6px);
+        transition: opacity 160ms ease, transform 160ms ease, visibility 160ms;
+        background: rgba(9, 10, 8, 0.97);
+        border: 1px solid var(--line);
+        border-top: 0;
+        border-radius: 0 0 16px 16px;
+        box-shadow: 0 30px 60px -26px rgba(0, 0, 0, 0.78);
+        backdrop-filter: saturate(150%) blur(18px);
+        -webkit-backdrop-filter: saturate(150%) blur(18px);
+      }
+
+      .hainav-item.is-open .hainav-panel {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .hainav-panel-inner {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 22px clamp(18px, 4vw, 56px) 26px;
+      }
+
+      .hainav-columns {
+        display: grid;
+        gap: 20px 40px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+
+      .hainav-column {
+        display: grid;
+        gap: 2px;
+        align-content: start;
+      }
+
+      .hainav-column-title {
+        margin: 0 0 8px;
+        color: var(--copper);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .hainav-link {
+        display: grid;
+        gap: 3px;
+        padding: 10px 12px;
+        border: 1px solid transparent;
+        text-decoration: none;
+        transition: background 160ms ease, border-color 160ms ease;
+      }
+
+      .hainav-link:hover,
+      .hainav-link:focus-visible {
+        background: var(--panel);
+        border-color: var(--line-soft);
+      }
+
+      .hainav-link-label {
+        color: var(--ink);
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .hainav-link:hover .hainav-link-label {
+        color: var(--signal);
+      }
+
+      .hainav-link-desc {
+        color: var(--muted);
+        font-size: 0.8rem;
+        line-height: 1.4;
+      }
+
+      .hainav-footer-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        width: 100%;
+        margin-top: 18px;
+        padding-top: 14px;
+        border-top: 1px solid var(--line-soft);
+        color: var(--signal);
+        font-size: 0.86rem;
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .hainav-footer-link:hover,
+      .hainav-footer-link:focus-visible {
+        color: var(--ink);
+      }
+
+      .hainav-plain {
+        display: inline-flex;
+        align-items: center;
+        min-height: 38px;
+        padding: 0 12px;
+        border: 1px solid transparent;
+        color: var(--ink);
+        font-size: 0.86rem;
+        text-decoration: none;
+        transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+      }
+
+      .hainav-plain:hover,
+      .hainav-plain:focus-visible {
+        color: var(--signal);
+        border-color: var(--line-soft);
+        background: var(--panel);
+      }
+
+      .hainav-trigger:focus-visible,
+      .hainav-link:focus-visible,
+      .hainav-plain:focus-visible,
+      .hainav-footer-link:focus-visible,
+      .nav-menu-toggle:focus-visible {
+        outline: 2px solid var(--signal);
+        outline-offset: 2px;
+      }
+
+      /* ---------- Mobile: Menü-Button + Accordion ---------- */
+      .nav-menu-toggle {
+        display: none;
+        align-items: center;
+        gap: 9px;
+        min-height: 38px;
+        padding: 0 12px;
+        border: 1px solid var(--line-soft);
+        background: rgba(9, 10, 8, 0.48);
+        color: var(--muted);
+        cursor: pointer;
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.66rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        transition: color 160ms ease, border-color 160ms ease;
+      }
+
+      .nav-menu-toggle:hover,
+      .nav-menu-toggle:focus-visible {
+        color: var(--ink);
+        border-color: rgba(167, 255, 79, 0.4);
+      }
+
+      .nav-menu-toggle-icon {
+        position: relative;
+        width: 14px;
+        height: 2px;
+        background: currentColor;
+      }
+
+      .nav-menu-toggle-icon::before,
+      .nav-menu-toggle-icon::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 14px;
+        height: 2px;
+        background: currentColor;
+      }
+
+      .nav-menu-toggle-icon::before {
+        top: -5px;
+      }
+
+      .nav-menu-toggle-icon::after {
+        top: 5px;
+      }
+
+      @media (max-width: 760px) {
+        .nav-menu-toggle {
+          display: inline-flex;
+        }
+
+        .hainav-menu {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0;
+          max-height: calc(100vh - 76px);
+          overflow-y: auto;
+          padding: 8px clamp(18px, 4vw, 56px) 22px;
+          background: rgba(9, 10, 8, 0.98);
+          border-bottom: 1px solid var(--line);
+          border-radius: 0 0 16px 16px;
+          box-shadow: 0 30px 60px -26px rgba(0, 0, 0, 0.78);
+          backdrop-filter: saturate(150%) blur(18px);
+          -webkit-backdrop-filter: saturate(150%) blur(18px);
+        }
+
+        .hainav-menu.is-open {
+          display: flex;
+        }
+
+        .hainav-menu .desktop-nav-link {
+          display: flex;
+        }
+
+        .hainav-trigger {
+          width: 100%;
+          justify-content: space-between;
+          padding: 13px 0;
+          border: 0;
+          border-bottom: 1px solid var(--line-soft);
+          font-size: 0.94rem;
+        }
+
+        .hainav-trigger:hover,
+        .hainav-item.is-open .hainav-trigger {
+          color: var(--ink);
+          border-color: var(--line-soft);
+          background: none;
+        }
+
+        .hainav-panel {
+          position: static;
+          display: none;
+          opacity: 1;
+          visibility: visible;
+          transform: none;
+          background: transparent;
+          border: 0;
+          border-radius: 0;
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+          transition: none;
+        }
+
+        .hainav-item.is-open .hainav-panel {
+          display: block;
+        }
+
+        .hainav-panel-inner {
+          padding: 4px 0 14px;
+        }
+
+        .hainav-columns {
+          gap: 4px;
+          grid-template-columns: 1fr;
+        }
+
+        .hainav-column-title {
+          margin-top: 10px;
+        }
+
+        .hainav-footer-link {
+          margin-top: 12px;
+        }
+
+        .hainav-plain {
+          width: 100%;
+          min-height: 46px;
+          padding: 13px 0;
+          border: 0;
+          border-bottom: 1px solid var(--line-soft);
+          font-size: 0.94rem;
+        }
+      }
     </style>
   </head>
   <body>
@@ -1276,8 +1697,12 @@
       <section class="hero" aria-labelledby="hero-title">
         <img class="hero-image" src="assets/hai-interface-background.webp" width="1672" height="941" alt="" aria-hidden="true">
         <canvas class="hero-canvas" id="agentField" aria-hidden="true"></canvas>
+        <a class="skip-link" href="#top">
+          <span class="lang-copy" data-lang-copy="en">Skip to content</span>
+          <span class="lang-copy" data-lang-copy="de">Zum Inhalt springen</span>
+        </a>
         <nav class="nav" aria-label="Main navigation">
-          <a class="brand" href="#top" aria-label="Human Agent Interface home">
+          <a class="brand" href="#top" aria-label="Human Agent Interface home" aria-current="page">
             <span class="brand-mark">HAI</span>
             <span>Human Agent Interface</span>
           </a>
@@ -1286,20 +1711,191 @@
             <span class="lang-copy" data-lang-copy="de">Samuel</span>
           </a>
           <div class="nav-actions">
-            <a class="nav-link desktop-nav-link" href="./what_it_is/">
-              <span class="lang-copy" data-lang-copy="en">Method</span>
-              <span class="lang-copy" data-lang-copy="de">Methode</span>
-            </a>
-            <a class="nav-link desktop-nav-link" href="./proof/">
-              <span class="lang-copy" data-lang-copy="en">Proof</span>
-              <span class="lang-copy" data-lang-copy="de">Nachweis</span>
-            </a>
-            <a class="nav-link desktop-nav-link" href="./samuel/">Samuel</a>
-            <a class="nav-link desktop-nav-link" href="./hai-mcp/">HAI-MCP</a>
-            <a class="nav-link desktop-nav-link" href="./product/">
-              <span class="lang-copy" data-lang-copy="en">Offer</span>
-              <span class="lang-copy" data-lang-copy="de">Angebot</span>
-            </a>
+            <button
+              class="nav-menu-toggle"
+              type="button"
+              aria-expanded="false"
+              aria-controls="hainav-menu"
+            >
+              <span class="lang-copy" data-lang-copy="en">Menu</span>
+              <span class="lang-copy" data-lang-copy="de">Menü</span>
+              <span class="nav-menu-toggle-icon" aria-hidden="true"></span>
+            </button>
+            <div class="hainav-menu" id="hainav-menu">
+              <div class="hainav-item">
+                <button class="hainav-trigger desktop-nav-link" type="button" aria-expanded="false" aria-controls="hainav-products">
+                  <span class="lang-copy" data-lang-copy="en">Products</span>
+                  <span class="lang-copy" data-lang-copy="de">Produkte</span>
+                  <span class="hainav-chevron" aria-hidden="true"></span>
+                </button>
+                <div class="hainav-panel" id="hainav-products">
+                  <div class="hainav-panel-inner">
+                    <div class="hainav-columns">
+                      <div class="hainav-column">
+                        <p class="hainav-column-title">
+                          <span class="lang-copy" data-lang-copy="en">Control</span>
+                          <span class="lang-copy" data-lang-copy="de">Kontrolle</span>
+                        </p>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_hai_mcp" href="./hai-mcp/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">HAI-MCP</span><span class="lang-copy" data-lang-copy="de">HAI-MCP</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">Open-source MCP control plane for agent sessions</span>
+                            <span class="lang-copy" data-lang-copy="de">Open-Source MCP-Control-Plane für Agenten-Sessions</span>
+                          </span>
+                        </a>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_sidecar" href="./sidecar/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Sidecar</span><span class="lang-copy" data-lang-copy="de">Sidecar</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">Control layer that runs next to your agent</span>
+                            <span class="lang-copy" data-lang-copy="de">Kontrollschicht, die neben deinem Agenten läuft</span>
+                          </span>
+                        </a>
+                      </div>
+                      <div class="hainav-column">
+                        <p class="hainav-column-title">
+                          <span class="lang-copy" data-lang-copy="en">Visibility</span>
+                          <span class="lang-copy" data-lang-copy="de">Sichtbarkeit</span>
+                        </p>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_tripwire" href="./tripwire-map/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Tripwire Map</span><span class="lang-copy" data-lang-copy="de">Tripwire-Map</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">See where agents slip before they do</span>
+                            <span class="lang-copy" data-lang-copy="de">Sieh, wo Agenten entgleisen, bevor es passiert</span>
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                    <a class="hainav-footer-link" data-site-event="cta_click" data-event-target="nav_product" href="./product/">
+                      <span class="lang-copy" data-lang-copy="en">All products →</span>
+                      <span class="lang-copy" data-lang-copy="de">Alle Produkte →</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="hainav-item">
+                <button class="hainav-trigger desktop-nav-link" type="button" aria-expanded="false" aria-controls="hainav-solutions">
+                  <span class="lang-copy" data-lang-copy="en">Solutions</span>
+                  <span class="lang-copy" data-lang-copy="de">Lösungen</span>
+                  <span class="hainav-chevron" aria-hidden="true"></span>
+                </button>
+                <div class="hainav-panel" id="hainav-solutions">
+                  <div class="hainav-panel-inner">
+                    <div class="hainav-columns">
+                      <div class="hainav-column">
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_workflow_audit" href="./AffeHTML/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">4h Workflow Audit</span><span class="lang-copy" data-lang-copy="de">4h Workflow-Audit</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">Find where your agent setup costs you control · 500 €</span>
+                            <span class="lang-copy" data-lang-copy="de">Finde, wo dein Agenten-Setup dich Kontrolle kostet · 500 €</span>
+                          </span>
+                        </a>
+                      </div>
+                      <div class="hainav-column">
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_fit" href="./fit/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Human Fit</span><span class="lang-copy" data-lang-copy="de">Human Fit</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">Check whether HAI fits your way of working</span>
+                            <span class="lang-copy" data-lang-copy="de">Prüfe, ob HAI zu deiner Arbeitsweise passt</span>
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="hainav-item">
+                <button class="hainav-trigger desktop-nav-link" type="button" aria-expanded="false" aria-controls="hainav-resources">
+                  <span class="lang-copy" data-lang-copy="en">Resources</span>
+                  <span class="lang-copy" data-lang-copy="de">Ressourcen</span>
+                  <span class="hainav-chevron" aria-hidden="true"></span>
+                </button>
+                <div class="hainav-panel" id="hainav-resources">
+                  <div class="hainav-panel-inner">
+                    <div class="hainav-columns">
+                      <div class="hainav-column">
+                        <p class="hainav-column-title">
+                          <span class="lang-copy" data-lang-copy="en">Learn</span>
+                          <span class="lang-copy" data-lang-copy="de">Verstehen</span>
+                        </p>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_method" href="./what_it_is/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">What is HAI</span><span class="lang-copy" data-lang-copy="de">Was ist HAI</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">The method in five minutes</span>
+                            <span class="lang-copy" data-lang-copy="de">Die Methode in fünf Minuten</span>
+                          </span>
+                        </a>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_deep_dive" href="./what_it_is/deep-dive/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Technical deep-dive</span><span class="lang-copy" data-lang-copy="de">Technischer Deep-Dive</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">A precise technical definition</span>
+                            <span class="lang-copy" data-lang-copy="de">Eine präzise technische Definition</span>
+                          </span>
+                        </a>
+                      </div>
+                      <div class="hainav-column">
+                        <p class="hainav-column-title">
+                          <span class="lang-copy" data-lang-copy="en">Evidence</span>
+                          <span class="lang-copy" data-lang-copy="de">Nachweis</span>
+                        </p>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_proof" href="./proof/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Proof case files</span><span class="lang-copy" data-lang-copy="de">Nachweis-Fallakten</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">Four case files: visibility, control, method, transfer</span>
+                            <span class="lang-copy" data-lang-copy="de">Vier Fallakten: Sichtbarkeit, Kontrolle, Methode, Transfer</span>
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="hainav-item">
+                <button class="hainav-trigger desktop-nav-link" type="button" aria-expanded="false" aria-controls="hainav-samuel">
+                  <span class="lang-copy" data-lang-copy="en">Samuel</span>
+                  <span class="lang-copy" data-lang-copy="de">Samuel</span>
+                  <span class="hainav-chevron" aria-hidden="true"></span>
+                </button>
+                <div class="hainav-panel" id="hainav-samuel">
+                  <div class="hainav-panel-inner">
+                    <div class="hainav-columns">
+                      <div class="hainav-column">
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_samuel" href="./samuel/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">About Samuel</span><span class="lang-copy" data-lang-copy="de">Über Samuel</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">Who builds HAI and why</span>
+                            <span class="lang-copy" data-lang-copy="de">Wer HAI baut und warum</span>
+                          </span>
+                        </a>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_why" href="./samuel/why-hai-matters/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Why HAI matters</span><span class="lang-copy" data-lang-copy="de">Warum HAI zählt</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">The problem behind the method</span>
+                            <span class="lang-copy" data-lang-copy="de">Das Problem hinter der Methode</span>
+                          </span>
+                        </a>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_timeline" href="./samuel/timeline/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Timeline</span><span class="lang-copy" data-lang-copy="de">Zeitleiste</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">How HAI grew, step by step</span>
+                            <span class="lang-copy" data-lang-copy="de">Wie HAI entstanden ist, Schritt für Schritt</span>
+                          </span>
+                        </a>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_audit" href="./samuel/computer-day-audit-2026/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Computer-Day-Audit 2026</span><span class="lang-copy" data-lang-copy="de">Computer-Day-Audit 2026</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">A year of agent work, measured</span>
+                            <span class="lang-copy" data-lang-copy="de">Ein Jahr Agentenarbeit, gemessen</span>
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="language-switch" aria-label="Language">
               <button class="lang-button" type="button" data-lang-toggle="de" aria-pressed="false">DE</button>
               <button class="lang-button" type="button" data-lang-toggle="en" aria-pressed="false">EN</button>
@@ -1307,11 +1903,11 @@
             <a
               class="nav-cta"
               data-site-event="cta_click"
-              data-event-target="nav_fit_call"
-              href="mailto:samuel@human-agent-interface.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A"
+              data-event-target="nav_fit"
+              href="./fit/"
             >
-              <span class="lang-copy" data-lang-copy="en">Test fit call</span>
-              <span class="lang-copy" data-lang-copy="de">Fit-Call testen</span>
+              <span class="lang-copy" data-lang-copy="en">Check fit</span>
+              <span class="lang-copy" data-lang-copy="de">Fit prüfen</span>
             </a>
           </div>
         </nav>
@@ -1456,24 +2052,23 @@
               </span>
             </p>
             <div class="hero-actions reveal">
-              <a
-                class="button primary"
-                data-site-event="cta_click"
-                data-event-target="hero_fit_call"
-                href="mailto:samuel@human-agent-interface.com?subject=One%20messy%20agent%20workflow&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20bring%20one%20messy%20agent%20workflow%20and%20turn%20it%20into%20a%20clear%20next%20action%20packet.%0D%0A%0D%0AWhat%20is%20currently%20chaotic%3A%0D%0A%0D%0ATools%20involved%3A%0D%0A%0D%0AWhat%20I%20need%20to%20decide%3A%0D%0A%0D%0APreferred%20time%20windows%3A"
-              >
-                <span class="lang-copy" data-lang-copy="en">Bring one workflow</span>
-                <span class="lang-copy" data-lang-copy="de">Einen Workflow mitbringen</span>
+              <a class="button primary" data-site-event="cta_click" data-event-target="hero_fit" href="./fit/">
+                <span class="lang-copy" data-lang-copy="en">Check if HAI fits you</span>
+                <span class="lang-copy" data-lang-copy="de">Prüfen, ob HAI zu dir passt</span>
               </a>
               <a class="button" data-site-event="cta_click" data-event-target="hero_product" href="./product/">
-                <span class="lang-copy" data-lang-copy="en">See offer</span>
-                <span class="lang-copy" data-lang-copy="de">Angebot ansehen</span>
+                <span class="lang-copy" data-lang-copy="en">What you actually get</span>
+                <span class="lang-copy" data-lang-copy="de">Was du konkret bekommst</span>
               </a>
-              <a class="button" data-site-event="cta_click" data-event-target="hero_fit" href="./fit/">
-                <span class="lang-copy" data-lang-copy="en">Human Fit</span>
-                <span class="lang-copy" data-lang-copy="de">Fit prüfen</span>
+              <a class="button" data-site-event="cta_click" data-event-target="hero_proof" href="./proof/">
+                <span class="lang-copy" data-lang-copy="en">Is this real?</span>
+                <span class="lang-copy" data-lang-copy="de">Ist das echt?</span>
               </a>
             </div>
+            <p class="hero-secondary reveal">
+              <span class="lang-copy" data-lang-copy="en">Already decided? <a data-site-event="cta_click" data-event-target="hero_fit_call" href="mailto:samuel@human-agent-interface.com?subject=One%20messy%20agent%20workflow&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20bring%20one%20messy%20agent%20workflow.%0D%0A%0D%0AWhat%20is%20currently%20chaotic%3A%0D%0A%0D%0ATools%20involved%3A%0D%0A%0D%0APreferred%20time%20windows%3A">Book a 20 min fit call</a>.</span>
+              <span class="lang-copy" data-lang-copy="de">Schon entschieden? <a data-site-event="cta_click" data-event-target="hero_fit_call" href="mailto:samuel@human-agent-interface.com?subject=Ein%20chaotischer%20Agenten-Workflow&amp;body=Hallo%20Samuel%2C%0D%0A%0D%0AIch%20will%20einen%20chaotischen%20Agenten-Workflow%20mitbringen.%0D%0A%0D%0AWas%20gerade%20chaotisch%20ist%3A%0D%0A%0D%0ATools%3A%0D%0A%0D%0AMoegliche%20Zeiten%3A">20-Min-Fit-Call buchen</a>.</span>
+            </p>
           </div>
 
           <div class="hero-copy hero-variant" data-hero-variant="C_proof_first">
@@ -1504,6 +2099,91 @@
                 <span class="lang-copy" data-lang-copy="de">Angebot ansehen</span>
               </a>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section doors-section" aria-labelledby="doors-title">
+        <div class="section-inner">
+          <p class="kicker reveal">
+            <span class="lang-copy" data-lang-copy="en">Start here</span>
+            <span class="lang-copy" data-lang-copy="de">Hier starten</span>
+          </p>
+          <h2 class="reveal" id="doors-title">
+            <span class="lang-copy" data-lang-copy="en">What do you want to know first?</span>
+            <span class="lang-copy" data-lang-copy="de">Was willst du zuerst wissen?</span>
+          </h2>
+          <div class="doors reveal">
+            <a class="door" data-site-event="cta_click" data-event-target="door_method" href="./what_it_is/">
+              <span class="door-q">
+                <span class="lang-copy" data-lang-copy="en">What is HAI, exactly?</span>
+                <span class="lang-copy" data-lang-copy="de">Was ist HAI genau?</span>
+              </span>
+              <span class="door-a">
+                <span class="lang-copy" data-lang-copy="en">The definition, the control problem, and HAI-MCP.</span>
+                <span class="lang-copy" data-lang-copy="de">Definition, Kontrollproblem und HAI-MCP.</span>
+              </span>
+              <span class="door-go">
+                <span class="lang-copy" data-lang-copy="en">Definition · 2 min</span>
+                <span class="lang-copy" data-lang-copy="de">Definition · 2 Min</span>
+              </span>
+            </a>
+            <a class="door" data-site-event="cta_click" data-event-target="door_product" href="./product/">
+              <span class="door-q">
+                <span class="lang-copy" data-lang-copy="en">What do you actually get?</span>
+                <span class="lang-copy" data-lang-copy="de">Was bekommst du konkret?</span>
+              </span>
+              <span class="door-a">
+                <span class="lang-copy" data-lang-copy="en">Scope, deliverables, and how one workflow becomes a packet.</span>
+                <span class="lang-copy" data-lang-copy="de">Scope, Ergebnisse und wie ein Workflow zum Paket wird.</span>
+              </span>
+              <span class="door-go">
+                <span class="lang-copy" data-lang-copy="en">Offer</span>
+                <span class="lang-copy" data-lang-copy="de">Angebot</span>
+              </span>
+            </a>
+            <a class="door" data-site-event="cta_click" data-event-target="door_fit" href="./fit/">
+              <span class="door-q">
+                <span class="lang-copy" data-lang-copy="en">Does this fit you?</span>
+                <span class="lang-copy" data-lang-copy="de">Passt das zu dir?</span>
+              </span>
+              <span class="door-a">
+                <span class="lang-copy" data-lang-copy="en">Check the human fit before booking anything.</span>
+                <span class="lang-copy" data-lang-copy="de">Erst den Fit prüfen, dann buchen.</span>
+              </span>
+              <span class="door-go">
+                <span class="lang-copy" data-lang-copy="en">Fit check · 60 sec</span>
+                <span class="lang-copy" data-lang-copy="de">Fit-Check · 60 Sek</span>
+              </span>
+            </a>
+            <a class="door" data-site-event="cta_click" data-event-target="door_proof" href="./proof/">
+              <span class="door-q">
+                <span class="lang-copy" data-lang-copy="en">Is this real?</span>
+                <span class="lang-copy" data-lang-copy="de">Ist das echt?</span>
+              </span>
+              <span class="door-a">
+                <span class="lang-copy" data-lang-copy="en">Real artifacts from real agent work, not claims.</span>
+                <span class="lang-copy" data-lang-copy="de">Echte Artefakte aus echter Agenten-Arbeit, keine Behauptungen.</span>
+              </span>
+              <span class="door-go">
+                <span class="lang-copy" data-lang-copy="en">Proof</span>
+                <span class="lang-copy" data-lang-copy="de">Nachweis</span>
+              </span>
+            </a>
+            <a class="door" data-site-event="cta_click" data-event-target="door_samuel" href="./samuel/">
+              <span class="door-q">
+                <span class="lang-copy" data-lang-copy="en">Who is behind this?</span>
+                <span class="lang-copy" data-lang-copy="de">Wer steckt dahinter?</span>
+              </span>
+              <span class="door-a">
+                <span class="lang-copy" data-lang-copy="en">Samuel Fleig's origin path and operating model.</span>
+                <span class="lang-copy" data-lang-copy="de">Samuel Fleigs Herkunft und Arbeitsmodell.</span>
+              </span>
+              <span class="door-go">
+                <span class="lang-copy" data-lang-copy="en">About</span>
+                <span class="lang-copy" data-lang-copy="de">Über</span>
+              </span>
+            </a>
           </div>
         </div>
       </section>
@@ -2121,6 +2801,10 @@
           <span class="lang-copy" data-lang-copy="en">CLI -> TUI -> GUI -> HAI</span>
           <span class="lang-copy" data-lang-copy="de">CLI -> TUI -> GUI -> HAI: Kontrolle über Agentenarbeit</span>
         </span>
+        <span style="display: inline-flex; gap: 14px; flex-wrap: wrap;">
+          <a href="./impressum/" style="color: inherit; text-decoration: underline; text-underline-offset: 3px;">Impressum</a>
+          <a href="./datenschutz/" style="color: inherit; text-decoration: underline; text-underline-offset: 3px;">Datenschutz</a>
+        </span>
       </div>
     </footer>
 
@@ -2347,6 +3031,115 @@
         if (!media.matches) requestAnimationFrame(frame);
       }
 
+      const siteNav = document.querySelector(".nav");
+      const syncNav = () => {
+        if (siteNav) siteNav.classList.toggle("is-scrolled", window.scrollY > 40);
+      };
+      syncNav();
+      window.addEventListener("scroll", syncNav, { passive: true });
+
+      // Mega-Menü: Hover (Desktop), Klick, Tastatur, ESC, Klick daneben.
+      const hoverCapable = window.matchMedia("(hover: hover) and (pointer: fine)");
+      const compactNav = window.matchMedia("(max-width: 760px)");
+      const menuItems = Array.from(document.querySelectorAll(".hainav-item"));
+      const navMenu = document.querySelector(".hainav-menu");
+      const menuToggle = document.querySelector(".nav-menu-toggle");
+      let hoverTimer = null;
+
+      const setMenuOpen = (item, open) => {
+        item.classList.toggle("is-open", open);
+        const trigger = item.querySelector(".hainav-trigger");
+        if (trigger) trigger.setAttribute("aria-expanded", open ? "true" : "false");
+      };
+
+      const closeMenus = (except) => {
+        menuItems.forEach((item) => {
+          if (item !== except) setMenuOpen(item, false);
+        });
+      };
+
+      const setMobileMenuOpen = (open) => {
+        if (!navMenu || !menuToggle) return;
+        navMenu.classList.toggle("is-open", open);
+        menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      };
+
+      menuItems.forEach((item) => {
+        const trigger = item.querySelector(".hainav-trigger");
+        if (!trigger) return;
+
+        item.addEventListener("pointerenter", () => {
+          if (!hoverCapable.matches || compactNav.matches) return;
+          window.clearTimeout(hoverTimer);
+          closeMenus(item);
+          setMenuOpen(item, true);
+        });
+
+        item.addEventListener("pointerleave", () => {
+          if (!hoverCapable.matches || compactNav.matches) return;
+          window.clearTimeout(hoverTimer);
+          hoverTimer = window.setTimeout(() => setMenuOpen(item, false), 140);
+        });
+
+        trigger.addEventListener("click", () => {
+          if (hoverCapable.matches && !compactNav.matches) {
+            // Hover already opens the panel on desktop; a click keeps it open
+            // instead of toggling it shut.
+            window.clearTimeout(hoverTimer);
+            closeMenus(item);
+            setMenuOpen(item, true);
+            return;
+          }
+          const willOpen = !item.classList.contains("is-open");
+          closeMenus(item);
+          setMenuOpen(item, willOpen);
+        });
+
+        item.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            event.stopPropagation();
+            setMenuOpen(item, false);
+            trigger.focus();
+          }
+        });
+
+        item.addEventListener("focusout", (event) => {
+          if (!item.contains(event.relatedTarget)) setMenuOpen(item, false);
+        });
+      });
+
+      if (menuToggle) {
+        menuToggle.addEventListener("click", () => {
+          const willOpen = !(navMenu && navMenu.classList.contains("is-open"));
+          if (willOpen) closeMenus();
+          setMobileMenuOpen(willOpen);
+        });
+      }
+
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest(".hainav-item") && !event.target.closest(".nav-menu-toggle")) {
+          closeMenus();
+        }
+        if (
+          navMenu &&
+          navMenu.classList.contains("is-open") &&
+          !event.target.closest(".hainav-menu") &&
+          !event.target.closest(".nav-menu-toggle")
+        ) {
+          setMobileMenuOpen(false);
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape" || !navMenu || !navMenu.classList.contains("is-open")) return;
+        setMobileMenuOpen(false);
+        if (menuToggle) menuToggle.focus();
+      });
+
+      window.addEventListener("resize", () => {
+        if (!compactNav.matches) setMobileMenuOpen(false);
+      });
+
       window.addEventListener("resize", resize);
       window.addEventListener("pointermove", (event) => {
         pointer = {
@@ -2355,13 +3148,6 @@
         };
       });
 
-      const observer = new IntersectionObserver((entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) entry.target.classList.add("is-visible");
-        }
-      }, { threshold: 0.14 });
-
-      document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
       resize();
       requestAnimationFrame(frame);
     </script>
