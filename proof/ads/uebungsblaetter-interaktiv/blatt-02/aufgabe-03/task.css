@@ -1,0 +1,10 @@
+.mission > * { min-width:0; }
+.controls { display:grid; grid-template-columns:repeat(5,minmax(6rem,1fr)); gap:.7rem; margin:1rem 0; }
+.controls label { font-weight:800; }
+.controls input { box-sizing:border-box; width:100%; margin-top:.3rem; padding:.65rem; border:2px solid #5e6673; border-radius:.45rem; font:700 1rem ui-monospace,monospace; }
+.table-output { min-height:7rem; max-width:100%; overflow:auto; padding:1rem; border:1px solid #b9c1cd; border-radius:.7rem; background:#101723; color:#f8fafc; font:600 .92rem/1.65 ui-monospace,monospace; white-space:pre; }
+.choice-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.7rem; }
+.choice-grid button { min-height:4rem; padding:.75rem; border:2px solid #566176; border-radius:.65rem; background:#fff; font-size:1rem; cursor:pointer; }
+.choice-grid button:focus-visible,.controls input:focus-visible { outline:4px solid #f0a830; outline-offset:2px; }
+@media (max-width:780px) { .controls { grid-template-columns:repeat(2,minmax(0,1fr)); } .choice-grid { grid-template-columns:1fr; } }
+@media (max-width:460px) { .controls { grid-template-columns:1fr; } }

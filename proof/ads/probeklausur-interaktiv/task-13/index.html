@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aufgabe 13 · Das Rekursions-Echo</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <script src="task.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Aufgabennavigation">
+      <a class="back" href="../index.html">← Übersicht</a>
+      <span class="brand">ADS · Aufrufbaum-Labor</span>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF ↗</a>
+    </nav>
+
+    <header class="task-head">
+      <div>
+        <span class="kicker">MISSION 13 · DOPPELREKURSION</span>
+        <h1>Ein Ruf wird<br>zum Echo.</h1>
+        <p class="lead">Du musst Rekursion noch nicht „im Kopf können“. Klappe einfach jeden Aufruf in seine zwei Kinder auf.</p>
+      </div>
+      <div class="counter">13 / 17</div>
+    </header>
+
+    <section class="mission" aria-labelledby="mission-title">
+      <article class="brief">
+        <h2 id="mission-title">Deine Mission</h2>
+        <p>Erzeuge den Aufrufbaum für <code>N=4</code>. Lies ihn danach auf zwei Arten und bestimme die gesamte Aufrufzahl.</p>
+        <p class="tiny"><strong>30-Sekunden-Start:</strong> Klicke unten nur auf die Wurzel <code>4</code>. Mehr musst du noch nicht wissen.</p>
+      </article>
+      <pre class="code" aria-label="Originalcode von fun1 und fun2"><code>fun1(N):                 fun2(N):
+  falls N == 1:           falls N == 1:
+    gib N aus               gib N aus
+  sonst:                  sonst:
+    gib N aus               fun2(N-1)
+    fun1(N-1)               gib N aus
+    fun1(N-1)               fun2(N-1)</code></pre>
+    </section>
+
+    <section class="step tree-workshop" aria-labelledby="tree-title">
+      <div class="step-heading">
+        <div>
+          <p class="eyebrow">DIREKTE MANIPULATION</p>
+          <h2 id="tree-title">Baue alle echten Aufrufe</h2>
+        </div>
+        <output id="call-meter" class="call-meter" aria-live="polite">1 sichtbarer Aufruf</output>
+      </div>
+      <p class="prompt">Jeder Knoten mit <code>N &gt; 1</code> startet <strong>zweimal</strong> <code>N−1</code>. Klicke offene Knoten auf. Ein <code>1</code>-Knoten stoppt.</p>
+      <div id="tree" class="call-tree" aria-label="Interaktiver Aufrufbaum für N gleich 4"></div>
+      <div class="button-row">
+        <button id="expand-all" class="action" type="button">Alle übrigen Aufrufe auffalten</button>
+        <button id="reset-tree" class="action quiet" type="button">Baum zurücksetzen</button>
+      </div>
+      <div id="tree-feedback" class="feedback" aria-live="polite"></div>
+    </section>
+
+    <section id="reading-step" class="step locked" aria-labelledby="reading-title" aria-disabled="true">
+      <h2 id="reading-title">Wann wird gedruckt?</h2>
+      <p class="prompt">Der Baum ist derselbe. Nur der Zeitpunkt von <code>cout</code> ändert die Ausgabereihenfolge.</p>
+      <div class="print-placement">
+        <article>
+          <h3><code>fun1</code></h3>
+          <p><code>cout</code> steht <strong>vor</strong> beiden Kindern.</p>
+          <div class="choices" role="group" aria-label="Leseregel für fun1">
+            <button class="choice" type="button" data-order="fun1-pre">Knoten → links → rechts</button>
+            <button class="choice" type="button" data-order="fun1-depth">Nur eine Zahl pro Tiefe</button>
+          </div>
+        </article>
+        <article>
+          <h3><code>fun2</code></h3>
+          <p><code>cout</code> steht <strong>zwischen</strong> beiden Kindern.</p>
+          <div class="choices" role="group" aria-label="Leseregel für fun2">
+            <button class="choice" type="button" data-order="fun2-in">links → Knoten → rechts</button>
+            <button class="choice" type="button" data-order="fun2-pre">Knoten → links → rechts</button>
+          </div>
+        </article>
+      </div>
+      <div id="order-feedback" class="feedback" aria-live="polite"></div>
+      <button class="action hint-button" type="button" data-hint="hint-print">Hinweis 1 · Der Cursor-Trick</button>
+      <div id="hint-print" class="hint"><strong>Setze einen kleinen Stift direkt an die <code>cout</code>-Zeile.</strong> Folge dem Code. Sobald der Stift diese Zeile erreicht, notierst du den aktuellen Knoten.</div>
+      <button class="action hint-button" type="button" data-hint="hint-order">Hinweis 2 · Die zwei Fachwörter</button>
+      <div id="hint-order" class="hint"><code>fun1</code> liest den Aufrufbaum in <strong>Preorder</strong>, <code>fun2</code> in <strong>Inorder</strong>. Die Namen sind weniger wichtig als die Position der Ausgabezeile.</div>
+    </section>
+
+    <section id="count-step" class="step locked" aria-labelledby="count-title" aria-disabled="true">
+      <h2 id="count-title">Die Tiefen-Falle entschärfen</h2>
+      <p class="prompt">Wie viele Funktionsaufrufe gibt es bei <code>fun1(4)</code> insgesamt — inklusive des ersten Aufrufs?</p>
+      <div class="choices" role="group" aria-label="Aufrufzahl bei fun1 von 4">
+        <button class="choice" type="button" data-count="4">4 · eine Rekursionstiefe</button>
+        <button class="choice" type="button" data-count="8">8 · nur die Blätter</button>
+        <button class="choice" type="button" data-count="15">15 · alle Knoten</button>
+      </div>
+      <div id="count-feedback" class="feedback" aria-live="polite"></div>
+      <div class="level-strip" aria-label="Knotenanzahl je Ebene">
+        <span><b>Tiefe 1</b>1</span><span><b>Tiefe 2</b>2</span><span><b>Tiefe 3</b>4</span><span><b>Tiefe 4</b>8</span>
+      </div>
+      <button class="action hint-button" type="button" data-hint="hint-count">Hinweis 3 · Zähle horizontal</button>
+      <div id="hint-count" class="hint">Tiefe sagt nur, wie lang <em>ein</em> Weg ist. Die Aufrufzahl zählt jeden Knoten auf <em>allen</em> Wegen: <code>1 + 2 + 4 + 8</code>.</div>
+    </section>
+
+    <section id="finish-step" class="step locked" aria-labelledby="finish-title" aria-disabled="true">
+      <h2 id="finish-title">Prüfungsabschluss</h2>
+      <p class="prompt">Liefere genau die vier Ergebnisse der Originalaufgabe. Leerzeichen oder Kommas zwischen Ausgaben sind beide okay.</p>
+      <div class="exam-grid">
+        <label><span>Ausgabe <code>fun1(4)</code></span>
+          <textarea id="fun1-output" class="answer sequence" rows="3" disabled placeholder="4 3 …"></textarea>
+        </label>
+        <label><span>Ausgabe <code>fun2(4)</code></span>
+          <textarea id="fun2-output" class="answer sequence" rows="3" disabled placeholder="1 2 …"></textarea>
+        </label>
+        <label><span>Aufrufe bei <code>N=4</code></span>
+          <input id="count-4" class="short-answer" inputmode="numeric" disabled placeholder="?">
+        </label>
+        <label><span>Aufrufe bei <code>N=10</code></span>
+          <input id="count-10" class="short-answer" inputmode="numeric" disabled placeholder="?">
+        </label>
+      </div>
+      <div class="button-row">
+        <button id="check-finish" class="action primary" type="button" disabled>Meine vier Ergebnisse prüfen</button>
+        <button id="reveal-solution" class="action" type="button">Musterweg bewusst öffnen</button>
+      </div>
+      <div id="finish-feedback" class="feedback" aria-live="polite"></div>
+      <p id="solution-note" class="tiny">Der Musterweg öffnet nach deinem ersten Prüfungsversuch. Ohne Versuch: zweimal bewusst auf „Musterweg“ klicken.</p>
+      <div id="solution" class="solution" hidden>
+        <h3>Vollständiger Musterweg</h3>
+        <p><strong>fun1(4):</strong> <code>4 3 2 1 1 2 1 1 3 2 1 1 2 1 1</code></p>
+        <p><strong>fun2(4):</strong> <code>1 2 1 3 1 2 1 4 1 2 1 3 1 2 1</code></p>
+        <p>Auf Ebene 1, 2, 3 und 4 liegen <code>1, 2, 4, 8</code> Aufrufe. Also:</p>
+        <p class="formula"><code>1 + 2 + 4 + … + 2<sup>N−1</sup> = 2<sup>N</sup> − 1</code></p>
+        <p>Damit entstehen bei <code>N=4</code> genau <strong>15</strong> und bei <code>N=10</code> genau <strong>1023</strong> Aufrufe.</p>
+      </div>
+    </section>
+
+    <section class="step status-card" aria-labelledby="status-title">
+      <h2 id="status-title">Wie steht Aufgabe 13?</h2>
+      <p>Würdest du morgen wieder alle Knoten zählen — nicht nur die Tiefe?</p>
+      <div class="state-row" role="group" aria-label="Lernstatus Aufgabe 13">
+        <button class="state-btn" type="button" data-value="wackelt" aria-pressed="false">Wackelt · Baum nochmal bauen</button>
+        <button class="state-btn" type="button" data-value="sitzt" aria-pressed="false">Sitzt · ich kann es herleiten</button>
+      </div>
+      <p id="state-feedback" class="tiny" aria-live="polite">Noch nicht markiert.</p>
+    </section>
+
+    <nav class="nav-bottom" aria-label="Aufgaben wechseln">
+      <a href="../task-12/index.html">← Aufgabe 12</a>
+      <a href="../index.html">Übersicht</a>
+      <a href="../task-14/index.html">Aufgabe 14 →</a>
+    </nav>
+    <p class="tiny source-note">Aufgabe und Musterlösung: <em>Probeklausur.pdf</em>, Aufgabe 13. Lernführung: lokale Problemnotizen und ADS-Lernpräferenzen.</p>
+  </main>
+</body>
+</html>

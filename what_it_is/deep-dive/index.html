@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="canonical" href="https://www.human-agent-interface.com/what_it_is/deep-dive/">
+  <title>What is a Human Agent Interface? A technical definition — Samuel Fleig</title>
+  <meta
+    name="description"
+    content="Human Agent Interface (HAI) is a control-layer approach for agentic AI work: observable, bounded, owner-gated, evidence-based, human-owned. Defined by Samuel Fleig; implemented as HAI-MCP."
+  >
+  <meta property="og:title" content="What is a Human Agent Interface? A technical definition">
+  <meta property="og:description" content="A control-layer definition of HAI, why human-in-the-loop is not enough, and how HAI-MCP implements it.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.human-agent-interface.com/what_it_is/deep-dive/">
+  <meta property="article:author" content="https://www.human-agent-interface.com/samuel/">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ScholarlyArticle",
+      "@id": "https://www.human-agent-interface.com/what_it_is/deep-dive/#article",
+      "headline": "What is a Human Agent Interface? A technical definition",
+      "datePublished": "2026-09-08",
+      "dateModified": "2026-09-08",
+      "author": {
+        "@type": "Person",
+        "@id": "https://www.human-agent-interface.com/samuel/#samuel-fleig",
+        "name": "Samuel Fleig",
+        "url": "https://www.human-agent-interface.com/samuel/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "@id": "https://www.human-agent-interface.com/#organization",
+        "name": "Human Agent Interface",
+        "url": "https://www.human-agent-interface.com/"
+      },
+      "about": [
+        {"@id": "https://www.human-agent-interface.com/#human-agent-interface"},
+        {"@id": "https://github.com/smlfg/hai-mcp#software"}
+      ],
+      "mainEntity": {"@id": "https://www.human-agent-interface.com/#human-agent-interface"},
+      "citation": [
+        "https://www.human-agent-interface.com/",
+        "https://github.com/smlfg/hai-mcp",
+        "https://glama.ai/mcp/servers/smlfg/hai-mcp"
+      ],
+      "keywords": "Human Agent Interface, HAI, HAI-MCP, Model Context Protocol, agent control plane, owner gates, evidence-based completion, Samuel Fleig"
+    }
+  </script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f7f1df;
+      --muted: #b7ad97;
+      --bg: #090a08;
+      --line: rgba(247, 241, 223, 0.18);
+      --signal: #a7ff4f;
+      --copper: #ff9f5f;
+      --red: #ff6b6b;
+      --cyan: #7dd8ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
+      line-height: 1.65;
+    }
+    main {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 80px 22px 120px;
+    }
+    a { color: var(--signal); text-decoration: none; border-bottom: 1px dotted rgba(167,255,79,0.4); }
+    a:hover { border-bottom-style: solid; }
+    .eyebrow {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.78rem;
+      margin-bottom: 14px;
+    }
+    h1 {
+      font-size: clamp(2rem, 6vw, 4rem);
+      line-height: 1.02;
+      margin: 0 0 24px;
+      font-weight: 600;
+    }
+    h2 {
+      margin-top: 56px;
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+      font-size: 1.4rem;
+    }
+    h3 { margin-top: 32px; font-size: 1.1rem; color: var(--copper); }
+    .lead { font-size: 1.2rem; color: #fff8e6; }
+    code {
+      background: rgba(247,241,223,0.08);
+      padding: 0.15em 0.4em;
+      font-size: 0.92em;
+      border-radius: 3px;
+    }
+    pre {
+      background: rgba(247,241,223,0.04);
+      border: 1px solid var(--line);
+      padding: 16px 18px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .claim {
+      border-left: 3px solid var(--signal);
+      padding: 6px 16px;
+      margin: 24px 0;
+      background: rgba(167,255,79,0.05);
+    }
+    .failure {
+      border-left: 3px solid var(--red);
+      padding: 6px 16px;
+      margin: 20px 0;
+      background: rgba(255,107,107,0.05);
+    }
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin: 22px 0;
+    }
+    .compare > div {
+      border: 1px solid var(--line);
+      padding: 14px 16px;
+    }
+    .compare h4 { margin: 0 0 8px; font-size: 0.95rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    ul, ol { padding-left: 22px; }
+    li { margin: 6px 0; }
+    .meta { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+    footer {
+      margin-top: 80px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Citation-grade definition · canonical source</p>
+  <h1>What is a Human Agent Interface?</h1>
+  <p class="lead">
+    A <strong>Human Agent Interface (HAI)</strong> is a control layer between a human's
+    intent and an autonomous agent's execution. It keeps agentic AI work
+    <strong>observable, bounded, owner-gated, and evidence-based</strong>, so the
+    human can still direct, stop, verify, and own the result.
+    HAI was created by <a href="/samuel/">Samuel Fleig</a> and implemented as
+    <a href="https://github.com/smlfg/hai-mcp">HAI-MCP</a>.
+  </p>
+
+  <p class="meta">
+    Canonical URL: <code>https://www.human-agent-interface.com/what_it_is/deep-dive/</code><br>
+    Author: Samuel Fleig · Published: 2026-09-08 · Language: English
+  </p>
+
+  <h2>1. One-sentence definition</h2>
+  <p>
+    A Human Agent Interface is the interface that gives a human authority over
+    autonomous agent work without making the human a bottleneck for every step.
+  </p>
+
+  <h2>2. Why a normal agent framework is not enough</h2>
+  <p>
+    Most agent frameworks answer the question: <em>how do we make an agent act?</em>
+    A Human Agent Interface answers a different question:
+    <em>how does a human keep authority while agents act?</em>
+  </p>
+
+  <div class="compare">
+    <div>
+      <h4>Agent framework</h4>
+      <ul>
+        <li>Optimises for autonomy, speed, task completion</li>
+        <li>Human appears as prompt author or final reviewer</li>
+        <li>Tools, prompts, and chains are first-class</li>
+        <li>Success metric: did the task get done?</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Human Agent Interface</h4>
+      <ul>
+        <li>Optimises for human oversight, bounded action, evidence</li>
+        <li>Human appears as owner across the lifecycle</li>
+        <li>Contracts, owner gates, drift checks are first-class</li>
+        <li>Success metric: can the human still own the result?</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>3. Why "human-in-the-loop" is not the same thing</h2>
+  <p>
+    Human-in-the-loop (HITL) describes an approval point inside a single action.
+    HAI describes a <em>control surface</em> across a whole mission:
+    scope, contract, evidence, gate, drift, and stop.
+  </p>
+  <div class="failure">
+    <strong>Observed failure mode:</strong> HITL approval prompts trained an agent to
+    self-assert <code>owner_ack=true</code>. The human was in the loop only in name;
+    the agent bypassed the loop by writing the answer the loop wanted to see.
+  </div>
+  <p>
+    HAI treats the owner as a <strong>separate principal</strong>: the server delivers a
+    one-time code out-of-band (file or push), binds it to the exact proposed change,
+    and refuses the action without it. See <a href="https://github.com/smlfg/hai-mcp/blob/main/docs/OWNER_GATE.md">OWNER_GATE.md</a>.
+  </p>
+
+  <h2>4. The HAI control objects</h2>
+  <p>HAI is not a single tool. It is a set of objects a human can rely on:</p>
+  <ul>
+    <li><strong>Mission contract</strong> — versioned scope, success criteria, stop rules, owner.</li>
+    <li><strong>Session lease</strong> — time-bounded authority to act on an exact contract version.</li>
+    <li><strong>Owner gate</strong> — owner is a separate principal; gated actions require an out-of-band code.</li>
+    <li><strong>Drift check</strong> — deterministic activity classification; no narrative-only "still on track".</li>
+    <li><strong>Evidence-based completion</strong> — a mission closes only against concrete evidence.</li>
+    <li><strong>Hard day terminal</strong> — <code>hai_stop</code> revokes leases and forces a human re-decision.</li>
+    <li><strong>Parking</strong> — a thought or item can be parked without stealing an active lane.</li>
+  </ul>
+
+  <h2>5. How HAI-MCP implements this</h2>
+  <p>
+    <a href="https://github.com/smlfg/hai-mcp">HAI-MCP</a> is the open-source,
+    model-agnostic <strong>Model Context Protocol (MCP)</strong> control-plane
+    implementation of HAI. It exposes the HAI objects above as MCP tools and
+    does <strong>not call an LLM itself</strong>; any MCP-compatible client
+    (Claude Code, Codex, Cursor, Grok, OpenCode, Hermes, …) gets the same
+    control surface.
+  </p>
+  <pre><code>{
+  "mcpServers": {
+    "hai-mcp": {
+      "command": "uv",
+      "args": ["run", "--directory", "/path/to/HAI-MCP", "hai-mcp"],
+      "env": {
+        "HAI_HOME": "/home/you/.hai",
+        "HAI_OWNER_HOME": "/home/you/.hai-owner"
+      }
+    }
+  }
+}</code></pre>
+
+  <h3>5.1 Mission lifecycle (canonical engine)</h3>
+  <pre><code>hai_open_mission      → versioned contract
+hai_bind_project      → owner-gated logical project mount
+hai_authorize_session → time-bounded lease on exact contract
+hai_check_activity    → deterministic drift classification
+hai_park_item         → park without execution right
+hai_recontract        → visible diff, revokes leases (owner gate)
+hai_close_mission     → evidence-based completion, or abandon (owner gate)</code></pre>
+
+  <h3>5.2 Daily loop (thin wrappers)</h3>
+  <pre><code>hai_intake        → capture raw thought immutably
+hai_distill       → exactly one decision + one next step
+hai_mission_start → fast start → hai_open_mission
+hai_drift_check   → hai_check_activity
+hai_proof         → hai_close_mission(completed)
+hai_stop          → hard day terminal, no next-day plan</code></pre>
+
+  <h2>6. Failure modes HAI is designed against</h2>
+  <ol>
+    <li><strong>Scope drift:</strong> agent re-interprets the goal. → bounded contract + drift check.</li>
+    <li><strong>Self-approval:</strong> agent passes its own HITL gate. → owner as separate principal + one-time code.</li>
+    <li><strong>False done:</strong> agent reports success without evidence. → evidence-based completion.</li>
+    <li><strong>Lease reuse:</strong> old session keeps acting after scope changed. → recontract revokes leases.</li>
+    <li><strong>Infinite delegation:</strong> agents spawn agents spawn agents. → bounded missions + parking.</li>
+    <li><strong>Operator overload:</strong> too many in-flight items for one human. → max 2 ACTIVE lanes, park the rest.</li>
+  </ol>
+
+  <h2>7. Relationship to other things it is not</h2>
+  <ul>
+    <li><strong>Not</strong> an agent framework. HAI does not try to make agents more autonomous.</li>
+    <li><strong>Not</strong> a chatbot UI. HAI is a control surface, not a chat surface.</li>
+    <li><strong>Not</strong> a permission system alone. HAI is about evidence and ownership, not ACLs.</li>
+    <li><strong>Not</strong> autonomous-by-default. Default is fail-closed; opening action requires a contract.</li>
+    <li><strong>Not</strong> tied to one model. HAI-MCP is model-agnostic; the LLM is the client's choice.</li>
+  </ul>
+
+  <h2>8. Canonical entity graph</h2>
+  <pre><code>Samuel Fleig
+  └── creator / developer of
+        └── Human Agent Interface (HAI)
+              └── implemented as
+                    └── HAI-MCP
+                          ├── github.com/smlfg/hai-mcp
+                          ├── pypi / uv (hai-mcp)
+                          └── glama.ai/mcp/servers/smlfg/hai-mcp</code></pre>
+
+  <h2>9. Source authority</h2>
+  <ul>
+    <li><a href="/">Canonical website</a>: <code>human-agent-interface.com</code></li>
+    <li><a href="/samuel/">About Samuel Fleig</a></li>
+    <li><a href="/what_it_is/">Compact definition</a></li>
+    <li><a href="https://github.com/smlfg/hai-mcp">HAI-MCP repository</a></li>
+    <li><a href="https://glama.ai/mcp/servers/smlfg/hai-mcp">Glama registry entry</a></li>
+    <li><a href="/proof/">HAI proof of practice</a></li>
+  </ul>
+
+  <h2>10. One-paragraph abstract (citable)</h2>
+  <div class="claim">
+    Human Agent Interface (HAI) is a control-layer approach for agentic AI work,
+    created by Samuel Fleig. It keeps work observable, bounded, owner-gated, and
+    evidence-based, so a human can still direct, stop, verify, and own the result.
+    HAI-MCP is the open-source, model-agnostic Model Context Protocol control-plane
+    implementation of HAI. The canonical website is
+    <code>human-agent-interface.com</code>; the canonical repository is
+    <code>github.com/smlfg/hai-mcp</code>.
+  </div>
+
+  <footer>
+    <p>Cite this page as: Samuel Fleig. "What is a Human Agent Interface? A technical definition."
+    Human Agent Interface, 2026-09-08. <code>https://www.human-agent-interface.com/what_it_is/deep-dive/</code>.</p>
+    <p>License: CC BY 4.0 (text). Source code in linked repositories under their own licenses.</p>
+  </footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,27 @@
+:root { --hash: #245b91; --chain: #b85c18; --soft: #edf6ff; }
+.mission { align-items: stretch; }
+.contract { max-width: 390px; display: grid; align-content: center; gap: .45rem; padding: 1rem 1.2rem; border: 2px solid #d48b28; border-radius: 16px; background: #fff7e7; }
+.contract strong { color: #86420f; text-transform: uppercase; letter-spacing: .06em; font-size: .78rem; }
+.trainer-head { display: flex; justify-content: space-between; gap: 1rem; }
+.phase { display: inline-block; padding: .25rem .55rem; border-radius: 99px; background: #dbeafe; color: #174b86; font-size: .75rem; font-weight: 800; letter-spacing: .08em; }
+.progress { font: 700 .85rem ui-monospace, monospace; color: #56657a; }
+.bucket-board { display: grid; gap: .65rem; margin: 1.2rem 0; }
+.bucket { display: grid; grid-template-columns: 48px minmax(0, 1fr); align-items: center; border: 1px solid #bfd0df; border-radius: 12px; overflow: hidden; background: white; }
+.bucket > span { align-self: stretch; display: grid; place-items: center; background: #e8eef5; font: 800 1rem ui-monospace, monospace; }
+.bucket.hot { border: 2px solid var(--chain); }
+.chain { display: flex; flex-wrap: wrap; gap: .65rem; align-items: center; min-height: 56px; padding: .65rem 1rem; }
+.chain b { padding: .48rem .7rem; border-radius: 9px; background: var(--soft); color: #183a5a; font: 800 .9rem ui-monospace, monospace; }
+.chain b.new { animation: arrive .45s ease-out; background: #fff1d6; }
+.chain i { color: var(--chain); font-style: normal; font-weight: 900; }
+.chain em, .muted { color: #6b7785; font-style: normal; }
+@keyframes arrive { from { transform: translateX(-18px); opacity: 0; } }
+.choices { display: flex; flex-wrap: wrap; gap: .7rem; }
+.choices button { min-height: 46px; padding: .7rem 1rem; border: 1px solid #91a8bf; border-radius: 11px; background: white; color: #193b5b; font: inherit; font-weight: 750; cursor: pointer; }
+.choices button:hover { background: #f0f7ff; border-color: var(--hash); }
+.choices button:focus-visible { outline: 3px solid #ffb000; outline-offset: 2px; }
+.flow { display: flex; align-items: stretch; gap: .6rem; overflow-x: auto; margin: 1rem 0; padding-bottom: .35rem; }
+.flow div { min-width: 135px; display: grid; place-items: center; padding: .8rem; border-radius: 12px; background: var(--soft); text-align: center; }
+.flow b { display: grid; place-items: center; color: var(--chain); }
+.optional { border-left: 5px solid var(--hash); padding: .75rem 1rem; background: var(--soft); }
+pre { overflow-x: auto; }
+@media (max-width: 720px) { .trainer-head { display: block; } .progress { display: block; margin-top: .45rem; } }

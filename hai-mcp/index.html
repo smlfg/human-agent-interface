@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090a08">
+  <link rel="canonical" href="https://www.human-agent-interface.com/hai-mcp/">
+  <title>HAI-MCP — MCP Control Plane for Human Agent Interface by Samuel Fleig</title>
+  <meta name="description" content="HAI-MCP is the open-source, model-agnostic Model Context Protocol control-plane implementation of Human Agent Interface (HAI), created by Samuel Fleig.">
+  <meta property="og:title" content="HAI-MCP — Human Agent Interface MCP implementation">
+  <meta property="og:description" content="Open-source MCP control plane for mission contracts, owner gates, drift checks, and evidence-based completion in Human Agent Interface workflows.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.human-agent-interface.com/hai-mcp/">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://www.human-agent-interface.com/samuel/#samuel-fleig",
+          "name": "Samuel Fleig",
+          "url": "https://www.human-agent-interface.com/samuel/",
+          "sameAs": [
+            "https://github.com/smlfg",
+            "https://www.linkedin.com/in/samuel-fleig-52610914b",
+            "https://x.com/Samuelflg1",
+            "https://medium.com/@smlflg"
+          ]
+        },
+        {
+          "@type": "CreativeWork",
+          "@id": "https://www.human-agent-interface.com/#human-agent-interface",
+          "name": "Human Agent Interface",
+          "alternateName": "HAI",
+          "url": "https://www.human-agent-interface.com/",
+          "creator": { "@id": "https://www.human-agent-interface.com/samuel/#samuel-fleig" },
+          "description": "Human Agent Interface (HAI) is an approach for keeping agentic AI work observable, bounded, verifiable, and human-owned."
+        },
+        {
+          "@type": "SoftwareSourceCode",
+          "@id": "https://github.com/smlfg/hai-mcp#software",
+          "name": "HAI-MCP",
+          "codeRepository": "https://github.com/smlfg/hai-mcp",
+          "url": "https://www.human-agent-interface.com/hai-mcp/",
+          "sameAs": [
+            "https://github.com/smlfg/hai-mcp",
+            "https://glama.ai/mcp/servers/@smlfg/hai-mcp"
+          ],
+          "programmingLanguage": "Python",
+          "creator": { "@id": "https://www.human-agent-interface.com/samuel/#samuel-fleig" },
+          "isPartOf": { "@id": "https://www.human-agent-interface.com/#human-agent-interface" },
+          "description": "HAI-MCP is the open-source, model-agnostic MCP control-plane implementation of Human Agent Interface."
+        }
+      ]
+    }
+  </script>
+  <style>
+    :root { color-scheme: dark; --ink:#f7f1df; --muted:#b7ad97; --line:rgba(247,241,223,.18); --signal:#a7ff4f; --bg:#090a08; }
+    * { box-sizing: border-box; }
+    body { margin:0; min-width:320px; color:var(--ink); background:radial-gradient(circle at 20% 0%, rgba(167,255,79,.12), transparent 28rem), linear-gradient(180deg,#090a08,#11100d); font-family:Aptos,"Segoe UI",sans-serif; line-height:1.55; }
+    a { color:inherit; }
+    .shell { width:min(920px, calc(100% - 40px)); margin:0 auto; padding:32px 0 80px; }
+    nav { position: sticky; top: 0; z-index: 60; display:flex; justify-content:space-between; gap:16px; align-items:center; margin-bottom:72px; padding:14px 0; background:rgba(9,10,8,.88); backdrop-filter:saturate(150%) blur(14px); -webkit-backdrop-filter:saturate(150%) blur(14px); border-bottom:1px solid rgba(247,241,223,.18); color:var(--muted); font-family:"IBM Plex Mono", monospace; font-size:.78rem; text-transform:uppercase; }
+    nav a { text-decoration:none; }
+    .brand { color:var(--signal); }
+    h1 { max-width:820px; margin:0; font-family:Georgia,"Times New Roman",serif; font-size:clamp(3.2rem, 9vw, 6.6rem); line-height:.92; font-weight:500; }
+    .lead { max-width:760px; margin:30px 0 0; color:var(--ink); font-size:clamp(1.25rem, 2.4vw, 1.75rem); line-height:1.22; }
+    .meta { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:42px 0 72px; }
+    .card, section { border:1px solid var(--line); background:rgba(247,241,223,.055); padding:22px; }
+    .card span { display:block; color:var(--muted); font-family:"IBM Plex Mono", monospace; font-size:.74rem; text-transform:uppercase; }
+    .card strong { display:block; margin-top:10px; font-size:1.05rem; }
+    h2 { margin:0 0 18px; font-family:Georgia,"Times New Roman",serif; font-size:clamp(2rem,4vw,3.3rem); line-height:1; font-weight:500; }
+    section { margin-top:18px; }
+    p { margin:0 0 16px; color:var(--muted); font-size:1.05rem; }
+    .statement { color:var(--ink); font-size:1.18rem; }
+    ul { margin:0; padding-left:1.2rem; color:var(--muted); }
+    li { margin:.45rem 0; }
+    .buttons { display:flex; flex-wrap:wrap; gap:12px; margin-top:24px; }
+    .button { display:inline-flex; min-height:44px; align-items:center; padding:0 16px; border:1px solid rgba(167,255,79,.45); text-decoration:none; color:var(--ink); background:rgba(167,255,79,.08); font-weight:700; }
+    footer { margin-top:64px; color:var(--muted); font-family:"IBM Plex Mono", monospace; font-size:.75rem; text-transform:uppercase; }
+    @media (max-width:720px) { .meta { grid-template-columns:1fr; } nav { align-items:flex-start; flex-direction:column; } }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 200; padding: 12px 18px; background: #090a08; color: #f7f1df; border: 1px solid #a7ff4f; text-decoration: none; }
+    .skip-link:focus { left: 10px; top: 10px; }
+    [id] { scroll-margin-top: 88px; }
+    nav a[aria-current="page"] { color: #a7ff4f; }
+    @view-transition { navigation: auto; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <main id="main" class="shell">
+    <nav aria-label="Site navigation">
+      <a class="brand" href="/" aria-current="page">Human Agent Interface</a>
+      <a href="/samuel/">Samuel Fleig</a>
+      <a href="/what_it_is/">What is HAI?</a>
+      <a href="https://github.com/smlfg/hai-mcp">GitHub</a>
+    </nav>
+
+    <header>
+      <h1>HAI-MCP is the MCP implementation of Human Agent Interface.</h1>
+      <p class="lead">HAI-MCP is the open-source, model-agnostic Model Context Protocol control-plane implementation of Human Agent Interface (HAI), created by Samuel Fleig.</p>
+    </header>
+
+    <div class="meta" aria-label="Entity summary">
+      <div class="card"><span>Creator</span><strong><a href="/samuel/">Samuel Fleig</a></strong></div>
+      <div class="card"><span>Parent approach</span><strong><a href="/what_it_is/">Human Agent Interface (HAI)</a></strong></div>
+      <div class="card"><span>Technical category</span><strong>Model Context Protocol server</strong></div>
+    </div>
+
+    <section aria-labelledby="definition">
+      <h2 id="definition">Definition</h2>
+      <p class="statement">HAI-MCP is a control plane for bounded agentic work. It exposes HAI workflow controls through MCP so compatible clients can bind agent work to mission contracts, owner gates, drift checks, and evidence-based completion.</p>
+      <p>HAI-MCP does not call a language model itself. The model remains in the client. The server manages state, rights, contracts, checkpoints, and proof requirements around the work.</p>
+    </section>
+
+    <section aria-labelledby="relationship">
+      <h2 id="relationship">Relationship to HAI</h2>
+      <p>Human Agent Interface is the method: keep agentic AI work observable, bounded, verifiable, and human-owned.</p>
+      <p>HAI-MCP is one implementation of that method: a Python MCP server that gives clients a shared control surface for the HAI workflow.</p>
+    </section>
+
+    <section aria-labelledby="functions">
+      <h2 id="functions">What it controls</h2>
+      <ul>
+        <li>Mission contracts: a declared problem, artifact, time limit, and done criteria.</li>
+        <li>Owner gates: explicit human approval before selected state changes.</li>
+        <li>Drift checks: comparison between planned or observed activity and the mission contract.</li>
+        <li>Evidence-based completion: closing work only against verifiable criteria.</li>
+        <li>Next-step continuity: canonical next actions across sessions and compatible clients.</li>
+      </ul>
+      <div class="buttons">
+        <a class="button" href="https://github.com/smlfg/hai-mcp">Open HAI-MCP on GitHub</a>
+        <a class="button" href="https://glama.ai/mcp/servers/@smlfg/hai-mcp">Open Glama registry entry</a>
+      </div>
+    </section>
+
+    <footer>
+      Samuel Fleig → Human Agent Interface → HAI-MCP
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB08 · Aufgabe 7 · Name im 2-3-4-Baum</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · INTERAKTIV</a><a class="back" href="../index.html">← Blatt 08</a></nav>
+    <header class="task-head"><div><span class="kicker">SPLIT · LEIHE · MERGE</span><h1>Dein Name im 2-3-4-Baum</h1></div><div class="counter">PB08 · 07/07</div></header>
+
+    <section class="mission">
+      <div class="brief"><h2>Der Papierauftrag als sichtbarer Trace</h2><p>Füge die Buchstaben deines Namens der Reihe nach ein und lösche sie danach in <strong>derselben Reihenfolge</strong>.</p><p>Erste Aktion: Mit <strong>SAMUEL</strong> vorbereiten oder den Namen ändern.</p></div>
+      <div class="rule-card"><strong>Duplikatregel: Menge</strong><span>Ein gleicher Buchstabe wird nur einmal gespeichert.</span><span>Sein späterer zweiter Löschversuch ist ein No-op.</span></div>
+    </section>
+
+    <section class="step setup">
+      <label for="name-input">Name</label>
+      <div class="input-row"><input id="name-input" value="SAMUEL" maxlength="24" autocomplete="name"><button class="action" id="prepare" type="button">Folge vorbereiten</button></div>
+      <p class="tiny">Nur Buchstaben; Groß-/Kleinschreibung wird vereinheitlicht.</p>
+      <div class="sequence" id="sequence" aria-live="polite"></div>
+    </section>
+
+    <section class="step gate" id="gate" hidden>
+      <h2>Mechanik-Gate</h2>
+      <fieldset><legend>1. Wie wählst du beim Abstieg das Kind?</legend><div class="choices"><button class="choice" data-rule="bst" type="button">Wie im BST: genau ein Schlüssel, dann links/rechts</button><button class="choice" data-rule="interval" type="button">Alle Schlüssel der Box bilden Werteintervalle</button></div></fieldset>
+      <fieldset><legend>2. Das Zielkind hat vor dem Löschen nur einen Schlüssel. Was nun?</legend><div class="choices"><button class="choice" data-underflow="ignore" type="button">Trotzdem absteigen; Unterlauf später ignorieren</button><button class="choice" data-underflow="repair" type="button">Vorher leihen oder mit einem Geschwister mergen</button></div></fieldset>
+      <div class="feedback" id="gate-feedback" role="status" aria-live="polite" hidden></div>
+      <button class="action primary" id="start" type="button" disabled>Trace starten</button>
+      <div class="hint-controls"><button class="action hint-btn" data-hint="hint-1" aria-expanded="false" type="button">Hinweis 1</button><button class="action hint-btn" data-hint="hint-2" aria-expanded="false" type="button">Hinweis 2</button></div>
+      <div class="hint" id="hint-1" hidden>Eine Box kann 1–3 sortierte Schlüssel enthalten. Bei <code>[M | T]</code> gibt es drei Wege: kleiner M, zwischen M/T, größer T.</div>
+      <div class="hint" id="hint-2" hidden>Top-down-Regel: Steige beim Löschen nie in ein 1-Schlüssel-Kind ab. Erst von einem kräftigen Nachbarn leihen, sonst mergen.</div>
+    </section>
+
+    <section class="step trainer" id="trainer" hidden>
+      <div class="trainer-head"><div><span class="phase" id="phase">EINFÜGEN</span><h2 id="event-title">Leerer Startbaum</h2></div><span class="progress" id="progress"></span></div>
+      <div class="tree-wrap" id="tree" aria-live="polite"></div>
+      <p class="operation" id="operation"></p>
+      <button class="action primary" id="next-step" type="button">Nächsten Mikroschritt zeigen</button>
+      <p class="tiny">Jeder Split, jedes Leihen und jedes Merge erhält einen eigenen Zustand.</p>
+    </section>
+
+    <section class="step solution" id="solution" hidden><h2>Kontrollspur der Strukturänderungen</h2><p>Fürs Papier genügen die markierten Strukturereignisse plus Endzustand.</p><div class="timeline" id="timeline"></div></section>
+    <section class="step completion" id="completion" hidden><h2>Papierabschluss</h2><p>Übertrage Split/Leihen/Merge auf dein Blatt. Der letzte Baum muss <strong>leer</strong> sein.</p><label class="proof-check"><input id="paper-proof" type="checkbox"> Mein Papiertrace endet mit ∅ und zeigt alle Strukturänderungen.</label><div class="state-row"><button class="state-btn" data-state="sitzt" type="button">✓ Sitzt</button><button class="state-btn" data-state="wackelt" type="button">↻ Wackelt</button></div><p class="tiny" id="state-feedback" aria-live="polite"></p></section>
+
+    <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-06/index.html">← Aufgabe 6</a><a href="../index.html">Blatt 08</a><a href="../../index.html">Gesamtübersicht</a><a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a><a href="../../index.html">Alle Blätter →</a></nav>
+  </main>
+  <script src="task.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 04 · Aufgabe 03 · HeapSort</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · Übungsblätter</a><a class="back" href="../index.html">← Blatt 04</a></nav>
+
+  <header class="task-head"><div><span class="kicker">HEAPSORT · MIN-HEAP</span><h1>Wo muss der Wert als Nächstes hin?</h1></div><div class="counter">03 / 04</div></header>
+
+  <section class="media-pre">
+    <div class="media-route-top">
+      <h2>Vorher ansehen</h2>
+      <span class="media-duration">Short · 1:08</span>
+    </div>
+    <p class="media-instruction">Anderer Heap als deine Aufgabe — bewusst. Die Mechanik überträgst du selbst.</p>
+    <video class="media-player short-player" controls preload="metadata" poster="../../../media-posters/pb04a03-short.webp" src="../../../notebooklm-study-pack/10_uebungsblaetter/blatt04/short_PB04A03_bubble-up.mp4">Dein Browser unterstützt Video nicht.</video>
+    <div class="recall-box"><strong>Sofort-Recall</strong>Bubble-up stoppt, sobald der Vater kleiner ist — ist der Heap dann sortiert?</div>
+  </section>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Originalauftrag</h2>
+      <p>Alle Werte in eine Min-Halde einfügen, dann wiederholt das kleinste Element entnehmen. Implementiere und vergleiche das Verfahren.</p>
+      <p>Der Baum liegt in einem Vektor; <strong>Index 0 bleibt frei</strong>. Kinder von <code>i</code>: <code>2·i</code> und <code>2·i+1</code>.</p>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF · Seite 2 ↗</a>
+    </div>
+    <div class="card first-action">
+      <p class="eyebrow">Erste Aktion · Index lesen</p>
+      <h2>Wo liegen die Kinder von Index 3?</h2>
+      <div class="choices" id="index-question">
+        <button class="choice" data-answer="zero">5 und 6</button>
+        <button class="choice" data-answer="correct">6 und 7</button>
+        <button class="choice" data-answer="next">4 und 5</button>
+      </div>
+      <div class="feedback" id="index-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step" id="heap-step" hidden>
+    <div class="step-heading"><div><p class="eyebrow" id="phase-label">Bubble-up</p><h2 id="step-title">Wähle den nächsten Tausch</h2></div><div class="formula" id="formula">Vater(i) = ⌊i / 2⌋</div></div>
+    <p id="instruction">Der neue Wert 17 liegt am nächsten freien Index. Klicke den Knoten, mit dem er jetzt getauscht werden muss.</p>
+    <div class="heap-stage">
+      <svg class="edges" id="edges" aria-hidden="true"></svg>
+      <div class="heap-tree" id="heap-tree" aria-label="Min-Heap als Baum"></div>
+    </div>
+    <div class="array-wrap"><div class="array-row" id="array-row" aria-label="Heap als 1-basiertes Array"></div></div>
+    <div class="feedback" id="heap-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step help" aria-labelledby="help-title">
+    <h2 id="help-title">Hinweise</h2>
+    <div class="actions"><button class="action hint-btn" data-hint="hint-1">Hinweis 1 · Bubble-up</button><button class="action hint-btn" data-hint="hint-2">Hinweis 2 · Bubble-down</button></div>
+    <div class="hint" id="hint-1" hidden>Beim Einfügen steht der neue Wert am nächsten freien Index. Vergleiche nur mit <code>⌊i/2⌋</code>; tausche, solange der Vater größer ist.</div>
+    <div class="hint" id="hint-2" hidden>Beim Löschen kommt der letzte Wert an die Wurzel. Vergleiche beide Kinder und wähle zuerst das <strong>kleinere</strong>; nur tauschen, wenn es kleiner als der aktuelle Wert ist.</div>
+  </section>
+
+  <section class="step solution">
+    <h2>Mechanikabschluss</h2>
+    <p id="gate-copy">Noch gesperrt: Löse Bubble-up und Bubble-down — oder decke den Musterweg nach einem Versuch bewusst auf.</p>
+    <button class="action" id="reveal">Musterweg bewusst aufdecken</button>
+    <div id="solution" hidden>
+      <p><strong>Einfügen 17:</strong> Start an Index 8, dann <code>17 ↔ 47</code> (Index 4), danach <code>17 ↔ 33</code> (Index 2). Bei Vater 1 stoppt es, weil <code>1 ≤ 17</code>.</p>
+      <p><strong>Delete-min:</strong> Minimum 1 entfernen, letzten Wert 88 an Index 1 setzen. Von den Kindern 17 und 42 ist 17 kleiner: <code>88 ↔ 17</code>. Danach ist von 33 und 44 die 33 kleiner: <code>88 ↔ 33</code>. Nun gilt die Heap-Eigenschaft wieder.</p>
+      <p><strong>HeapSort:</strong> Erst alle <code>n</code> Elemente in den Min-Heap einfügen. Dann <code>n</code>-mal <code>delete-min</code>; die entnommenen Minima bilden direkt die aufsteigende Folge. Ein Bubble-Schritt läuft höchstens über die Baumhöhe <code>O(log n)</code>, insgesamt also <code>O(n log n)</code>.</p>
+    </div>
+  </section>
+
+  <section class="step lab" id="lab-step" hidden>
+    <h2>C++-Lab · zwei TODOs, keine Musterlösung</h2>
+    <p><code>lab/min_heap.cpp</code> enthält kompilierbaren Startercode für <code>insert_min_heap</code> und <code>delete_min</code>. Ergänze Bubble-up und Bubble-down selbst.</p>
+    <pre><code>cd lab
+./run-tests.sh</code></pre>
+    <p>Die Tests prüfen den freien Index 0, mehrere Inserts und die sortierte Folge wiederholter <code>delete_min</code>-Operationen.</p>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Abschlussbeleg</h2>
+    <p>Erledigt, wenn du beide Beispieloperationen mit jedem Tausch begründest, HeapSort als „einfügen, dann Minima entnehmen“ erklärst und <code>./run-tests.sh</code> grün bekommst.</p>
+    <div class="state-row"><button class="state-btn" data-state="sitzt">Sitzt</button><button class="state-btn" data-state="wackelt">Wackelt</button></div>
+    <div class="feedback" id="state-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-02/index.html">← Aufgabe 02</a><a href="../index.html">Blattübersicht</a><a href="../aufgabe-04/index.html">Aufgabe 04 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

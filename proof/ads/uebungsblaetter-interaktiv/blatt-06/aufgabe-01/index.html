@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB06 · Aufgabe 1 · N-Damen</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · INTERAKTIV</a><a class="back" href="../index.html">← Blatt 06</a></nav>
+  <header class="task-head"><div><span class="kicker">PLATZIEREN · PRÜFEN · ZURÜCKNEHMEN</span><h1>N-Damen: Backtracking sichtbar</h1></div><div class="counter">PB06 · 01/03</div></header>
+
+  <section class="mission">
+    <div class="brief"><h2>Dein Mikro-Schritt</h2><p>Steuere einen echten <strong>N=4</strong>-Suchlauf. Entscheide bei jedem Zustand: platzieren, Konflikt erkennen oder die letzte Dame zurücknehmen.</p><p>Merksatz: <strong>Wahl → Prüfung → Rekursion → Undo.</strong></p></div>
+    <div class="source-core">Brett als vector&lt;int&gt;:
+Index = Zeile
+Wert = Spalte der Dame
+frei = -1</div>
+  </section>
+
+  <section class="step board-step">
+    <div><h2>1 · Backtracking-Brett</h2><p id="trace-prompt" class="prompt">Welche Aktion folgt?</p><div class="trace-actions" role="group" aria-label="Nächste Backtracking-Aktion"><button type="button" data-action="place">♛ Platzieren</button><button type="button" data-action="conflict">⚠ Konflikt</button><button type="button" data-action="undo">↶ Undo</button></div><div class="feedback" id="trace-feedback" role="status" aria-live="polite" hidden></div><div class="actions"><button class="action" id="reset-trace" type="button">Trace zurücksetzen</button><button class="action hint-btn" data-hint="hint-1" aria-expanded="false" type="button">Hinweis 1</button><button class="action hint-btn" data-hint="hint-2" aria-expanded="false" type="button">Hinweis 2</button></div><div class="hint" id="hint-1" hidden>Prüfe gegen <em>alle</em> früheren Damen: gleiche Spalte sowie <code>|ΔZeile| = |ΔSpalte|</code>.</div><div class="hint" id="hint-2" hidden>Wenn eine Zeile keinen gültigen Platz mehr hat: letzte gesetzte Dame auf <code>-1</code> zurücksetzen, dann deren nächste Spalte probieren.</div></div>
+    <div><div id="board" class="board" role="img" aria-label="Leeres Vier-mal-vier-Schachbrett"></div><p id="candidate" class="candidate"></p></div>
+  </section>
+
+  <section class="step" id="mode-step" hidden>
+    <h2>2 · Erste Lösung oder alle?</h2>
+    <div class="mode-grid"><article><h3><code>./ndamen 4</code></h3><p>Beim ersten vollständigen Brett <code>true</code> zurückgeben und die Lösung ausgeben.</p></article><article><h3><code>./ndamen 4 -a</code></h3><p>Am Blatt des Suchbaums zählen, zurückkehren und systematisch weitersuchen. Nur die Anzahl ausgeben.</p></article></div>
+    <p class="prompt">Welche Stelle trennt die beiden Modi?</p><div class="choices" role="group" aria-label="Abbruchbedingung"><button class="choice" data-mode="first" type="button">Immer beim ersten Treffer stoppen</button><button class="choice" data-mode="column-only" type="button">Nur gleiche Spalten prüfen</button><button class="choice" data-mode="leaf" type="button">Im Basisfall: je nach <code>-a</code> stoppen oder zählen</button></div><div class="feedback" id="mode-feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step lab-box" id="lab-step" hidden>
+    <h2>3 · C++-Lab ohne Komplettlösung</h2><p>Ergänze die TODOs in <code>lab/nqueens.cpp</code>. <code>main.cpp</code> übernimmt bereits den CLI-Vertrag und misst mit <code>steady_clock</code>.</p>
+    <code class="command">cd uebungsblaetter-interaktiv/blatt-06/aufgabe-01/lab
+./run-tests.sh</code>
+    <p class="tiny">Der Starter kompiliert und ist absichtlich rot. Der Harness prüft Konflikte, Undo-Wirkung, die erste N=4-Lösung, Lösungszahlen N=1…8 sowie echte CLI-Ausgaben. Binärdateien und Logs landen nur unter <code>/tmp</code>.</p>
+  </section>
+
+  <section class="step" id="gate-step" hidden>
+    <h2>4 · Abschluss-Gate</h2><p>Ordne die bekannten Anzahlen für N=1…8 zu. Damit erkennst du auch einen Solver, der beim Backtrack eine Dame stehen lässt.</p>
+    <label class="count-label" for="counts">Anzahlen, kommasepariert</label><input id="counts" class="count-input" autocomplete="off" placeholder="N=1, N=2, …, N=8">
+    <button class="action primary" id="check-counts" type="button">Counts prüfen</button><div class="feedback" id="count-feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step completion" id="completion" hidden><h2>Beleg statt Komplettlösung</h2><p>Erster N=4-Treffer: <code>[1, 3, 0, 2]</code> (Zeile → Spalte). Erwartete Counts: <code>1, 0, 0, 2, 10, 4, 40, 92</code>. Beide CLI-Modi müssen zusätzlich eine Dauer ausgeben.</p><label class="proof-check"><input id="tests-pass" type="checkbox"> Mein echter Lauf meldet alle API- und CLI-Tests als bestanden.</label><div class="state-row"><button class="state-btn" data-state="sitzt" type="button">✓ Sitzt</button><button class="state-btn" data-state="wackelt" type="button">↻ Wackelt</button></div><p class="tiny" id="state-feedback" aria-live="polite"></p></section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../../blatt-05/aufgabe-04/index.html">← Blatt 05</a><a href="../index.html">Blatt 06</a><a href="../../index.html">Gesamtübersicht</a><a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a><a href="../aufgabe-02/index.html">Aufgabe 2 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agentenfähig — Human Agent Interface</title>
+  <meta name="description" content="Dein Agenten-Setup läuft nicht rund? Samuel Fleig richtet Claude Code, Codex und Co. ein, repariert Setups und macht Teams agentenfähig. Festpreis, remote." />
+  <link rel="icon" href="/favicon.png" />
+  <link rel="canonical" href="https://www.human-agent-interface.com/agentfaehig/" />
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f7f1df;
+      --muted: #b7ad97;
+      --dim: #756d5e;
+      --void: #090a08;
+      --panel: rgba(247, 241, 223, 0.065);
+      --line: rgba(247, 241, 223, 0.18);
+      --line-soft: rgba(247, 241, 223, 0.1);
+      --signal: #a7ff4f;
+      --copper: #ff9f5f;
+      --cyan: #7dd8ff;
+      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 20% 8%, rgba(167, 255, 79, 0.11), transparent 26rem),
+        radial-gradient(circle at 85% 20%, rgba(255, 159, 95, 0.09), transparent 22rem),
+        linear-gradient(180deg, #090a08 0%, #11100d 50%, #070806 100%);
+      font-family: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+    a { color: inherit; }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px); }
+    header { padding: 20px 0; border-bottom: 1px solid var(--line-soft); }
+    .brand { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+    .hero { padding: clamp(48px, 9vw, 96px) 0 40px; }
+    .kicker { font-family: var(--mono); font-size: 0.8rem; color: var(--signal); text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 14px; }
+    h1 { font-size: clamp(2rem, 5.4vw, 3.6rem); line-height: 1.05; margin: 0 0 20px; max-width: 18ch; }
+    .lead { font-size: clamp(1.05rem, 2vw, 1.25rem); color: var(--muted); max-width: 60ch; margin: 0 0 28px; }
+    .jump { display: flex; flex-wrap: wrap; gap: 10px; }
+    .jump a { border: 1px solid var(--line); padding: 10px 16px; text-decoration: none; font-size: 0.95rem; background: var(--panel); }
+    .jump a:hover { border-color: var(--signal); }
+    .offers { display: grid; gap: 20px; padding: 24px 0 56px; }
+    .offer { border: 1px solid var(--line); background: var(--panel); padding: clamp(20px, 3.5vw, 36px); scroll-margin-top: 16px; }
+    .offer:target { border-color: var(--signal); box-shadow: 0 0 0 1px var(--signal); }
+    .who { font-family: var(--mono); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 8px; }
+    .offer:nth-child(1) .who { color: var(--signal); }
+    .offer:nth-child(2) .who { color: var(--copper); }
+    .offer:nth-child(3) .who { color: var(--cyan); }
+    h2 { font-size: clamp(1.4rem, 3vw, 2rem); margin: 0 0 10px; line-height: 1.15; }
+    .problem { color: var(--muted); margin: 0 0 18px; max-width: 62ch; }
+    .cols { display: grid; gap: 18px 32px; grid-template-columns: 1fr; }
+    @media (min-width: 760px) { .cols { grid-template-columns: 1.4fr 1fr; } }
+    ul { margin: 0; padding-left: 1.1em; }
+    li { margin: 0 0 6px; }
+    .facts { border-left: 1px solid var(--line); padding-left: 18px; font-size: 0.95rem; }
+    .facts dt { color: var(--dim); font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .facts dd { margin: 0 0 12px; }
+    .price { font-size: 1.6rem; font-weight: 700; color: var(--ink); }
+    .cta { display: inline-block; margin-top: 22px; padding: 14px 22px; background: var(--signal); color: #0b0d08; font-weight: 700; text-decoration: none; }
+    .cta:hover { filter: brightness(1.08); }
+    .cta-note { display: block; margin-top: 8px; color: var(--dim); font-size: 0.85rem; }
+    .how { padding: 8px 0 56px; }
+    .how h2 { font-size: 1.4rem; }
+    .steps { display: grid; gap: 14px; grid-template-columns: 1fr; counter-reset: s; padding: 0; list-style: none; }
+    @media (min-width: 760px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+    .steps li { border-top: 1px solid var(--line); padding-top: 12px; color: var(--muted); }
+    .steps li::before { counter-increment: s; content: "0" counter(s); display: block; font-family: var(--mono); color: var(--signal); margin-bottom: 4px; }
+    .steps strong { color: var(--ink); }
+    .about { color: var(--muted); max-width: 66ch; padding-bottom: 56px; }
+    footer { border-top: 1px solid var(--line-soft); padding: 22px 0 40px; font-size: 0.85rem; color: var(--dim); }
+    footer a { margin-right: 16px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap"><a class="brand" href="/">Human Agent Interface</a></div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <p class="kicker">Agentenfähig · remote · Festpreis</p>
+      <h1>Dein Agent soll arbeiten, nicht dich beschäftigen.</h1>
+      <p class="lead">Claude Code, Codex, Cursor, Hermes: Ich richte Agenten-Setups ein, repariere, was hakt, und bringe Teams in einen Ablauf, dem sie trauen können. Kleine, klar umrissene Aufträge mit festem Preis.</p>
+      <nav class="jump" aria-label="Angebote">
+        <a href="#enthusiasten">Ich nutze Agenten schon</a>
+        <a href="#geschaeft">Ich will Agenten fürs Geschäft</a>
+        <a href="#teams">Wir sind ein Team</a>
+      </nav>
+    </section>
+
+    <section class="offers">
+      <article class="offer" id="enthusiasten">
+        <p class="who">Für Agent-Enthusiasten</p>
+        <h2>Setup-Rettung</h2>
+        <p class="problem">Der Agent vergisst Kontext, MCP-Server starten nicht, Regeln werden ignoriert, Kosten laufen weg – oder du weißt einfach nicht, warum es gestern ging und heute nicht.</p>
+        <div class="cols">
+          <ul>
+            <li>90 Minuten gemeinsam per Bildschirmfreigabe an deinem Rechner</li>
+            <li>Fehler finden und beheben: Konfiguration, MCP, Berechtigungen, Modelle</li>
+            <li>Saubere CLAUDE.md / AGENTS.md für dein Projekt</li>
+            <li>Kurze Notiz danach: was geändert wurde und warum</li>
+          </ul>
+          <dl class="facts">
+            <dt>Preis</dt><dd><span class="price">190 €</span> fix</dd>
+            <dt>Dauer</dt><dd>90 Minuten, remote</dd>
+            <dt>Gut für</dt><dd>Entwickler, Gründer, Power-User</dd>
+          </dl>
+        </div>
+        <a class="cta" data-offer="Setup-Rettung" href="mailto:samuel@human-agent-interface.com">Setup-Rettung anfragen</a>
+        <span class="cta-note">Öffnet eine vorausgefüllte E-Mail. Antwort innerhalb eines Werktags.</span>
+      </article>
+
+      <article class="offer" id="geschaeft">
+        <p class="who">Für Selbstständige und Geschäftsleute</p>
+        <h2>Rechner agentenfähig machen</h2>
+        <p class="problem">Du willst, dass ein Agent dir Recherche, Vorbereitung oder wiederkehrende Büroarbeit abnimmt – aber zwischen Terminal, Tools und Datenschutz weißt du nicht, wo anfangen.</p>
+        <div class="cols">
+          <ul>
+            <li>Halber Tag gemeinsam: Agent, Werkzeuge und Zugriffe sauber eingerichtet</li>
+            <li>Ein echter Arbeitsablauf aus deinem Alltag läuft am Ende mit Agent</li>
+            <li>Klare Prüfpunkte: was der Agent darf und was du freigibst</li>
+            <li>Kurzanleitung, damit du ohne mich weitermachen kannst</li>
+          </ul>
+          <dl class="facts">
+            <dt>Preis</dt><dd><span class="price">690 €</span> fix</dd>
+            <dt>Dauer</dt><dd>4 Stunden, remote</dd>
+            <dt>Gut für</dt><dd>Selbstständige, Berater, kleine Firmen</dd>
+          </dl>
+        </div>
+        <a class="cta" data-offer="Rechner agentenfähig" href="mailto:samuel@human-agent-interface.com">Termin anfragen</a>
+        <span class="cta-note">Vorab 15 Minuten kostenlos klären, ob es passt.</span>
+      </article>
+
+      <article class="offer" id="teams">
+        <p class="who">Für Teams und Unternehmen</p>
+        <h2>Agenten-Workshop fürs Team</h2>
+        <p class="problem">Einige im Team nutzen Agenten, andere nicht. Niemand weiß genau, wer was prüft, welche Daten rein dürfen und wie Ergebnisse abgenommen werden.</p>
+        <div class="cols">
+          <ul>
+            <li>3-Stunden-Workshop an einem echten Arbeitsablauf eures Teams</li>
+            <li>Gemeinsame Regeln: Rollen, Prüfpunkte, Datengrenzen</li>
+            <li>Startvorlage für Agenten-Regeln in eurem Repo oder Tool</li>
+            <li>Zwei Wochen danach: 60 Minuten Office Hours für offene Fragen</li>
+          </ul>
+          <dl class="facts">
+            <dt>Preis</dt><dd><span class="price">1.200 €</span> fix</dd>
+            <dt>Umfang</dt><dd>bis 8 Personen, remote</dd>
+            <dt>Gut für</dt><dd>Entwicklungs-, Produkt- und Wissensteams</dd>
+          </dl>
+        </div>
+        <a class="cta" data-offer="Team-Workshop" href="mailto:samuel@human-agent-interface.com">Workshop anfragen</a>
+        <span class="cta-note">Vorab 20 Minuten Gespräch, um den Ablauf auszuwählen.</span>
+      </article>
+    </section>
+
+    <section class="how">
+      <h2>So läuft es ab</h2>
+      <ol class="steps">
+        <li><strong>Mail schreiben.</strong> Zwei Sätze zu deinem Problem reichen.</li>
+        <li><strong>Kurz klären.</strong> Ich sage dir ehrlich, ob es passt – oder was du stattdessen brauchst.</li>
+        <li><strong>Termin, Umsetzung, Notiz.</strong> Du bekommst ein laufendes Setup und schriftlich, was gemacht wurde.</li>
+      </ol>
+    </section>
+
+    <section class="about">
+      <p>Ich bin Samuel Fleig und baue mit <a href="/">Human Agent Interface</a> Arbeitsweisen, in denen Menschen die Kontrolle über ihre Agenten behalten. Ich arbeite täglich mit Claude Code, Codex und Hermes – und helfe dort, wo die Einrichtung klemmt.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <a href="/impressum/">Impressum</a>
+      <a href="/datenschutz/">Datenschutz</a>
+      <a href="mailto:samuel@human-agent-interface.com">samuel@human-agent-interface.com</a>
+    </div>
+  </footer>
+
+  <script>
+    // Prefill each mail with the offer and the ad source, so every inquiry can be attributed.
+    (function () {
+      var p = new URLSearchParams(location.search);
+      var source = [p.get("utm_source"), p.get("utm_campaign"), p.get("utm_content")].filter(Boolean).join(" / ");
+      document.querySelectorAll("a.cta[data-offer]").forEach(function (a) {
+        var offer = a.getAttribute("data-offer");
+        var body = "Hallo Samuel,\n\nich interessiere mich für: " + offer + "\n\nMein Problem in zwei Sätzen:\n\n\nTools, die ich nutze:\n\nMögliche Zeiten:\n" +
+          (source ? "\n---\nQuelle: " + source + "\n" : "");
+        a.href = "mailto:samuel@human-agent-interface.com?subject=" + encodeURIComponent("Anfrage: " + offer) + "&body=" + encodeURIComponent(body);
+      });
+    })();
+  </script>
+</body>
+</html>

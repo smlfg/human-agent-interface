@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB07 · Aufgabe 2 · Abzählreim</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · INTERAKTIV</a><a class="back" href="../index.html">← Blatt 07</a></nav>
+  <header class="task-head"><div><span class="kicker">QUEUE · ROTIEREN · ENTFERNEN</span><h1>Josephus: Wer bleibt im Kreis?</h1></div><div class="counter">PB07 · 02/04</div></header>
+
+  <section class="mission">
+    <div class="brief"><h2>Dein Mikro-Schritt</h2><p>Stelle bei <strong>n = 7, k = 3</strong> zuerst genau <strong>k−1 = 2</strong> Kinder von vorn nach hinten. Entferne danach das neue vorderste Kind.</p></div>
+    <div class="source-core">leave → enter   // k−1 mal
+leave           // k-tes Kind scheidet aus</div>
+  </section>
+
+  <section class="step simulator">
+    <div>
+      <h2>1 · Kreis als Queue steuern</h2>
+      <div class="controls"><label>n <input id="n" type="number" min="1" max="20" value="7"></label><label>k <input id="k" type="number" min="1" max="20" value="3"></label><button class="action" id="reset" type="button">↺ Neu</button></div>
+      <div class="actions"><button class="action primary" id="rotate" type="button">Vorn → hinten</button><button class="action danger" id="remove" type="button">Vorderstes scheidet aus</button><button class="action" id="round" type="button">Eine Runde automatisch</button></div>
+      <p id="event" class="event" role="status" aria-live="polite">Runde 1: Noch 2 Rotationen, dann entfernen.</p>
+      <div class="actions"><button class="action hint-btn" data-hint="hint-1" aria-expanded="false" type="button">Hinweis 1</button><button class="action hint-btn" data-hint="hint-2" aria-expanded="false" type="button">Hinweis 2</button></div>
+      <div class="hint" id="hint-1" hidden>Die Queue speichert die Kinder in ihrer aktuellen Zählreihenfolge. Das vorderste Kind bekommt immer die nächste Silbe.</div>
+      <div class="hint" id="hint-2" hidden>Nach <code>k−1</code> Rotationen steht das Kind mit der k-ten Silbe vorn. Dieses wird entfernt und nicht wieder angefügt.</div>
+    </div>
+    <div>
+      <div id="circle" class="circle" role="img" aria-label="Kinderkreis"></div>
+      <div class="queue-box"><span class="queue-label">VORN</span><div id="queue" class="queue" aria-label="Aktuelle Queue"></div><span class="queue-label">HINTEN</span></div>
+      <p id="history" class="history">Ausgeschieden: –</p>
+    </div>
+  </section>
+
+  <section class="step" id="gate-step">
+    <h2>2 · Mechanik-Gate</h2><p>Welche Schleife bildet den Aufgabentext korrekt ab?</p>
+    <div class="choices" role="group" aria-label="Algorithmus auswählen">
+      <button class="choice" data-path="extra" type="button"><code>k</code>-mal rotieren, dann zusätzlich entfernen</button>
+      <button class="choice" data-path="one" type="button">Kinder als 1 bis n nummerieren</button>
+      <button class="choice" data-path="correct" type="button"><code>k−1</code>-mal rotieren, dann Vorderstes entfernen</button>
+    </div>
+    <div id="gate-feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step lab-box" id="lab-step" hidden>
+    <h2>3 · C++-Lab</h2><p>Ergänze nur die TODOs in <code>lab/josephus.cpp</code>. Die Signatur und Tests stehen bereit; eine Komplettimplementierung wird nicht gezeigt.</p>
+    <code class="command">cd uebungsblaetter-interaktiv/blatt-07/aufgabe-02/lab
+./run-tests.sh</code>
+    <p class="tiny">Geprüft werden die beiden Pflichtfälle sowie n=1, k=1 und k&gt;n. Das Testprogramm entsteht ausschließlich unter <code>/tmp</code>.</p>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Abschlussbeleg</h2><p>Die Simulation bestätigt <code>abzaehlreim(7,3) = 3</code>. Prüfe zusätzlich <code>abzaehlreim(10,2) = 4</code> im Lab.</p>
+    <label class="proof-check"><input id="tests-pass" type="checkbox"> Mein lokaler Testlauf meldet alle Fälle als bestanden.</label>
+    <div class="state-row"><button class="state-btn" data-state="sitzt" type="button">✓ Sitzt</button><button class="state-btn" data-state="wackelt" type="button">↻ Wackelt</button></div><p class="tiny" id="state-feedback" aria-live="polite"></p>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-01/index.html">← Aufgabe 1</a><a href="../index.html">Blatt 07</a><a href="../../index.html">Gesamtübersicht</a><a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a><a href="../aufgabe-03/index.html">Aufgabe 3 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

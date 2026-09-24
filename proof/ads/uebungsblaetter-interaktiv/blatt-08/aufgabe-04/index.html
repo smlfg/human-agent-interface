@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 08 · Aufgabe 04 · intset als Suchbaum</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · Übungsblätter</a><a class="back" href="../index.html">← Blatt 08</a></nav>
+
+  <header class="task-head"><div><span class="kicker">BST-SET · POINTERPFAD</span><h1>Welche Kante darf sich ändern?</h1></div><div class="counter">04 / 07</div></header>
+
+  <section class="media-pre">
+    <div class="media-route-top">
+      <h2>Vorher ansehen</h2>
+      <span class="media-duration">Short · 1:02</span>
+    </div>
+    <p class="media-instruction">Anderer Baum als deine Aufgabe — bewusst. Die Mechanik überträgst du selbst.</p>
+    <video class="media-player short-player" controls preload="metadata" poster="../../../media-posters/pb08a04-short.webp" src="../../../notebooklm-study-pack/10_uebungsblaetter/blatt08/short_PB08A04_zwei-kinder-loeschen.mp4">Dein Browser unterstützt Video nicht.</video>
+    <div class="recall-box"><strong>Sofort-Recall</strong>Warum darf beim Löschen mit zwei Kindern nicht einfach ein Kind hochrutschen?</div>
+  </section>
+
+  <section class="mission">
+    <div class="brief">
+      <h2>Originalauftrag</h2>
+      <p>Implementiere eine Menge ganzer Zahlen als binären Suchbaum: initialisieren, freigeben, hinzufügen, suchen, entfernen, leer prüfen und Größe liefern.</p>
+      <p>Danach muss derselbe Zufallszahlentest wie beim <code>vector&lt;int&gt;</code>-Set dieselben Mengenstände ergeben. Der größere <code>bench</code>-Test prüft zusätzlich jede Rückgabe und misst Einfügen sowie Entfernen.</p>
+      <div class="source-row"><a class="source-link" href="/proof/ads/source-materials-not-included.html">Original · Seite 1 ↗</a><a class="source-link" href="/proof/ads/source-materials-not-included.html">Benchmark · Seite 2 ↗</a></div>
+    </div>
+    <div class="card first-action">
+      <p class="eyebrow">Erste Aktion · du bist der Pointer</p>
+      <h2>Wo suchst du die 11?</h2>
+      <div class="tree" aria-label="Binärer Suchbaum mit Wurzel 8, Kindern 3 und 12, sowie 10 und 14 unter 12">
+        <button class="node root" data-value="8">8</button>
+        <span class="edge e-left"></span><span class="edge e-right"></span>
+        <button class="node n3" data-value="3">3</button><button class="node n12" data-value="12">12</button>
+        <span class="edge e-10"></span><span class="edge e-14"></span>
+        <button class="node n10" data-value="10">10</button><button class="node n14" data-value="14">14</button>
+      </div>
+      <p class="prompt" id="path-prompt">Klicke den ersten verglichenen Knoten.</p>
+      <div class="feedback" id="path-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step" id="contract-step" hidden>
+    <h2>1 · Set-Vertrag statt nur Baumform</h2>
+    <p><code>is_add(&amp;s, 10)</code> trifft im gezeigten Baum auf ein Duplikat. Welche Zustandsänderung ist korrekt?</p>
+    <div class="choices">
+      <button class="choice contract-choice" data-answer="grow">Neuen 10-Knoten anlegen, Größe +1</button>
+      <button class="choice contract-choice" data-answer="size">Keinen Knoten anlegen, aber Größe +1</button>
+      <button class="choice contract-choice" data-answer="correct">Nichts ändern, <code>false</code> liefern, Größe bleibt 5</button>
+    </div>
+    <div class="feedback" id="contract-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="delete-step" hidden>
+    <h2>2 · Löschen mit zwei Kindern</h2>
+    <p>Entferne <strong>12</strong>. Klicke in der richtigen Reihenfolge: Zielknoten → Ersatzknoten. Der Ersatz soll hier der Inorder-Nachfolger sein.</p>
+    <div class="delete-tree" id="delete-tree">
+      <button data-delete="8">8</button><div class="delete-row"><button data-delete="3">3</button><button data-delete="12">12</button></div><div class="delete-row lower"><span></span><button data-delete="10">10</button><button data-delete="14">14</button></div>
+    </div>
+    <p class="reconnect" id="reconnect-copy">Noch kein Pointer wird verändert.</p>
+    <div class="feedback" id="delete-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step help">
+    <h2>Hinweise</h2>
+    <div class="actions"><button class="action hint-btn" data-hint="hint-1">Hinweis 1 · Pointerpfad</button><button class="action hint-btn" data-hint="hint-2">Hinweis 2 · Zwei Kinder</button></div>
+    <div class="hint" id="hint-1" hidden>Halte gedanklich einen Zeiger auf den aktuellen Knoten: vergleichen, genau einer Kante folgen, bei <code>nullptr</code> stoppen. Zum Verändern brauchst du zusätzlich den Parent-Link oder einen Pointer auf den Link.</div>
+    <div class="hint" id="hint-2" hidden>Ein Knoten mit zwei Kindern kann nicht einfach verschwinden. Nimm z. B. das kleinste Element im rechten Teilbaum, übertrage dessen Wert und entferne anschließend diesen Ersatzknoten an seiner alten Stelle.</div>
+  </section>
+
+  <section class="step solution">
+    <h2>API- und Rückgabeverträge</h2>
+    <p id="gate-copy">Noch gesperrt: Laufe den Suchpfad, entscheide das Duplikat und repariere den Zwei-Kinder-Fall — oder decke die Verträge nach einem Versuch bewusst auf.</p>
+    <button class="action" id="reveal">Verträge bewusst aufdecken</button>
+    <div id="solution" hidden>
+      <div class="contract-grid">
+        <div><code>is_init</code><span>leer, Größe 0</span></div><div><code>is_clear</code><span>alle Knoten frei, wieder leer</span></div>
+        <div><code>is_add</code><span><code>true</code> genau bei neuem Element</span></div><div><code>is_contains</code><span><code>true</code> genau bei Fund</span></div>
+        <div><code>is_remove</code><span><code>true</code> genau bei echter Entfernung</span></div><div><code>is_isempty</code><span>äquivalent zu Größe 0</span></div>
+        <div><code>is_size</code><span>Anzahl verschiedener Elemente</span></div>
+      </div>
+      <p><strong>Invarianten:</strong> links kleiner, rechts größer; keine Duplikatknoten; gespeicherte Größe entspricht der erreichbaren Knotenzahl. Eine erfolgreiche Mutation ändert die Größe genau einmal.</p>
+    </div>
+  </section>
+
+  <section class="step lab" id="lab-step" hidden>
+    <h2>3 · C++-Lab: Gerüst, keine Komplettlösung</h2>
+    <p>Implementiere die TODOs in <code>lab/intset.cpp</code>. Der Testtreiber prüft leeren Zustand, Rückgabewerte, Duplikate, Größenänderungen und Entfernen einer Wurzel mit zwei Kindern.</p>
+    <pre><code>cd lab
+./run-tests.sh</code></pre>
+    <p><strong>Benchmarkvertrag aus der Quelle:</strong> 100.000 reproduzierbare Zufallszahlen in <code>1…100000</code>; erste 50.000 mit vorherigem <code>contains</code> einfügen und Rückgabe abgleichen, danach alle enthalten; zweite 50.000 entfernen und Rückgabe abgleichen, danach alle abwesend. Zeiten getrennt nach Einfügen und Entfernen ausgeben. Das Lab prüft bewusst nur die kleinen mechanischen Verträge — den Quellen-Benchmark baust du anschließend in dein Kursprojekt ein.</p>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Abschlussbeleg</h2>
+    <p>Fertig, wenn du jeden API-Rückgabevertrag erklären kannst, Duplikate die Größe nicht verändern, der Zwei-Kinder-Fall den Ersatz wieder korrekt reconnectet und <code>./run-tests.sh</code> grün ist.</p>
+    <div class="state-row"><button class="state-btn" data-state="sitzt">Sitzt</button><button class="state-btn" data-state="wackelt">Wackelt</button></div>
+    <div class="feedback" id="state-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-03/index.html">← Aufgabe 03</a><a href="../index.html">Blattübersicht</a><a href="../aufgabe-05/index.html">Aufgabe 05 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

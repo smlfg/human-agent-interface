@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AVL-Rotationen Mini-Trainer</title>
+  <style>
+    :root { --bg:#0f172a; --card:#172033; --ink:#f8fafc; --muted:#cbd5e1; --green:#22c55e; --yellow:#facc15; --blue:#38bdf8; --red:#fb7185; }
+    body { margin:0; font-family: system-ui, sans-serif; background:var(--bg); color:var(--ink); }
+    main { max-width: 900px; margin: 0 auto; padding: 24px; }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    .sub { color: var(--muted); margin-bottom: 18px; }
+    .grid { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+    .card { background:var(--card); border:1px solid #334155; border-radius:16px; padding:16px; box-shadow:0 12px 28px #0004; }
+    button { background:#1e293b; color:var(--ink); border:1px solid #475569; border-radius:10px; padding:10px 12px; margin:4px; cursor:pointer; font-weight:700; }
+    button:hover { border-color:var(--blue); }
+    .active { background:#075985; border-color:var(--blue); }
+    .rule { font-size:18px; line-height:1.45; }
+    .hint { color:var(--yellow); font-weight:700; }
+    svg { width:100%; height:280px; background:#0b1220; border-radius:12px; }
+    .node { fill:#1e293b; stroke:var(--blue); stroke-width:3; }
+    .bad { stroke:var(--red); }
+    .good { stroke:var(--green); }
+    .edge { stroke:#94a3b8; stroke-width:3; }
+    text { fill:var(--ink); font-size:20px; font-weight:800; text-anchor:middle; dominant-baseline:middle; }
+    .small { color: var(--muted); font-size: 14px; }
+    @media (max-width:760px){ .grid{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+<main>
+  <h1>AVL-Rotationen: Warum gibt es das?</h1>
+  <div class="sub">Mini-Multimedia-Seite: sehen → hören → eine Entscheidung drillen.</div>
+
+  <section class="card">
+    <audio controls src="../audio/avl-rotationen-warum.mp3"></audio>
+    <p class="small">Audio: kurze Erklärung. Falls der Player nichts abspielt, nutze die Regelkarte darunter.</p>
+  </section>
+
+  <div class="grid">
+    <section class="card">
+      <h2>1. Problem</h2>
+      <p class="rule">Ein Suchbaum kann zur <span class="hint">Liste</span> entarten. Dann dauert Suchen im Worst Case O(n).</p>
+      <svg viewBox="0 0 360 280" aria-label="Schiefer Baum vor AVL-Rotation">
+        <line class="edge" x1="180" y1="55" x2="120" y2="125" />
+        <line class="edge" x1="120" y1="145" x2="70" y2="215" />
+        <circle class="node bad" cx="180" cy="45" r="30"/><text x="180" y="45">30</text>
+        <circle class="node" cx="120" cy="135" r="30"/><text x="120" y="135">20</text>
+        <circle class="node" cx="70" cy="225" r="30"/><text x="70" y="225">10</text>
+      </svg>
+    </section>
+
+    <section class="card">
+      <h2>2. Reparatur</h2>
+      <p class="rule">Rotation macht den mittleren Wert zur neuen Teilbaum-Wurzel. Der Baum bleibt Suchbaum, aber wird flacher.</p>
+      <svg viewBox="0 0 360 280" aria-label="Balancierter Baum nach AVL-Rotation">
+        <line class="edge" x1="180" y1="70" x2="105" y2="155" />
+        <line class="edge" x1="180" y1="70" x2="255" y2="155" />
+        <circle class="node good" cx="180" cy="55" r="32"/><text x="180" y="55">20</text>
+        <circle class="node" cx="105" cy="170" r="32"/><text x="105" y="170">10</text>
+        <circle class="node" cx="255" cy="170" r="32"/><text x="255" y="170">30</text>
+      </svg>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:16px;">
+    <h2>3. Fall erkennen</h2>
+    <p class="rule">Klick den Weg vom kaputten Knoten zum neuen Wert:</p>
+    <button data-case="LL">links → links</button>
+    <button data-case="RR">rechts → rechts</button>
+    <button data-case="LR">links → rechts</button>
+    <button data-case="RL">rechts → links</button>
+    <p id="out" class="rule"><span class="hint">LL</span>: einfache Rechtsrotation. Beispiel: 30 → 20 → 10.</p>
+  </section>
+
+  <section class="card" style="margin-top:16px;">
+    <h2>Dein Drill danach</h2>
+    <p class="rule">Ich zeige dir gleich nur einen Baum. Du sagst: LL, RR, LR oder RL — plus einen halben Satz warum.</p>
+  </section>
+</main>
+<script>
+const texts = {
+  LL: '<span class="hint">LL</span>: links-links. Reparatur: einfache Rechtsrotation. Beispiel: 30 → 20 → 10.',
+  RR: '<span class="hint">RR</span>: rechts-rechts. Reparatur: einfache Linksrotation. Beispiel: 10 → 20 → 30.',
+  LR: '<span class="hint">LR</span>: links-rechts. Reparatur: erst links am linken Kind, dann rechts am kaputten Knoten.',
+  RL: '<span class="hint">RL</span>: rechts-links. Reparatur: erst rechts am rechten Kind, dann links am kaputten Knoten.'
+};
+for (const b of document.querySelectorAll('button')) {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById('out').innerHTML = texts[b.dataset.case];
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,336 @@
+:root {
+      color-scheme: dark;
+      --bg: #090a08;
+      --panel: #11120f;
+      --ink: #f7f1df;
+      --muted: #b7ad97;
+      --quiet: #7a715f;
+      --line: rgba(247, 241, 223, 0.16);
+      --line-strong: rgba(247, 241, 223, 0.3);
+      --signal: #a7ff4f;
+      --copper: #ff9f5f;
+      --red: #ff6a5f;
+      --max: 1360px;
+      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+      --body: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
+      --display: Georgia, "Times New Roman", serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      color: var(--ink);
+      background: #090a08;
+      font-family: var(--body);
+      line-height: 1.45;
+    }
+
+    main {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      padding: 34px 0 58px;
+    }
+
+    header {
+      padding: 18px 0 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow,
+    .step-count,
+    .limit,
+    .tiny {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      color: var(--copper);
+    }
+
+    h1,
+    h2,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 1040px;
+      margin-top: 12px;
+      font-family: var(--display);
+      font-size: clamp(2.8rem, 7vw, 5.8rem);
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .lead {
+      max-width: 920px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2vw, 1.3rem);
+    }
+
+    .back-link {
+      display: inline-flex;
+      margin-top: 22px;
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .step-count {
+      margin: 20px 0 14px;
+      color: var(--muted);
+    }
+
+    form {
+      display: block;
+    }
+
+    .step {
+      display: none;
+      min-height: 520px;
+      border: 1px solid var(--line);
+      background: rgba(17, 18, 15, 0.84);
+      padding: clamp(18px, 4vw, 34px);
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    .step h2 {
+      max-width: 980px;
+      font-family: var(--display);
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .hint {
+      max-width: 860px;
+      margin-top: 10px;
+      color: var(--muted);
+    }
+
+    .field {
+      margin-top: 20px;
+    }
+
+    .field + .field {
+      margin-top: 18px;
+    }
+
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    label,
+    .label {
+      display: block;
+      color: var(--ink);
+      font-weight: 750;
+    }
+
+    .limit,
+    .tiny {
+      color: var(--quiet);
+      white-space: nowrap;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid var(--line);
+      background: #090a08;
+      color: var(--ink);
+      padding: 11px 12px;
+      font: inherit;
+      border-radius: 0;
+    }
+
+    textarea {
+      min-height: 82px;
+      resize: vertical;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .choice {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: rgba(247, 241, 223, 0.04);
+      padding: 9px 10px;
+      color: var(--muted);
+      font-size: 0.94rem;
+      font-weight: 650;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .choice input {
+      flex: 0 0 auto;
+      accent-color: var(--signal);
+    }
+
+    .choice:has(input:checked) {
+      border-color: rgba(167, 255, 79, 0.68);
+      background: rgba(167, 255, 79, 0.1);
+      color: var(--ink);
+    }
+
+    .more-wrap {
+      margin-top: 10px;
+    }
+
+    .more-panel {
+      display: none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .more-panel.open {
+      display: block;
+    }
+
+    .inline-note {
+      margin-top: 10px;
+      color: var(--quiet);
+      font-size: 0.94rem;
+    }
+
+    .warning {
+      display: none;
+      margin-top: 8px;
+      color: var(--red);
+      font-size: 0.95rem;
+    }
+
+    .warning.visible {
+      display: block;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .left-actions,
+    .right-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      min-height: 44px;
+      border: 1px solid var(--line-strong);
+      background: rgba(247, 241, 223, 0.07);
+      color: var(--ink);
+      padding: 0 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    button.primary {
+      border-color: rgba(167, 255, 79, 0.72);
+      background: var(--signal);
+      color: #11150d;
+    }
+
+    button.text-button {
+      min-height: 34px;
+      border-color: transparent;
+      background: transparent;
+      color: var(--muted);
+      padding: 0;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    button:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+    }
+
+    .packet-step {
+      min-height: unset;
+    }
+
+    pre {
+      max-height: 56vh;
+      overflow: auto;
+      white-space: pre-wrap;
+      margin: 20px 0 0;
+      border: 1px solid var(--line);
+      background: #090a08;
+      color: var(--muted);
+      padding: 14px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 760px) {
+      main {
+        width: min(100% - 22px, var(--max));
+        padding-top: 20px;
+      }
+
+      .step {
+        min-height: auto;
+      }
+
+      .choice-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-actions {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .left-actions,
+      .right-actions {
+        width: 100%;
+      }
+
+      button:not(.text-button) {
+        flex: 1;
+      }
+    }

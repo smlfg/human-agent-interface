@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>ADS Aufgabe wird geöffnet …</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <p>Die einzelne Aufgabenseite wird geöffnet …</p>
+    <noscript><a href="index.html">Zur Aufgabenübersicht</a></noscript>
+  </main>
+  <script>
+    const raw = Number(new URLSearchParams(location.search).get("n"));
+    const number = Math.min(17, Math.max(1, Number.isFinite(raw) ? raw : 1));
+    location.replace(`task-${String(number).padStart(2, "0")}/index.html`);
+  </script>
+</body>
+</html>

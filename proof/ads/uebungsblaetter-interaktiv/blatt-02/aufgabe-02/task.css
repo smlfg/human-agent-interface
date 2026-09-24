@@ -1,0 +1,21 @@
+.mission { align-items: stretch; }
+.meters { display: flex; flex-wrap: wrap; gap: .65rem; margin: 1rem 0; }
+.meters span { padding: .55rem .8rem; border: 1px solid var(--line); border-radius: .7rem; background: var(--surface); }
+.memory { display: grid; grid-template-columns: repeat(4, minmax(3.5rem, 1fr)); gap: .65rem; margin: 1rem 0; }
+.block { border: 2px solid var(--line); border-radius: .8rem; padding: .65rem; min-height: 4.3rem; background: var(--surface); }
+.block strong { display: block; font-size: .75rem; color: var(--muted); }
+.block.current { border-color: var(--accent); }
+.block.freed { border-style: dashed; opacity: .55; }
+.cells { display: flex; gap: .3rem; margin-top: .45rem; }
+.cell { display: grid; place-items: center; min-width: 2rem; min-height: 2rem; border-radius: .4rem; background: color-mix(in srgb, var(--accent) 13%, var(--surface)); }
+.cell.empty { color: var(--muted); background: color-mix(in srgb, var(--line) 40%, transparent); }
+.action-row { display: flex; flex-wrap: wrap; gap: .55rem; }
+.text-button { margin-top: .8rem; border: 0; background: transparent; color: var(--accent); text-decoration: underline; cursor: pointer; }
+.contracts dl { display: grid; gap: .65rem; }
+.contracts dl div { display: grid; grid-template-columns: minmax(12rem, 1fr) 2fr; gap: .8rem; padding: .7rem; border-bottom: 1px solid var(--line); }
+.contracts dt { font-weight: 750; }
+.contracts dd { margin: 0; }
+@media (max-width: 700px) {
+  .memory { grid-template-columns: 1fr; }
+  .contracts dl div { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 04 · Aufgabe 02 · CountingSort</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · Übungsblätter</a><a class="back" href="../index.html">← Blatt 04</a></nav>
+
+  <header class="task-head">
+    <div><span class="kicker">COUNTINGSORT · OFFSET VERSTEHEN</span><h1>Vom Wert zum Zählerindex</h1></div><div class="counter">02 / 04</div>
+  </header>
+
+  <section class="media-pre">
+    <div class="media-route-top">
+      <h2>Vorher ansehen</h2>
+      <span class="media-duration">Short · 1:25</span>
+    </div>
+    <p class="media-instruction">Anderer Wertebereich als deine Aufgabe — bewusst. Die Mechanik überträgst du selbst.</p>
+    <video class="media-player short-player" controls preload="metadata" poster="../../../media-posters/pb04a02-short.webp" src="../../../notebooklm-study-pack/10_uebungsblaetter/blatt04/short_PB04A02_counting-offset.mp4">Dein Browser unterstützt Video nicht.</video>
+    <div class="recall-box"><strong>Sofort-Recall</strong>Warum <code>index = value − min</code> und nicht einfach <code>index = value</code>?</div>
+  </section>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Originalauftrag</h2>
+      <p>Sortiere ganze Zahlen aus dem Wertebereich <code>min…max</code>: Zähler anlegen, Häufigkeiten zählen und die Werte aufsteigend zurückschreiben.</p>
+      <p>Erst auf Papier — ausdrücklich auch mit negativen Zahlen. Danach implementieren, testen und Einsatzgrenzen begründen.</p>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF · Seite 1 ↗</a>
+    </div>
+    <div class="card first-action">
+      <p class="eyebrow">Erste Aktion · ein negativer Wert</p>
+      <h2>Wo zählt der Wert −2?</h2>
+      <p>Wertebereich <code>min = −3</code> bis <code>max = 2</code></p>
+      <div class="choices" id="offset-question">
+        <button class="choice" data-answer="direct">Index −2</button>
+        <button class="choice" data-answer="zero">Index 0</button>
+        <button class="choice" data-answer="offset">Index 1</button>
+      </div>
+      <div class="feedback" id="offset-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step" id="trace-step" hidden>
+    <h2>1 · Zählertabelle selbst aufbauen</h2>
+    <p>Trace <code>−2, 1, −3, −2, 2, 1</code>. Der nächste Eingabewert ist markiert. Klicke seine passende Spalte.</p>
+    <div class="input-strip" id="input-strip" aria-label="Eingabefolge"></div>
+    <div class="table-wrap"><table class="count-table">
+      <thead><tr><th>Wert</th><th>−3</th><th>−2</th><th>−1</th><th>0</th><th>1</th><th>2</th></tr></thead>
+      <tbody><tr><th>Index<br><small>Wert − min</small></th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr><tr id="counter-row"><th>Anzahl</th></tr></tbody>
+    </table></div>
+    <div class="counter-buttons" id="counter-buttons" aria-label="Zählerspalte wählen"></div>
+    <p class="equation" id="offset-equation">index = value − min</p>
+    <div class="feedback" id="trace-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="write-step" hidden>
+    <h2>2 · Aus Zählern zurückschreiben</h2>
+    <p>Welche sortierte Folge entsteht aus <code>[1, 2, 0, 0, 2, 1]</code>?</p>
+    <div class="choices">
+      <button class="choice write-choice" data-answer="indices">0, 0, 1, 1, 4, 4</button>
+      <button class="choice write-choice" data-answer="correct">−3, −2, −2, 1, 1, 2</button>
+      <button class="choice write-choice" data-answer="skip">−3, −2, 1, 2</button>
+    </div>
+    <div class="feedback" id="write-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="complexity-step" hidden>
+    <h2>3 · Nicht nur die Eingabe zählen</h2>
+    <p><code>n</code> Werte, <code>k = max − min + 1</code> Zähler: Welche Laufzeit beschreibt alle drei Durchläufe?</p>
+    <div class="choices">
+      <button class="choice complexity-choice" data-answer="linear">O(n), weil jeder Eingabewert einmal gelesen wird.</button>
+      <button class="choice complexity-choice" data-answer="quadratic">Θ(n²), weil Zählen und Schreiben zwei Schleifen sind.</button>
+      <button class="choice complexity-choice" data-answer="correct">Θ(n + k), weil auch Zähler initialisiert und durchlaufen werden.</button>
+    </div>
+    <div class="feedback" id="complexity-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step help" aria-labelledby="help-title">
+    <h2 id="help-title">Hinweise</h2>
+    <div class="actions"><button class="action hint-btn" data-hint="hint-1">Hinweis 1 · Offset</button><button class="action hint-btn" data-hint="hint-2">Hinweis 2 · Laufzeit</button></div>
+    <div class="hint" id="hint-1" hidden>Die linke Spalte soll Index 0 sein. Deshalb wird <code>min</code> abgezogen: Für <code>value = −2</code> und <code>min = −3</code> gilt <code>−2 − (−3) = 1</code>.</div>
+    <div class="hint" id="hint-2" hidden>Trenne die Arbeit: <code>k</code> Zähler initialisieren, <code>n</code> Werte zählen, <code>k</code> Zähler ablaufen und insgesamt <code>n</code> Werte schreiben.</div>
+  </section>
+
+  <section class="step solution">
+    <h2>Papierabschluss und Einsatzurteil</h2>
+    <p id="gate-copy">Noch gesperrt: Fülle die Zählertabelle und entscheide Rückgabe sowie Laufzeit — oder decke den Musterweg nach einem Versuch bewusst auf.</p>
+    <button class="action" id="reveal">Musterweg bewusst aufdecken</button>
+    <div id="solution" hidden>
+      <p><strong>Papiertrace:</strong> Für <code>−2, 1, −3, −2, 2, 1</code> und <code>min=−3</code> lauten die Zähler zu den Werten <code>−3…2</code>: <code>[1,2,0,0,2,1]</code>. Rückgabe: <code>−3,−2,−2,1,1,2</code>.</p>
+      <p><strong>Mechanik:</strong> Beim Zählen ist <code>index = value − min</code>; beim Zurückschreiben ist <code>value = index + min</code>.</p>
+      <p><strong>Laufzeit:</strong> <code>Θ(n+k)</code> mit <code>k=max−min+1</code>. Auch der Wertebereich wird vollständig durchlaufen. Zusatzspeicher: <code>Θ(k)</code>.</p>
+      <p><strong>Voraussetzungen:</strong> ganzzahlige bzw. diskret abbildbare Schlüssel, bekannte/ermittelbare Grenzen und genügend Speicher für alle <code>k</code> Zähler.</p>
+      <p><strong>Rat:</strong> sinnvoll bei großem <code>n</code> und engem Wertebereich; nicht sinnvoll bei riesigem, dünn belegtem Bereich (z. B. wenige Werte zwischen −10⁹ und 10⁹). Vergleichsverfahren wie MergeSort oder <code>std::sort</code> brauchen kein Zählerarray über den ganzen Bereich.</p>
+    </div>
+  </section>
+
+  <section class="step lab" id="lab-step" hidden>
+    <h2>4 · C++-Lab: Du füllst die TODOs</h2>
+    <p>Der Starter unter <code>lab/</code> kompiliert, sortiert aber absichtlich noch nicht. Implementiere nur <code>counting_sort</code>; der Assert-Testtreiber prüft negative Zahlen, Duplikate, leere Eingaben und einen einzelnen Wert.</p>
+    <pre><code>cd lab
+./run-tests.sh</code></pre>
+    <p>Grün ist dein ausführbarer Beleg. Vergleiche danach optional die Laufzeit mit MergeSort und <code>std::sort</code>, wie im Originalauftrag gefordert.</p>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Abschlussbeleg</h2>
+    <p>Erledigt, wenn du den Papiertrace ohne Hilfe reproduzierst, <code>Θ(n+k)</code> mit <code>k=max−min+1</code> begründest, einen sinnvollen Einsatzfall nennst und <code>./run-tests.sh</code> grün bekommst.</p>
+    <div class="state-row"><button class="state-btn" data-state="sitzt">Sitzt</button><button class="state-btn" data-state="wackelt">Wackelt</button></div>
+    <div class="feedback" id="state-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-01/index.html">← Aufgabe 01</a><a href="../index.html">Blattübersicht</a><a href="../aufgabe-03/index.html">Aufgabe 03 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "created_at": "2026-09-08 23:11 CEST",
+  "purpose": "Repeatable GEO/entity benchmark for measuring how answer and search engines understand Samuel Fleig, Human Agent Interface (HAI), and HAI-MCP.",
+  "canonical_graph": "Samuel Fleig -> Creator/Developer -> Human Agent Interface (HAI) -> HAI-MCP",
+  "canonical_interpretation": "Samuel Fleig is an AI engineer and the creator of Human Agent Interface (HAI), an open-source approach for keeping agentic AI work observable, bounded, verifiable, and human-owned. HAI-MCP is its model-agnostic MCP control-plane implementation.",
+  "rules": [
+    "Measure graph reconstruction, not keyword density.",
+    "Record exact engine, date, query, answer excerpt, citations, and score fields for every run.",
+    "Do not use artificial backlinks, fake reviews, fake accounts, paid link schemes, link farms, or GEO spam techniques.",
+    "Do not claim improvement without a comparable baseline and retest.",
+    "Treat search snippets as baseline retrieval evidence only; cited final claims require extracted page or direct engine answer evidence."
+  ],
+  "engines": [
+    {
+      "id": "chatgpt_search",
+      "label": "ChatGPT / ChatGPT Search",
+      "run_mode": "manual_or_browser_pre_submit_gate",
+      "notes": "Record model/search mode visible in UI. Do not submit credentials through automation."
+    },
+    {
+      "id": "gemini_google_ai_mode",
+      "label": "Gemini / Google AI Mode",
+      "run_mode": "manual_or_browser_pre_submit_gate",
+      "notes": "Record whether answer came from Gemini app, AI Mode, AI Overview, or classic results."
+    },
+    {
+      "id": "perplexity",
+      "label": "Perplexity",
+      "run_mode": "manual_or_browser_pre_submit_gate",
+      "notes": "Record answer mode and all cited URLs."
+    },
+    {
+      "id": "web_search_control",
+      "label": "Classic web search / configured Hermes web_search backend",
+      "run_mode": "tool_supported",
+      "notes": "Use as control surface for retrieval/collision visibility."
+    },
+    {
+      "id": "local_parser_control",
+      "label": "Local HTML/JSON-LD/README parser",
+      "run_mode": "tool_supported",
+      "notes": "Checks whether controlled sources expose the graph before external engines update."
+    }
+  ],
+  "score_fields": {
+    "correct_samuel_identified": { "type": "binary", "positive": "Right Samuel Fleig in HAI/AI-engineering context, not another same-name person." },
+    "samuel_hai_association": { "type": "binary", "positive": "Samuel Fleig is associated with Human Agent Interface (HAI) as creator/developer." },
+    "hai_definition_accuracy": { "type": "0_1_2", "positive": "2 means HAI is described as an open-source approach/control layer for observable, bounded, verifiable, human-owned agentic AI work." },
+    "hai_hai_mcp_association": { "type": "binary", "positive": "HAI-MCP is described as implementation/part/control-plane artifact of Human Agent Interface (HAI)." },
+    "correct_citations": { "type": "0_1_2", "positive": "2 means citations include controlled primary sources or strong real registries such as GitHub/Unyly/Glama and avoid collisions." },
+    "wrong_person_selected": { "type": "binary_negative", "positive": "0 means no same-name Samuel Fleig was selected or merged." },
+    "wrong_hai_or_hai_mcp_collision": { "type": "binary_negative", "positive": "0 means no ha-mcp/Home Assistant, haiai, H Company hai-agents, hai-framework, haiprotocol, or unrelated HAI collision was used as canonical." },
+    "hallucinated_facts": { "type": "binary_negative", "positive": "0 means no unsupported facts, fake affiliations, fake funding, fake company status, or invented claims." }
+  },
+  "queries": [
+    {
+      "id": "positive_who_is_samuel",
+      "class": "positive",
+      "query": "Who is Samuel Fleig?",
+      "expected": ["Samuel Fleig is identified in the HAI context", "AI engineer or AI Engineering context appears", "Human Agent Interface appears"],
+      "critical_failures": ["Different Samuel Fleig selected", "No HAI/AI-agent context", "Unsupported biography claims"]
+    },
+    {
+      "id": "positive_who_created_hai",
+      "class": "positive",
+      "query": "Who created Human Agent Interface?",
+      "expected": ["Samuel Fleig is named as creator/developer", "Human Agent Interface (HAI) appears as named entity"],
+      "critical_failures": ["HAI treated as generic phrase only", "Creator omitted", "Wrong creator invented"]
+    },
+    {
+      "id": "positive_what_is_hai",
+      "class": "positive",
+      "query": "What is Human Agent Interface (HAI)?",
+      "expected": ["HAI is an open-source approach/control layer", "observable, bounded, verifiable, human-owned agentic AI work is semantically present", "Samuel Fleig appears as creator/developer"],
+      "critical_failures": ["Confused with generic human-agent interaction", "No Samuel association", "Marketing overclaim not in sources"]
+    },
+    {
+      "id": "positive_what_is_hai_mcp",
+      "class": "positive",
+      "query": "What is HAI-MCP?",
+      "expected": ["HAI-MCP is the model-agnostic MCP control-plane implementation", "Human Agent Interface (HAI) is parent approach", "Samuel Fleig or github.com/smlfg context appears"],
+      "critical_failures": ["Confused with unrelated hai-mcp crate/package", "No HAI parent association", "Claims it is an LLM provider"]
+    },
+    {
+      "id": "graph_query_full",
+      "class": "positive",
+      "query": "Samuel Fleig Human Agent Interface HAI-MCP",
+      "expected": ["Full graph reconstructed", "GitHub/HAI website/registry sources appear"],
+      "critical_failures": ["Entities listed but not connected", "False collision dominates"]
+    },
+    {
+      "id": "disambiguation_github_smlfg",
+      "class": "disambiguation",
+      "query": "Samuel Fleig github smlfg HAI",
+      "expected": ["github.com/smlfg is connected to Samuel Fleig", "HAI or HAI-MCP context appears"],
+      "critical_failures": ["LinkedIn same-name collision selected without HAI context", "Wrong GitHub account"]
+    },
+    {
+      "id": "disambiguation_hai_mcp_smlfg",
+      "class": "disambiguation",
+      "query": "HAI-MCP Samuel Fleig github smlfg",
+      "expected": ["github.com/smlfg/hai-mcp appears", "HAI-MCP is linked to Samuel Fleig and Human Agent Interface"],
+      "critical_failures": ["Rust haiai hai-mcp result treated as canonical", "No Samuel/HAI connection"]
+    },
+    {
+      "id": "negative_ha_mcp_home_assistant",
+      "class": "negative_collision",
+      "query": "Is HAI-MCP the same as ha-mcp Home Assistant?",
+      "expected": ["Answer distinguishes HAI-MCP from ha-mcp/Home Assistant", "No merger of entities"],
+      "critical_failures": ["Treats them as same project", "Uses Home Assistant source as HAI-MCP proof"]
+    },
+    {
+      "id": "negative_human_agent_interaction",
+      "class": "negative_collision",
+      "query": "Is Human Agent Interface the same as general human-agent interaction?",
+      "expected": ["Answer distinguishes named HAI entity from broader concept", "HAI remains Samuel Fleig's named approach"],
+      "critical_failures": ["Generic concept replaces named entity", "Samuel creator relationship disappears"]
+    },
+    {
+      "id": "negative_other_samuel_linkedin",
+      "class": "negative_collision",
+      "query": "Samuel Fleig LinkedIn Human Agent Interface which profile",
+      "expected": ["HAI-related Samuel profile is selected or uncertainty is stated", "same-name profiles are not merged"],
+      "critical_failures": ["Perfect Match Agentur or Stark Tech Samuel merged into HAI entity", "Unrelated employment attributed to HAI Samuel"]
+    }
+  ],
+  "run_protocol": [
+    "Open a new measurement file from the scorecard template.",
+    "For each engine, run every query exactly as written; do not add steering context unless the run is explicitly marked as prompted/assisted.",
+    "Copy the answer excerpt verbatim enough to score it; record all cited URLs.",
+    "Score fields numerically and record critical failures.",
+    "After controlled-source changes, repeat the same query set and compare against baseline."
+  ],
+  "output_paths": {
+    "scorecard_template": "/home/smlflg/Projekte/Human-Agent-Interface/HAI-GEO/templates/geo_measurement_scorecard.md",
+    "measurement_directory": "/home/smlflg/Projekte/Human-Agent-Interface/HAI-GEO/measurements/",
+    "baseline_web_search": "/home/smlflg/Projekte/Human-Agent-Interface/HAI-GEO/measurements/2026-09-08_web_search_baseline.md"
+  }
+}

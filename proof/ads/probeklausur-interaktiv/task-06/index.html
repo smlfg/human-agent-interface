@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Aufgabe 06 · Big-O-Termwerkstatt</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <script src="task.js" defer></script>
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Seitennavigation">
+    <a class="back" href="../index.html">← Übersicht</a>
+    <span class="brand">ADS · Termwerkstatt</span>
+    <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF</a>
+  </nav>
+
+  <header class="task-head">
+    <div><span class="kicker">ERST KÜRZEN, DANN VERGLEICHEN</span><h1>Big-O ohne Ratespiel</h1></div>
+    <div class="counter">06 / 17</div>
+  </header>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Deine Mission</h2>
+      <p>Entzerre vier Funktionen. Erst danach entscheidest du fünf Big-O-Aussagen — jeweils mit genau einem Satz.</p>
+      <p class="micro"><strong>Erster Zug:</strong> Welcher Term dominiert bei <code>f(n)</code>?</p>
+    </div>
+    <div class="formula-sheet" aria-label="Originalfunktionen">
+      <p><b>f(n)</b> = 1 + 2n + 3n + 4</p>
+      <p><b>g(n)</b> = (1+n)(2+n) − 3n</p>
+      <p><b>h(n)</b> = (17+n²) · log₃(n)</p>
+      <p><b>k(n)</b> = 42 + n² + (1+n)(2−n)</p>
+    </div>
+  </section>
+
+  <section class="step" id="workshop" aria-labelledby="workshop-title">
+    <h2 id="workshop-title">Term-Werkstatt</h2>
+    <p class="prompt">Bearbeite immer nur den leuchtenden Term. Ausmultiplizieren und Kürzen kommt <em>vor</em> Big-O.</p>
+    <div class="bench" id="term-bench" aria-live="polite"></div>
+    <div class="tool-row">
+      <button class="action" id="hint-one" aria-expanded="false">Hinweis 1: Wo hinschauen?</button>
+      <button class="action" id="hint-two" aria-expanded="false">Hinweis 2: Mechanik zeigen</button>
+    </div>
+    <div class="hint" id="term-hint" aria-live="polite"></div>
+    <div class="feedback" id="term-feedback" aria-live="polite"></div>
+  </section>
+
+  <section class="step locked" id="claims-step" aria-labelledby="claims-title" aria-disabled="true">
+    <h2 id="claims-title">Big-O-Duell</h2>
+    <div class="notation">
+      <b>Übersetzung:</b> <code>a ∈ O(b)</code> heißt: „<code>a</code> wächst höchstens so schnell wie <code>b</code>.“
+      <span>Links darf kleiner oder gleich schnell wachsen — aber nicht schneller.</span>
+    </div>
+    <p class="prompt">Wähle wahr/falsch und formuliere deinen Ein-Satz-Grund. Bewertet wird die eindeutige Auswahl; dein Satz bleibt dein Prüfungsbeleg.</p>
+    <div id="claims" class="claims"></div>
+  </section>
+
+  <section class="step locked" id="finish-step">
+    <h2>Prüfungsabschluss</h2>
+    <p class="prompt">Der vollständige Musterweg bleibt gesperrt, bis du alle fünf Aussagen versucht hast.</p>
+    <button class="action primary" id="reveal" disabled>Musterweg aufdecken</button>
+    <div class="solution" id="solution" hidden tabindex="-1">
+      <h3>Dominante Terme</h3>
+      <ul>
+        <li><code>f(n)=5n+5 ∈ Θ(n)</code></li>
+        <li><code>g(n)=n²+2 ∈ Θ(n²)</code></li>
+        <li><code>h(n)=(n²+17)log₃(n) ∈ Θ(n² log n)</code></li>
+        <li><code>k(n)=n+44 ∈ Θ(n)</code>, denn die beiden <code>n²</code>-Terme löschen sich.</li>
+      </ul>
+      <h3>Fünf klausurfertige Sätze</h3>
+      <ol>
+        <li><strong>Falsch:</strong> <code>g ∉ O(f)</code>, weil quadratisches <code>g</code> schneller wächst als lineares <code>f</code>.</li>
+        <li><strong>Wahr:</strong> <code>g ∈ O(f)·O(f)</code>, weil das Produkt zweier linearer Schranken quadratisch ist und damit <code>g</code> beschränkt.</li>
+        <li><strong>Wahr:</strong> <code>g ∈ O(h)</code>, weil <code>n²</code> höchstens so schnell wächst wie <code>n² log n</code>.</li>
+        <li><strong>Falsch:</strong> <code>h ∉ O(g)</code>, weil der zusätzliche Faktor <code>log n</code> unbeschränkt wächst.</li>
+        <li><strong>Falsch:</strong> <code>g ∉ O(k)</code>, weil <code>k</code> nach dem Kürzen linear, <code>g</code> aber quadratisch ist.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="status-title">
+    <h2 id="status-title">Wie sitzt es?</h2>
+    <div class="state-row" role="group" aria-label="Lernstatus">
+      <button class="state-btn" data-value="wackelt">Wackelt</button>
+      <button class="state-btn" data-value="sitzt">Sitzt</button>
+    </div>
+    <p id="state-feedback" class="tiny" aria-live="polite">Noch nicht markiert.</p>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgaben wechseln">
+    <a href="../task-05/index.html">← Aufgabe 05</a><a href="../index.html">Übersicht</a><a href="../task-07/index.html">Aufgabe 07 →</a>
+  </nav>
+</main>
+</body>
+</html>

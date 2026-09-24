@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Four public learning editions showing how Human Agent Interface supports active learning without outsourcing understanding.">
+  <title>Learning with agents | Human Agent Interface</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f7f1df;
+      --muted: #b7ad97;
+      --quiet: #776f60;
+      --void: #080806;
+      --charcoal: #11100d;
+      --panel: rgba(247, 241, 223, .055);
+      --line: rgba(247, 241, 223, .16);
+      --signal: #a7ff4f;
+      --copper: #ff9f5f;
+      --cyan: #83dbc8;
+      --rose: #ff8ab8;
+      --max: 1180px;
+      --pad: clamp(18px, 4vw, 56px);
+      --display: Georgia, "Times New Roman", serif;
+      --body: Aptos, "Segoe UI", "Helvetica Neue", sans-serif;
+      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--void); scroll-behavior: smooth; }
+    body {
+      min-width: 320px;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 82% 4%, rgba(131, 219, 200, .15), transparent 27rem),
+        radial-gradient(circle at 14% 22%, rgba(255, 159, 95, .11), transparent 26rem),
+        linear-gradient(180deg, #080806 0%, #10100d 48%, #070806 100%);
+      font-family: var(--body);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      content: "";
+      opacity: .25;
+      background-image: linear-gradient(rgba(247, 241, 223, .035) 1px, transparent 1px), linear-gradient(90deg, rgba(247, 241, 223, .025) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: linear-gradient(180deg, black, transparent 78%);
+    }
+    a { color: inherit; }
+    p, h1, h2, h3 { margin: 0; }
+    .shell { width: min(var(--max), 100%); margin: 0 auto; }
+    .topbar { position: fixed; inset: 0 0 auto; z-index: 30; padding: 14px var(--pad) 0; pointer-events: none; }
+    .topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 12px 14px; border: 1px solid rgba(247, 241, 223, .13); background: rgba(8, 8, 6, .78); backdrop-filter: blur(18px); pointer-events: auto; }
+    .brand, .nav { display: flex; align-items: center; gap: 10px; min-width: 0; color: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; }
+    .brand { text-decoration: none; }
+    .brand-mark { display: grid; width: 30px; height: 30px; place-items: center; border: 1px solid var(--line); color: var(--signal); font-size: 12px; }
+    .nav { gap: clamp(12px, 2vw, 24px); }
+    .nav a { opacity: .82; text-decoration: none; transition: color 160ms ease, opacity 160ms ease; }
+    .nav a:hover, .nav a:focus-visible { color: var(--ink); opacity: 1; }
+    .hero { position: relative; min-height: 92svh; display: grid; align-items: end; padding: 132px var(--pad) 72px; border-bottom: 1px solid var(--line); }
+    .hero::after { position: absolute; inset: 0; z-index: -1; content: ""; background: linear-gradient(135deg, transparent 0 59%, rgba(167, 255, 79, .045) 59% 60%, transparent 60%), linear-gradient(45deg, transparent 0 76%, rgba(255, 159, 95, .05) 76% 77%, transparent 77%); background-size: 240px 240px; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, .93fr) minmax(280px, .5fr); gap: clamp(30px, 8vw, 120px); align-items: end; }
+    .eyebrow, .kicker { color: var(--copper); font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+    .eyebrow::before { width: 42px; height: 1px; content: ""; background: currentColor; }
+    h1 { max-width: 900px; font-family: var(--display); font-size: clamp(3.25rem, 7.5vw, 7.3rem); font-weight: 500; line-height: .92; letter-spacing: -.03em; text-wrap: balance; }
+    .hero-lede { max-width: 700px; margin-top: 28px; color: var(--muted); font-size: clamp(1.08rem, 2vw, 1.38rem); }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .button { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; padding: 0 18px; border: 1px solid rgba(247, 241, 223, .3); background: rgba(247, 241, 223, .04); color: var(--ink); font-weight: 700; text-decoration: none; transition: transform 160ms ease, border-color 160ms ease, background 160ms ease; }
+    .button:hover, .button:focus-visible { transform: translateY(-2px); border-color: rgba(167, 255, 79, .72); background: rgba(167, 255, 79, .1); }
+    .button.primary { border-color: rgba(167, 255, 79, .56); background: rgba(167, 255, 79, .13); }
+    .boundary-card { position: relative; padding: 26px; border: 1px solid var(--line); background: rgba(8, 8, 6, .72); box-shadow: 0 24px 80px rgba(0, 0, 0, .28); }
+    .boundary-card::before { position: absolute; top: -1px; left: 22px; width: 64px; height: 3px; content: ""; background: var(--signal); }
+    .boundary-card h2 { font-family: var(--display); font-size: 1.7rem; font-weight: 500; }
+    .boundary-card p { margin-top: 14px; color: var(--muted); }
+    .boundary-list { display: grid; gap: 10px; margin: 20px 0 0; padding: 0; list-style: none; color: #dfd7c4; font-size: .9rem; }
+    .boundary-list li { display: grid; grid-template-columns: 14px 1fr; gap: 8px; }
+    .boundary-list li::before { color: var(--signal); content: "↳"; }
+    section { position: relative; }
+    .section { padding: clamp(78px, 11vw, 136px) var(--pad); border-bottom: 1px solid var(--line); }
+    .section-head { display: grid; grid-template-columns: minmax(0, .8fr) minmax(260px, .55fr); gap: clamp(26px, 7vw, 96px); align-items: end; }
+    .section-title { max-width: 720px; font-family: var(--display); font-size: clamp(2.35rem, 4.4vw, 4.6rem); font-weight: 500; line-height: .98; letter-spacing: -.025em; }
+    .section-copy { max-width: 510px; color: var(--muted); font-size: 1.04rem; }
+    .loop { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 54px; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+    .loop-step { min-height: 250px; padding: 22px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(247, 241, 223, .018); }
+    .loop-step:nth-child(2) { background: rgba(131, 219, 200, .06); }
+    .loop-step:nth-child(3) { background: rgba(167, 255, 79, .045); }
+    .loop-step span { color: var(--copper); font-family: var(--mono); font-size: 12px; }
+    .loop-step h3 { margin-top: 42px; font-family: var(--display); font-size: 1.75rem; font-weight: 500; line-height: 1; }
+    .loop-step p { margin-top: 14px; color: var(--muted); font-size: .94rem; }
+    .role-strip { display: grid; grid-template-columns: 1fr auto 1fr; gap: 18px; align-items: center; margin-top: 22px; padding: 20px; border: 1px solid var(--line); background: var(--panel); }
+    .role-strip strong { display: block; color: var(--signal); font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
+    .role-strip p { margin-top: 5px; color: var(--muted); font-size: .92rem; }
+    .role-arrow { color: var(--copper); font-size: 1.45rem; }
+    .gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 54px; }
+    .artifact { position: relative; display: grid; min-height: 440px; grid-template-rows: auto 1fr auto; overflow: hidden; padding: 25px; border: 1px solid var(--line); background: rgba(247, 241, 223, .025); text-decoration: none; transition: transform 180ms ease, border-color 180ms ease, background 180ms ease; }
+    .artifact:hover, .artifact:focus-visible { transform: translateY(-5px); border-color: rgba(247, 241, 223, .42); background: rgba(247, 241, 223, .055); }
+    .artifact::after { position: absolute; right: -28px; bottom: -52px; width: 180px; height: 180px; border: 1px solid currentColor; border-radius: 50%; content: ""; opacity: .55; }
+    .artifact.ads { color: #ffbf6e; }
+    .artifact.mlg { color: #83dbc8; }
+    .artifact.ma1 { color: #ff8ab8; }
+    .artifact.dlm { color: #a7ff4f; }
+    .artifact-top { display: flex; justify-content: space-between; gap: 18px; color: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; }
+    .artifact-icon { position: relative; z-index: 1; align-self: center; color: currentColor; font-family: var(--display); font-size: clamp(4rem, 10vw, 7.8rem); line-height: .75; letter-spacing: -.12em; }
+    .artifact-copy { position: relative; z-index: 1; }
+    .artifact h3 { max-width: 430px; color: var(--ink); font-family: var(--display); font-size: clamp(1.9rem, 3vw, 3.1rem); font-weight: 500; line-height: .95; }
+    .artifact p { max-width: 440px; margin-top: 14px; color: var(--muted); }
+    .artifact-footer { display: flex; align-items: end; justify-content: space-between; gap: 14px; margin-top: 20px; color: var(--ink); font-family: var(--mono); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; }
+    .artifact-footer span:last-child { color: currentColor; font-size: 1.3rem; }
+    .boundary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 52px; }
+    .boundary { padding: 26px; border: 1px solid var(--line); background: rgba(247, 241, 223, .025); }
+    .boundary.warn { border-color: rgba(255, 159, 95, .45); background: rgba(255, 159, 95, .055); }
+    .boundary h3 { font-family: var(--display); font-size: 1.75rem; font-weight: 500; }
+    .boundary p { margin-top: 12px; color: var(--muted); }
+    .close { padding: clamp(92px, 13vw, 160px) var(--pad); text-align: center; }
+    .close h2 { max-width: 890px; margin: 14px auto 0; font-family: var(--display); font-size: clamp(2.8rem, 6vw, 6.5rem); font-weight: 500; line-height: .94; letter-spacing: -.035em; }
+    .close p { max-width: 620px; margin: 26px auto 0; color: var(--muted); font-size: 1.05rem; }
+    .close .actions { justify-content: center; }
+    footer { padding: 20px var(--pad); border-top: 1px solid var(--line); color: var(--quiet); font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 18px; width: min(var(--max), 100%); margin: 0 auto; }
+    @media (max-width: 760px) {
+      .topbar-inner { padding: 10px; }
+      .brand > span:last-child, .nav a:not(:last-child) { display: none; }
+      .hero { min-height: auto; padding-top: 130px; }
+      .hero-grid, .section-head { grid-template-columns: 1fr; }
+      .loop, .gallery, .boundary-grid { grid-template-columns: 1fr; }
+      .loop-step { min-height: 190px; }
+      .loop-step h3 { margin-top: 24px; }
+      .role-strip { grid-template-columns: 1fr; }
+      .role-arrow { transform: rotate(90deg); }
+      .artifact { min-height: 350px; }
+      .footer-inner { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .001ms !important; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner shell">
+      <a class="brand" href="../../index.html" aria-label="Human Agent Interface home"><span class="brand-mark">HAI</span><span>Human Agent Interface</span></a>
+      <nav class="nav" aria-label="Site navigation"><a href="../">Proof</a><a href="../../what_it_is/">Method</a><a href="#artifacts">Learning editions</a></nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="shell hero-grid">
+        <div>
+          <p class="eyebrow">Learning in public</p>
+          <h1 id="hero-title">I use agents to make learning active.</h1>
+          <p class="hero-lede">Not to outsource understanding. To turn one blocked concept into a bounded interface, then test whether I can carry the pattern without it.</p>
+          <div class="actions"><a class="button primary" href="#artifacts">Open the learning editions</a><a class="button" href="#loop">See the learning loop</a></div>
+        </div>
+        <aside class="boundary-card" aria-label="Public scope">
+          <h2>What is public here</h2>
+          <p>Four self-contained learning interactions. The artifacts are German because they were built for real study work.</p>
+          <ul class="boundary-list"><li>Original public examples, not course PDFs</li><li>No personal learning data or private session logs</li><li>No live agent, account, or backend connection</li></ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="loop" aria-labelledby="loop-title">
+      <div class="shell">
+        <div class="section-head"><div><p class="kicker">The loop</p><h2 class="section-title" id="loop-title">The agent helps shape the practice. The learner still has to do it.</h2></div><p class="section-copy">The proof is not that an agent can explain a subject. The proof is a smaller claim: it can help turn a vague blockage into deliberate practice with a visible next move.</p></div>
+        <div class="loop" aria-label="Learning loop">
+          <article class="loop-step"><span>01 / notice</span><h3>Name the real block.</h3><p>Not “I need to learn machine learning.” A concrete breakdown: one update, one proof step, one runtime pattern.</p></article>
+          <article class="loop-step"><span>02 / bound</span><h3>Build one small surface.</h3><p>The agent turns the selected problem into a constrained explainer, visual or drill — not a general tutor chat.</p></article>
+          <article class="loop-step"><span>03 / act</span><h3>Recall and transfer.</h3><p>The screen is a prompt to calculate, classify, or trace. Hints can disappear; a new case checks whether the pattern moved.</p></article>
+          <article class="loop-step"><span>04 / revise</span><h3>Keep the failure useful.</h3><p>A wrong answer becomes the next bounded repair, rather than a reason to restart the whole subject or the whole system.</p></article>
+        </div>
+        <div class="role-strip" aria-label="Human and agent responsibilities"><div><strong>Agent role</strong><p>Creates a focused practice surface from an explicit learning constraint.</p></div><span class="role-arrow" aria-hidden="true">→</span><div><strong>Human role</strong><p>Chooses the problem, performs the work, checks transfer, and owns the decision to keep or discard the artifact.</p></div></div>
+      </div>
+    </section>
+
+    <section class="section" id="artifacts" aria-labelledby="artifacts-title">
+      <div class="shell">
+        <div class="section-head"><div><p class="kicker">Four learning editions</p><h2 class="section-title" id="artifacts-title">Different subjects. The same refusal to stay passive.</h2></div><p class="section-copy">Each edition keeps one learning mechanic visible: identify the motor, calculate the update, reconstruct the representation, or follow the transformation through a network.</p></div>
+        <div class="gallery">
+          <a class="artifact ads" href="demos/ads-runtime/" aria-label="Open ADS Runtime Detective"><div class="artifact-top"><span>ADS / algorithms</span><span>German interaction</span></div><div class="artifact-icon" aria-hidden="true">Θ</div><div class="artifact-copy"><h3>Runtime Detective</h3><p>Find the loop, the growth variable, and the operation that controls the runtime — before choosing Θ.</p><div class="artifact-footer"><span>Identify → classify → transfer</span><span>↗</span></div></div></a>
+          <a class="artifact mlg" href="demos/mlg-gradient-descent/" aria-label="Open MLG Gradient Descent"><div class="artifact-top"><span>MLG / machine learning</span><span>German interaction</span></div><div class="artifact-icon" aria-hidden="true">∂</div><div class="artifact-copy"><h3>Gradient Descent</h3><p>Move the model, inspect the residuals, and calculate the update instead of memorising the formula.</p><div class="artifact-footer"><span>See → calculate → update</span><span>↗</span></div></div></a>
+          <a class="artifact ma1" href="demos/ma1-complex-numbers/" aria-label="Open MA1 Complex Numbers"><div class="artifact-top"><span>MA1 / mathematics</span><span>German interaction</span></div><div class="artifact-icon" aria-hidden="true">i</div><div class="artifact-copy"><h3>Complex Numbers</h3><p>Locate a number in the complex plane, choose its quadrant, and rebuild its polar representation step by step.</p><div class="artifact-footer"><span>Locate → derive → verify</span><span>↗</span></div></div></a>
+          <a class="artifact dlm" href="demos/dlm-cnn/" aria-label="Open DLM CNN Visualizer"><div class="artifact-top"><span>DLM / deep learning</span><span>German interaction</span></div><div class="artifact-icon" aria-hidden="true">⊞</div><div class="artifact-copy"><h3>CNN Visualizer</h3><p>Choose an input pattern and follow how convolution, pooling, and channels change the representation.</p><div class="artifact-footer"><span>Input → features → decision</span><span>↗</span></div></div></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="boundary-title">
+      <div class="shell"><div class="section-head"><div><p class="kicker">Honest boundary</p><h2 class="section-title" id="boundary-title">These are learning artifacts, not a claim of finished mastery.</h2></div><p class="section-copy">A public interface can show a method without pretending to publish grades, course materials, a universal tutoring model, or private agent traces.</p></div><div class="boundary-grid"><article class="boundary"><h3>What the page demonstrates</h3><p>Agents can be placed inside a bounded learning loop where the human still has to retrieve, calculate, compare, and transfer.</p></article><article class="boundary warn"><h3>What the page does not demonstrate</h3><p>It is not official course material, a substitute for teaching, an autonomous tutor, or evidence that a concept is learned because an interaction was opened.</p></article></div></div>
+    </section>
+
+    <section class="close" aria-labelledby="close-title"><p class="kicker">Human Agent Interface</p><h2 id="close-title">The method matters when the next move is visible.</h2><p>HAI is about making work with agents scoped, inspectable, and owned. Learning is one real place where that has to hold.</p><div class="actions"><a class="button primary" href="../../what_it_is/">Explore the HAI method</a><a class="button" href="../">Return to proof</a></div></section>
+  </main>
+  <footer><div class="footer-inner"><span>Human Agent Interface / Learning in public</span><span>Bounded practice / active transfer / honest proof</span></div></footer>
+</body>
+</html>

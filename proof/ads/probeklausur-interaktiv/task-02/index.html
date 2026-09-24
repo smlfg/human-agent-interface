@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aufgabe 02 – Zwei Runden durch die Liste</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <style>.state-btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none}</style>
+  <script src="task.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Aufgabennavigation">
+      <a class="back" href="../index.html">← Übersicht</a>
+      <span class="brand">ADS · Listen-Werkstatt</span>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF ↗</a>
+    </nav>
+
+    <header class="task-head">
+      <div><span class="kicker">Mission 02</span><h1>Zwei Runden.<br>Wie teuer?</h1></div>
+      <div class="counter">02 / 17</div>
+    </header>
+
+    <section class="mission" aria-labelledby="mission-title">
+      <div class="brief">
+        <h2 id="mission-title">Dein Auftrag</h2>
+        <p>Übersetze zuerst genau <code>n = n-&gt;next</code>. Danach läufst du mit dem Zeiger durch eine Mini-Liste und leitest Best, Mittel und Worst Case ab.</p>
+        <p class="tiny">Du brauchst noch kein C++. Denk an einen Finger, der von Box zu Box wandert.</p>
+      </div>
+      <pre class="code" aria-label="Originalkern der Funktion"><code>node* n = head;
+while (n != nullptr) {
+    if (n-&gt;wert &gt;= 0) wert1 += n-&gt;wert;
+    n = n-&gt;next;
+}
+n = head;
+while (n != nullptr) {
+    if (n-&gt;wert &lt; 0) wert2 += n-&gt;wert;
+    n = n-&gt;next;
+}
+return wert1 &gt;= -wert2;</code></pre>
+    </section>
+
+    <div class="stepper">
+      <section class="step" id="translate-step">
+        <h2>Den Pfeil entschärfen</h2>
+        <p class="prompt"><code>n = n-&gt;next</code> bedeutet …</p>
+        <div class="choices" role="group" aria-label="Bedeutung des Pfeilausdrucks">
+          <button class="choice" data-arrow="move">Setze <code>n</code> auf die nächste Box</button>
+          <button class="choice" data-arrow="calculate">Rechne mit <code>n</code> und <code>next</code></button>
+          <button class="choice" data-arrow="compare">Vergleiche <code>n</code> mit <code>next</code></button>
+        </div>
+        <div class="feedback" id="arrow-feedback" role="status" aria-live="polite"></div>
+        <button class="action hint-toggle" data-hint="arrow-hint">Hinweis 1: Symbol für Symbol</button>
+        <div class="hint" id="arrow-hint"><code>-&gt;</code> greift auf ein Feld der aktuellen Box zu. Das Feld <code>next</code> enthält die Adresse der nächsten Box.</div>
+      </section>
+
+      <section class="step locked" id="trace-step" aria-labelledby="trace-title" inert>
+        <h2 id="trace-title">Den Zeiger laufen lassen</h2>
+        <p class="prompt">Liste: <strong>head → 4 → −7 → 2 → nullptr</strong>. Drücke „ein Schritt“ und beobachte, was ein Schleifendurchlauf wirklich kostet.</p>
+        <div class="list-lab" aria-label="Visualisierung einer verketteten Liste">
+          <div class="node" data-node="0"><b>4</b><span>next →</span></div>
+          <div class="node" data-node="1"><b>−7</b><span>next →</span></div>
+          <div class="node" data-node="2"><b>2</b><span>next →</span></div>
+          <div class="null-node" data-node="3">nullptr</div>
+        </div>
+        <p class="trace-readout" id="trace-readout">Erst den Pfeil oben korrekt übersetzen.</p>
+        <button class="action primary" id="trace-next" disabled>Ein Schritt →</button>
+        <button class="action hint-toggle" data-hint="trace-hint">Hinweis 2: Was bleibt konstant?</button>
+        <div class="hint" id="trace-hint">Pro Box passieren nur Prüfung, eventuell Addition und Zeigerbewegung: konstant viele Operationen. Entscheidend ist, wie viele Boxen besucht werden.</div>
+      </section>
+
+      <section class="step locked" id="runtime-step" inert>
+        <h2>Laufzeit festnageln</h2>
+        <p class="prompt">Die Liste habe <strong>k Knoten</strong>. Welche Aussage passt für die gegebene Funktion?</p>
+        <div class="choices" role="group" aria-label="Laufzeit auswählen">
+          <button class="choice" data-runtime="constant">Best Θ(1), Worst Θ(k)</button>
+          <button class="choice" data-runtime="quadratic">Zwei Schleifen ergeben Θ(k²)</button>
+          <button class="choice" data-runtime="linear">Best = Mittel = Worst = Θ(k)</button>
+        </div>
+        <div class="feedback" id="runtime-feedback" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="step locked" id="finish-step" inert>
+        <h2>Prüfungsabschluss</h2>
+        <label for="one-loop">Schreibe die Kernidee als eine einzige Schleife. Was wird aufsummiert und was wird am Ende geprüft?</label>
+        <textarea class="answer" id="one-loop" placeholder="while (...) { ... }&#10;return ...;"></textarea>
+        <button class="action primary" id="submit-idea">Versuch abgeben</button>
+        <div class="feedback" id="idea-feedback" role="status" aria-live="polite"></div>
+
+        <div class="solution-lock" id="solution-lock">
+          <button class="action" id="show-solution" disabled>Vollständigen Musterweg zeigen</button>
+          <span class="tiny" id="lock-note">Erst nach deinem eigenen Ein-Schleifen-Versuch freigeschaltet.</span>
+        </div>
+        <div class="hint solution" id="solution">
+          <h3>Musterweg</h3>
+          <p>Jede der beiden Schleifen besucht alle <strong>k</strong> Knoten – unabhängig von den Werten. Also <code>k + k = 2k</code> Besuche und damit in Best-, Mittel- und Worst Case <strong>Θ(k)</strong> (folglich auch <strong>O(k)</strong>).</p>
+          <pre class="code"><code>int summe = 0;
+node* n = head;
+while (n != nullptr) {
+    summe += n-&gt;wert;
+    n = n-&gt;next;
+}
+return summe &gt;= 0;</code></pre>
+          <p>Warum gleich? <code>wert1 &gt;= -wert2</code> ist äquivalent zu <code>wert1 + wert2 &gt;= 0</code>. Die Nullwerte ändern keine Summe.</p>
+        </div>
+
+        <div class="state-panel">
+          <p><strong>Kannst du den Pfeil und die zwei vollständigen Durchläufe jetzt begründen?</strong></p>
+          <div class="state-row" role="group" aria-label="Lernstatus Aufgabe 2">
+            <button class="state-btn" data-value="sitzt">Sitzt</button>
+            <button class="state-btn" data-value="wackelt">Wackelt</button>
+          </div>
+          <p class="tiny" id="state-readout" aria-live="polite">Noch nicht markiert.</p>
+        </div>
+      </section>
+    </div>
+
+    <nav class="nav-bottom" aria-label="Vorherige und nächste Aufgabe">
+      <a href="../task-01/index.html">← Aufgabe 01</a>
+      <a href="../index.html">Übersicht</a>
+      <a href="../task-03/index.html">Aufgabe 03 →</a>
+    </nav>
+  </main>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aufgabe 07 · Big-O-Termwerkstatt</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <script src="task.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Aufgabennavigation">
+      <a class="back" href="../index.html">← Übersicht</a>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF ↗</a>
+    </nav>
+
+    <header class="task-head">
+      <div>
+        <span class="kicker">TERM-WERKSTATT</span>
+        <h1>Streichen vor Schätzen.</h1>
+      </div>
+      <div class="counter" aria-label="Aufgabe 7 von 17">07 / 17</div>
+    </header>
+
+    <section class="mission" aria-labelledby="mission-title">
+      <div class="brief">
+        <h2 id="mission-title">Mission</h2>
+        <p>Vereinfache zuerst <strong>k(n)</strong>. Danach entscheidest du vier Big-O-Aussagen mit je einem Satz.</p>
+        <p class="tiny">Big-O heißt hier: „wächst höchstens so schnell wie“.</p>
+      </div>
+      <div class="formula-sheet" aria-label="Originalkern der Aufgabe">
+        <p><i>f</i>(n) = 1 + (2+n)(3+n) + 4</p>
+        <p><i>g</i>(n) = 2n + 3n − 4n</p>
+        <p><i>h</i>(n) = (17+n<sup>1,99</sup>) · 242 · log<sub>2</sub>(n)</p>
+        <p class="target"><i>k</i>(n) = n² + 2n² − 3n²</p>
+      </div>
+    </section>
+
+    <section class="step first-move" aria-labelledby="first-title">
+      <h2 id="first-title">Dein erster Zug</h2>
+      <p class="prompt">Tippe die drei Koeffizienten von k(n) an, um sie zusammenzufassen.</p>
+      <div class="coefficient-board" aria-label="Koeffizienten von k">
+        <button class="coefficient" type="button" data-value="1">+1n²</button>
+        <button class="coefficient" type="button" data-value="2">+2n²</button>
+        <button class="coefficient" type="button" data-value="-3">−3n²</button>
+        <span class="equals" aria-hidden="true">=</span>
+        <output id="coefficient-total" aria-live="polite">? · n²</output>
+      </div>
+      <div class="choices misconception" aria-label="Alternative Einschätzung">
+        <button id="quadratic-trap" class="choice" type="button">Ich sehe n², also ist k quadratisch</button>
+      </div>
+      <div class="help-row">
+        <button class="action hint-button" type="button" data-hint="hint-1">Hinweis 1</button>
+        <button class="action hint-button" type="button" data-hint="hint-2">Hinweis 2</button>
+      </div>
+      <div id="hint-1" class="hint">Alle drei Summanden haben denselben Faktor n². Sammle nur die Zahlen davor.</div>
+      <div id="hint-2" class="hint">Rechne <strong>1 + 2 − 3</strong>. Erst danach darfst du die Wachstumsordnung benennen.</div>
+      <div id="first-feedback" class="feedback" role="status" aria-live="polite"></div>
+    </section>
+
+    <section id="dominance-step" class="step locked" aria-labelledby="dominance-title" aria-disabled="true">
+      <h2 id="dominance-title">Vier Terme, vier Wachstumskarten</h2>
+      <p class="prompt">Ordne jeder Funktion ihren dominanten Term zu. Genaues Kürzen kommt vor Big-O.</p>
+      <div class="term-grid">
+        <article><h3>f(n)</h3><p>1 + (2+n)(3+n) + 4</p><label>dominant <select data-term="f"><option value="">wählen …</option><option value="n">n</option><option value="n2">n²</option><option value="n199log">n^1,99 log₂n</option><option value="zero">0</option></select></label></article>
+        <article><h3>g(n)</h3><p>2n + 3n − 4n</p><label>dominant <select data-term="g"><option value="">wählen …</option><option value="n">n</option><option value="n2">n²</option><option value="n199log">n^1,99 log₂n</option><option value="zero">0</option></select></label></article>
+        <article><h3>h(n)</h3><p>(17+n<sup>1,99</sup>)·242·log₂n</p><label>dominant <select data-term="h"><option value="">wählen …</option><option value="n">n</option><option value="n2">n²</option><option value="n199log">n^1,99 log₂n</option><option value="zero">0</option></select></label></article>
+        <article><h3>k(n)</h3><p>n² + 2n² − 3n²</p><label>exakt <select data-term="k"><option value="">wählen …</option><option value="n">n</option><option value="n2">n²</option><option value="n199log">n^1,99 log₂n</option><option value="zero">0</option></select></label></article>
+      </div>
+      <button id="check-terms" class="action primary" type="button">Terme prüfen</button>
+      <div id="term-feedback" class="feedback" role="status" aria-live="polite"></div>
+    </section>
+
+    <section id="claims-step" class="step locked" aria-labelledby="claims-title" aria-disabled="true">
+      <h2 id="claims-title">Vier Aussagen vor Gericht</h2>
+      <p class="prompt">Wähle wahr oder falsch. Deine Begründung entsteht danach als prüfungstauglicher Satz.</p>
+      <div id="claims" class="claims">
+        <fieldset data-claim="1"><legend>(1) g ∈ O(f)</legend><label><input type="radio" name="c1" value="true"> wahr</label><label><input type="radio" name="c1" value="false"> falsch</label></fieldset>
+        <fieldset data-claim="2"><legend>(2) f ∈ O(g) · O(g)</legend><label><input type="radio" name="c2" value="true"> wahr</label><label><input type="radio" name="c2" value="false"> falsch</label></fieldset>
+        <fieldset data-claim="3"><legend>(3) f ∈ O(h)</legend><label><input type="radio" name="c3" value="true"> wahr</label><label><input type="radio" name="c3" value="false"> falsch</label></fieldset>
+        <fieldset data-claim="4"><legend>(4) k ∈ O(f)</legend><label><input type="radio" name="c4" value="true"> wahr</label><label><input type="radio" name="c4" value="false"> falsch</label></fieldset>
+      </div>
+      <div class="help-row">
+        <button class="action hint-button" type="button" data-hint="hint-3">Hinweis 1</button>
+        <button class="action hint-button" type="button" data-hint="hint-4">Hinweis 2</button>
+      </div>
+      <div id="hint-3" class="hint">Vergleiche nur: n, n², n<sup>1,99</sup>log n und 0. Ein Logarithmus macht den fehlenden Polynomfaktor n<sup>0,01</sup> asymptotisch nicht wett.</div>
+      <div id="hint-4" class="hint">O(g)·O(g) wächst hier wie n·n = n². Für (4): Die Nullfunktion liegt unter jeder positiven asymptotischen Schranke.</div>
+      <button id="check-claims" class="action primary" type="button">Alle vier prüfen</button>
+      <div id="claim-feedback" class="feedback" role="status" aria-live="polite"></div>
+    </section>
+
+    <section id="solution-step" class="step solution locked" aria-labelledby="solution-title" aria-disabled="true">
+      <h2 id="solution-title">Prüfungsabschluss</h2>
+      <p>Jetzt erst darf der vollständige Musterweg sichtbar werden.</p>
+      <button id="reveal-solution" class="action" type="button" disabled>Meine vier Begründungssätze zeigen</button>
+      <div id="solution" class="solution-paper" hidden>
+        <p><strong>Vorarbeit:</strong> f(n)=n²+5n+11 ∈ Θ(n²), g(n)=n ∈ Θ(n), h(n) ∈ Θ(n<sup>1,99</sup>log₂n), k(n)=0.</p>
+        <ol>
+          <li><strong>Wahr:</strong> g ∈ O(f), da lineares Wachstum durch quadratisches Wachstum nach oben beschränkt wird.</li>
+          <li><strong>Wahr:</strong> f ∈ O(g)·O(g), da O(n)·O(n)=O(n²) gilt und f quadratisch wächst.</li>
+          <li><strong>Falsch:</strong> f ∉ O(h), da n² schneller wächst als n<sup>1,99</sup>log₂n; insbesondere n<sup>0,01</sup>/log₂n → ∞.</li>
+          <li><strong>Wahr:</strong> k ∈ O(f), da k(n)=0 ist und die Nullfunktion von f nach oben beschränkt wird.</li>
+        </ol>
+      </div>
+      <div class="state-row" aria-label="Eigenen Lernstatus setzen">
+        <button class="state-btn" type="button" data-state="wackelt">Wackelt noch</button>
+        <button class="state-btn" type="button" data-state="sitzt">Sitzt</button>
+      </div>
+      <p id="state-feedback" class="tiny" aria-live="polite"></p>
+    </section>
+
+    <nav class="nav-bottom" aria-label="Zwischen Aufgaben wechseln">
+      <a href="../task-06/index.html">← Aufgabe 06</a>
+      <a href="../index.html">Übersicht</a>
+      <a href="../task-08/index.html">Aufgabe 08 →</a>
+    </nav>
+  </main>
+</body>
+</html>

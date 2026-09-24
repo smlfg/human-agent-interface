@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <meta name="theme-color" content="#090a08">
+    <title>Datenschutzerklärung — Human Agent Interface (HAI)</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #f7f1df;
+        --muted: #b7ad97;
+        --dim: #756d5e;
+        --void: #090a08;
+        --panel: rgba(247, 241, 223, 0.065);
+        --panel-strong: rgba(247, 241, 223, 0.13);
+        --line: rgba(247, 241, 223, 0.18);
+        --line-soft: rgba(247, 241, 223, 0.1);
+        --signal: #a7ff4f;
+        --copper: #ff9f5f;
+        --red: #ff4d4d;
+        --cyan: #7dd8ff;
+        --max: 1160px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 20% 10%, rgba(167, 255, 79, 0.12), transparent 26rem),
+          radial-gradient(circle at 80% 18%, rgba(255, 159, 95, 0.1), transparent 22rem),
+          linear-gradient(180deg, #090a08 0%, #11100d 48%, #070806 100%);
+        font-family: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
+        line-height: 1.5;
+        overflow-x: hidden;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .wrap {
+        width: 100%;
+        max-width: 72ch;
+        margin: 0 auto;
+        padding: 0 clamp(18px, 4vw, 40px);
+      }
+
+      .page-head {
+        padding: 22px 0;
+        border-bottom: 1px solid var(--line-soft);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        color: var(--muted);
+        text-decoration: none;
+      }
+
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        background: rgba(247, 241, 223, 0.04);
+        color: var(--signal);
+      }
+
+      .brand:hover,
+      .brand:focus-visible {
+        color: var(--ink);
+      }
+
+      main {
+        padding: 40px 0 64px;
+      }
+
+      .notice {
+        margin: 0 0 36px;
+        padding: 14px 16px;
+        border-left: 3px solid var(--copper);
+        background: rgba(255, 159, 95, 0.1);
+        color: var(--ink);
+        font-size: 0.95rem;
+      }
+
+      h1 {
+        margin: 0 0 18px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 500;
+        font-size: clamp(2rem, 5vw, 3rem);
+        line-height: 1.02;
+      }
+
+      h2 {
+        margin: 40px 0 10px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 500;
+        font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+        line-height: 1.15;
+      }
+
+      p,
+      li {
+        color: var(--muted);
+        font-size: 1rem;
+      }
+
+      p {
+        margin: 0 0 14px;
+      }
+
+      ul {
+        margin: 0 0 14px;
+        padding-left: 1.2em;
+      }
+
+      li {
+        margin-bottom: 6px;
+      }
+
+      strong {
+        color: var(--ink);
+      }
+
+      code {
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.86em;
+        color: var(--ink);
+        background: var(--panel);
+        padding: 0.05em 0.3em;
+      }
+
+      main a {
+        color: var(--cyan);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        word-break: break-word;
+      }
+
+      .todo {
+        background: #ffd400;
+        color: #1a1400;
+        font-weight: 700;
+        padding: 0 0.22em;
+        border-radius: 2px;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+      }
+
+      .meta {
+        margin: 0 0 14px;
+      }
+
+      footer {
+        padding: 28px 0;
+        border-top: 1px solid var(--line-soft);
+        color: var(--dim);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+      }
+
+      footer .wrap {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      .footer-links {
+        display: inline-flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      .footer-links a {
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      .footer-links a:hover,
+      .footer-links a:focus-visible {
+        color: var(--ink);
+      }
+
+      @media (max-width: 620px) {
+        .brand span:not(.brand-mark) {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-head">
+      <div class="wrap">
+        <a class="brand" href="../" aria-label="Human Agent Interface home">
+          <span class="brand-mark">HAI</span>
+          <span>Human Agent Interface</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <p class="notice">Entwurf – vor Veröffentlichung rechtlich prüfen. Gelbe Stellen sind noch offen.</p>
+
+      <h1>Datenschutzerklärung</h1>
+      <p>
+        Diese Erklärung informiert Sie nach Art. 13 DSGVO darüber, welche personenbezogenen Daten beim Besuch dieser Website und
+        bei der Nutzung ihrer Funktionen verarbeitet werden. Die Angaben wurden aus dem tatsächlichen Betriebsaufbau abgeleitet
+        (<code>src/worker.js</code> und <code>wrangler.jsonc</code>).
+      </p>
+
+      <h2>1. Verantwortlicher</h2>
+      <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist:</p>
+      <p>
+        Samuel David Fleig<br>
+        Ahornweg 8<br>
+        69256 Mauer<br>
+        Deutschland<br>
+        E-Mail: <a href="mailto:samuel@human-agent-interface.com">samuel@human-agent-interface.com</a>
+      </p>
+
+      <h2>2. Hosting und Auslieferung über Cloudflare</h2>
+      <p>
+        Diese Website wird über Cloudflare ausgeliefert. Anbieter ist die Cloudflare, Inc., 101 Townsend St, San Francisco, CA
+        94107, USA. Die Seite läuft als Cloudflare Worker mit statischen Assets (siehe <code>src/worker.js</code> und
+        <code>wrangler.jsonc</code>).
+      </p>
+      <p>Beim Aufruf der Website verarbeitet Cloudflare technisch notwendige Verbindungsdaten. Dazu gehören insbesondere:</p>
+      <ul>
+        <li>IP-Adresse des zugreifenden Geräts,</li>
+        <li>Datum und Uhrzeit des Zugriffs,</li>
+        <li>angeforderte URL und HTTP-Statuscode,</li>
+        <li>übertragene Datenmenge,</li>
+        <li>Browser- und Geräteangaben (User-Agent).</li>
+      </ul>
+      <p>
+        Diese Verarbeitung ist zur Auslieferung der Inhalte, zum sicheren und stabilen Betrieb und zur Abwehr von Angriffen
+        erforderlich. In <code>wrangler.jsonc</code> ist zusätzlich die Cloudflare-Observability (Logs und Traces) aktiviert.
+      </p>
+      <p class="meta">
+        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an sicherem, stabilem und
+        performantem Betrieb).<br>
+        <strong>Empfänger:</strong> Cloudflare, Inc.<br>
+        <strong>Drittland:</strong> Übermittlung in die USA, gestützt auf das EU-U.S. Data Privacy Framework.<br>
+        <strong>Speicherdauer:</strong> Cloudflare-Zugriffs- und Worker-Logs werden maximal 30 Tage gespeichert.
+      </p>
+
+      <h2>3. Cloudflare Web Analytics</h2>
+      <p>
+        Auf dieser Website ist Cloudflare Web Analytics aktiv. Das von Cloudflare eingefügte Beacon unter <code>/cdn-cgi/rum</code>
+        erhebt aggregierte Nutzungsdaten (zum Beispiel aufgerufene Seite, Ladezeiten, Herkunftsland, verweisende Seite). Nach
+        Angaben von Cloudflare arbeitet dieses Verfahren ohne Cookies und ohne websiteübergreifende Wiedererkennung.
+      </p>
+      <p class="meta">
+        <strong>Zweck:</strong> Reichweitenmessung und Verbesserung der Website.<br>
+        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO.<br>
+        <strong>Empfänger:</strong> Cloudflare, Inc.<br>
+        <strong>Drittland:</strong> Übermittlung in die USA, gestützt auf das EU-U.S. Data Privacy Framework.<br>
+        <strong>Speicherdauer:</strong> Die aggregierten Daten werden für 12 Monate gespeichert.
+      </p>
+
+      <h2>4. Eigene Klick-Messung über /api/site-event</h2>
+      <p>
+        Die Seite sendet bei bestimmten Interaktionen (Seitenaufruf, Klick auf einen Handlungsaufruf) ein Ereignis an den eigenen
+        Endpunkt <code>/api/site-event</code>. Der Worker schreibt dabei einen Datensatz in das Cloudflare-Analytics-Engine-Dataset
+        <code>hai_site_events</code> (<code>src/worker.js</code>, <code>writeDataPoint</code>, Zeilen 214–225). Gespeichert werden
+        ausschließlich:
+      </p>
+      <ul>
+        <li>Index: die Experiment-ID (immer <code>homepage-hero-2026-05-23</code>),</li>
+        <li>
+          Blobs: Variante (<code>A_control</code>, <code>B_offer_first</code>, <code>C_proof_first</code>), Ereignis
+          (<code>hero_impression</code>, <code>hero_cta_click</code>, <code>cta_click</code>), Ziel, Pfad, Sprache und
+          Viewport-Klasse,
+        </li>
+        <li>Double: ein Zeitstempel (Millisekunden seit Epoche).</li>
+      </ul>
+      <p>
+        <strong>Es werden keine IP-Adresse, kein User-Agent, kein Cookie-Wert und keine sonstige Kennung in das Dataset
+        geschrieben.</strong> Die Daten lassen keinen unmittelbaren Rückschluss auf eine Person zu.
+      </p>
+      <p>
+        Zur konstanten Zuordnung der Hero-Variante setzt der Server außerdem ein funktionales Erstanbieter-Cookie
+        <code>haiHeroVariant</code> (<code>src/worker.js</code>, Zeile 142). Es enthält nur die Variantenbezeichnung, keine
+        Kennung. Zusätzlich speichert die Seite die gewählte Sprache lokal im Browser (<code>localStorage</code>-Schlüssel
+        <code>haiLang</code>); dieser Wert wird nicht an den Server übertragen.
+      </p>
+      <p class="meta">
+        <strong>Zweck:</strong> Auswertung und Verbesserung des Seitenaufbaus.<br>
+        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO.<br>
+        <strong>Empfänger:</strong> Cloudflare, Inc. (Analytics Engine).<br>
+        <strong>Drittland:</strong> Übermittlung in die USA, gestützt auf das EU-U.S. Data Privacy Framework.<br>
+        <strong>Speicherdauer:</strong> Einträge im Analytics-Engine-Dataset werden maximal 12 Monate gespeichert.
+      </p>
+
+      <h2>5. Kontakt per E-Mail</h2>
+      <p>
+        Wenn Sie mich per E-Mail kontaktieren (<a href="mailto:samuel@human-agent-interface.com">samuel@human-agent-interface.com</a>),
+        verarbeite ich die von Ihnen übermittelten Angaben (E-Mail-Adresse, Name, Inhalt der Nachricht) zur Beantwortung der
+        Anfrage.
+      </p>
+      <p class="meta">
+        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Beantwortung von Anfragen);
+        soweit die Anfrage auf den Abschluss eines Vertrags gerichtet ist, Art. 6 Abs. 1 lit. b DSGVO.<br>
+        <strong>Empfänger:</strong> der für die Mailbox eingesetzte Anbieter – Cloudflare Email Routing, das eingehende Nachrichten an meine private Mailbox weiterleitet.<br>
+        <strong>Speicherdauer:</strong> Anfragen werden so lange gespeichert, wie es zur Bearbeitung und zur Erfüllung gesetzlicher Aufbewahrungsfristen (in der Regel bis zu 10 Jahre für Geschäftsbriefe nach § 257 HGB / § 147 AO) erforderlich ist; gesetzliche Aufbewahrungsfristen bleiben unberührt.
+      </p>
+
+      <h2>6. Client-Handoff-Upload (/api/client-handoff-upload)</h2>
+      <p>
+        Im Rahmen der Vorbereitung eines angenommenen Falls können Sie über <code>/api/client-handoff-upload</code> eine
+        Markdown-Datei mit Kontext hochladen. Die Datei und die Formularangaben werden im Cloudflare-R2-Bucket
+        <code>hai-client-handoffs</code> gespeichert (<code>src/worker.js</code>, Zeilen 505–637). Gespeichert werden:
+      </p>
+      <ul>
+        <li>Fall-ID (<code>caseId</code>),</li>
+        <li>Name (<code>customerName</code>),</li>
+        <li>E-Mail-Adresse (<code>customerEmail</code>),</li>
+        <li>freier Kontexttext (<code>contextNote</code>, bis 1.000 Zeichen),</li>
+        <li>Einwilligung und Einwilligungsversion (<code>consent</code>, <code>consentVersion</code>),</li>
+        <li>genau eine Markdown-Datei (<code>handoffFile</code>, <code>.md</code>, maximal 1 MB),</li>
+        <li>
+          technische Metadaten: Upload-ID, Zeitstempel, Original- und Speicherdateiname, Dateigröße, SHA-256-Prüfsumme sowie
+          Zweck- und Grenzhinweise.
+        </li>
+      </ul>
+      <p>
+        Die Datei wird als R2-Objekt unter <code>accepted-cases/&lt;caseId&gt;/…</code> abgelegt; zusätzlich wird eine
+        Metadatendatei <code>…metadata.json</code> gespeichert.
+      </p>
+      <p class="meta">
+        <strong>Zweck:</strong> Vorbereitung eines angenommenen HAI-Falls.<br>
+        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen), ergänzt durch Ihre Einwilligung
+        nach Art. 6 Abs. 1 lit. a DSGVO.<br>
+        <strong>Empfänger:</strong> Cloudflare, Inc. (R2-Speicher).<br>
+        <strong>Drittland:</strong> Übermittlung in die USA, gestützt auf das EU-U.S. Data Privacy Framework.<br>
+        <strong>Speicherdauer:</strong> Handoff-Uploads werden 12 Monate nach Abschluss des jeweiligen Falls gelöscht; bei Zurückweisung oder Abbruch spätestens 90 Tage nach Eingang.
+      </p>
+
+      <h2>7. Harness-Check-Chat über die OpenAI-API (/api/harness-check/chat)</h2>
+      <p>
+        Beim Harness-Check-Chat sendet der Worker Ihre Eingaben an die OpenAI-API (<code>https://api.openai.com/v1/responses</code>,
+        <code>src/worker.js</code>, Zeilen 234–344). Übermittelt werden:
+      </p>
+      <ul>
+        <li>gewählter Harness, Level, Problembeschreibung, Ziel und Grenzen,</li>
+        <li>die Anzahl der Nutzer-Nachrichten,</li>
+        <li>das Transkript der letzten bis zu 12 Nachrichten (je bis 900 Zeichen),</li>
+        <li>systemseitige Anweisungen an das Modell.</li>
+      </ul>
+      <p>
+        Eingaben, die wie ein Secret, Token, Passwort oder API-Key aussehen, werden bereits im Worker erkannt und
+        <strong>nicht</strong> an OpenAI weitergegeben (<code>src/worker.js</code>, Zeilen 266–273). Die Anfrage wird mit
+        <code>store: false</code> gesendet, sodass die Antwort nicht im Antwortverlauf gespeichert wird.
+      </p>
+      <p class="meta">
+        <strong>Zweck:</strong> Durchführung des freiwilligen Harness-Checks als vorvertragliche Beratung.<br>
+        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen).<br>
+        <strong>Empfänger:</strong> OpenAI (USA).<br>
+        <strong>Drittland:</strong> Übermittlung in die USA. Es ist ein Auftragsverarbeitungsvertrag mit OpenAI erforderlich: ein solcher AVV wird vor produktiver Nutzung des Harness-Check-Chats abgeschlossen (Stand: in Vorbereitung). Bis dahin findet über diesen Endpunkt keine produktive Verarbeitung statt. Grundlage des Drittlandtransfers ist das EU-U.S. Data Privacy Framework bzw. die Standardvertragsklauseln.<br>
+        <strong>Speicherdauer:</strong> Anfragen werden mit <code>store: false</code> gesendet, sodass Inhalte nicht im OpenAI-Antwortverlauf gespeichert werden; eine darüber hinausgehende Speicherung bei OpenAI findet nicht statt.
+      </p>
+
+      <h2>8. Cookies, lokale Speicherung und externe Ressourcen</h2>
+      <p>
+        Es werden <strong>keine Cookies zu Werbe- oder websiteübergreifenden Tracking-Zwecken</strong> gesetzt. Das einzige
+        gesetzte Cookie ist das funktionale Erstanbieter-Cookie <code>haiHeroVariant</code>, das ausschließlich der Zuordnung einer
+        Hero-Variante dient und keine personenbezogene Kennung enthält.
+      </p>
+      <p>
+        Die Sprachwahl wird lokal im Browser gespeichert (<code>localStorage</code>-Schlüssel <code>haiLang</code>) und nicht an
+        den Server übertragen.
+      </p>
+      <p>
+        Die Seite lädt <strong>keine externen Schriftarten, Schriftbibliotheken, Skripte oder sonstigen Ressourcen von
+        Drittanbietern</strong>. Es werden ausschließlich Systemschriften verwendet. Einziges serverseitig von Cloudflare
+        eingefügtes Skript ist das Analytics-Beacon <code>/cdn-cgi/rum</code> (siehe Abschnitt 3).
+      </p>
+
+      <h2>9. Ihre Rechte</h2>
+      <p>Sie haben mir gegenüber folgende Rechte hinsichtlich Ihrer personenbezogenen Daten:</p>
+      <ul>
+        <li>Recht auf Auskunft (Art. 15 DSGVO),</li>
+        <li>Recht auf Berichtigung (Art. 16 DSGVO),</li>
+        <li>Recht auf Löschung (Art. 17 DSGVO),</li>
+        <li>Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO),</li>
+        <li>Recht auf Datenübertragbarkeit (Art. 20 DSGVO),</li>
+        <li>Recht auf Widerspruch gegen die Verarbeitung (Art. 21 DSGVO),</li>
+        <li>Recht auf Widerruf einer erteilten Einwilligung mit Wirkung für die Zukunft (Art. 7 Abs. 3 DSGVO).</li>
+      </ul>
+      <p>
+        Zur Ausübung Ihrer Rechte genügt eine Nachricht an
+        <a href="mailto:samuel@human-agent-interface.com">samuel@human-agent-interface.com</a>.
+      </p>
+      <p>
+        Außerdem haben Sie das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren (Art. 77 DSGVO). Zuständig ist
+        der Landesbeauftragte für den Datenschutz und die Informationsfreiheit Baden-Württemberg (LfDI BW),
+        Postfach 10 29 32, 70025 Stuttgart, <a href="https://www.baden-wuerttemberg.datenschutz.de">baden-wuerttemberg.datenschutz.de</a>.
+      </p>
+
+      <h2>10. Stand</h2>
+      <p>Stand dieser Datenschutzerklärung: September 2026.</p>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <span>Human Agent Interface (HAI) by Samuel Fleig</span>
+        <span class="footer-links">
+          <a href="../impressum/">Impressum</a>
+          <a href="../datenschutz/">Datenschutz</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>

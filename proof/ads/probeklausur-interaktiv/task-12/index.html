@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aufgabe 12 · Suchbaum-Werkstatt</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <script src="task.js" defer></script>
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Aufgabennavigation">
+    <a class="back" href="../index.html">← Übersicht</a>
+    <span class="brand">ADS · Baum-Werkstatt</span>
+    <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF ↗</a>
+  </nav>
+
+  <header class="task-head">
+    <div><span class="kicker">Vier Funktionen · ein Rekursionsgerüst</span><h1>Suchbaum<br>unter der Lupe</h1></div>
+    <div class="counter">12 / 17</div>
+  </header>
+
+  <section class="mission">
+    <div class="brief">
+      <h2>Mission</h2>
+      <p>Du steuerst den Baum selbst. Finde erst den größten Wert, dann den schwersten Wurzel-Blatt-Pfad und seine Länge. Zum Schluss schneidest du den Baum auf eine Höhe zurück.</p>
+      <p class="tiny"><strong>Knoten</strong> = eine Box. <strong>Wurzel</strong> = oberste Box. <strong>Blatt</strong> = Box ohne Kinder. Höhe und Pfadlänge zählen hier Knoten.</p>
+    </div>
+    <pre class="code" aria-label="Gegebene Datenstruktur"><code>struct sb_node {
+    sb_node* left;      // linkes Kind
+    unsigned int val;  // positiver Wert
+    sb_node* right;     // rechtes Kind
+};
+struct suchbaum { sb_node* root; };
+
+// vorhanden und benutzbar:
+void sb_clear(sb_node* n);</code></pre>
+  </section>
+
+  <section class="workbench" aria-labelledby="tree-title">
+    <div>
+      <p class="eyebrow">Direkte Manipulation</p>
+      <h2 id="tree-title">Klicke deinen Weg</h2>
+      <p id="tree-instruction">Start: Wo liegt im Suchbaum das maximale Element?</p>
+    </div>
+    <div class="tree" id="tree" role="group" aria-label="Suchbaum mit Wurzel 8">
+      <button class="node root" data-node="8" style="--x:50%;--y:8%">8</button>
+      <i class="edge e1"></i><i class="edge e2"></i>
+      <button class="node" data-node="4" style="--x:25%;--y:34%">4</button>
+      <button class="node" data-node="12" style="--x:75%;--y:34%">12</button>
+      <i class="edge e3"></i><i class="edge e4"></i><i class="edge e5"></i><i class="edge e6"></i>
+      <button class="node" data-node="3" style="--x:12.5%;--y:63%">3</button>
+      <button class="node" data-node="7" style="--x:37.5%;--y:63%">7</button>
+      <button class="node" data-node="10" style="--x:62.5%;--y:63%">10</button>
+      <button class="node" data-node="20" style="--x:87.5%;--y:63%">20</button>
+      <i class="edge e7"></i><i class="edge e8"></i>
+      <button class="node" data-node="2" style="--x:6%;--y:90%">2</button>
+      <button class="node" data-node="9" style="--x:56%;--y:90%">9</button>
+    </div>
+    <div class="path-readout" aria-live="polite"><span>Dein Trace:</span> <strong id="trace">—</strong></div>
+  </section>
+
+  <div class="stepper">
+    <section class="step active" id="step1">
+      <h2>Maximum im Suchbaum</h2>
+      <p class="prompt">Klicke oben im Baum den Weg von der Wurzel zum maximalen Element.</p>
+      <div class="actions">
+        <button class="action" data-hint="hint1a">Hinweis 1</button>
+        <button class="action" data-hint="hint1b">Hinweis 2</button>
+        <button class="action primary" id="check1">Weg prüfen</button>
+      </div>
+      <div class="hint" id="hint1a">Suchbaum-Regel in Alltagssprache: kleinere Werte links, größere rechts.</div>
+      <div class="hint" id="hint1b">Solange ein rechtes Kind existiert, gehst du rechts. Stoppe <em>auf</em> dem letzten Knoten, nicht erst hinter ihm.</div>
+      <div class="feedback" id="feedback1" aria-live="polite"></div>
+    </section>
+
+    <section class="step locked" id="step2" aria-disabled="true">
+      <h2>Maximale Pfadsumme</h2>
+      <p class="prompt">Jetzt zählen vollständige Pfade von der Wurzel bis zu einem Blatt. Welcher Ast gewinnt?</p>
+      <div class="choices" role="group" aria-label="Pfad auswählen">
+        <button class="choice path-choice" data-path="8-4-3-2">8 → 4 → 3 → 2</button>
+        <button class="choice path-choice" data-path="8-4-7">8 → 4 → 7</button>
+        <button class="choice path-choice" data-path="8-12-10-9">8 → 12 → 10 → 9</button>
+        <button class="choice path-choice" data-path="8-12-20">8 → 12 → 20</button>
+      </div>
+      <div class="actions">
+        <button class="action" data-hint="hint2a">Hinweis 1</button>
+        <button class="action" data-hint="hint2b">Hinweis 2</button>
+        <button class="action primary" id="check2">Pfad prüfen</button>
+      </div>
+      <div class="hint" id="hint2a">Rechne jeden Wurzel-Blatt-Pfad als Summe. Ein innerer Knoten ist noch kein fertiger Pfad.</div>
+      <div class="hint" id="hint2b">Die Rekursion fragt links und rechts dieselbe Frage und nimmt dann <code>max(links, rechts)</code>.</div>
+      <div class="feedback" id="feedback2" aria-live="polite"></div>
+    </section>
+
+    <section class="step locked" id="step3" aria-disabled="true">
+      <h2>Länge des schwersten Pfads</h2>
+      <p class="prompt">Die Hilfsfunktion muss Summe <em>und</em> Länge nach oben tragen. Ergänze den Rückgabewert für einen leeren Teilbaum.</p>
+      <div class="code-fill"><code>if (n == nullptr) return paar{</code><label><span class="sr-only">Summe</span><input id="baseSum" inputmode="numeric" size="2"></label><code>,</code><label><span class="sr-only">Länge</span><input id="baseLen" inputmode="numeric" size="2"></label><code>};</code></div>
+      <div class="actions">
+        <button class="action" data-hint="hint3a">Hinweis 1</button>
+        <button class="action" data-hint="hint3b">Hinweis 2</button>
+        <button class="action primary" id="check3">Basisfall prüfen</button>
+      </div>
+      <div class="hint" id="hint3a">Ein leerer Teilbaum trägt weder Wert noch Knoten bei.</div>
+      <div class="hint" id="hint3b"><code>first</code> speichert die Summe, <code>second</code> die Anzahl der Knoten. Beide neutralen Werte sind 0.</div>
+      <div class="feedback" id="feedback3" aria-live="polite"></div>
+    </section>
+
+    <section class="step locked" id="step4" aria-disabled="true">
+      <h2>Trim auf Höhe 2</h2>
+      <p class="prompt">Klicke im Baum alle Knoten an, die entfernt werden müssen, damit nur zwei Ebenen bleiben.</p>
+      <div class="actions">
+        <button class="action" data-hint="hint4a">Hinweis 1</button>
+        <button class="action" data-hint="hint4b">Hinweis 2</button>
+        <button class="action primary" id="check4">Schnitt prüfen</button>
+      </div>
+      <div class="hint" id="hint4a">Die Wurzel hat Höhe 1. Ihre Kinder liegen auf Höhe 2 und bleiben.</div>
+      <div class="hint" id="hint4b">Bei Resthöhe 1 werden beide Unterbäume mit <code>sb_clear</code> gelöscht und beide Zeiger auf <code>nullptr</code> gesetzt.</div>
+      <div class="feedback" id="feedback4" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <section class="step solution locked" id="solution" aria-disabled="true">
+    <h2>Prüfungsabschluss: kompletter Code</h2>
+    <p>Erst nach allen vier Werkstatt-Schritten wird die vollständige Musterlösung freigegeben.</p>
+    <button class="action primary" id="revealSolution" disabled>Vollständigen Code aufdecken</button>
+    <pre class="code hidden" id="solutionCode"><code>unsigned int sb_maxval(suchbaum* sb) {
+    if (sb->root == nullptr) throw runtime_error("Suchbaum ist leer");
+    sb_node* n = sb->root;
+    while (n->right != nullptr) n = n->right;
+    return n->val;
+}
+
+unsigned int sb_maxpath(sb_node* n) {
+    if (n == nullptr) return 0;
+    return n->val + max(sb_maxpath(n->left), sb_maxpath(n->right));
+}
+unsigned int sb_maxpath(suchbaum* sb) { return sb_maxpath(sb->root); }
+
+struct paar { unsigned int first; int second; };
+paar sb_maxpathlen(sb_node* n) {
+    if (n == nullptr) return paar{0, 0};
+    paar l = sb_maxpathlen(n->left);
+    paar r = sb_maxpathlen(n->right);
+    if (l.first > r.first) return paar{l.first+n->val, l.second+1};
+    return paar{r.first+n->val, r.second+1};
+}
+unsigned int sb_maxpathlen(suchbaum* sb) {
+    return sb_maxpathlen(sb->root).second;
+}
+
+void sb_trim(sb_node* n, int height) {
+    if (n == nullptr) return;
+    if (height == 1) {
+        sb_clear(n->right); sb_clear(n->left);
+        n->right = nullptr; n->left = nullptr;
+        return;
+    }
+    sb_trim(n->right, height-1);
+    sb_trim(n->left, height-1);
+}
+void sb_trim(suchbaum* sb, int height) {
+    if (height <= 0) {
+        sb_clear(sb->root); sb->root = nullptr; return;
+    }
+    sb_trim(sb->root, height);
+}</code></pre>
+    <div class="exam-box hidden" id="examBox">
+      <h3>Was du mechanisch auf Papier schreibst</h3>
+      <ol><li>Leerer Baum/Knoten? Basisfall.</li><li>Teilbäume rekursiv berechnen.</li><li>Ergebnis auswählen oder Unterbäume löschen.</li><li>Aktuellen Knoten addieren bzw. Zeiger bereinigen.</li></ol>
+      <p><strong>Werkstattbaum:</strong> maxval = 20, maxpath = 40, maxpathlen = 3. Nach trim(2) bleiben 8, 4 und 12.</p>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="state-title">
+    <h2 id="state-title">Wie sitzt Aufgabe 12?</h2>
+    <div class="state-row">
+      <button class="state-btn" data-value="sitzt">Sitzt</button>
+      <button class="state-btn" data-value="wackelt">Wackelt</button>
+    </div>
+    <p class="tiny" id="savedState" aria-live="polite">Noch nicht markiert.</p>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Weitere Aufgaben">
+    <a href="../task-11/index.html">← Aufgabe 11</a><a href="../index.html">Übersicht</a><a href="../task-13/index.html">Aufgabe 13 →</a>
+  </nav>
+</main>
+</body>
+</html>

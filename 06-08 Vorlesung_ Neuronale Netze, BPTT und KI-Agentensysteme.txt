@@ -1,0 +1,569 @@
+Speaker 1 00:00:01
+Also, ähm, komm. Hier raus.
+Speaker 1 00:00:08
+SCD. Also, ich hab natürlich mehrere Fragen. Ich hatte damals, als ich, Claude ich, Praktikum 5 gemacht hab, da sind sie leider nicht wieder zurückgekommen an das, was sie versprochen hatten. Aber ich bin nicht mehr aktuell drinnen im Thema. Das ist auch schon drei Wochen her. Entschuldigung. Ähm, das war damals .
+Speaker 1 00:00:33
+Eine Sache?
+Speaker 2 00:00:34
+Was ist ein RMM, MSCMM, GRU im Training? Genau, das heißt, in jedem Fall wird es ausgerollt. Also, mach es gerade nur ganz kurz. Egal, Ob ich einen GRM, einen LSCM oder was auch immer ich habe, X, der irgendwas man braucht mit Y.
+Speaker 2 00:01:04
+Ich habe irgendwie eine Rückkopplung.
+Speaker 2 00:01:09
+Es kann entweder ein direkter Ausgang sein, wie beim RNN oder beim LSTM habe ich halt noch mal einen zusätzlichen Tensor, der damit durchgeht, das Gedächtnis irgendwann. Auf jeden Fall ist hier drin gegen dieses Neuron, ja, in ein, zwei, drei kleinen neuronalen Netze, wie wir gesehen haben, diese Blutfunktion und so weiter, Ja.
+Speaker 1 00:01:27
+Also ist eine Zelle,
+Speaker 2 00:01:28
+Weil es ist eine Zelle, sind mehrere Neuronen, mehrere Player,
+Speaker 1 00:01:31
+Mehrere . Aber die architekturelle Darstellung, die wir jetzt gerade als Menschen gewählt haben . Der ganze Apparat ist hier, das ist ja eine Repräsentation für uns als Mensch, um das greifbar zu machen. Genau. Und diese Zelle, oder wie nennt sich dieser Block?
+Speaker 1 00:01:50
+Der bildet mehrere Neuronen.
+Speaker 2 00:01:52
+Da drin sind, je nachdem ob es ein RMM ist, ein NSCM und so weiter, halt mehrere Signalfunktionen, haben wir die Eignung vorher auch gemacht. Aber worum es jetzt geht ist, das ist die Ausführung. Daten kommt rein, ein Vektor oder ein einfacher Wert oder ein Vektor kommt rein oder ein Tensor kommt rein, wird aufgrund des Vorhergenen von T-1 vom Hörgängerwert, der aktuelle T-Wert rein vom Vorgänger, Zusammen wird das Aktuelle verarbeitet. Nächster Wert kommt rein, der jetzt gerade irgendwelche produzierte Probunger Wert kommt rein, wird verarbeitet.
+Speaker 2 00:02:24
+So beim Training mache ich alle Zeitschritte. X von T. Und was schiebst du dann?
+Speaker 2 00:02:45
+Ich bin grad vor der Zeitschrift. Okay. X von T-1, X von T-2 und so weiter.
+Speaker 1 00:03:01
+Also bei RNN wird über mehrere Zeitschritte entfaltet.
+Speaker 2 00:03:05
+Genau, Achtung. Und hier drin gibt es jetzt, machen wir ganz einfach drei Neuronen. In 1, in 2, in 3 und so weiter, ja? Ja. Oben kommt mein Y von T, Y von T minus 1, Y von T minus 2 und wie viele Schritte ich auch immer will. Hier gebe ich meine Supervised Learning-Daten rein und hier meine erwarteten Ergebnisse.
+Speaker 2 00:03:33
+Und dadurch haben wir ja diese Rückkopplung, heißt ja in dem Fall, dass die immer hier weitergegeben werden. Und jetzt habe ich hier eher ein Loss.
+Speaker 2 00:03:43
+Hier ein bisschen los, aus den Soll-Werten, wie auch immer.
+Speaker 1 00:03:46
+Also pro singulärem Timestamp, aber halt auch mit dem . Also überall vernetzt.
+Speaker 2 00:03:51
+Loss Für das jeweilige. So und jetzt für das Backpropagation heißt ja, ich gehe hier zurück plus dem Weg zurück plus dem Weg zurück und alles wird gleichzeitig gerechnet. Und hier drin gibt es, Parameter, wenn ich durchrechne, das sind immer dieselben Parameter. Ich benutze hier drin immer dieselben Neuronen mit denselben Werten zu einem Zeitschritt. Also geh rein, rechne den Loss zurück und hab darüber ein Delta, also einen Differenzwert hierüber, einen Differenzwert, also einen Gradienten.
+Speaker 2 00:04:31
+Ja schon,
+Speaker 1 00:04:31
+Aber der unterscheidet sich ja pro Zelle.
+Speaker 2 00:04:34
+Die Werden aufaddiert. Und einmal aktualisiert für alle.
+Speaker 2 00:04:39
+Genau, also wir haben einen Gradientenfluss, der über alle Zeitschritte kommt und überall haben wir einen Gradienten. Und die werden wieder mit einem Mittelwert genommen.
+Speaker 1 00:04:47
+Ja, aber damit kondenst man ja den kompletten Zeitabschnitt auf ein . Also naja doch.
+Speaker 2 00:04:54
+Weil, gucken Sie mal, das ist ja rekursiv. Und er muss ja, das Netz muss ja nicht nur den, Muss ja sozusagen für alle Zeitschritte, also das soll ja sozusagen die Information, also soll den optimalen Wert hier liefern oder dass er auch schon hier den optimalen Wert kriegt vom Vorgänger und vom Vorgänger und vom Vorgänger. Deswegen muss es über die Zeit aufgefaltet werden und der Gradientenfluss ist von überall gleichzeitig zurück. Wir haben aber immer dieselbe, also dieselbe Entscheidung.
+Speaker 2 00:05:26
+Wir betreffen ja immer dieselben Entscheidungen, also immer die gleichen Gewichte.
+Speaker 1 00:05:29
+Ja, aber auf anderer Datenbasis.
+Speaker 2 00:05:30
+Nein, Ja, jeweils auf die jeweiligen hier, genau.
+Speaker 1 00:05:35
+Wie Können dieselben Neuronen bei unterschiedlicher Datenbasis zum selben Output führen?
+Speaker 2 00:05:40
+Die sollen jeweils zum richtigen hier führen, nicht zum selben. Also, im Prinzip muss der selbe Parameter hier zum richtigen Ergebnis führen, also auch hier zum richtigen Ergebnis führen, also hier. Neuronenparameter müssen so gewählt werden, dass sie mittelrichtig sind.
+Speaker 2 00:05:56
+Ja.
+Speaker 1 00:05:57
+Das ist dann quasi der Filter, der Feature.
+Speaker 2 00:05:59
+Genau, das ist das Feature, genau. Und das ist halt Backpropagation Over Time heißt das. Das ist die Grundidee, dass ich den selben Parameter hier wieder, also schlussendlich steckt nachher nur der endgültig drin. Und im Echtbetrieb betreibe ich so hier drin eine große Koppel, da habe ich eine kleine Auskettung. Und der muss halt mit dem aktuellen Wert und mit dem Vergangenheitswert immer das richtige Ergebnis liefern. Und das geht nur, indem ich auffalle beim Lernen. Das ist beim Lernen ist es hier speicherintensiv, super anfällig zu Hyperparameter, Hyperparameter, das größte des Netzes, und es führt auch dazu, dass die Dinger.
+Speaker 2 00:06:43
+Ganz schlecht übertragbar sind. Das heißt, auf ein Problem kann ich nur .
+Speaker 1 00:06:46
+Keine Generalisierung.
+Speaker 2 00:06:48
+Genau, Keine Generalisierung, kein Feintuning auf neue Probleme, also das.
+Speaker 1 00:06:53
+War dann jetzt ja quasi heute das Gegenstück zur heutigen Vorlesung. Der Auto-Encoder kann also so wie sie es präsentiert haben um einiges besser generalisieren.
+Speaker 2 00:07:03
+Ja, aber der Auto-Encoder macht nur was anderes, macht eine wichtige Repräsentation der Daten überhaupt erstmal, das hat damit nur im Geringsten was zu tun.
+Speaker 1 00:07:11
+Ich verstehe.
+Speaker 1 00:07:13
+Dann zweite wichtige Frage, die ist jetzt eher, also sehr viel besser als davor. Mentales Modell. Mir fällt es oft schwer zu entscheiden, in welcher neuronalen Architektur bewegen wir uns gerade, also die Zuordnung, wenn wir jetzt gerade ein CNN haben, ein RNN oder jetzt Encoder-Decoder oder Auto-Encoder, im Kopf zu sagen, jetzt sind wir gerade hier, jetzt gelten diese, Attribute, Parameter und also weil die Formeln sind ja überall gleich, also man macht viel mit Relo, Sigmoid, das wird alles wiederverwendet, aber dann hat man ja auch noch den Split von Trainingsphase, die sich unterscheidet zu Inferenzphase, Anwendungsphase und wie man das im Kopf managt, dass man da nicht confused ist zwischen dem.
+Speaker 2 00:08:08
+Okay, also.
+Speaker 2 00:08:15
+Ja, das muss man immer sortieren. Man braucht eine gewisse Zeit, man muss sich gewöhnen an die Dinge so ein bisschen. Und tatsächlich je komplexer die Architekturen werden und je komplexer die Lernverfahren, desto mehr mischt sich das auch, weil ich nachher beim Lernen auch bestimmte Teile im Inferenzbetrieb betreibe und andere im Backpropagation und das eine lerne ich mit.
+Speaker 1 00:08:33
+Ja, Man kombiniert dann ja auch wild, was gerade passt.
+Speaker 2 00:08:37
+Deswegen würde ich erstmal klassisch denken, nur im Lernbetrieb brauchen wir. Patienten und Lernbetrieb backpropagation genau nachher genau relu und weiß unabhängig davon ja wann welche Funktion wie ja das haben wir erstmal isoliert und dann verwenden wir es immer wieder eigentlich ist dann ganz einfach sag im wirkbetrieb geh ich halt nur vorwärts durch und im Lernbetrieb geh ich vorwärts und rückwärts rückwärts und krieg Patienten und mach immer mein.
+Speaker 1 00:09:11
+Delta Ja okay ja stimmt das macht Sinn und wir unterscheiden sie zwischen also convolutional also weil sie können super easy springen zwischen dem mentalen Modell vom CNN RNN vom Transformer also mir fällt das oft schwer wenn ich jetzt beim CNN verstanden habe was ein Filter ist dann will ich dieses Konzept direkt mitnehmen auf die Transformer Architektur die kann man ja schon auch, Logisch übertragen, also die Analogie stimmt, zum Beispiel beim Sparse.
+Speaker 1 00:09:43
+Das hatte ich jetzt zum Beispiel verglichen mit den Dropout-Neuronen, also auf der konzeptionellen Ebene. Es werden Teile ausgeschalten, damit die neuronale Struktur auf eine andere Art und Weise lernen muss. Die genau wird gezwungen. Ja, das ist .
+Speaker 2 00:09:59
+Also im Prinzip ist es, Fast egal. Also schlussendlich, also je weiter sie kommen, desto mehr ist es eigentlich egal, ob das jetzt ein CNN-Stack ist oder ein Transformer-Stack, also ein Self-Attention-Stack, das ist eigentlich egal. CNN hat halt die Eigenschaft, dass er jeweils immer nur sehr lokal schaut, immer kleinlokal und durch Tiefe dann eben sozusagen die Gesamtheit mit betrachten kann, also eine bestimmte Tiefe.
+Speaker 2 00:10:30
+Der Transformer kann das sofort, der hat sofort die komplette Breite, ist halt für teurer in der Komplexität und im Speicherverbrauch halt. Aber im Prinzip ist es eine lokale Conf oder eine große Fenstergröße. Also schlussendlich gibt es Daten, wo das eine geschickter ist, Weil das andere geschickter ist so ja sozusagen ob ich halt ganz viel lokale Information brauch dann tun 10ms genauso gut und vor allem wenn ich Daten hab oder ein Problem hab dass ich nicht von Grund auf neu trainieren will dann kann ich schon in den backbone.
+Speaker 1 00:11:14
+Nicht jeder setz.
+Speaker 2 00:11:16
+Dann halt klugerweise oben bei Transformer und nimm halt dann die Blocks raus also was da hinten als Features rauskommt und steck die dann in Transformer oder machen wir hier noch ein sparse representation drauf also kommt der raus machen eine sparse representation und dann.
+Speaker 1 00:11:30
+Also das ist quasi wie Lego spielen mit der Architektur. Mit ein bisschen Mathe. Ja, ja.
+Speaker 2 00:11:38
+Machen die Schnüre mal nichts anderes. Die schrauben eng mit Kuppels Maschinen zusammen, mit Schrauben und Kechstangen.
+Speaker 1 00:11:43
+Naja, das ist schon angenehmer, aber das kann man tausendmal simulieren.
+Speaker 2 00:11:46
+Das können wir tausendmal simulieren. Wir können es tausendmal ausprobieren, es passiert nichts.
+Speaker 1 00:11:51
+Ja ne, also ich kann 1000 verschiedene, also ich habe einen Datensatz und dann überlege ich mir fünf verschiedene neuronale Architekturen.
+Speaker 2 00:11:59
+Probier sie aus, ob das am besten funktioniert. Genau, aber ein Maschinenbauer auch, der kann auch fünf verschiedene Kranarchitekturen bauen. Es gibt ja jetzt eine Geschichte, das so zu konstruieren, machen wir das so.
+Speaker 1 00:12:11
+Aber Es ist halt so, ich generiere den Code, schicke es auf einen schnell genugen Computer, ist in drei Sekunden da.
+Speaker 2 00:12:18
+Beim Maschinenbauer.
+Speaker 1 00:12:20
+Nee, beim Machine Learning.
+Speaker 1 00:12:23
+Wenn der Computer schnell genug ist.
+Speaker 2 00:12:25
+Ja, Ja, ja, aber das braucht schon Wochen eher einen Tag, also groß im Training.
+Speaker 1 00:12:29
+Na klar. Ja, das stimmt. So, dann, was hatte ich noch?
+Speaker 1 00:12:35
+Wenn beim Training dann die Gradienten aus den verschiedenen Zeitschritten auf die gemeinsam, ja, das haben wir bearbeitet, perfekt. Dann Hidden State, Und Cell State beim LSTM.
+Speaker 1 00:12:52
+Also, was habe ich aufgeschrieben? Ich verstehe den Hidden State aktuell als nach außen sichtbaren Zustand, also für die anderen Neuronen oder für die anderen Nodes als lesbare, als public Variable, die da an den nächsten.
+Speaker 2 00:13:09
+Hidden State ist einfach das Neuronen, die weder Eingangs noch Ausgangsschicht Sind.
+Speaker 1 00:13:14
+Die sind weder Eingangs.
+Speaker 2 00:13:16
+Also Hidden ist einfach sozusagen innere Neuronen, wenn ich mehrschichtiges Ding hab.
+Speaker 1 00:13:22
+Also das ist dann jetzt quasi...
+Speaker 2 00:13:26
+Warum Hidden State und Seven State beim NSDM?
+Speaker 2 00:13:33
+Ach so, ah ne halt... Ach so generell ja, der Begriff ist sozusagen einfach... Wir bestehen Hidden State, HT, Advers...
+Speaker 2 00:13:46
+Mal in die Bilddarstellung. Können Sie mal die Bilder von der Vorlesung .
+Speaker 1 00:13:50
+Von der Vorlesung? Ja, ja, ja. Ja, komm ich hin. Das war Vorlesung.
+Speaker 1 00:14:03
+Hier.
+Speaker 2 00:14:07
+Ich hab noch Vorlesungen die nächsten Wochen, ich bin da.
+Speaker 2 00:14:17
+Also, genau, Sie können mich einfach einplanen. Ich komm dann dazu oder . Wenn Sie auch noch gebraucht sind. Also ich wollte mich heute nicht aufdrängen, da ich dachte, das wäre ein Gespräch zwischen Ihnen.
+Speaker 2 00:14:29
+Ja, das werde ich versuchen einzurichten. Genau, gucken Sie, dass Sie zusammen einen Termin finden, wir kommen wieder dazu.
+Speaker 2 00:14:36
+Danke, ciao.
+Speaker 2 00:14:43
+Ja, wir kriegen das hin. Danke, ciao. Na, gehen Sie mal gerne in die Vorlesungsunterlagen,
+Speaker 1 00:14:50
+Weil da. Ja, macht aus. Wissen Sie, Auswendig, wo da das . Also das ist die R&M-Vorlesung. Kann man da eigentlich größer springen?
+Speaker 1 00:15:07
+Mit Bild. Alles gut. Man muss.
+Speaker 2 00:15:13
+Das Fachamt behandeln, zum Beispiel, ich werde schon gleich mehr overfliegen, nee, doch ein Minuten Zeit rein.
+Speaker 2 00:15:22
+Gate weiter hinten diskutieren.
+Speaker 2 00:15:26
+So, okay.
+Speaker 2 00:15:33
+Sozusagen hier wird bei dem GRU quasi was einfacheres gemacht als beim LSDM. Man gibt im Prinzip hier den HT einfach weiter, ähnlich wie beim GRU, hat aber dann trotzdem noch solche Gates, die es mit modellieren können. Das wird sozusagen einfach weitergegeben. Wobei beim LSTM, also wir nehmen immer zwei Sachen an. Das XT kommt rein und das HT kommt raus plus, also geht weiter zum nächsten Zeitschritt. So jetzt machen wir das LSTM nochmal.
+Speaker 2 00:16:09
+Das ist die vereinfachte Form und die allgemeine, das LSTM, das hat sozusagen den Hauptunterschied, dass sozusagen im getrennten nochmal Speicher, Also da ist das HT, was rauskommt und auch weitergegeben wird, gibt es zusätzlich noch sozusagen einen Speicher, einen Tensor oder eine Matrix oder was auch immer, was ich da mitgebe und die wird mit modelliert. Da wird einmal sowohl der HT mitgegeben, was kam beim vorherigen raus, als auch noch sozusagen eine innere Datenspeicherung mitgibt.
+Speaker 2 00:16:43
+Und das GRU verzichtet darauf und gibt nur das weiter, hat aber trotzdem interne Gates, um, Dann bei dem HT Informationen hinzufügen und rauszuschmeißen. Ich kann natürlich bei einem GRU dann auch das so machen, dass ich die das HT kann durchaus höher dimensional sein als das was ich nachher brauche.
+Speaker 1 00:17:02
+Okay.
+Speaker 2 00:17:03
+Aber mit DNO.
+Speaker 2 00:17:09
+Aber Ansonsten Ist die Idee relativ gleich. Also andererseits noch ein Speicher, was dann gelöscht wird. Gesteuert werden soll. Da drin sind eben kleine neuronale Netze und es kann zweischichtig, dreischichtig, also mehr wie drei macht man normal nicht, aber.
+Speaker 1 00:17:26
+Es ist meistens sehr schön. Also die Nodes bilden nicht nur die grob granulare neuronale Struktur, sondern die Nodes selber haben dann auch eine fein granulare neuronale Struktur.
+Speaker 2 00:17:35
+Aber das ist die Architektur in den Nodes drin.
+Speaker 1 00:17:38
+Und im Training wieder um dahin zurückzukommen, laufen wir dann also vor und zurück.
+Speaker 2 00:17:44
+Beim Training haben wir immer nur eine Einrichtung, Also die Zeit, in die Zukunft können wir nicht laufen, macht bei Zeit bestehen keinen Sinn. Also guckt man sich die Vergangenheit, baut die auf, baut aber dieselben neuromonalen, den selben Neuroparameter rein und rechnet den Loss eben über die verschiedenen Zeitschritte gleichzeitig zurück. Und nehme an jedem Mal, wo ich halt an einem Gewicht vorbeikomme, an einem Parameter angepasst werden muss, nehme ich halt aus allen Zweigen, Gradienten, addieren auf und machen mit.
+Speaker 1 00:18:14
+Aber haben wir jetzt wieder modifizieren wir alle Neuronen oder modifizieren wir die Neuronen pro Neuronen?
+Speaker 2 00:18:22
+Das sind Neuronen, die nur einmal, zum Zeitschritt eins was sagen.
+Speaker 1 00:18:26
+Aber Wie kann denn so viel Information auf so weniger Neuronen repräsentiert werden?
+Speaker 2 00:18:30
+Nein, nochmal, das wird einfach so durchgerechnet. Also ich gehe den Vorratspfad. Ich gehe hier da rein, dann kommen Sie durch die Neuronen durch hier, kommen hier ein Ergebnis raus und kommen weiter. Dann kommt das dazu, wird verrechnet, kommt T raus, dann kommt das dazu, wird verrechnet. So, jetzt gehört Backpropagation. Hier machen wir los, rechnen wir einmal zurück. Rechnen wir den Weg einmal zurück und merken uns immer den Gradienten und addieren die auf, machen unseren Optimierungsstep, passen die Gewichte an und gehen in die nächste Zeit rein.
+Speaker 1 00:19:03
+Und wie viele Parameter haben die Neuronen?
+Speaker 2 00:19:05
+Die sind in der Regel sehr wenig.
+Speaker 1 00:19:08
+Aber wie kann das dann passen? Wie kann auch so wenig Neuronen .
+Speaker 2 00:19:13
+Ja, weil es ist einfach so ein Zeitsignal, dass man einfach . Ach so,
+Speaker 1 00:19:17
+Okay, weil .
+Speaker 2 00:19:18
+Die können auch Embedding-Vektoren hier für 12.000 Dimensionen reingeben, das tut auch. Da habe ich halt entsprechend mehr Neuronen da drin,
+Speaker 1 00:19:25
+Glaube ich. Ja, also weil okay, okay, weil daran .
+Speaker 2 00:19:28
+Ne, Mann, genau, ich habe eben diesen .
+Speaker 2 00:19:31
+Beschleunigungssensor was höherdimensionales, kann aber auch nur eindimensionales Audiosignal sein.
+Speaker 1 00:19:36
+Okay, ja dann .
+Speaker 2 00:19:37
+Das ist uns ja egal als Data Scientist, ist völlig wurscht.
+Speaker 1 00:19:40
+Und also das LSDM hat dann quasi die Brücke geschlagen: Hey, nicht jede Information muss weitergegeben werden und wir können auch aussortieren.
+Speaker 2 00:19:49
+Aussortieren kann auch das GRU, aber das LSDM hat zusätzlich einen Speicher, diesen Extraline.
+Speaker 1 00:19:57
+Den HT.
+Speaker 2 00:19:58
+Gibt er noch zusätzlich.
+Speaker 1 00:19:59
+Also ist es quasi nicht nur Z als Repräsentation, sondern halt auch noch mal ein zweiter Vektor.
+Speaker 2 00:20:07
+Die Analogie jetzt zu Z wäre mir ist mir eins zu weit. Es ist kein latenter Vektor, der da weitergegeben wird. Sondern?
+Speaker 1 00:20:15
+Das ist ein Tensor.
+Speaker 2 00:20:18
+Intern ist eine interne Datenrepräsentation, wo man sich was merken kann.
+Speaker 2 00:20:24
+Also das ist nicht das HT, sondern das, Wie heißt vom LSDM die Bezeichnung? Doch, ne.
+Speaker 2 00:20:34
+Gehen wir mal kurz vom LSDM hoch. Nicht, dass ich den falschen Begriff verwende.
+Speaker 2 00:20:42
+Das C, T. Cell State. Cell State ist am ehesten so eine interne Repräsentation, wo man sich Sachen merken kann. Weil das ja auch, versuche das effiziente zu machen, aber trotzdem ist es kein latenter Vektor in dem Sinn, weil er ja nicht so gelernt wird. Also natürlich schon, da hat er nicht die Aufgabe, das datenintensiv zu werden, aber er lernt trotzdem die interne Repräsentation, wie er sich diese Art von Information am klügsten merkt, dass er die Aufgabe beantworten kann. Insofern ist es schon 'ne Art latenten Vektoren dazu nicht bezeichnet.
+Speaker 2 00:21:13
+O. K., mhm, also ganz falsch, das ist ja immer, das ist immer nicht ganz scharf.
+Speaker 1 00:21:21
+Ja, So und dann die dritte Frage war G. R. U. Im Vergleich zum L. S. T. M., Kann man ein GRU vereinfacht als LSTM ähnliche Architektur ohne separaten Cell State beschreiben? Jo, anscheinend schon.
+Speaker 1 00:21:36
+Bei der Hidden State, bei der der Hidden State die Speicherrolle übernimmt.
+Speaker 2 00:21:45
+Ja, der macht beides, der gibt eben sozusagen den CT weiter als auch eine zusätzliche Information.
+Speaker 1 00:21:50
+Genau und dann ist es quasi nur dieses Update Gate und das Reset Gate. Beim LSTM, was das powerful macht oder stärker macht als das GRU. Man braucht halt auch mehr Ressourcen,
+Speaker 2 00:22:04
+Mehr Rechenzeiten, mehr Speicher mehr und alles, Ja.
+Speaker 1 00:22:06
+Ja, okay, okay. Ah nee, das waren die Fragen von damals.
+Speaker 1 00:22:11
+Perfekt.
+Speaker 1 00:22:14
+Weitere Fragen? Ja, sicher, also die Fragen gibt es mir jetzt genug.
+Speaker 2 00:22:18
+Super, dafür ist Praktikum auch da, also ihr müsst halt auch fragen, nur wenn ich drin sitze, die lächeln mich alle an und hoffen, dass ich weiterlaufe.
+Speaker 1 00:22:25
+Ja, man muss sich halt auch trauen zu fragen. So, wo sind meine ?
+Speaker 1 00:22:32
+Ja, ja, ich muss kurz suchen.
+Speaker 1 00:22:43
+Dann drei Fragen zum Autoencoder aus der aktuellen Vorlesung waren: Ist dieser Regularisierung, ist die Regularisierung der Druck auf den Latent Space gegen triviales Kopieren? Also diese Einstellung.
+Speaker 2 00:22:60
+Bei dem, wo der Laternenvektor größer ist. Genau, der würde normal nur kopieren.
+Speaker 1 00:23:05
+Also bei dem Over Completion?
+Speaker 2 00:23:08
+Ja, genau. Das heißt, wenn der Laternenvity Space größer ist als der Input und Output State, dann führt genau die Regularisierung dazu, dass sonst würde nur einfach mehr wie der Kopierer durchreichen oder sowas.
+Speaker 1 00:23:23
+Dann zweite Frage. Beim SPARS Auto Encoder, Kann man sich die Disparsity als .
+Speaker 2 00:23:38
+Ja, also die einzelnen Dinge haben dann explizite Bedeutungen eher.
+Speaker 1 00:23:43
+Viele Z-Aktivierungen nahe Null oder eher als wenig interpretierbare Features aktiv?
+Speaker 2 00:23:50
+Ja interpretierbare Features, also bei dem haben wir eher interpretierbare, Elemente. Wir wissen zwar am Anfang nicht, was es ist, aber man könnte es ausprobieren, kann einfach mal gucken, einen alten Menschen, und ein anderer High sein, ganz konkreten Akt. Und ein junger Mensch oder ein anderes Neuro und starker wenig sein, das heißt, er kann eher sozusagen die Features expliziter machen. Ja, okay.
+Speaker 1 00:24:17
+Jo, das checke ich. So und dann beim variationalen Encoder.
+Speaker 1 00:24:28
+Ist der wichtigste Unterschied zum normalen Autoencoder, dass Z nicht ein fester Punkt ist, sondern eine Verteilung, die per KL in Richtung Normalverteilung geordnet wird?
+Speaker 2 00:24:38
+Richtig, Ich mache zusätzlich, sage ich noch, ihr seid, also gibt es halt nicht irgendwie effizient, also da muss ihr weitergeben, um es wiederherzustellen. Ich mache noch eine Nebenbedingung und sage, dass ihr Neuronen euch in nicht in der Verteilung, Münden sollte, so eine Art Standardverteilung oder einer bestimmten Verteilung. Und das führt dann mal dazu, dass auch so etwas wie eine Varianz verteilt, also alle einen ähnlichen Beitrag zu leisten.
+Speaker 2 00:25:06
+Das unterstützt es, dass die Informationen nicht nur effizient, sondern auch gut verteilt, dass nicht an einzelnen Dingern besonders hängt.
+Speaker 1 00:25:13
+Ja, ich verstehe.
+Speaker 1 00:25:16
+Dass halt das gesamte Netz lernt.
+Speaker 2 00:25:18
+Ja, die gesamte Repräsentation, fast alle haben relevante Informationen, also ich gebe Informationen, Jeder ist fast gleich wichtig, fast demokratisch, also einen wichtigen Beitrag. Das Ding nicht nur zur Effizienz weiterzugeben, sondern auch noch gleich, also vereinfacht gesagt, alle sollen einen relevanten Beitrag haben, die Beteiligung.
+Speaker 2 00:25:46
+Mache ich bei der PCA ja auch so, nur im Linearen, wenn ich sage, ich möchte, dass die Variante alt bleibt. Mhm. Genau. Und da war's dann, geht weiter und sein muss geil, Verteilung soll.
+Speaker 1 00:25:59
+So, jetzt muss ich kurz wieder suchen.
+Speaker 1 00:26:06
+"Lernstand" heißt der Ordner.
+Speaker 1 00:26:10
+Uhhh. Womit fangen wir an? "Lernzettel" nee. "Probleme" hört sich gut an.
+Speaker 1 00:26:22
+Oh Mann. So viele Probleme wurden gelockt also das hatten wir quasi besprungen ja ist klar ein Fenster.
+Speaker 2 00:26:42
+Man dreht es rum und schiebt es drüber oder?
+Speaker 1 00:26:44
+Ja Ja das ist klar.
+Speaker 2 00:26:45
+Das Sternchen ist einfach eine andere Schreibweise wie die Faltung das W mal X ist einfach das ist die Formel hinten dran, Bezeichnung. Warum werden CNN-Operationen ein lokales Polarprodukt bilden, obwohl die mathematische Faltung als Integral.
+Speaker 1 00:27:00
+Boah, die Frage ist nicht für mich.
+Speaker 2 00:27:02
+Integral ist auch nicht global, sondern Integral sagt nur, dass es kontinuierlich ist, nur den Bereich. Also wenn man das Integral angeschaut, ist es von bis und ist genau diese Fensterbreite.
+Speaker 1 00:27:14
+Jo, stimmt.
+Speaker 2 00:27:14
+Das ist einfach nur, dass halt kontinuierlich drüber integriert.
+Speaker 1 00:27:21
+So dann das ist auch schon ein Monat her damals Cross Entropy loss shapes im 10n Training das war das war noch mit den logits logits waren sind quasi die Vorstufe von Filtern nee logits waren.
+Speaker 1 00:27:45
+Also Ich gehe hier gerade.
+Speaker 2 00:27:48
+Bin okay und jetzt fragen wir mal, Typische Denkfehler fälschlich 2 3 x 10 x 10 korrekt ist pro Bild sondern doch jetzt plus ein ah das ist sozusagen die Filterbreite plus ein BIAS oder was meinst du da alles oder.
+Speaker 1 00:28:04
+Ich glaube nee das war das war beim fully connected labeling Netzwerk was halt nicht direkt Klassen ausgibt sondern Logits und über die Logits werden dann die Klassen gebildet ja mit der Klassenlabelung, Und das wie das mit der batch size zu tun hatte aber ist auch schon ein Monat her ist nicht mehr aktiv im Kopf.
+Speaker 2 00:28:26
+Erstmal nichts zu tun die batch size ist dann einfach wenn ich mich speicher ich dann also nochmal wenn ich dann die Daten die Features muss ich dazwischen speichern also die Gradienten und die batch size brauchen immer also wenn ich batch size 5 habe brauche ich fünfmal so viel Gradientenspeicher.
+Speaker 1 00:28:52
+Dann das war hier 10N Feature Maps. Ja, vermische ich teilweise mit dieser Positional Encoding im Transformer.
+Speaker 1 00:29:03
+Dann Feature Map ist eine 2D Trefferkarte eines Filters. Ort bleibt durch Höhe, Breite, Koordinate erhalten und nicht durch extra Positional Encoding.
+Speaker 1 00:29:16
+Genau, aber immer im Kopf linke ich das halt, weil das.
+Speaker 2 00:29:20
+Kenne Ich.
+Speaker 1 00:29:22
+Das Ist die Position in den Daten. Wo steht das im Verhältnis zum Rest der Daten?
+Speaker 2 00:29:27
+Genau, aber wenn es um so einen 10N-Filter geht, macht er eine bestimmte Antwort an dieser einen lokalen Stelle. Ja, ja.
+Speaker 1 00:29:35
+Und wenn er da dann halt was detektiert, okay, hier sehen wir das Fell oder Augen, was weiß ich, dann mappt er das ja mit dem Rahmen. Und darum ging es, glaube ich, ob man das irgendwie halber auch vergleichen kann. Aber ja, passt. So, dann.
+Speaker 1 00:29:52
+Ja, TNN Shapes, das kann ich mittlerweile.
+Speaker 1 00:29:57
+Bis 2D Trefferkarte, genau, nicht positional encoding. NN, da Lost Gradient und Optimizer muss sich noch sauber trennen, okay.
+Speaker 1 00:30:11
+Zeitlich dieselben Gewichte. Es werden nicht, das hatten wir jetzt vorhin auch, perfekt. Dann große Lernstandskontrolle, das war da, wo auch die E-Mail entstanden ist.
+Speaker 1 00:30:26
+Ja, Begriffe.
+Speaker 1 00:30:30
+Over-verses Training, das hatten wir auch. Backpropagation wird nicht pro einzelner Zelle gemacht, sondern zellenübergreifend. Ja, dann der Gradient descent/adam Optimizer ändert Parameter anhand vom Gradient.
+Speaker 1 00:30:53
+Ja, das macht auch Sinn.
+Speaker 1 00:30:56
+Ein Musik mal, Tenage, ja, ja, O. K., das hab ich mittlerweile alles. Ja, nee, ich glaub, dann hab ich jetzt aktiv keine offenen Fragen mehr. O.
+Speaker 2 00:31:08
+K., man macht es ruhig nächste Woche wieder, ja, je länger man lernt, desto mehr Fragen kommen eigentlich.
+Speaker 2 00:31:13
+Macht es ruhig aktiv, um auch die anderen motivieren, das macht total Sinn, weil es manchmal so kleine Punkte, an denen es hängt, ja,
+Speaker 1 00:31:19
+Wo man dann bestimmte Dinge ist, was man dann macht. Also, wenn Sie noch was sehen wollen, das ist zwar von mir generiert, nicht von Ihren Vorlesungsfolien, aber es gilt als Datenbasis.
+Speaker 1 00:31:31
+Das ist quasi meine persönliche Lernlandkarte.
+Speaker 1 00:31:36
+Genau, es geht halt um dieselben Probleme, die ich gerade mit Ihnen besprochen habe, dass es mir halt noch schwer fällt, die einzelnen Architekturen auseinanderzuhalten und deswegen habe ich mir das bauen lassen.
+Speaker 1 00:31:48
+Genau, wir haben die Funktion, wir haben die Layer, So, und dann haben wir hier im Training jede neuronale Struktur, die wir bisher behandelt haben. Also wir laufen hier damals durch beim MLP Fully Connected und da haben wir halt das große Problem des Grading Descent, oder? Die Information läuft da durch und wird verwaschen.
+Speaker 1 00:32:17
+Beim CNN laufen wir dann von unserem Bild,
+Speaker 1 00:32:22
+Convolution genau dann flatten wir da und machen auch wieder pooling und zwischenberechnungen und irgendwann kommt dann der loss raus und wir können das checke ich auch so dann rns das ist das halt mit der zeit da muss man halt das ist falsch schlechte schlechte grafik merke ich selber, Ein LSTM, hier hat er verkackt, aber naja, halber, auch schlecht generiert und GHU und schon wieder ruft mich jetzt jemand an aus Österreich nicht.
+Speaker 1 00:33:01
+Oh Mann.
+Speaker 2 00:33:03
+Das machen wir beim nächsten Mal in Ruhe mal durch, das finde ich gut zu lernen, Strandekin und sich aufzubauen. Cool.
+Speaker 2 00:33:11
+Sehr schön. Ja.
+Speaker 1 00:33:16
+Und jede Architektur konkret, das, Ja, also ich bin dran. Ich glaube, ich kann die Klausur mitschreiben. Wer ruft mich denn aus Österreich an? Hallo, Samuel Fleig.
+Speaker 1 00:33:36
+Spam-Anruf. Spam.
+Speaker 1 00:33:43
+Boah, haben Sie immer noch Zeit und diesmal abhängig vom Fach an sich? Also, Sie merken ja, ich mag . Ja, auch. Ich arbeite sehr viel mit neuronalen Netzen, also mit Sachen, die auf neuronalen Netzen basieren. Ich arbeite mit Agenten, sagt Ihnen das was? Ja, natürlich. Okay, ich arbeite jetzt schon seit zwei Jahren mit Agenten und ich arbeite langsam professionell mit Agenten.
+Speaker 1 00:34:16
+So professionell, dass ich Aufträge annehme für die Industrie und für Firmenagentenbau. Und ja, das ist gut, weil da verdiene ich Geld, sogar gutes Geld, aber was ich eigentlich mache oder wo ich eigentlich zurzeit am meisten Spaß habe ist, ich entwickle etwas, das nenne ich Human Agent Interface. Das ist quasi die Brücke, wenn wir sagen, Wir haben keinen stochastischen Papagei, sondern halbwegs intelligente große LLMs.
+Speaker 1 00:34:48
+Und wir haben den Menschen als funktionierendes natürliches neuronales Netz. Wie muss die Interface-Connection zwischen beiden laufen? Weil beide haben unterschiedliche Parameter in der Bandbreite. Den digitalen Teil kann ich mit Geld unendlich groß skalieren. Mein menschlicher Aufnahmekontext ist begrenzt. Und ich bin jetzt seit einem Monat dran, ein Projekt oder es ist quasi ein agentischer Workflow oder eine agentische Arbeitsweise zu entwickeln.
+Speaker 1 00:35:21
+Die nenne ich Human HAI, Human Agent Interface. Das kann man sich so vorstellen wie eine Sanduhr. Man wirft oben alles rein, was relevant ist. Dann passiert ganz viel Preprocessing, also der Agent sucht im Web, welche Lösungen gibt es schon, macht alles, Um das Projekt in going zu bekommen und dann kanalisiert die Sanduhr durch verschiedene Gates es so weit runter, dass aus diesen ganzen 10 Millionen Tokens, die jetzt aus einem Gedanken verarbeitet wurden,
+Speaker 1 00:35:59
+Drei Für den Menschen zu entscheidende Sachen, die ihm erklärt werden: Hey, die Firma hat das Problem so gelöst oder man könnte das so und so machen. Jetzt musst du entscheiden, wie willst du das lösen, also die echte menschliche Intelligenz und dann wählt der Mensch einfach nur noch Knopf A aus oder sagt, erklär es mir besser.
+Speaker 2 00:36:18
+Können Sie mir so einen latenten Space bringen?
+Speaker 2 00:36:22
+Das ist.
+Speaker 1 00:36:24
+Ein typischer latenter Space, der passend ist für mich als Mensch in der Aufnahme und eben, also es geht so ein bisschen raus aus der . Was macht man so, was macht mir das Spaß? Genau, aus dem, Terminal User Interface, ins Graphical User Interface, ins Agent User Interface, weil es ist multimodal, er kann Video, Text, alles generieren. Hauptsache ich als Mensch kann damit interagieren. Ich bestätige dann, jo das machen wir und dann entsteht nach unten, da bin ich jetzt gerade am bauen von, eine Executor Pyramide.
+Speaker 1 00:36:56
+Bisher habe ich nur ein Teil davon. Ich habe einen Executor, einen Verifier Agent, die laufen im Loop und wenn die sich nicht einigen können, dass der Code committed werden kann, Wird ein dritter Agent zugeschaltet und der soll vermitteln und wenn die sich immer noch nicht zu dritt einigen können eskaliert sie wieder hoch in die Sanduhr zum Menschen. Genau und das ist eigentlich was mir viel viel mehr Spaß macht.
+Speaker 2 00:37:20
+Grundlagen Muss man lernen, da muss man durch, wovon wir studieren brauchen sie trotzdem machen sie das. In Deutschland kommt das so und es macht einfach Sinn, weil sie trotzdem was mitkriegen auch wenn es ja sehr langsam sie anhört.
+Speaker 1 00:37:30
+Ja ne ich weiß warum ich hier bin ich komme hier freiwillig her. Und auch mit Motivation aber ich baue jetzt quasi zusätzlich dazu noch eine agentic Landkarte also jeder Agent braucht ein Profil nicht nur statisch wo drin steht hey das kann er oder diese Skills Connectors Rechte hat er sondern auch das ist sein Einsatzzweck und.
+Speaker 1 00:38:03
+Die Arbeitsweise, mit der ich mittlerweile arbeite, ist, ich erstelle Agenten, teste diese gegen meine Projekte, kommentiere live den agenticn Dings, lass den Output von einem LLM as a judge, also das Human End Agent Feedback und wir iterieren soweit, bis die Akzeptanzkriterien für das neue Feature gepasst haben, dass der Agent den Zielstatus sicher erreicht.
+Speaker 2 00:38:33
+Auch schon automatisiert,
+Speaker 1 00:38:34
+Voll oder was? Nein. Also wenn ich das voll automatisieren kann, dann muss ich nicht mehr studieren, dann kann ich zu Anthropic persönlich gehen. Ja, ja, aber . Doch. Also ich hab lokal hier gerade 70, 80 Agenten.
+Speaker 1 00:38:52
+Jo, und ich verbrauch an einem guten Tag 100 Millionen Tokens. Und ja, das ist nicht wenig. Und wer zahlt das? Ich und meine Firma.
+Speaker 2 00:39:04
+Wie viel investieren.
+Speaker 1 00:39:04
+Sie alle in Token sammeln? Also krassester Monat dieses Jahr waren 450 Euro. Pro Tag ja? Ne, pro Monat. Pro Monat echt? Das geht immer noch. Ja, ja, man kann. Also ich habe sechs verschiedene KI-Abos. Ich habe Gemini, Claude, Codecs, Minimax, OpenClaw und Cursor. Genau.
+Speaker 2 00:39:28
+Was für Anwendungszwecke haben Sie da vor allem? Also Agenten führen?
+Speaker 1 00:39:32
+Software-News. Mittlerweile geht es raus aus der Softwareentwicklung rein in das operationale Geschäft. Also ich baue für Mannheim einen Bewerbungsagenten für eine Firma, die halt die Bewerbung reinkommt. Der Agent kümmert sich darum, damit der Mensch nicht mehr machen muss. Für Berlin baue ich quasi Production Agents.
+Speaker 2 00:39:51
+Die Städte sind.
+Speaker 1 00:39:53
+Halt schon eine Stadt? Ne, für ein Startup. Was halt operative Aufgaben innerhalb des Geschäfts lösen soll oder machen soll, die zumindest digital lösbar sind. Und der Markt ist unendlich groß, weil ich gehe davon aus, in fünf Jahren hat jeder Mensch 10, 20, 30 Agenten, so wie wir Apps sammeln auf dem Handy. Und das ökonomische Potenzial von agenticr Arbeit, Return on Token Invest ist enorm. Solange mein Agent mehr.
+Speaker 1 00:40:27
+Geld produziert als er API Kosten hat, kann ich ihn unendlich groß skalieren.
+Speaker 2 00:40:30
+Ja, es wird auch wieder Technologiesprünge geben und so weiter. Also momentan machen wir halt mit ganz vielen Agenten, die Rollen haben. Da wird es ja auch was tun, aber momentan ist es eine total sinnvolle Geschichte.
+Speaker 1 00:40:42
+Genau und agentic Optimierung, also ich habe angefangen damals mit Prompt Optimization, davon bin ich lange Lange-Weg, ich mache mittlerweile Hermes Optimization. Dafür fehlt mir ganz viel Statistik, um .
+Speaker 2 00:40:57
+Ganz wichtig. Punkte an die Grundlagen, an die werden mir am meisten geholfen. Weil es wird ein oder zwei Technologieschritte, wenn sie da durchkommen. Was, wenn man jetzt nur auf diese Frameworks und . Was haben Sie für Graph Frameworks?
+Speaker 1 00:41:12
+Was nehmen Sie denn alles? Also ich bin vor allem im Hermes Framework aktiv, aber ich arbeite eigentlich mittlerweile quasi Model und Hermes-agnostisch. Also ich kann auch mit Claude Code, mit Codex, mit Open Code, aber ja mit Length Views oder . Die mag ich nicht. Ich komme in die nicht rein, weil damit fehlt mir die Erfahrung. Ich arbeite halt seit Jahren mit meinen Terminals und kenne die komplett in und auswendig.
+Speaker 1 00:41:42
+Und meine Arbeitsweise passt mir und das müsste ich halt neu lernen.
+Speaker 2 00:41:47
+Das ist auch nicht so wild, aber viele Aufgaben sind ja auch gar nicht prozessorientiert. Es gibt Aufgaben die prozessorientiert da kann man das halt explizit modellieren das hat eine Mischung aus was LLMs gut können und was man als Prozessgraphen gut kann also wir machen das gerade in SET machen wir gerade ein Projekt mit Blanker für solche Agenten machen medizinische Agenten also ist Teil einer Vorlesung von der Oma aber das ist schwer jetzt gerade im Sex oder später machen wir so Zeug.
+Speaker 1 00:42:16
+Ja also ich mache das Zeug jetzt schon.
+Speaker 2 00:42:20
+Klar aber, Es macht auch Sinn sich mit dir aufeinander aufzubauen.
+Speaker 1 00:42:24
+Ja und was mich zurzeit sehr fuchst ist agentic diese Agenten Optimierung also wir iterieren durch Agenten Variation wir verändern einzelne Komponenten am Agenten in Skill und Skill in der Permission messen den den Return kommen wir näher mit Accuracy dran, Also quasi das auf einer Ebene höher gesetzt, können wir den Gradienten zurückberechnen, auch wenn wir uns nur im Wortraum bewegen ohne Zahlen.
+Speaker 1 00:43:03
+Und das dann zu automatisieren, also Agenten zu haben, deren Aufgabe es ist, einen Agenten zu überwachen und diesen während der Laufzeit mit Fallacy, also sollen Linter, also Vorlaufzeit als auch während Laufzeit, Zu optimieren und das ist verrücktes Zeug was dann möglich ist also weil ich mache das alles händisch und.
+Speaker 2 00:43:30
+Also wenn sie in so themen tiefer einsteigen was immer noch sozusagen auch neben den ganzen LLMs sie nutzen und den Grundkonzepten aber sie bleiben ja nur im Textbereich ja also machen sie immer auch Texttransformationen man kann jetzt eben man.
+Speaker 2 00:43:50
+Dann eben in der Zukunft.
+Speaker 2 00:43:54
+Wenn Sie irgendwelche Konzepte verstehen, können Sie sich auch so etwas wie einen inneren Kern bauen und dadurch dann solches meta-Wissen über mehrere Sachen hinweg in so einen latellischen Raum transformieren und sozusagen sowohl Prozesswissen oder halbes Wissen auf eine sehr intensive Form, der Sie hier ganz einfach nachlernen können oder reinzoomen können. Ja, Ja, das können Sie als Kernsystem haben. Das heißt, Sie können dann zurzeit Ihre Anfragen motivieren in bestimmte Dinge. Da ist doch ganz viel Potenzial.
+Speaker 2 00:44:25
+Ja. Weil Sie arbeiten ganz schön explizit mit Wissen. Ja. Macht total Sinn. Aber da haben Sie Windowgrößen, die sind auch ineffizient und man will ja manchmal auch Wissen von dem einen und anderen Dingen verbinden, die so gar nicht verbunden sind. Wir sind zu weit an der Stelle, aber da ist noch ganz viel Geschick nach oben und ist auch Gegenstand der Forschung, wie man das sozusagen am liebsten repräsentiert. Auch über Rec-Systeme, also die kann man auf allem die Wissensdaten von den Unternehmen noch effizient mit einbeziehen.
+Speaker 2 00:44:58
+Wir wissen ja, was nicht jedes Mal alles durchnoodelt. Ja, ja. Dokumente mitgibt. Ich weiß,
+Speaker 1 00:45:04
+Ich löse diese Probleme für Firmen.
+Speaker 2 00:45:07
+Okay, ein Film ist ein Rec-System.
+Speaker 1 00:45:08
+Nein, ich bin ein granularer Agentenmensch. Für jedes Problem ein Agent.
+Speaker 1 00:45:17
+Und das heißt, der Executor fragt den Researcher. Das ist die Datenbank. Du kennst dich aus, weil du hast eine interne Map, deine Skill ist angepasst.
+Speaker 2 00:45:27
+Genau, aber das ist sozusagen, wie gesagt, sind sie über den expliziten.
+Speaker 2 00:45:34
+Jetzt kommt noch mal eine andere Nummer draus, wenn sie sozusagen dann kluge, also so macht es auch kluge Anfrage. Das heißt, sie überführen erstmal ihre, Für Ihre Fragestellung in interne Repräsentation zum latenten Space. In diesem latenten Space können Sie erstmal denken, in Ihrer Welt. Und dann kommen Sie wieder zurück und stellen daraus dann ganz konkrete Fragen ans LSTM. An einen Transformer, ja? Ach so.
+Speaker 1 00:45:59
+Naja, weil.
+Speaker 2 00:46:00
+Ich sag Ihnen, da ist einfach nochmal die Musik von sehr gut zu absolut spitzen. Na klar. Das braucht nicht jeder, eine Einstellung brauchen Sie vielleicht nicht. Trotzdem durchsetzt später.
+Speaker 1 00:46:11
+Also Sie sagen, die Agenten sollen nicht per MCP/ACP kommunizieren, sondern auch über einen Latent Space?
+Speaker 2 00:46:19
+Zum Beispiel, oder darin denken oder Wissen repräsentieren vom Unternehmen. Das heißt, Anwendungswissen daraus können Sie einfach optimieren, weil denken Sie mal, machen wir kurz das Bild von der Gesichtserkennung. Wir haben ganz viele Gesichter gesehen, wir haben einen kleinen latentischen Space, mit dem wir, Relevantes Wissen über Gesichter haben. Wenn wir da drin ein bisschen nur wir uns bewegen, bewegen wir uns im Gesichtsbild. Ganz viele Möglichkeiten Bilder zu haben, aber der Agent hat doch an seiner Rolle doch nur eine Aufgabe.
+Speaker 2 00:46:51
+Er soll im Prinzip diese Aufgabe möglichst gut und im Prinzip können sie die Aufgabe, seine Welt, sein Wissen, seinen latenten Space kriegen. Sonst haben sie momentan ihren ganzen Textspace, aber wir Menschen funktionieren ja, aber wir haben nicht also ja ich lese nochmal vom, Vor meinem Studium jedes Mal die erste Seite: Wie programmiere ich eine For-Schleife und so weiter. Sondern sie haben ganz viel Implizit und Administration.
+Speaker 1 00:47:15
+Naja, aber das bringen die großen Neuro-LLMs mit in ihrem Latent Space.
+Speaker 2 00:47:21
+Ja, aber so allgemein, aber nicht als Spezialist.
+Speaker 1 00:47:24
+Ja doch, aber da kommt dann das Harness Engineering ins Spiel.
+Speaker 2 00:47:32
+Ja, es funktioniert und es funktioniert mit einer bestimmten Güte. Wenn Sie aber dann über die Fähigkeit von anderen bereitgestellten großen Modellen weiter wollen, also wenn man das sozusagen in der Qualität weiterentwickeln will, machen alle Technologien mit einzubeziehen sind.
+Speaker 1 00:47:53
+Ja, ich verstehe das. Ich erzähl,
+Speaker 2 00:47:54
+Was Sie da machen, das machen ganz ganz viele, machen alle Unternehmen, das machen Sie ja. Sie können als Dienstleister Geld verdienen und das anbieten. Wenn Sie ein Unternehmen gründen wollen und wirklich wegfliegen in die .
+Speaker 1 00:48:06
+Ja, ich verstehe, was Sie wollen. Da hatte ich auch mal ähnliches Konzept zu, das war Agentic Sales und eben, dass Sie nicht auf MCP/ACP Ebene sich treffen, sondern halt eben im Latent Space. Der Käufer generiert den Vektor oder halt ja eine Repräsentation, was will ich haben? Der Verkäufer schaut nach in seinem Inventar, welches Produkt matcht diesen Vektor?
+Speaker 2 00:48:30
+Im Prinzip ja, also kann man mal so suchen, also, Die Suchanfragen heute laufen so. Genau. Ja und das machen wir auch mit den RAG-Konzepte machen das ja auch. Aber ich meine nicht nur Suchen, sondern ich meine Denken,
+Speaker 1 00:48:44
+Entscheiden und Fühlen. Ja, kompliziert.
+Speaker 2 00:48:52
+Um jetzt für mit Start-up was Kleines zu machen, alles gut. Wenn Sie sich aber irgendwann abheben wollen, das ist momentan so wie Internet-Webseiten, Momentan sind wir im Zeitalter, wie man mit 2000er, wo man mit Webseiten und die Webseite programmieren konnte, haben viel Geld verdient. Die Zeit wird irgendwann weg sein und irgendwann werden Agenten, sollen die Agenten bauen. Also was geht jetzt tun gerade? Das werden irgendwann andere Agenten. Irgendjemand baut die und kommt auf die geniale Idee, das was die tun und können und wissen.
+Speaker 1 00:49:19
+Ja richtig und das können die auch alle viel besser. Aber was mein Selling Point ist eigentlich, Noch niemand hat gecheckt, dass wir in eine neue Arbeitsära kommen und dass die Art und Weise, wie ich als Mensch plötzlich mit dem proaktiven Computer interagiere, einen mentalen Shift, also ich muss anders über meine Arbeit nachdenken. Was machen die überhaupt?
+Speaker 2 00:49:45
+Was Glauben Sie, was Musk mit dem Neurointerface macht?
+Speaker 1 00:49:49
+Genau, das als Hardware. Nicht nur Hardware.
+Speaker 1 00:49:55
+Naja, es ist die Bandbreite zwischen Computer und Mensch.
+Speaker 2 00:49:57
+Relevant Informationen zur richtigen Zeit, in der richtigen Taktung, zu richtigen Dingen rein.
+Speaker 1 00:50:02
+Ja, ja.
+Speaker 2 00:50:04
+Dahin läuft die Welt, ja, ich weiß. Ne, super. Kunden zu übernehmen, machen, bedienen Geld mit, sammeln Erfahrungen, total gut. Wenn sie so denken, passen sie auch ganz gut in die Abteilung hier rein, weil wir lauter für Leute sind, die davon nachdenken, die kommen, wie wir lösen. Alles klar, viel Erfolg. Dankeschön. Finde ich cool. Also wenn Sie Fragen haben,
+Speaker 1 00:50:29
+Übersteht sich natürlich auch gerne sowas. Ja, so wie heute. Tschüss Herr Vetter.
+Speaker 1 00:50:38
+So.> Datum/Uhrzeit: 2026-06-08 11:15:36
+> Ort: [Ort einfügen]
+> Dozent/Kursleiter: [Name einfügen]
+## Zusammenfassung
+Die Diskussion behandelt zentrale Konzepte und Architekturen neuronaler Netze (MLP, CNN, RNN, LSTM, GRU, Transformer), ihre Trainings- und Inferenzphasen sowie praktische Aspekte des Einsatzes in KI-Agentensystemen. Im Fokus stehen rekurrente Architekturen mit zeitlicher Entfaltung (Unrolling) und Backpropagation Through Time (BPTT), die Wiederverwendung identischer Parameter über Zeitschritte und die Aggregation von Gradienten. Es werden Unterschiede zwischen LSTM und GRU (Hidden State vs. separater Cell State) und grundlegende CNN-Konzepte (Faltung, Feature Maps, Logits, Batch-Einfluss auf Speicher) erläutert. Zudem werden Auto-Encoder-Varianten (Sparse, Overcomplete, Variational) mit Regularisierung und latenter Repräsentation besprochen. Der praktische Teil skizziert die Entwicklung und den Betrieb von KI-Agenten, insbesondere das Human Agent Interface (HAI), agentische Ausführungsstrukturen (Executor Pyramide), Arbeitsweise, Kosten und Skalierungspotenziale sowie die Vision von Kommunikation und „Denken“ im latenten Raum.
+## Wissenspunkte
+### 1. Rekurrente Architekturen und Zellen
+- Eine Zelle ist ein Block aus mehreren Neuronen und Signalfunktionen; bei LSTM umfasst sie zusätzlich einen Gedächtnis-Tensor (Cell State), der zeitliche Informationen trägt.
+- RNNs geben den Output direkt aus dem aktuellen Zustand, LSTMs halten und steuern Information über längere Sequenzen mittels Gates und separatem Cell State. Interne Rückkopplung integriert frühere Zustände (T-1, T-2, …) in die aktuelle Verarbeitung.
+### 2. Datenfluss über Zeitschritte und Unrolling
+- Pro Zeitschritt T werden Eingaben X(T) mit dem Vorgängerzustand verarbeitet, um Y(T) zu erzeugen; über die Sequenz existieren Sollwerte/Targets je Schritt.
+- Für das Training wird das Netz zeitlich entfaltet, um rekursive Abhängigkeiten explizit zu machen und Gradienten über die gesamte Sequenz berechnen zu können.
+### 3. Loss-Berechnung und Gradientenfluss
+- Es wird ein Loss pro Zeitschritt berechnet; spätere Fehler beeinflussen frühere Zustände über die Rückkopplung.
+- Backpropagation erfolgt durch die entfaltete Struktur, nicht isoliert pro Zelle; Gradienten aus allen Zeitschritten werden aggregiert (Summieren/Mittelwertbildung) und führen zu einer gemeinsamen Parameteraktualisierung.
+### 4. Backpropagation Through Time (BPTT) und Parameterwiederverwendung
+- Über alle Zeitschritte werden identische Gewichte einer Zelle verwendet; Entscheidungsträger sind im Forward-Pass zeitinvariant.
+- Aggregierte Gradienten passen die Parameter so an, dass sie über die Zeit „mittelrichtig“ funktionieren und als robuste Feature-Extraktoren/Filter generalisieren, trotz unterschiedlicher Eingaben pro Zeitschritt.
+### 5. Vergleich von LSTM und GRU
+- GRU: Vereinfachte Architektur mit Hidden State als weitergegebenem Speicher; nutzt Update- und Reset-Gates zur Informationssteuerung.
+- LSTM: Getrennte Rollen von Hidden State (HT) und Cell State (CT); CT ist ein Tensor als expliziter Langzeitspeicher. Potenziell leistungsfähiger, aber rechen- und speicherintensiver.
+### 6. CNN-Konzepte und Trainingskomponenten
+- Faltung: Sternchen-Notation als alternative Schreibweise; lokale Skalarprodukte über begrenzte Fenster erzeugen Feature Maps mit Positionsinformation (Höhe×Breite).
+- Logits sind Rohausgaben vor Softmax; Batch-Größe skaliert Speicherbedarf für Gradienten.
+- Loss, Gradient und Optimizer sind klar zu trennen; Optimizer (z. B. Adam) passt Gewichte basierend auf berechneten Gradienten an.
+### 7. Transformer und Architektur-Kombination
+- CNNs erfassen lokale Muster effizient; Transformer betrachten globalen Kontext, sind speicherintensiver.
+- Modularer Einsatz: CNN-Backbones zur Feature-Extraktion, Einspeisung in Transformer („Lego“-Ansatz).
+### 8. Auto-Encoder-Architekturen
+- Overcomplete Auto-Encoder: Erfordert Regularisierung, um triviales Kopieren zu vermeiden.
+- Sparse Auto-Encoder: Erzwingt dünnbesetzte Aktivierungen für interpretierbare latente Features.
+- Variational Auto-Encoder (VAE): Repräsentiert Z als Verteilung; KL-Divergenz reguliert Richtung Standardverteilung, fördert gleichmäßige Informationsverteilung.
+### 9. Praktische Aspekte und Einschränkungen
+- BPTT ist speicherintensiv und hyperparameter-sensitiv (Netzgröße, Anzahl Neuronen, Sequenzlänge).
+- Übertragbarkeit auf andere Probleme ist oft eingeschränkt; domänenspezifische Muster reduzieren Generalisierbarkeit.
+- Echtbetrieb vs. Training: Im Einsatz laufende Rekursion mit aktueller und vergangener Zustandsaktualisierung ohne vollständige Entfaltung; im Training vollständiges Unrolling notwendig.
+### 10. Entwicklung und Einsatz von KI-Agenten
+- Human Agent Interface (HAI): Sanduhr-Prinzip zur Verdichtung komplexer Informationen in wenige entscheidbare Optionen; Vorverarbeitung (z. B. Recherche) und „Gates“ zur Kanalisierung.
+- Executor Pyramide: Zusammenspiel von Executor- und Verifier-Agenten; bei Uneinigkeit Vermittler-Agent; Eskalation zum Menschen bei ausbleibender Einigung.
+- Professionelle Praxis: Agentenbau für Industrie (Bewerbungsagent, Produktionsagenten), agentische Landkarte mit Skills/Konnektoren/Rechten, iterative Tests bis Zielerreichung; Einsatz von „LLM as a judge“ für Feedback.
+- Arbeitsweise und Kosten: Lokal 70–80 Agenten; hoher Tokenverbrauch; monatliche API-Kosten; Skalierung wirtschaftlich, solange Output die Kosten übersteigt.
+### 11. Zukünftige Konzepte: Denken und Kommunikation im Latenten Raum
+- Effizienzpotenzial durch latente Wissensrepräsentation jenseits textbasierter Schnittstellen; komprimiertes Unternehmens- und Prozesswissen als Vektoren.
+- Beispiel Agentic Sales: Matching von Käuferwunsch- und Produktvektoren im latenten Raum.
+- Erwartete Evolution: Zunehmende Agenten bauen Agenten; mentaler Wandel in der Mensch-Computer-Interaktion und mögliche Neurointerfaces zur Bandbreitenoptimierung.
+## Aufgaben
+- [ ] Hyperparameter für stabile BPTT-Trainingsläufe überprüfen und abstimmen (Netzgröße, Neuronenzahl, Sequenzlänge).
+- [ ] BPTT mit Sequenz-Unrolling implementieren; identische Parameter über Zeitschritte sicherstellen und Gradienten korrekt aggregieren.
+- [ ] Speicherbedarf senken (z. B. Truncated BPTT, Gradient-Checkpointing).
+- [ ] Modellleistung im Echtbetrieb mit kurzer Auskettung validieren (fortlaufende Zustände ohne vollständige Entfaltung).
+- [ ] Übertragbarkeit evaluieren: Tests auf verwandten Aufgaben, Performance-Abfälle dokumentieren und Anpassungen ableiten.
+- [ ] Unterschiede LSTM vs. GRU und Regularisierung bei Auto-Encodern zusammenfassen und im Selbststudium aufbereiten.
+- [ ] Architektur-Kombinationen (CNN, Transformer, GRU, LSTM) auf Datensätzen ausprobieren und vergleichen.
+- [ ] Konzepte Loss, Gradient und Optimizer sauber definieren und trennen.
+- [ ] „Hermes Optimization“ weiter erforschen und statistische Grundlagen erarbeiten.
+- [ ] Konzeption zur Wissensrepräsentation im latenten Raum für KI-Agenten ausarbeiten.06-08 Vorlesung: Neuronale Netze, BPTT und KI-Agentensysteme2026-06-08T11:15:36Z

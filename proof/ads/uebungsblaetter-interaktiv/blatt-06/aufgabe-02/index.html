@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB06 · Aufgabe 2 · N-Damen visualisieren</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · INTERAKTIV</a><a class="back" href="../index.html">← Blatt 06</a></nav>
+  <header class="task-head"><div><span class="kicker">SETZEN · RENDERN · SCHLAFEN · UNDO</span><h1>N-Damen: Dynamik statt Endbild</h1></div><div class="counter">PB06 · 02/03</div></header>
+
+  <section class="mission">
+    <div class="brief"><h2>Dein Mikro-Schritt</h2><p>Starte den echten Suchlauf und beobachte, wann ein Feld <strong>grün</strong>, ein Konflikt <strong>rot</strong> und eine Wahl wieder zurückgenommen wird.</p><p>Aufgabenvertrag: Die Option <code>-d</code> schaltet die Anzeige; ohne sie bleibt der Solver headless.</p></div>
+    <div class="source-core">if (display) {
+  board-&gt;setSquare(row, col, Gruen);
+  board-&gt;render();
+  schlafe_ms(delay);
+}</div>
+  </section>
+
+  <section class="step board-step">
+    <div>
+      <h2>1 · Suchlauf beobachten</h2>
+      <div class="controls"><label>N <select id="size"><option>4</option><option selected>8</option></select></label><label>Tempo <input id="speed" type="range" min="0" max="800" value="240"><span id="speed-label">240 ms</span></label></div>
+      <div class="actions"><button class="action primary" id="start" type="button">▶ Lauf starten</button><button class="action" id="pause" type="button" disabled>Pause</button><button class="action" id="reset" type="button">↺ Reset</button></div>
+      <p id="event" class="event" role="status" aria-live="polite">Bereit: Noch keine Dame gesetzt.</p>
+      <div class="legend"><span><i class="swatch place"></i> gültig gesetzt</span><span><i class="swatch conflict"></i> Konflikt geprüft</span><span><i class="swatch undo"></i> zurückgenommen</span></div>
+      <div class="actions"><button class="action hint-btn" data-hint="hint-1" aria-expanded="false" type="button">Hinweis 1</button><button class="action hint-btn" data-hint="hint-2" aria-expanded="false" type="button">Hinweis 2</button></div>
+      <div class="hint" id="hint-1" hidden>Ein Zustandswechsel wird erst durch <code>render()</code> sichtbar; die Pause gehört <em>zwischen</em> die Zustände.</div>
+      <div class="hint" id="hint-2" hidden>Beim Backtrack erst <code>resetSquare(row,col)</code>, dann erneut rendern. Sonst zeigt die Oberfläche einen Zustand, den der Solver längst verlassen hat.</div>
+    </div>
+    <div><div id="board" class="board" role="img" aria-label="N-Damen-Schachbrett"></div><p id="stats" class="stats">0 Events</p></div>
+  </section>
+
+  <section class="step" id="gate-step">
+    <h2>2 · Integrations-Gate</h2><p>Welche Reihenfolge bildet einen einzelnen sichtbaren Backtracking-Schritt korrekt ab?</p>
+    <div class="choices" role="group" aria-label="Integrationsreihenfolge"><button class="choice" data-order="end" type="button">Alle setzen → am Ende rendern</button><button class="choice" data-order="no-undo" type="button">Setzen → rendern → schlafen, Undo nur intern</button><button class="choice" data-order="dynamic" type="button">Ändern → rendern → schlafen; Undo genauso sichtbar</button></div>
+    <div id="gate-feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step lab-box" id="lab-step" hidden>
+    <h2>3 · Headless C++-Lab</h2><p>Ergänze nur die TODOs in <code>lab/display_hooks.cpp</code> und binde die Hooks anschließend in deinen Solver aus Aufgabe 1 ein. Das Lab prüft Display-Schalter, Eventreihenfolge sowie sichtbare Place-/Conflict-/Undo-Ereignisse.</p>
+    <code class="command">cd uebungsblaetter-interaktiv/blatt-06/aufgabe-02/lab
+./run-tests.sh</code>
+    <p class="tiny">SFML ist lokal nicht installiert und daher kein Test-Gate. Der optionale echte Build braucht zusätzlich <code>pbmag.h/.cpp</code>, <code>-pthread -lsfml-graphics -lsfml-window -lsfml-system</code>. Test-Binärdateien entstehen nur unter <code>/tmp</code>.</p>
+  </section>
+
+  <section class="step completion" id="completion" hidden><h2>Beleg statt Komplettlösung</h2><p>Der Browserlauf hat mindestens ein sichtbares Undo gezeigt und bei N=8 die erste Lösung gehalten. Bestätige danach deinen echten Hook-Test.</p><label class="proof-check"><input id="tests-pass" type="checkbox"> Mein Lauf meldet alle headless Hook-Tests als bestanden.</label><div class="state-row"><button class="state-btn" data-state="sitzt" type="button">✓ Sitzt</button><button class="state-btn" data-state="wackelt" type="button">↻ Wackelt</button></div><p class="tiny" id="state-feedback" aria-live="polite"></p></section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-01/index.html">← Aufgabe 1</a><a href="../index.html">Blatt 06</a><a href="../../index.html">Gesamtübersicht</a><a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a><a href="../aufgabe-03/index.html">Aufgabe 3 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

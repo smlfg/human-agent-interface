@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 03 · Aufgabe 02 · Term-Werkstatt</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <script src="task.js" defer></script>
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Seitennavigation">
+    <a class="brand" href="../../index.html">ADS · Übungsblätter</a>
+    <a class="back" href="../index.html">← Blatt 03</a>
+  </nav>
+
+  <header class="task-head">
+    <div><span class="kicker">Big-O-Werkstatt</span><h1>Terme auf Wachstum trimmen</h1></div>
+    <div class="counter">Aufgabe 02</div>
+  </header>
+
+  <section class="media-pre">
+    <div class="media-route-top">
+      <h2>Vorher ansehen</h2>
+      <span class="media-duration">Short · 1:09</span>
+    </div>
+    <p class="media-instruction">Anderer Term als deine Aufgabe — bewusst. Die Mechanik überträgst du selbst.</p>
+    <video class="media-player short-player" controls preload="metadata" poster="../../../media-posters/pb03a02-short.webp" src="../../../notebooklm-study-pack/10_uebungsblaetter/blatt03/short_PB03A02_dominanter-term.mp4">Dein Browser unterstützt Video nicht.</video>
+    <div class="recall-box"><strong>Sofort-Recall</strong>Warum schreibt man <code>h ∈ O(n)</code> und nicht <code>h = O(n)</code>?</div>
+  </section>
+
+  <section class="mission">
+    <div class="brief">
+      <h2>Dein Auftrag</h2>
+      <p>Bestimme erst die Wachstumsform der sechs Funktionen. Entscheide danach jede Originalaussage mit einer passenden Begründung.</p>
+      <p class="tiny">Prüfungsprodukt: 17 × wahr/falsch plus dominanter Term oder Mengeninklusion.</p>
+    </div>
+    <div class="step first-action">
+      <h2>1 · Ausdrücke lesen, dann vereinfachen</h2>
+      <p class="prompt">Wähle für jede Funktion ihre asymptotische Wachstumsform. Du darfst hier ausmultiplizieren, kürzen und dominante Faktoren markieren.</p>
+      <div id="termBench" class="term-bench"></div>
+      <div class="actions"><button id="checkTerms" class="action primary" type="button">Terme prüfen</button></div>
+      <div id="termFeedback" class="feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step help-zone" aria-labelledby="helpTitle">
+    <h2 id="helpTitle">Hilfe, gestuft</h2>
+    <div class="actions">
+      <button class="action" type="button" data-hint="hint1">Hinweis 1</button>
+      <button class="action" type="button" data-hint="hint2">Hinweis 2</button>
+    </div>
+    <p id="hint1" class="hint" hidden>Konstante Summanden verschwinden asymptotisch. Bei Produkten addieren sich die Exponenten; ein Quotient kann einen Faktor wieder abziehen.</p>
+    <p id="hint2" class="hint" hidden>Die Zielformen sind: <strong>f ~ n</strong>, <strong>g ~ n²</strong>, <strong>h ~ n²</strong>, <strong>ξ ~ n</strong>, <strong>φ ~ n·log n</strong>, <strong>ψ ~ n⁶</strong>. Erst danach Aussagen vergleichen.</p>
+  </section>
+
+  <section id="claimsStep" class="step" hidden>
+    <h2>2 · Alle Originalaussagen entscheiden</h2>
+    <p class="prompt">Für jede Zeile: Wahrheit wählen und den Mechanismus benennen. „O(f) ist eine Zahl“ ist kein gültiges Modell: <strong>O(f) ist eine Menge von Funktionen</strong>.</p>
+    <div id="claims" class="claims"></div>
+    <div class="actions sticky-actions"><button id="checkClaims" class="action primary" type="button">Alle Aussagen prüfen</button></div>
+    <div id="claimFeedback" class="feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step solution-gate">
+    <h2>3 · Musterweg</h2>
+    <p>Die vollständige Auflösung bleibt bis zu deinem ersten Prüfversuch verborgen. Du kannst sie auch bewusst zweistufig aufdecken.</p>
+    <div class="actions">
+      <button id="revealAsk" class="action" type="button">Musterweg bewusst öffnen</button>
+      <button id="revealConfirm" class="action primary" type="button" hidden>Ja, eigenen Versuch überspringen</button>
+    </div>
+    <div id="solutions" class="solution-list" hidden></div>
+  </section>
+
+  <section class="step completion">
+    <h2>Selbsteinschätzung</h2>
+    <p>Markiere erst nach deinem Papierabschluss. Gespeichert wird nur der vereinbarte Aufgabenstatus.</p>
+    <div class="state-row">
+      <button class="state-btn" type="button" data-state="sitzt">Sitzt</button>
+      <button class="state-btn" type="button" data-state="wackelt">Wackelt</button>
+    </div>
+    <p id="stateFeedback" class="feedback" aria-live="polite" hidden></p>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation">
+    <a href="../aufgabe-01/index.html">← Aufgabe 01</a>
+    <a href="/proof/ads/source-materials-not-included.html">Original-PDF</a>
+    <a href="../aufgabe-03/index.html">Aufgabe 03 →</a>
+  </nav>
+</main>
+</body>
+</html>

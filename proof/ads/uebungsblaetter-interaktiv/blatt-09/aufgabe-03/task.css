@@ -1,0 +1,22 @@
+:root { --bench-blue:#245b91; --bench-ink:#173d70; --warn:#9a4e13; }
+.mission { align-items:stretch; }
+.source-gap { max-width:420px; display:grid; align-content:center; gap:.45rem; padding:1rem 1.2rem; border:2px solid #d48b28; border-radius:16px; background:#fff7e7; }
+.source-gap strong { color:#7b3d0c; text-transform:uppercase; letter-spacing:.06em; font-size:.78rem; }
+.trainer-head { display:flex; justify-content:space-between; gap:1rem; align-items:start; }
+.phase { display:inline-block; padding:.25rem .55rem; border-radius:99px; background:#dbeafe; color:#174b86; font-size:.75rem; font-weight:800; letter-spacing:.08em; }
+.progress { font:700 .85rem ui-monospace,monospace; color:#56657a; }
+.formula { padding:.85rem 1rem; border-left:5px solid var(--bench-blue); background:#eaf3fb; }
+.controls { display:flex; flex-wrap:wrap; align-items:end; gap:.8rem; }
+.controls label { display:grid; gap:.35rem; font-weight:750; }
+select { min-height:44px; padding:.55rem .7rem; border:1px solid #91a8bf; border-radius:10px; background:white; font:inherit; }
+.sample { color:#4c6075; }
+.bucket-strip { display:grid; grid-template-columns:repeat(auto-fit,minmax(104px,1fr)); gap:.55rem; margin:1rem 0; }
+.bucket { padding:.75rem; border:1px solid #b8c9da; border-radius:11px; background:#f7fbff; }
+.bucket strong,.bucket span { display:block; }
+.bucket strong { color:var(--bench-ink); font:800 .9rem ui-monospace,monospace; }
+.bucket span { margin-top:.3rem; color:#526579; font-size:.82rem; }
+.choice-grid { display:grid; gap:.7rem; }
+.design-choice,.interpret-choice { padding:.85rem 1rem; border:1px solid #91a8bf; border-radius:11px; background:white; color:#193b5b; text-align:left; font:inherit; font-weight:750; cursor:pointer; }
+.design-choice:hover,.interpret-choice:hover { background:#f0f7ff; }
+.design-choice:focus-visible,.interpret-choice:focus-visible,select:focus-visible { outline:3px solid #ffb000; outline-offset:2px; }
+@media (max-width:760px) { .trainer-head { display:block; } .progress { display:block; margin-top:.4rem; } .source-gap { max-width:none; } }

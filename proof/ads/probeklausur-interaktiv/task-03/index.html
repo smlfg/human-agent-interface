@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aufgabe 03 · Rekurrenz-Werkstatt</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <style>.state-btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none}</style>
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Aufgabennavigation">
+      <a class="back" href="../index.html">← Übersicht</a>
+      <span class="brand">ADS · Rekurrenz-Werkstatt</span>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF ↗</a>
+    </nav>
+
+    <header class="task-head">
+      <div>
+        <span class="kicker">MISSION 03 · Laufzeit statt Ergebniswert</span>
+        <h1>Eine Treppe, kein Feuerwerk.</h1>
+        <p class="lead">Dein erster Zug: Entscheide, wie viele rekursive Aufrufe <code>fun(x)</code> pro Ebene startet.</p>
+      </div>
+      <div class="counter">03 / 17</div>
+    </header>
+
+    <section class="mission" aria-labelledby="original-title">
+      <article class="brief">
+        <h2 id="original-title">Originalkern</h2>
+        <p>Berechne die Laufzeit, stelle eine Rekurrenzrelation auf und löse sie in eine geschlossene Form.</p>
+        <p class="tiny"><strong>Vorbedingung:</strong> Das Programm terminiert nur für <code>x ≥ 1</code>.</p>
+      </article>
+      <pre class="code" aria-label="C++-Funktion fun"><code>int fun(int x) {
+  if (x == 1) return 1;
+  int zw = fun(x - 1);
+  return zw * x;
+}</code></pre>
+    </section>
+
+    <section class="first-move" aria-labelledby="first-title">
+      <div>
+        <p class="eyebrow">30-SEKUNDEN-START</p>
+        <h2 id="first-title">Was passiert in <em>einem</em> Aufruf?</h2>
+        <p><code>int zw = fun(x - 1)</code> heißt: „Rufe dieselbe Funktion mit einem um 1 kleineren Problem auf und merke das Ergebnis.“</p>
+      </div>
+      <div class="choices" role="group" aria-label="Anzahl rekursiver Aufrufe">
+        <button class="choice" type="button" data-branches="1">1 neuer Aufruf</button>
+        <button class="choice" type="button" data-branches="2">2 neue Aufrufe</button>
+      </div>
+      <p id="branch-feedback" class="feedback" aria-live="polite"></p>
+    </section>
+
+    <div class="stepper">
+      <section class="step locked" id="step-recurrence" aria-labelledby="recurrence-title">
+        <h2 id="recurrence-title">Baue die Rekurrenz</h2>
+        <p class="prompt">Eine Ebene erledigt konstant viel Arbeit und reicht dann an <code>x−1</code> weiter. Welche Formel beschreibt das?</p>
+        <fieldset class="formula-cards">
+          <legend>Wähle eine Rekurrenzrelation</legend>
+          <label><input type="radio" name="recurrence" value="linear"> <span>T(x) = T(x−1) + c</span></label>
+          <label><input type="radio" name="recurrence" value="double"> <span>T(x) = 2 · T(x−1) + c</span></label>
+          <label><input type="radio" name="recurrence" value="factorial"> <span>T(x) = x · T(x−1)</span></label>
+        </fieldset>
+        <div class="button-row">
+          <button class="action primary" id="check-recurrence" type="button">Rekurrenz prüfen</button>
+          <button class="action" type="button" data-hint="hint-1">Hinweis 1</button>
+          <button class="action" type="button" data-hint="hint-2">Hinweis 2</button>
+        </div>
+        <div class="hint" id="hint-1">Zähle im Code nur, wie oft <code>fun(…)</code> in einem nicht-trivialen Aufruf vorkommt.</div>
+        <div class="hint" id="hint-2">Die Multiplikation <code>zw * x</code> kostet einen Schritt. Sie vervielfacht den <em>Wert</em>, nicht die Zahl der Aufrufe.</div>
+        <p id="recurrence-feedback" class="feedback" aria-live="polite"></p>
+      </section>
+
+      <section class="step locked" id="step-unroll" aria-labelledby="unroll-title">
+        <h2 id="unroll-title">Kurble die Maschine</h2>
+        <p class="prompt">Die PDF zählt pro normalem Aufruf 3 Schritte, im Basisfall 2. Erzeuge die Werte nacheinander.</p>
+        <div class="machine" aria-label="Laufzeitwerte">
+          <div class="tape" id="tape"><span>T(1) = 2</span></div>
+          <button class="action primary" id="next-value" type="button">+ eine Ebene</button>
+        </div>
+        <p id="machine-feedback" class="feedback" aria-live="polite">Starte bei 2 und addiere pro Ebene immer 3.</p>
+      </section>
+
+      <section class="step locked" id="step-finish" aria-labelledby="finish-title">
+        <h2 id="finish-title">Prüfungssatz fertigstellen</h2>
+        <p class="prompt">Schreibe die geschlossene Form und die asymptotische Laufzeit. Beispielsyntax: <code>3x-1, Theta(x)</code>.</p>
+        <label for="final-answer">Dein Prüfungssatz</label>
+        <textarea class="answer" id="final-answer" placeholder="T(x) = …; daher …" spellcheck="false"></textarea>
+        <div class="button-row">
+          <button class="action primary" id="check-final" type="button">Abschluss prüfen</button>
+          <button class="action" id="reveal-solution" type="button" disabled>Vollständigen Musterweg aufdecken</button>
+        </div>
+        <p id="final-feedback" class="feedback" aria-live="polite"></p>
+
+        <details id="solution" class="solution" hidden>
+          <summary>Musterweg</summary>
+          <ol>
+            <li>Basis: <code>T(1)=2</code>.</li>
+            <li>Für <code>x&gt;1</code>: ein rekursiver Aufruf und drei gezählte Schritte, also <code>T(x)=3+T(x−1)</code>.</li>
+            <li>Ausrollen: <code>2, 5, 8, 11, …</code>. Jede Erhöhung von <code>x</code> addiert 3.</li>
+            <li>Geschlossen: <code>T(x)=3x−1</code>, also <code>T(x) ∈ Θ(x)</code>.</li>
+            <li><code>fun(x)</code> berechnet zwar <code>x!</code>, aber nur über eine Kette von <code>x</code> Aufrufen. Ergebniswachstum ≠ Laufzeitwachstum.</li>
+          </ol>
+        </details>
+
+        <div class="status-panel">
+          <p><strong>Wie fühlt sich genau diese Mechanik an?</strong></p>
+          <div class="state-row" role="group" aria-label="Lernstatus Aufgabe 03">
+            <button class="state-btn" type="button" data-state="sitzt">Sitzt</button>
+            <button class="state-btn" type="button" data-state="wackelt">Wackelt</button>
+          </div>
+          <p id="state-feedback" class="tiny" aria-live="polite"></p>
+        </div>
+      </section>
+    </div>
+
+    <nav class="nav-bottom" aria-label="Vorherige und nächste Aufgabe">
+      <a href="../task-02/index.html">← Aufgabe 02</a>
+      <a href="../index.html">Übersicht</a>
+      <a href="../task-04/index.html">Aufgabe 04 →</a>
+    </nav>
+  </main>
+  <script src="task.js"></script>
+</body>
+</html>

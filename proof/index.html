@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090a08">
   <meta
     name="description"
     content="Proof that Human Agent Interface comes from real agent practice: building systems, finding breakpoints, and taking control back."
@@ -104,6 +105,7 @@
       border: 1px solid rgba(247, 241, 223, 0.13);
       background: rgba(8, 8, 6, 0.72);
       backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
       box-shadow: 0 18px 70px rgba(0, 0, 0, 0.3);
       pointer-events: auto;
     }
@@ -697,9 +699,27 @@
         transition-duration: 0.001ms !important;
       }
     }
+    .trust-preamble { margin:26px 0 8px; padding:18px 20px; border:1px solid rgba(247,241,223,.18); }
+    .trust-preamble .trust-q { margin:0 0 12px; color:#b7ad97; }
+    .trust-preamble .trust-q:last-child { margin-bottom:0; }
+    .trust-preamble strong { color:#f7f1df; }
+    .proof-closing { margin-top:56px; padding-top:28px; border-top:1px solid rgba(247,241,223,.18); }
+    .proof-closing-eyebrow { margin:0 0 8px; color:#b7ad97; text-transform:uppercase; letter-spacing:.08em; font-size:.78rem; }
+    .proof-closing p { color:#b7ad97; }
+    .proof-closing-actions { margin:16px 0 0; }
+    .proof-closing-actions a { display:inline-block; margin:0 10px 10px 0; padding:12px 18px; text-decoration:none; border:1px solid rgba(247,241,223,.18); color:#f7f1df; }
+    .proof-closing-actions a.proof-closing-primary { border-color:#a7ff4f; color:#a7ff4f; }
+
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 200; padding: 12px 18px; background: #090a08; color: #f7f1df; border: 1px solid #a7ff4f; text-decoration: none; }
+    .skip-link:focus { left: 10px; top: 10px; }
+    [id] { scroll-margin-top: 88px; }
+    nav a[aria-current="page"] { color: #a7ff4f; }
+
+    @view-transition { navigation: auto; }
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#top">Skip to content</a>
   <div class="site-shell">
     <header class="topbar" aria-label="Site navigation">
       <div class="topbar-inner">
@@ -709,9 +729,10 @@
         </a>
         <nav class="nav" aria-label="Site navigation">
           <a href="../what_it_is/">Method</a>
-          <a href="../proof/">Proof</a>
+          <a href="../proof/" aria-current="page">Proof</a>
           <a href="../samuel/">Samuel</a>
           <a href="../product/">Offer</a>
+          <a href="../fit/" data-site-event="cta_click" data-event-target="nav_fit">Fit</a>
           <a href="#contact">Contact</a>
         </nav>
       </div>
@@ -723,6 +744,11 @@
           <div>
             <p class="eyebrow">Proof of practice</p>
             <h1 id="hero-title">HAI comes from real agent practice.</h1>
+            <div class="trust-preamble">
+              <p class="trust-q"><strong>Did Samuel really work with agents?</strong> Yes — these artifacts come from real local agent systems, runs, and owner-control work, not from a slide deck.</p>
+              <p class="trust-q"><strong>Can he control it?</strong> The point of every artifact here is the boundary: what the agent did, what the human decided, and how it was verified.</p>
+              <p class="trust-q"><strong>Is this more than AI hype?</strong> Judge it on the evidence below, not on the claims.</p>
+            </div>
             <p class="hero-lede">
               Not from a theory of agents. From building systems, watching them break, and learning how humans can take control back.
             </p>
@@ -787,13 +813,13 @@
 
       <section id="case-files" aria-labelledby="cases-title">
         <div class="section-inner">
-          <div class="section-head">
+            <div class="section-head">
             <div>
-              <p class="kicker">Three case files</p>
-              <h2 class="section-title" id="cases-title">The proof is a chain: visibility, control, method.</h2>
+              <p class="kicker">Four case files</p>
+              <h2 class="section-title" id="cases-title">The proof is a chain: visibility, control, method, transfer.</h2>
             </div>
             <p class="section-copy">
-              Each case answers the same buyer question: has Samuel already seen the shape of the problem I am about to have?
+              Each case answers the same question in sequence: can Samuel see the problem, bound the agent role, and then produce transfer through his own decisions?
             </p>
           </div>
 
@@ -847,6 +873,24 @@
               </div>
               <div class="case-media">
                 <img src="assets/claude-insights-timeline--samuel-agentic-profile-v2.png" alt="Claude Insights agentic profile screenshot">
+              </div>
+            </article>
+            <article class="case-file">
+              <div class="case-copy">
+                <span class="case-number">Case file 04 / Study transfer</span>
+                <h3>Samuel used bounded agents to restore his own study control.</h3>
+                <p>
+                  In the ADS study proof, he kept the decision loop with the human while using agents as bounded tooling for structure and interactive workflows.
+                  The visible artifacts are the study pages themselves and the transfer traces they expose.
+                </p>
+                <div class="case-proof">
+                  <span>Evidence artifact</span>
+                  <strong>Public ADS learning suite as human-owned proof.</strong>
+                </div>
+                <p><a href="ads/">Open the ADS study proof.</a></p>
+              </div>
+              <div class="case-media">
+                <img src="assets/portfolio-timeline--index.png" alt="ADS study proof preview">
               </div>
             </article>
           </div>
@@ -908,6 +952,15 @@
           </div>
 
         </div>
+      </section>
+      <section class="proof-closing">
+        <p class="proof-closing-eyebrow">Next step</p>
+        <h2>Convinced enough to check the fit?</h2>
+        <p>Bring one messy agent workflow and see whether HAI fits it.</p>
+        <p class="proof-closing-actions">
+          <a class="proof-closing-primary" data-site-event="cta_click" data-event-target="door_fit" href="../fit/">Check if HAI fits you</a>
+          <a data-site-event="cta_click" data-event-target="door_product" href="../product/">What you actually get</a>
+        </p>
       </section>
     </main>
 

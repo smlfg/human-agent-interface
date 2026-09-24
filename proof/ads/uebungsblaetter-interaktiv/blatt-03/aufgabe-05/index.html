@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 03 · Aufgabe 05 · Duplikate finden</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · Übungsblätter</a><a class="back" href="../index.html">← Blatt 03</a></nav>
+
+  <header class="task-head">
+    <div><span class="kicker">CODE LESEN · PAARE ZÄHLEN</span><h1>Wann stoppt die Duplikatsuche?</h1></div><div class="counter">05 / 06</div>
+  </header>
+
+  <section class="media-pre">
+    <div class="media-route-top">
+      <h2>Vorher ansehen</h2>
+      <span class="media-duration">Short · 1:17</span>
+    </div>
+    <p class="media-instruction">Andere Felder als deine Aufgabe — bewusst. Die Mechanik überträgst du selbst.</p>
+    <video class="media-player short-player" controls preload="metadata" poster="../../../media-posters/pb03a05-short.webp" src="../../../notebooklm-study-pack/10_uebungsblaetter/blatt03/short_PB03A05_best-worst-return.mp4">Dein Browser unterstützt Video nicht.</video>
+    <div class="recall-box"><strong>Sofort-Recall</strong>Zwei verschachtelte Schleifen stehen im Code — ist der Best Case damit automatisch quadratisch?</div>
+  </section>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Originalauftrag</h2>
+      <p>Ein Algorithmus vergleicht jedes <code>a[i]</code> mit allen späteren <code>a[j]</code> und liefert beim ersten gleichen Paar <code>true</code>.</p>
+      <p>Erkläre Funktion, Best-/Worst-Case und entwickle für ein sortiertes Feld einen besseren Algorithmus.</p>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF · Seite 2 ↗</a>
+    </div>
+    <div class="card first-action">
+      <p class="eyebrow">Erste Aktion · ein Schleifenschritt</p>
+      <h2>Welches Paar wird zuerst verglichen?</h2>
+      <div class="array" aria-label="Array 4, 7, 2, 7"><span data-index="0"><small>0</small>4</span><span data-index="1"><small>1</small>7</span><span data-index="2"><small>2</small>2</span><span data-index="3"><small>3</small>7</span></div>
+      <div class="choices" data-question="first"><button class="choice" data-pair="0-1">a[0] und a[1]</button><button class="choice" data-pair="0-3">a[0] und a[3]</button><button class="choice" data-pair="1-2">a[1] und a[2]</button></div>
+      <div class="feedback" id="first-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step" id="trace-step" hidden>
+    <h2>1 · Interaktiver Paar-Trace</h2>
+    <p>Verfolge <code>i</code> außen und <code>j=i+1,…,n−1</code> innen. Stoppe, sobald zwei Werte gleich sind.</p>
+    <div class="trace-layout">
+      <div><div class="array trace-array" id="trace-array" aria-label="Trace-Array"></div><p class="comparison" id="comparison">Bereit für den ersten Vergleich.</p><button class="action primary" id="next-comparison">Nächstes Paar prüfen</button></div>
+      <ol class="trace-log" id="trace-log" aria-live="polite"></ol>
+    </div>
+    <div class="feedback" id="trace-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="cases-step" hidden>
+    <h2>2 · Arbeit zählen, Fälle trennen</h2>
+    <p class="prompt">Welche Aussage beschreibt Best und Worst Case dieses Codes korrekt?</p>
+    <div class="choices cases"><button class="choice case-choice" data-answer="linear">Best Case ist immer O(n), weil ein Array gelesen wird.</button><button class="choice case-choice" data-answer="correct">Best Θ(1) bei a[0]=a[1]; Worst Θ(n²), wenn kein Duplikat gefunden wird.</button><button class="choice case-choice" data-answer="always">Best und Worst sind beide Θ(n²), weil zwei Schleifen im Code stehen.</button></div>
+    <div class="feedback" id="cases-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="sorted-step" hidden>
+    <h2>3 · Sortierte Eingabe ausnutzen</h2>
+    <p>Für <code>2, 4, 4, 7, 9</code> gilt: gleiche Werte stehen direkt nebeneinander. Welcher Algorithmus nutzt das?</p>
+    <div class="choices"><button class="choice sorted-choice" data-answer="pairs">Weiter jedes Paar vergleichen; Sortierung ändert nichts.</button><button class="choice sorted-choice" data-answer="neighbors">Einmal von links nach rechts nur a[k] mit a[k+1] vergleichen.</button><button class="choice sorted-choice" data-answer="ends">Nur erstes und letztes Element vergleichen.</button></div>
+    <div class="feedback" id="sorted-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step help" aria-labelledby="help-title"><h2 id="help-title">Hinweise</h2><div class="actions"><button class="action hint-btn" data-hint="hint-1">Hinweis 1 · Rücksprung</button><button class="action hint-btn" data-hint="hint-2">Hinweis 2 · Sortierung</button></div><div class="hint" id="hint-1" hidden><code>return true</code> beendet beide Schleifen sofort. Suche einen Input, bei dem das schon im allerersten Vergleich passiert.</div><div class="hint" id="hint-2" hidden>In einem aufsteigend sortierten Feld können zwei gleiche Werte nicht durch einen anderen Wert getrennt sein. Nachbarn reichen.</div></section>
+
+  <section class="step solution">
+    <h2>Sauberer Papierabschluss</h2>
+    <p id="gate-copy">Noch gesperrt: Trace ein Duplikat und entscheide beide Laufzeitfragen — oder decke den Musterweg bewusst auf.</p>
+    <button class="action" id="reveal">Lösung bewusst aufdecken</button>
+    <div id="solution" hidden>
+      <p><strong>Funktion:</strong> Der Algorithmus prüft, ob im Feld mindestens ein Wert doppelt vorkommt. Beim ersten gleichen Indexpaar liefert er <code>true</code>, sonst nach allen Paaren <code>false</code>.</p>
+      <p><strong>Worst Case:</strong> Ohne gefundenes Duplikat werden <code>(n−1)+(n−2)+…+1 = n(n−1)/2</code> Paare verglichen. Damit gilt <strong>Θ(n²)</strong>.</p>
+      <p><strong>Best Case:</strong> Gilt schon <code>a[0]==a[1]</code>, endet der Algorithmus nach genau einem Vergleich: <strong>Θ(1)</strong>.</p>
+      <p><strong>Sortiertes Feld:</strong> Vergleiche nur benachbarte Elemente <code>a[k]</code> und <code>a[k+1]</code>. Ein Durchlauf benötigt im Worst Case <code>n−1</code> Vergleiche: <strong>Θ(n)</strong>.</p>
+    </div>
+  </section>
+
+  <section class="step completion" id="completion" hidden><h2>Kannst du die drei Fälle verteidigen?</h2><p>Prüfungsbeleg: Funktion in einem Satz, Worst <code>Θ(n²)</code>, Best <code>Θ(1)</code> und sortierte Alternative <code>Θ(n)</code> jeweils mit Begründung.</p><div class="state-row"><button class="state-btn" data-state="sitzt">Sitzt</button><button class="state-btn" data-state="wackelt">Wackelt</button></div><div class="feedback" id="state-feedback" aria-live="polite" hidden></div></section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-04/index.html">← Aufgabe 04</a><a href="../index.html">Blattübersicht</a><a href="../aufgabe-06/index.html">Aufgabe 06 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

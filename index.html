@@ -1,20 +1,81 @@
 <!doctype html>
-<html lang="en">
+<!-- Klarheits-Pass (lokal): EIN Hero statt A/B/C. B_offer_first gewaehlt, weil es
+     "was bekomme ich konkret" beantwortet. Live laeuft das Experiment weiter. -->
+<html lang="en" data-hero-variant="B_offer_first">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Human Agent Interface</title>
+    <meta name="theme-color" content="#090a08">
+    <title>Human Agent Interface (HAI) by Samuel Fleig — Agent Control & Human Ownership</title>
     <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="canonical" href="https://www.human-agent-interface.com/">
     <meta
       name="description"
-      content="Human Agent Interface turns messy AI work into a safe, scoped, agent-ready next action."
+      content="Human Agent Interface (HAI), created by Samuel Fleig, keeps agentic AI work observable, bounded, verifiable, and human-owned."
     >
-    <meta property="og:title" content="Human Agent Interface">
+    <meta property="og:title" content="Human Agent Interface (HAI) by Samuel Fleig">
     <meta
       property="og:description"
-      content="The next interface is not graphical. It is agentic."
+      content="An open-source approach for keeping agentic AI work observable, bounded, verifiable, and human-owned."
     >
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.human-agent-interface.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://www.human-agent-interface.com/samuel/#samuel-fleig",
+            "name": "Samuel Fleig",
+            "url": "https://www.human-agent-interface.com/samuel/",
+            "jobTitle": "AI Engineer",
+            "knowsAbout": [
+              "AI agents",
+              "agentic systems",
+              "AI harnesses",
+              "Model Context Protocol",
+              "human-agent interaction"
+            ],
+            "sameAs": [
+              "https://github.com/smlfg",
+              "https://x.com/Samuelflg1",
+              "https://www.linkedin.com/in/samuel-fleig-52610914b",
+              "https://medium.com/@smlflg"
+            ]
+          },
+          {
+            "@type": "CreativeWork",
+            "@id": "https://www.human-agent-interface.com/#human-agent-interface",
+            "name": "Human Agent Interface",
+            "alternateName": "HAI",
+            "url": "https://www.human-agent-interface.com/",
+            "creator": { "@id": "https://www.human-agent-interface.com/samuel/#samuel-fleig" },
+            "description": "Human Agent Interface (HAI) is an approach for keeping agentic AI work observable, bounded, verifiable, and human-owned.",
+            "subjectOf": [
+              { "@id": "https://www.human-agent-interface.com/hai-mcp/#hai-mcp" },
+              { "@id": "https://www.human-agent-interface.com/proof/#proof" }
+            ]
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "@id": "https://www.human-agent-interface.com/hai-mcp/#hai-mcp",
+            "name": "HAI-MCP",
+            "codeRepository": "https://github.com/smlfg/hai-mcp",
+            "url": "https://www.human-agent-interface.com/hai-mcp/",
+            "sameAs": [
+              "https://github.com/smlfg/hai-mcp",
+              "https://glama.ai/mcp/servers/@smlfg/hai-mcp"
+            ],
+            "programmingLanguage": "Python",
+            "creator": { "@id": "https://www.human-agent-interface.com/samuel/#samuel-fleig" },
+            "isPartOf": { "@id": "https://www.human-agent-interface.com/#human-agent-interface" },
+            "description": "HAI-MCP is the model-agnostic MCP control-plane implementation of Human Agent Interface."
+          }
+        ]
+      }
+    </script>
     <style>
       :root {
         color-scheme: dark;
@@ -117,14 +178,26 @@
       }
 
       .nav {
-        position: absolute;
+        position: fixed;
         inset: 0 0 auto;
-        z-index: 12;
+        z-index: 60;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 18px;
         padding: 24px clamp(18px, 4vw, 56px);
+        background: transparent;
+        border-bottom: 1px solid transparent;
+        transition: background 200ms ease, border-color 200ms ease, padding 200ms ease;
+      }
+
+      .nav.is-scrolled {
+        padding-top: 13px;
+        padding-bottom: 13px;
+        background: rgba(9, 10, 8, 0.84);
+        border-bottom-color: var(--line-soft);
+        backdrop-filter: saturate(150%) blur(14px);
+        -webkit-backdrop-filter: saturate(150%) blur(14px);
       }
 
       .nav-actions {
@@ -150,6 +223,23 @@
       html.lang-en .lang-copy[data-lang-copy="en"],
       html.lang-de .lang-copy[data-lang-copy="de"] {
         display: inline;
+      }
+
+      .copy-block {
+        display: none;
+      }
+
+      .copy-block[data-lang-copy="en"] {
+        display: block;
+      }
+
+      html.lang-de .copy-block[data-lang-copy="en"] {
+        display: none;
+      }
+
+      html.lang-en .copy-block[data-lang-copy="en"],
+      html.lang-de .copy-block[data-lang-copy="de"] {
+        display: block;
       }
 
       .language-switch {
@@ -277,12 +367,42 @@
       .epoch {
         min-height: 92px;
         padding: 14px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        display: grid;
+        grid-template-rows: auto auto 1fr;
+        gap: 8px;
         border: 1px solid var(--line-soft);
         background: rgba(9, 10, 8, 0.54);
         backdrop-filter: blur(12px);
+      }
+
+      .epoch::after {
+        content: "";
+        min-height: 30px;
+        display: grid;
+        align-items: end;
+        color: rgba(247, 241, 223, 0.58);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.62rem;
+        line-height: 1.2;
+        text-transform: none;
+      }
+
+      .epoch[data-stage="cli"]::after {
+        content: "$ scope --next";
+      }
+
+      .epoch[data-stage="tui"]::after {
+        content: "[1] plan\A[2] run";
+        white-space: pre;
+      }
+
+      .epoch[data-stage="gui"]::after {
+        content: "[ button ]  [ view ]";
+      }
+
+      .epoch[data-stage="hai"]::after {
+        content: "human -> gate -> agent";
+        color: rgba(167, 255, 79, 0.78);
       }
 
       .epoch strong {
@@ -339,9 +459,9 @@
 
       .hero-copy {
         display: grid;
-        grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.48fr);
-        gap: clamp(24px, 6vw, 96px);
-        align-items: end;
+        grid-template-columns: minmax(0, 760px);
+        gap: 18px;
+        align-items: start;
         margin-top: clamp(28px, 5vw, 56px);
       }
 
@@ -390,6 +510,7 @@
         flex-wrap: wrap;
         gap: 12px;
         justify-content: flex-start;
+        max-width: 760px;
       }
 
       .access-router {
@@ -555,6 +676,12 @@
 
       .section {
         padding: clamp(70px, 10vw, 150px) clamp(18px, 4vw, 56px);
+      }
+
+      .section-smoke {
+        background:
+          linear-gradient(180deg, rgba(247, 241, 223, 0.055), rgba(247, 241, 223, 0.018)),
+          #141511;
       }
 
       .section-inner {
@@ -878,7 +1005,8 @@
 
       .wide-statement {
         padding: clamp(70px, 10vw, 140px) clamp(18px, 4vw, 56px);
-        background: var(--ink);
+        background:
+          linear-gradient(180deg, #d7d0bc 0%, #f7f1df 100%);
         color: #10110d;
       }
 
@@ -979,15 +1107,13 @@
         flex-wrap: wrap;
       }
 
+      /* Bewusst OHNE Scroll-Effekt: Inhalt ist sofort sichtbar — maximale "snappy".
+         Hier lag vorher ein 700ms-Reveal, der nie feuerte, weil opacity nie 0 war
+         (der Observer setzte is-visible, das CSS war aber schon voll sichtbar).
+         Effekt zurückholen: .reveal { opacity: 0; transform: translateY(12px); }
+         + html.js-Gate + .js .reveal.is-visible { opacity: 1; transform: none; } */
       .reveal {
         opacity: 1;
-        transform: translateY(0);
-        transition: opacity 700ms ease, transform 700ms ease;
-      }
-
-      .js .reveal.is-visible {
-        opacity: 1;
-        transform: translateY(0);
       }
 
       @media (max-width: 900px) {
@@ -1156,6 +1282,414 @@
           transition-duration: 0.001ms !important;
         }
       }
+      /* ---------- Klarheits-Pass: Türen + Sekundär-CTA ---------- */
+      .doors {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(auto-fit, minmax(186px, 1fr));
+        margin-top: 26px;
+      }
+
+      .door {
+        display: grid;
+        gap: 7px;
+        align-content: start;
+        padding: 18px;
+        border: 1px solid var(--line-soft);
+        background: var(--panel);
+        text-decoration: none;
+        transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+      }
+
+      .door:hover,
+      .door:focus-visible {
+        border-color: var(--signal);
+        background: var(--panel-strong);
+        transform: translateY(-2px);
+      }
+
+      .door-q {
+        font-size: 1.02rem;
+        font-weight: 600;
+        line-height: 1.25;
+        color: var(--ink);
+      }
+
+      .door-a {
+        font-size: 0.86rem;
+        color: var(--muted);
+      }
+
+      .door-go {
+        margin-top: 2px;
+        color: var(--signal);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .door-go::after {
+        content: " →";
+      }
+
+      .hero-secondary {
+        margin: 12px 0 0;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      .hero-secondary a {
+        color: var(--signal);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      /* ---------- Bediengefühl Ebene 1 ---------- */
+      @view-transition {
+        navigation: auto;
+      }
+
+      [id] {
+        scroll-margin-top: 88px;
+      }
+
+      .skip-link {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        z-index: 100;
+        padding: 12px 18px;
+        background: var(--void);
+        color: var(--ink);
+        border: 1px solid var(--signal);
+        text-decoration: none;
+      }
+
+      .skip-link:focus {
+        left: 10px;
+        top: 10px;
+      }
+
+      .nav-link[aria-current="page"] {
+        color: var(--signal);
+      }
+
+      /* ---------- Mega-Menü (Cloudflare-Muster: 4 Nomen + Panel + CTA) ---------- */
+      .hainav-menu {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+      }
+
+      .hainav-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        min-height: 38px;
+        padding: 0 12px;
+        border: 1px solid transparent;
+        background: none;
+        color: var(--ink);
+        font: inherit;
+        font-size: 0.86rem;
+        cursor: pointer;
+        transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+      }
+
+      .hainav-trigger:hover,
+      .hainav-item.is-open .hainav-trigger {
+        color: var(--signal);
+        border-color: var(--line-soft);
+        background: var(--panel);
+      }
+
+      .hainav-chevron {
+        width: 6px;
+        height: 6px;
+        border-right: 1px solid currentColor;
+        border-bottom: 1px solid currentColor;
+        transform: translateY(-2px) rotate(45deg);
+        transition: transform 160ms ease;
+      }
+
+      .hainav-item.is-open .hainav-chevron {
+        transform: translateY(1px) rotate(-135deg);
+      }
+
+      .hainav-panel {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 70;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-6px);
+        transition: opacity 160ms ease, transform 160ms ease, visibility 160ms;
+        background: rgba(9, 10, 8, 0.97);
+        border: 1px solid var(--line);
+        border-top: 0;
+        border-radius: 0 0 16px 16px;
+        box-shadow: 0 30px 60px -26px rgba(0, 0, 0, 0.78);
+        backdrop-filter: saturate(150%) blur(18px);
+        -webkit-backdrop-filter: saturate(150%) blur(18px);
+      }
+
+      .hainav-item.is-open .hainav-panel {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .hainav-panel-inner {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 22px clamp(18px, 4vw, 56px) 26px;
+      }
+
+      .hainav-columns {
+        display: grid;
+        gap: 20px 40px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+
+      .hainav-column {
+        display: grid;
+        gap: 2px;
+        align-content: start;
+      }
+
+      .hainav-column-title {
+        margin: 0 0 8px;
+        color: var(--copper);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .hainav-link {
+        display: grid;
+        gap: 3px;
+        padding: 10px 12px;
+        border: 1px solid transparent;
+        text-decoration: none;
+        transition: background 160ms ease, border-color 160ms ease;
+      }
+
+      .hainav-link:hover,
+      .hainav-link:focus-visible {
+        background: var(--panel);
+        border-color: var(--line-soft);
+      }
+
+      .hainav-link-label {
+        color: var(--ink);
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .hainav-link:hover .hainav-link-label {
+        color: var(--signal);
+      }
+
+      .hainav-link-desc {
+        color: var(--muted);
+        font-size: 0.8rem;
+        line-height: 1.4;
+      }
+
+      .hainav-footer-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        width: 100%;
+        margin-top: 18px;
+        padding-top: 14px;
+        border-top: 1px solid var(--line-soft);
+        color: var(--signal);
+        font-size: 0.86rem;
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .hainav-footer-link:hover,
+      .hainav-footer-link:focus-visible {
+        color: var(--ink);
+      }
+
+      .hainav-plain {
+        display: inline-flex;
+        align-items: center;
+        min-height: 38px;
+        padding: 0 12px;
+        border: 1px solid transparent;
+        color: var(--ink);
+        font-size: 0.86rem;
+        text-decoration: none;
+        transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+      }
+
+      .hainav-plain:hover,
+      .hainav-plain:focus-visible {
+        color: var(--signal);
+        border-color: var(--line-soft);
+        background: var(--panel);
+      }
+
+      .hainav-trigger:focus-visible,
+      .hainav-link:focus-visible,
+      .hainav-plain:focus-visible,
+      .hainav-footer-link:focus-visible,
+      .nav-menu-toggle:focus-visible {
+        outline: 2px solid var(--signal);
+        outline-offset: 2px;
+      }
+
+      /* ---------- Mobile: Menü-Button + Accordion ---------- */
+      .nav-menu-toggle {
+        display: none;
+        align-items: center;
+        gap: 9px;
+        min-height: 38px;
+        padding: 0 12px;
+        border: 1px solid var(--line-soft);
+        background: rgba(9, 10, 8, 0.48);
+        color: var(--muted);
+        cursor: pointer;
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.66rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        transition: color 160ms ease, border-color 160ms ease;
+      }
+
+      .nav-menu-toggle:hover,
+      .nav-menu-toggle:focus-visible {
+        color: var(--ink);
+        border-color: rgba(167, 255, 79, 0.4);
+      }
+
+      .nav-menu-toggle-icon {
+        position: relative;
+        width: 14px;
+        height: 2px;
+        background: currentColor;
+      }
+
+      .nav-menu-toggle-icon::before,
+      .nav-menu-toggle-icon::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 14px;
+        height: 2px;
+        background: currentColor;
+      }
+
+      .nav-menu-toggle-icon::before {
+        top: -5px;
+      }
+
+      .nav-menu-toggle-icon::after {
+        top: 5px;
+      }
+
+      @media (max-width: 760px) {
+        .nav-menu-toggle {
+          display: inline-flex;
+        }
+
+        .hainav-menu {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0;
+          max-height: calc(100vh - 76px);
+          overflow-y: auto;
+          padding: 8px clamp(18px, 4vw, 56px) 22px;
+          background: rgba(9, 10, 8, 0.98);
+          border-bottom: 1px solid var(--line);
+          border-radius: 0 0 16px 16px;
+          box-shadow: 0 30px 60px -26px rgba(0, 0, 0, 0.78);
+          backdrop-filter: saturate(150%) blur(18px);
+          -webkit-backdrop-filter: saturate(150%) blur(18px);
+        }
+
+        .hainav-menu.is-open {
+          display: flex;
+        }
+
+        .hainav-menu .desktop-nav-link {
+          display: flex;
+        }
+
+        .hainav-trigger {
+          width: 100%;
+          justify-content: space-between;
+          padding: 13px 0;
+          border: 0;
+          border-bottom: 1px solid var(--line-soft);
+          font-size: 0.94rem;
+        }
+
+        .hainav-trigger:hover,
+        .hainav-item.is-open .hainav-trigger {
+          color: var(--ink);
+          border-color: var(--line-soft);
+          background: none;
+        }
+
+        .hainav-panel {
+          position: static;
+          display: none;
+          opacity: 1;
+          visibility: visible;
+          transform: none;
+          background: transparent;
+          border: 0;
+          border-radius: 0;
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+          transition: none;
+        }
+
+        .hainav-item.is-open .hainav-panel {
+          display: block;
+        }
+
+        .hainav-panel-inner {
+          padding: 4px 0 14px;
+        }
+
+        .hainav-columns {
+          gap: 4px;
+          grid-template-columns: 1fr;
+        }
+
+        .hainav-column-title {
+          margin-top: 10px;
+        }
+
+        .hainav-footer-link {
+          margin-top: 12px;
+        }
+
+        .hainav-plain {
+          width: 100%;
+          min-height: 46px;
+          padding: 13px 0;
+          border: 0;
+          border-bottom: 1px solid var(--line-soft);
+          font-size: 0.94rem;
+        }
+      }
     </style>
   </head>
   <body>
@@ -1163,8 +1697,12 @@
       <section class="hero" aria-labelledby="hero-title">
         <img class="hero-image" src="assets/hai-interface-background.webp" width="1672" height="941" alt="" aria-hidden="true">
         <canvas class="hero-canvas" id="agentField" aria-hidden="true"></canvas>
+        <a class="skip-link" href="#top">
+          <span class="lang-copy" data-lang-copy="en">Skip to content</span>
+          <span class="lang-copy" data-lang-copy="de">Zum Inhalt springen</span>
+        </a>
         <nav class="nav" aria-label="Main navigation">
-          <a class="brand" href="#top" aria-label="Human Agent Interface home">
+          <a class="brand" href="#top" aria-label="Human Agent Interface home" aria-current="page">
             <span class="brand-mark">HAI</span>
             <span>Human Agent Interface</span>
           </a>
@@ -1173,134 +1711,480 @@
             <span class="lang-copy" data-lang-copy="de">Samuel</span>
           </a>
           <div class="nav-actions">
-            <a class="nav-link desktop-nav-link" href="./what_it_is/">
-              <span class="lang-copy" data-lang-copy="en">Method</span>
-              <span class="lang-copy" data-lang-copy="de">Methode</span>
-            </a>
-            <a class="nav-link desktop-nav-link" href="./proof/">
-              <span class="lang-copy" data-lang-copy="en">Proof</span>
-              <span class="lang-copy" data-lang-copy="de">Nachweis</span>
-            </a>
-            <a class="nav-link desktop-nav-link" href="./samuel/">Samuel</a>
-            <a class="nav-link desktop-nav-link" href="./product/">
-              <span class="lang-copy" data-lang-copy="en">Offer</span>
-              <span class="lang-copy" data-lang-copy="de">Angebot</span>
-            </a>
+            <button
+              class="nav-menu-toggle"
+              type="button"
+              aria-expanded="false"
+              aria-controls="hainav-menu"
+            >
+              <span class="lang-copy" data-lang-copy="en">Menu</span>
+              <span class="lang-copy" data-lang-copy="de">Menü</span>
+              <span class="nav-menu-toggle-icon" aria-hidden="true"></span>
+            </button>
+            <div class="hainav-menu" id="hainav-menu">
+              <div class="hainav-item">
+                <button class="hainav-trigger desktop-nav-link" type="button" aria-expanded="false" aria-controls="hainav-products">
+                  <span class="lang-copy" data-lang-copy="en">Products</span>
+                  <span class="lang-copy" data-lang-copy="de">Produkte</span>
+                  <span class="hainav-chevron" aria-hidden="true"></span>
+                </button>
+                <div class="hainav-panel" id="hainav-products">
+                  <div class="hainav-panel-inner">
+                    <div class="hainav-columns">
+                      <div class="hainav-column">
+                        <p class="hainav-column-title">
+                          <span class="lang-copy" data-lang-copy="en">Control</span>
+                          <span class="lang-copy" data-lang-copy="de">Kontrolle</span>
+                        </p>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_hai_mcp" href="./hai-mcp/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">HAI-MCP</span><span class="lang-copy" data-lang-copy="de">HAI-MCP</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">Open-source MCP control plane for agent sessions</span>
+                            <span class="lang-copy" data-lang-copy="de">Open-Source MCP-Control-Plane für Agenten-Sessions</span>
+                          </span>
+                        </a>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_sidecar" href="./sidecar/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Sidecar</span><span class="lang-copy" data-lang-copy="de">Sidecar</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">Control layer that runs next to your agent</span>
+                            <span class="lang-copy" data-lang-copy="de">Kontrollschicht, die neben deinem Agenten läuft</span>
+                          </span>
+                        </a>
+                      </div>
+                      <div class="hainav-column">
+                        <p class="hainav-column-title">
+                          <span class="lang-copy" data-lang-copy="en">Visibility</span>
+                          <span class="lang-copy" data-lang-copy="de">Sichtbarkeit</span>
+                        </p>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_tripwire" href="./tripwire-map/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Tripwire Map</span><span class="lang-copy" data-lang-copy="de">Tripwire-Map</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">See where agents slip before they do</span>
+                            <span class="lang-copy" data-lang-copy="de">Sieh, wo Agenten entgleisen, bevor es passiert</span>
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                    <a class="hainav-footer-link" data-site-event="cta_click" data-event-target="nav_product" href="./product/">
+                      <span class="lang-copy" data-lang-copy="en">All products →</span>
+                      <span class="lang-copy" data-lang-copy="de">Alle Produkte →</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="hainav-item">
+                <button class="hainav-trigger desktop-nav-link" type="button" aria-expanded="false" aria-controls="hainav-solutions">
+                  <span class="lang-copy" data-lang-copy="en">Solutions</span>
+                  <span class="lang-copy" data-lang-copy="de">Lösungen</span>
+                  <span class="hainav-chevron" aria-hidden="true"></span>
+                </button>
+                <div class="hainav-panel" id="hainav-solutions">
+                  <div class="hainav-panel-inner">
+                    <div class="hainav-columns">
+                      <div class="hainav-column">
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_workflow_audit" href="./AffeHTML/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">4h Workflow Audit</span><span class="lang-copy" data-lang-copy="de">4h Workflow-Audit</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">Find where your agent setup costs you control · 500 €</span>
+                            <span class="lang-copy" data-lang-copy="de">Finde, wo dein Agenten-Setup dich Kontrolle kostet · 500 €</span>
+                          </span>
+                        </a>
+                      </div>
+                      <div class="hainav-column">
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_fit" href="./fit/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Human Fit</span><span class="lang-copy" data-lang-copy="de">Human Fit</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">Check whether HAI fits your way of working</span>
+                            <span class="lang-copy" data-lang-copy="de">Prüfe, ob HAI zu deiner Arbeitsweise passt</span>
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="hainav-item">
+                <button class="hainav-trigger desktop-nav-link" type="button" aria-expanded="false" aria-controls="hainav-resources">
+                  <span class="lang-copy" data-lang-copy="en">Resources</span>
+                  <span class="lang-copy" data-lang-copy="de">Ressourcen</span>
+                  <span class="hainav-chevron" aria-hidden="true"></span>
+                </button>
+                <div class="hainav-panel" id="hainav-resources">
+                  <div class="hainav-panel-inner">
+                    <div class="hainav-columns">
+                      <div class="hainav-column">
+                        <p class="hainav-column-title">
+                          <span class="lang-copy" data-lang-copy="en">Learn</span>
+                          <span class="lang-copy" data-lang-copy="de">Verstehen</span>
+                        </p>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_method" href="./what_it_is/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">What is HAI</span><span class="lang-copy" data-lang-copy="de">Was ist HAI</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">The method in five minutes</span>
+                            <span class="lang-copy" data-lang-copy="de">Die Methode in fünf Minuten</span>
+                          </span>
+                        </a>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_deep_dive" href="./what_it_is/deep-dive/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Technical deep-dive</span><span class="lang-copy" data-lang-copy="de">Technischer Deep-Dive</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">A precise technical definition</span>
+                            <span class="lang-copy" data-lang-copy="de">Eine präzise technische Definition</span>
+                          </span>
+                        </a>
+                      </div>
+                      <div class="hainav-column">
+                        <p class="hainav-column-title">
+                          <span class="lang-copy" data-lang-copy="en">Evidence</span>
+                          <span class="lang-copy" data-lang-copy="de">Nachweis</span>
+                        </p>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_proof" href="./proof/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Proof case files</span><span class="lang-copy" data-lang-copy="de">Nachweis-Fallakten</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">Four case files: visibility, control, method, transfer</span>
+                            <span class="lang-copy" data-lang-copy="de">Vier Fallakten: Sichtbarkeit, Kontrolle, Methode, Transfer</span>
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="hainav-item">
+                <button class="hainav-trigger desktop-nav-link" type="button" aria-expanded="false" aria-controls="hainav-samuel">
+                  <span class="lang-copy" data-lang-copy="en">Samuel</span>
+                  <span class="lang-copy" data-lang-copy="de">Samuel</span>
+                  <span class="hainav-chevron" aria-hidden="true"></span>
+                </button>
+                <div class="hainav-panel" id="hainav-samuel">
+                  <div class="hainav-panel-inner">
+                    <div class="hainav-columns">
+                      <div class="hainav-column">
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_samuel" href="./samuel/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">About Samuel</span><span class="lang-copy" data-lang-copy="de">Über Samuel</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">Who builds HAI and why</span>
+                            <span class="lang-copy" data-lang-copy="de">Wer HAI baut und warum</span>
+                          </span>
+                        </a>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_why" href="./samuel/why-hai-matters/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Why HAI matters</span><span class="lang-copy" data-lang-copy="de">Warum HAI zählt</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">The problem behind the method</span>
+                            <span class="lang-copy" data-lang-copy="de">Das Problem hinter der Methode</span>
+                          </span>
+                        </a>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_timeline" href="./samuel/timeline/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Timeline</span><span class="lang-copy" data-lang-copy="de">Zeitleiste</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">How HAI grew, step by step</span>
+                            <span class="lang-copy" data-lang-copy="de">Wie HAI entstanden ist, Schritt für Schritt</span>
+                          </span>
+                        </a>
+                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_audit" href="./samuel/computer-day-audit-2026/">
+                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Computer-Day-Audit 2026</span><span class="lang-copy" data-lang-copy="de">Computer-Day-Audit 2026</span></span>
+                          <span class="hainav-link-desc">
+                            <span class="lang-copy" data-lang-copy="en">A year of agent work, measured</span>
+                            <span class="lang-copy" data-lang-copy="de">Ein Jahr Agentenarbeit, gemessen</span>
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="language-switch" aria-label="Language">
               <button class="lang-button" type="button" data-lang-toggle="de" aria-pressed="false">DE</button>
               <button class="lang-button" type="button" data-lang-toggle="en" aria-pressed="false">EN</button>
             </div>
             <a
               class="nav-cta"
-              data-site-event="hero_cta_click"
-              data-event-target="contact_fit_call_nav"
-              href="mailto:samuel@human-agent-interface.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A"
+              data-site-event="cta_click"
+              data-event-target="nav_fit"
+              href="./fit/"
             >
-              <span class="lang-copy" data-lang-copy="en">Test fit call</span>
-              <span class="lang-copy" data-lang-copy="de">Fit-Call testen</span>
+              <span class="lang-copy" data-lang-copy="en">Check fit</span>
+              <span class="lang-copy" data-lang-copy="de">Fit prüfen</span>
             </a>
           </div>
         </nav>
 
         <div class="hero-inner" id="top">
           <div class="lineage reveal" aria-label="Interface evolution">
-            <div class="epoch">
+            <div class="epoch" data-stage="cli">
               <strong>CLI</strong>
-              <span>commands</span>
+              <span>
+                <span class="lang-copy" data-lang-copy="en">commands</span>
+                <span class="lang-copy" data-lang-copy="de">Befehle</span>
+              </span>
             </div>
-            <div class="epoch">
+            <div class="epoch" data-stage="tui">
               <strong>TUI</strong>
               <span>terminal</span>
             </div>
-            <div class="epoch">
+            <div class="epoch" data-stage="gui">
               <strong>GUI</strong>
-              <span>screens</span>
+              <span>
+                <span class="lang-copy" data-lang-copy="en">screens</span>
+                <span class="lang-copy" data-lang-copy="de">Oberflächen</span>
+              </span>
             </div>
-            <div class="epoch is-current">
+            <div class="epoch is-current" data-stage="hai">
               <strong>HAI</strong>
-              <span>agency</span>
+              <span>
+                <span class="lang-copy" data-lang-copy="en">agency</span>
+                <span class="lang-copy" data-lang-copy="de">Kontrolle</span>
+              </span>
             </div>
           </div>
 
           <p class="eyebrow reveal">
-            <span class="hero-text-variant" data-hero-variant="A_control">For people stuck inside agent threads</span>
-            <span class="hero-text-variant" data-hero-variant="B_offer_first">For one messy agent workflow</span>
-            <span class="hero-text-variant" data-hero-variant="C_proof_first">Proof before more agent output</span>
+            <span class="hero-text-variant" data-hero-variant="A_control">
+              <span class="lang-copy" data-lang-copy="en">For people stuck inside agent threads</span>
+              <span class="lang-copy" data-lang-copy="de">Für Menschen in zu vielen Agenten-Threads</span>
+            </span>
+            <span class="hero-text-variant" data-hero-variant="B_offer_first">
+              <span class="lang-copy" data-lang-copy="en">For one messy agent workflow</span>
+              <span class="lang-copy" data-lang-copy="de">Für einen chaotischen Agenten-Workflow</span>
+            </span>
+            <span class="hero-text-variant" data-hero-variant="C_proof_first">
+              <span class="lang-copy" data-lang-copy="en">Proof before more agent output</span>
+              <span class="lang-copy" data-lang-copy="de">Nachweis vor noch mehr Agenten-Output</span>
+            </span>
           </p>
           <h1 class="reveal" id="hero-title">
             <span class="hero-text-variant" data-hero-variant="A_control">
-              AI work should create momentum.
-              <span class="desktop-break"></span>
-              For most people, it creates confusion.
+              <span class="lang-copy" data-lang-copy="en">
+                AI work should create momentum.
+                <span class="desktop-break"></span>
+                For most people, it creates confusion.
+              </span>
+              <span class="lang-copy" data-lang-copy="de">
+                KI-Arbeit sollte Schwung geben.
+                <span class="desktop-break"></span>
+                Oft macht sie erst mehr Chaos.
+              </span>
             </span>
             <span class="hero-text-variant" data-hero-variant="B_offer_first">
-              Bring one chaotic agent workflow.
-              <span class="desktop-break"></span>
-              Leave with one concrete next action packet.
+              <span class="lang-copy" data-lang-copy="en">
+                Bring one chaotic agent workflow.
+                <span class="desktop-break"></span>
+                Leave with one concrete next action packet.
+              </span>
+              <span class="lang-copy" data-lang-copy="de">
+                Bring einen chaotischen Agenten-Workflow.
+                <span class="desktop-break"></span>
+                Geh mit einem prüfbaren nächsten Schritt.
+              </span>
             </span>
             <span class="hero-text-variant" data-hero-variant="C_proof_first">
-              The problem is not stronger agents.
-              <span class="desktop-break"></span>
-              It is whether the human can still own the work.
+              <span class="lang-copy" data-lang-copy="en">
+                The problem is not stronger agents.
+                <span class="desktop-break"></span>
+                It is whether the human can still own the work.
+              </span>
+              <span class="lang-copy" data-lang-copy="de">
+                Das Problem sind nicht stärkere Agents.
+                <span class="desktop-break"></span>
+                Es ist, ob der Mensch die Arbeit noch besitzt.
+              </span>
             </span>
           </h1>
 
           <div class="hero-copy hero-variant" data-hero-variant="A_control">
             <p class="lead reveal">
-              <strong>Human Agent Interface</strong> turns agent chaos into work a human can still own.
+              <span class="copy-block" data-lang-copy="en">
+                <strong>Human Agent Interface (HAI)</strong>, created by <a href="./samuel/">Samuel Fleig</a>, turns agent chaos into work a human can still own: observable, bounded, verifiable, and human-owned.
+              </span>
+              <span class="copy-block" data-lang-copy="de">
+                <strong>Human Agent Interface (HAI)</strong>, entwickelt von <a href="./samuel/">Samuel Fleig</a>, macht aus Agenten-Chaos wieder Arbeit, die ein Mensch steuern kann: beobachtbar, begrenzt, überprüfbar und menschlich verantwortet.
+              </span>
             </p>
             <p class="reveal">
-              You have Claude Code open.<br>
-              Codex produced another plan.<br>
-              One chat says the build is done.<br>
-              Another says the architecture is wrong.<br>
-              You have five outputs and no decision.<br>
-              That is where HAI starts.
+              <span class="copy-block" data-lang-copy="en">
+                You have Claude Code open.<br>
+                Codex produced another plan.<br>
+                One chat says the build is done.<br>
+                Another says the architecture is wrong.<br>
+                You have five outputs and no decision.<br>
+                That is where HAI starts.
+              </span>
+              <span class="copy-block" data-lang-copy="de">
+                Claude Code ist offen.<br>
+                Codex hat den nächsten Plan geschrieben.<br>
+                Ein Chat sagt: fertig.<br>
+                Ein anderer sagt: Architektur falsch.<br>
+                Du hast fünf Outputs und keine Entscheidung.<br>
+                Genau dort startet HAI.
+              </span>
             </p>
             <div class="hero-actions reveal">
               <a
                 class="button primary"
-                data-site-event="hero_cta_click"
-                data-event-target="contact_fit_call"
+                data-site-event="cta_click"
+                data-event-target="hero_fit_call"
                 href="mailto:samuel@human-agent-interface.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A"
-              >Book 20 min HAI fit call</a>
-              <a class="button" data-site-event="hero_cta_click" data-event-target="choose_path" href="#choose-path">Choose your path</a>
-              <a class="button" data-site-event="hero_cta_click" data-event-target="proof" href="./proof/">Proof</a>
+              >
+                <span class="lang-copy" data-lang-copy="en">Test 20 min fit call</span>
+                <span class="lang-copy" data-lang-copy="de">20-Min-Fit-Call testen</span>
+              </a>
+              <a class="button" data-site-event="cta_click" data-event-target="hero_choose_path" href="#choose-path">
+                <span class="lang-copy" data-lang-copy="en">Choose your path</span>
+                <span class="lang-copy" data-lang-copy="de">Pfad wählen</span>
+              </a>
+              <a class="button" data-site-event="cta_click" data-event-target="hero_proof" href="./proof/">
+                <span class="lang-copy" data-lang-copy="en">Proof</span>
+                <span class="lang-copy" data-lang-copy="de">Nachweis</span>
+              </a>
             </div>
           </div>
 
           <div class="hero-copy hero-variant" data-hero-variant="B_offer_first">
             <p class="lead reveal">
-              <strong>HAI starts with one workflow you can actually inspect.</strong> Bring the messy agent thread, stalled tool run, or pile of conflicting plans. Leave with a scoped packet: what the agent does, what you decide, and how the work gets verified.
+              <span class="copy-block" data-lang-copy="en">
+                <strong>HAI starts with one workflow you can actually inspect.</strong> Bring the messy agent thread, stalled tool run, or pile of conflicting plans. Leave with a scoped packet: what the agent does, what you decide, and how the work gets verified.
+              </span>
+              <span class="copy-block" data-lang-copy="de">
+                <strong>HAI startet mit einem Workflow, den du wirklich prüfen kannst.</strong> Bring den verworrenen Agenten-Thread, den steckenden Tool-Run oder die widersprüchlichen Pläne. Am Ende steht ein kleiner Scope: was der Agent tut, was du entscheidest und wie die Arbeit geprüft wird.
+              </span>
             </p>
             <div class="hero-actions reveal">
-              <a
-                class="button primary"
-                data-site-event="hero_cta_click"
-                data-event-target="contact_one_workflow"
-                href="mailto:samuel@human-agent-interface.com?subject=One%20messy%20agent%20workflow&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20bring%20one%20messy%20agent%20workflow%20and%20turn%20it%20into%20a%20clear%20next%20action%20packet.%0D%0A%0D%0AWhat%20is%20currently%20chaotic%3A%0D%0A%0D%0ATools%20involved%3A%0D%0A%0D%0AWhat%20I%20need%20to%20decide%3A%0D%0A%0D%0APreferred%20time%20windows%3A"
-              >Bring one workflow</a>
-              <a class="button" data-site-event="hero_cta_click" data-event-target="product" href="./product/">See product</a>
-              <a class="button" data-site-event="hero_cta_click" data-event-target="fit" href="./fit/">Human fit</a>
+              <a class="button primary" data-site-event="cta_click" data-event-target="hero_fit" href="./fit/">
+                <span class="lang-copy" data-lang-copy="en">Check if HAI fits you</span>
+                <span class="lang-copy" data-lang-copy="de">Prüfen, ob HAI zu dir passt</span>
+              </a>
+              <a class="button" data-site-event="cta_click" data-event-target="hero_product" href="./product/">
+                <span class="lang-copy" data-lang-copy="en">What you actually get</span>
+                <span class="lang-copy" data-lang-copy="de">Was du konkret bekommst</span>
+              </a>
+              <a class="button" data-site-event="cta_click" data-event-target="hero_proof" href="./proof/">
+                <span class="lang-copy" data-lang-copy="en">Is this real?</span>
+                <span class="lang-copy" data-lang-copy="de">Ist das echt?</span>
+              </a>
             </div>
+            <p class="hero-secondary reveal">
+              <span class="lang-copy" data-lang-copy="en">Already decided? <a data-site-event="cta_click" data-event-target="hero_fit_call" href="mailto:samuel@human-agent-interface.com?subject=One%20messy%20agent%20workflow&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20bring%20one%20messy%20agent%20workflow.%0D%0A%0D%0AWhat%20is%20currently%20chaotic%3A%0D%0A%0D%0ATools%20involved%3A%0D%0A%0D%0APreferred%20time%20windows%3A">Book a 20 min fit call</a>.</span>
+              <span class="lang-copy" data-lang-copy="de">Schon entschieden? <a data-site-event="cta_click" data-event-target="hero_fit_call" href="mailto:samuel@human-agent-interface.com?subject=Ein%20chaotischer%20Agenten-Workflow&amp;body=Hallo%20Samuel%2C%0D%0A%0D%0AIch%20will%20einen%20chaotischen%20Agenten-Workflow%20mitbringen.%0D%0A%0D%0AWas%20gerade%20chaotisch%20ist%3A%0D%0A%0D%0ATools%3A%0D%0A%0D%0AMoegliche%20Zeiten%3A">20-Min-Fit-Call buchen</a>.</span>
+            </p>
           </div>
 
           <div class="hero-copy hero-variant" data-hero-variant="C_proof_first">
             <p class="lead reveal">
-              <strong>HAI is built from real local agent systems, evals, and owner-control artifacts.</strong> The point is not to worship stronger tools. The point is whether the human can still inspect, stop, verify, and own the work.
+              <span class="copy-block" data-lang-copy="en">
+                <strong>HAI is built from real local agent systems, evals, and owner-control artifacts.</strong> The point is not to worship stronger tools. The point is whether the human can still inspect, stop, verify, and own the work.
+              </span>
+              <span class="copy-block" data-lang-copy="de">
+                <strong>HAI kommt aus echten lokalen Agenten-Systemen, Evals und Owner-Control-Artefakten.</strong> Es geht nicht darum, stärkere Tools zu feiern. Es geht darum, ob der Mensch Arbeit noch prüfen, stoppen, verifizieren und besitzen kann.
+              </span>
             </p>
             <div class="hero-actions reveal">
-              <a class="button primary" data-site-event="hero_cta_click" data-event-target="proof" href="./proof/">See proof</a>
+              <a class="button primary" data-site-event="cta_click" data-event-target="hero_proof" href="./proof/">
+                <span class="lang-copy" data-lang-copy="en">See proof</span>
+                <span class="lang-copy" data-lang-copy="de">Nachweis ansehen</span>
+              </a>
               <a
                 class="button"
-                data-site-event="hero_cta_click"
-                data-event-target="contact_fit_call"
+                data-site-event="cta_click"
+                data-event-target="hero_fit_call"
                 href="mailto:samuel@human-agent-interface.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A"
-              >Book fit call</a>
-              <a class="button" data-site-event="hero_cta_click" data-event-target="product" href="./product/">See product</a>
+              >
+                <span class="lang-copy" data-lang-copy="en">Test fit call</span>
+                <span class="lang-copy" data-lang-copy="de">Fit-Call testen</span>
+              </a>
+              <a class="button" data-site-event="cta_click" data-event-target="hero_product" href="./product/">
+                <span class="lang-copy" data-lang-copy="en">See offer</span>
+                <span class="lang-copy" data-lang-copy="de">Angebot ansehen</span>
+              </a>
             </div>
           </div>
+        </div>
+      </section>
 
+      <section class="section doors-section" aria-labelledby="doors-title">
+        <div class="section-inner">
+          <p class="kicker reveal">
+            <span class="lang-copy" data-lang-copy="en">Start here</span>
+            <span class="lang-copy" data-lang-copy="de">Hier starten</span>
+          </p>
+          <h2 class="reveal" id="doors-title">
+            <span class="lang-copy" data-lang-copy="en">What do you want to know first?</span>
+            <span class="lang-copy" data-lang-copy="de">Was willst du zuerst wissen?</span>
+          </h2>
+          <div class="doors reveal">
+            <a class="door" data-site-event="cta_click" data-event-target="door_method" href="./what_it_is/">
+              <span class="door-q">
+                <span class="lang-copy" data-lang-copy="en">What is HAI, exactly?</span>
+                <span class="lang-copy" data-lang-copy="de">Was ist HAI genau?</span>
+              </span>
+              <span class="door-a">
+                <span class="lang-copy" data-lang-copy="en">The definition, the control problem, and HAI-MCP.</span>
+                <span class="lang-copy" data-lang-copy="de">Definition, Kontrollproblem und HAI-MCP.</span>
+              </span>
+              <span class="door-go">
+                <span class="lang-copy" data-lang-copy="en">Definition · 2 min</span>
+                <span class="lang-copy" data-lang-copy="de">Definition · 2 Min</span>
+              </span>
+            </a>
+            <a class="door" data-site-event="cta_click" data-event-target="door_product" href="./product/">
+              <span class="door-q">
+                <span class="lang-copy" data-lang-copy="en">What do you actually get?</span>
+                <span class="lang-copy" data-lang-copy="de">Was bekommst du konkret?</span>
+              </span>
+              <span class="door-a">
+                <span class="lang-copy" data-lang-copy="en">Scope, deliverables, and how one workflow becomes a packet.</span>
+                <span class="lang-copy" data-lang-copy="de">Scope, Ergebnisse und wie ein Workflow zum Paket wird.</span>
+              </span>
+              <span class="door-go">
+                <span class="lang-copy" data-lang-copy="en">Offer</span>
+                <span class="lang-copy" data-lang-copy="de">Angebot</span>
+              </span>
+            </a>
+            <a class="door" data-site-event="cta_click" data-event-target="door_fit" href="./fit/">
+              <span class="door-q">
+                <span class="lang-copy" data-lang-copy="en">Does this fit you?</span>
+                <span class="lang-copy" data-lang-copy="de">Passt das zu dir?</span>
+              </span>
+              <span class="door-a">
+                <span class="lang-copy" data-lang-copy="en">Check the human fit before booking anything.</span>
+                <span class="lang-copy" data-lang-copy="de">Erst den Fit prüfen, dann buchen.</span>
+              </span>
+              <span class="door-go">
+                <span class="lang-copy" data-lang-copy="en">Fit check · 60 sec</span>
+                <span class="lang-copy" data-lang-copy="de">Fit-Check · 60 Sek</span>
+              </span>
+            </a>
+            <a class="door" data-site-event="cta_click" data-event-target="door_proof" href="./proof/">
+              <span class="door-q">
+                <span class="lang-copy" data-lang-copy="en">Is this real?</span>
+                <span class="lang-copy" data-lang-copy="de">Ist das echt?</span>
+              </span>
+              <span class="door-a">
+                <span class="lang-copy" data-lang-copy="en">Real artifacts from real agent work, not claims.</span>
+                <span class="lang-copy" data-lang-copy="de">Echte Artefakte aus echter Agenten-Arbeit, keine Behauptungen.</span>
+              </span>
+              <span class="door-go">
+                <span class="lang-copy" data-lang-copy="en">Proof</span>
+                <span class="lang-copy" data-lang-copy="de">Nachweis</span>
+              </span>
+            </a>
+            <a class="door" data-site-event="cta_click" data-event-target="door_samuel" href="./samuel/">
+              <span class="door-q">
+                <span class="lang-copy" data-lang-copy="en">Who is behind this?</span>
+                <span class="lang-copy" data-lang-copy="de">Wer steckt dahinter?</span>
+              </span>
+              <span class="door-a">
+                <span class="lang-copy" data-lang-copy="en">Samuel Fleig's origin path and operating model.</span>
+                <span class="lang-copy" data-lang-copy="de">Samuel Fleigs Herkunft und Arbeitsmodell.</span>
+              </span>
+              <span class="door-go">
+                <span class="lang-copy" data-lang-copy="en">About</span>
+                <span class="lang-copy" data-lang-copy="de">Über</span>
+              </span>
+            </a>
+          </div>
         </div>
       </section>
 
@@ -1425,21 +2309,40 @@
           </div>
       </section>
 
-      <section class="section" aria-labelledby="confusion-title">
+      <section class="section section-smoke" aria-labelledby="confusion-title">
         <div class="section-inner split">
           <div>
-            <p class="kicker reveal">The customer pain</p>
-            <h2 class="reveal" id="confusion-title">AI work creates more confusion than momentum.</h2>
+            <p class="kicker reveal">
+              <span class="lang-copy" data-lang-copy="en">The customer pain</span>
+              <span class="lang-copy" data-lang-copy="de">Der eigentliche Schmerz</span>
+            </p>
+            <h2 class="reveal" id="confusion-title">
+              <span class="copy-block" data-lang-copy="en">AI work creates more confusion than momentum.</span>
+              <span class="copy-block" data-lang-copy="de">KI-Arbeit erzeugt oft mehr Unklarheit als Schwung.</span>
+            </h2>
           </div>
           <div>
             <p class="body-copy reveal">
-              You start with an idea, open three chats, ask for a plan, launch an agent,
-              paste context into another tool, then lose the thread. The output is not
-              wrong. It is just not owned.
+              <span class="copy-block" data-lang-copy="en">
+                You start with an idea, open three chats, ask for a plan, launch an agent,
+                paste context into another tool, then lose the thread. The output is not
+                wrong. It is just not owned.
+              </span>
+              <span class="copy-block" data-lang-copy="de">
+                Du startest mit einer Idee, öffnest drei Chats, holst einen Plan, startest einen Agenten,
+                kopierst Kontext in das nächste Tool und verlierst den Faden. Der Output ist nicht
+                unbedingt falsch. Er gehört dir nur nicht mehr richtig.
+              </span>
             </p>
             <p class="body-copy reveal">
-              HAI exists for that moment: when the human state is messy, the agents are
-              loud, and the next responsible action is not obvious.
+              <span class="copy-block" data-lang-copy="en">
+                HAI exists for that moment: when the human state is messy, the agents are
+                loud, and the next responsible action is not obvious.
+              </span>
+              <span class="copy-block" data-lang-copy="de">
+                HAI ist für genau diesen Moment da: Der menschliche Zustand ist unordentlich,
+                die Agents produzieren weiter, und die nächste verantwortliche Handlung ist nicht klar.
+              </span>
             </p>
           </div>
         </div>
@@ -1448,66 +2351,156 @@
       <section class="section fit-call" id="fit-call" aria-labelledby="fit-call-title">
         <div class="section-inner fit-call-grid">
           <div class="fit-hook">
-            <p class="kicker reveal">20 min HAI fit call</p>
-            <h2 class="reveal" id="fit-call-title">Where do you lose control in your agent workflow?</h2>
+            <p class="kicker reveal">
+              <span class="lang-copy" data-lang-copy="en">20 min HAI fit call</span>
+              <span class="lang-copy" data-lang-copy="de">20-Minuten-Hypothese</span>
+            </p>
+            <h2 class="reveal" id="fit-call-title">
+              <span class="copy-block" data-lang-copy="en">Where do you lose control in your agent workflow?</span>
+              <span class="copy-block" data-lang-copy="de">Wo verlierst du Kontrolle in deinem Agenten-Workflow?</span>
+            </h2>
             <p class="body-copy reveal">
-              Bring one real workflow, not a transformation plan. The call is for finding
-              whether HAI can turn your current agent mess into a bounded 4h audit.
+              <span class="copy-block" data-lang-copy="en">
+                Bring one real workflow, not a transformation plan. The call is for finding
+                whether HAI can turn your current agent mess into a bounded 4h audit.
+              </span>
+              <span class="copy-block" data-lang-copy="de">
+                Bring einen echten Workflow, keinen Transformationsplan. Der Call testet nur,
+                ob HAI aus deinem aktuellen Agenten-Durcheinander einen begrenzten 4h-Scope machen kann.
+              </span>
             </p>
 
             <div class="intake-list reveal" aria-label="Mini intake questions">
               <div class="intake-question">
                 <div>
-                  <strong>What agent workflow is creating confusion?</strong>
-                  <span>Which chats, tools, agents, handoffs, or projects are involved?</span>
+                  <strong>
+                    <span class="lang-copy" data-lang-copy="en">What agent workflow is creating confusion?</span>
+                    <span class="lang-copy" data-lang-copy="de">Welcher Agenten-Workflow erzeugt gerade Verwirrung?</span>
+                  </strong>
+                  <span>
+                    <span class="lang-copy" data-lang-copy="en">Which chats, tools, agents, handoffs, or projects are involved?</span>
+                    <span class="lang-copy" data-lang-copy="de">Welche Chats, Tools, Agents, Übergaben oder Projekte hängen daran?</span>
+                  </span>
                 </div>
               </div>
               <div class="intake-question">
                 <div>
-                  <strong>Where do you lose control, overview, or trust?</strong>
-                  <span>Name the point where output keeps growing but ownership gets weaker.</span>
+                  <strong>
+                    <span class="lang-copy" data-lang-copy="en">Where do you lose control, overview, or trust?</span>
+                    <span class="lang-copy" data-lang-copy="de">Wo verlierst du Kontrolle, Überblick oder Vertrauen?</span>
+                  </strong>
+                  <span>
+                    <span class="lang-copy" data-lang-copy="en">Name the point where output keeps growing but ownership gets weaker.</span>
+                    <span class="lang-copy" data-lang-copy="de">Benenne den Punkt, an dem Output wächst, aber Ownership schwächer wird.</span>
+                  </span>
                 </div>
               </div>
               <div class="intake-question">
                 <div>
-                  <strong>What would be useful after 4 hours?</strong>
-                  <span>A clearer setup, a stop rule, a verifier path, or one next action packet.</span>
+                  <strong>
+                    <span class="lang-copy" data-lang-copy="en">What would be useful after 4 hours?</span>
+                    <span class="lang-copy" data-lang-copy="de">Was wäre nach 4 Stunden wirklich nützlich?</span>
+                  </strong>
+                  <span>
+                    <span class="lang-copy" data-lang-copy="en">A clearer setup, a stop rule, a verifier path, or one next action packet.</span>
+                    <span class="lang-copy" data-lang-copy="de">Ein klareres Setup, eine Stop-Regel, ein Verifier-Pfad oder ein nächstes Handlungspaket.</span>
+                  </span>
                 </div>
               </div>
             </div>
 
             <p class="pilot-note reveal">
-              Pilot status: testing HAI with the first 5-10 real workflows. One workflow,
-              one owner packet, one follow-up.
+              <span class="copy-block" data-lang-copy="en">
+                Pilot status: testing HAI with the first 5-10 real workflows. One workflow,
+                one owner packet, one follow-up.
+              </span>
+              <span class="copy-block" data-lang-copy="de">
+                Pilotstatus: Ich teste HAI an den ersten 5-10 echten Workflows. Ein Workflow,
+                ein Owner Packet, ein Follow-up.
+              </span>
             </p>
           </div>
 
           <aside class="output-panel reveal" aria-label="4 hour audit output">
-            <span class="state-label">Visible output</span>
-            <h3>What you get after the 4h audit.</h3>
+            <span class="state-label">
+              <span class="lang-copy" data-lang-copy="en">Visible output</span>
+              <span class="lang-copy" data-lang-copy="de">Sichtbarer Output</span>
+            </span>
+            <h3>
+              <span class="copy-block" data-lang-copy="en">What you get after the 4h audit.</span>
+              <span class="copy-block" data-lang-copy="de">Was nach dem 4h-Audit sichtbar ist.</span>
+            </h3>
             <p>
-              A compact owner packet shaped by practical depth: Samuel has already seen
-              how agent workflows drift into overload, weak ownership, and false done signals.
+              <span class="copy-block" data-lang-copy="en">
+                A compact owner packet shaped by practical depth: Samuel has already seen
+                how agent workflows drift into overload, weak ownership, and false done signals.
+              </span>
+              <span class="copy-block" data-lang-copy="de">
+                Ein kompaktes Owner Packet aus echter Praxis: Ich kenne die Stellen, an denen
+                Agenten-Workflows in Overload, schwache Ownership und falsche Fertig-Signale kippen.
+              </span>
             </p>
             <ul class="output-list">
-              <li>Workflow diagnosis</li>
-              <li>3 friction points</li>
-              <li>3 immediate changes</li>
-              <li>Human gates</li>
-              <li>Verification rule</li>
-              <li>Next Action Packet</li>
+              <li>
+                <span class="lang-copy" data-lang-copy="en">Workflow diagnosis</span>
+                <span class="lang-copy" data-lang-copy="de">Workflow-Diagnose</span>
+              </li>
+              <li>
+                <span class="lang-copy" data-lang-copy="en">3 friction points</span>
+                <span class="lang-copy" data-lang-copy="de">3 Reibungspunkte</span>
+              </li>
+              <li>
+                <span class="lang-copy" data-lang-copy="en">3 immediate changes</span>
+                <span class="lang-copy" data-lang-copy="de">3 Sofortänderungen</span>
+              </li>
+              <li>
+                <span class="lang-copy" data-lang-copy="en">Human gates</span>
+                <span class="lang-copy" data-lang-copy="de">Human Gates</span>
+              </li>
+              <li>
+                <span class="lang-copy" data-lang-copy="en">Verification rule</span>
+                <span class="lang-copy" data-lang-copy="de">Prüfregel</span>
+              </li>
+              <li>
+                <span class="lang-copy" data-lang-copy="en">Next Action Packet</span>
+                <span class="lang-copy" data-lang-copy="de">Nächstes Handlungspaket</span>
+              </li>
             </ul>
             <p class="trust-bridge">
-              The trust bridge is simple: he has already been where your problem can go.
-              The value is learning where your agent system breaks, who owns the decision,
-              and how the next step becomes checkable.
+              <span class="copy-block" data-lang-copy="en">
+                The trust bridge is simple: he has already been where your problem can go.
+                The value is learning where your agent system breaks, who owns the decision,
+                and how the next step becomes checkable.
+              </span>
+              <span class="copy-block" data-lang-copy="de">
+                Die Trust-Brücke ist einfach: Ich war schon an vielen Stellen, an denen dein Problem hinführen kann.
+                Der Wert liegt darin, herauszufinden, wo dein Agentensystem bricht, wer entscheidet
+                und wie der nächste Schritt prüfbar wird.
+              </span>
             </p>
             <div class="fit-actions">
               <a
                 class="button primary"
+                data-site-event="cta_click"
+                data-event-target="intake_start"
+                href="/intake/"
+              >
+                <span class="lang-copy" data-lang-copy="en">Start workflow intake</span>
+                <span class="lang-copy" data-lang-copy="de">Workflow-Intake starten</span>
+              </a>
+              <a
+                class="button"
+                data-site-event="cta_click"
+                data-event-target="contact_fit_call"
                 href="mailto:samuel@human-agent-interface.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A"
-              >Book 20 min HAI fit call</a>
-              <a class="button" href="./product/">See the 4h setup</a>
+              >
+                <span class="lang-copy" data-lang-copy="en">Test 20 min HAI fit call</span>
+                <span class="lang-copy" data-lang-copy="de">20-Min-Fit-Call testen</span>
+              </a>
+              <a class="button" data-site-event="cta_click" data-event-target="hero_product" href="./product/">
+                <span class="lang-copy" data-lang-copy="en">See the 4h setup</span>
+                <span class="lang-copy" data-lang-copy="de">4h-Setup ansehen</span>
+              </a>
             </div>
           </aside>
         </div>
@@ -1515,11 +2508,21 @@
 
       <section class="wide-statement" aria-label="Human tool statement">
         <div class="section-inner">
-          <p class="tool-line reveal">Humans are tool-using animals. Agents are the most powerful tool we have ever built.</p>
+          <p class="tool-line reveal">
+            <span class="copy-block" data-lang-copy="en">Humans are tool-using animals. Agents are the most powerful tool we have ever built.</span>
+            <span class="copy-block" data-lang-copy="de">Menschen nutzen Werkzeuge. Agents sind das mächtigste Werkzeug, das wir bisher gebaut haben.</span>
+          </p>
           <p class="reveal">
-            Voice, text, drawing, terminal, IDE, browser, or background process are only
-            surfaces. The real interface is how the human directs, scopes, verifies, and
-            stays aligned with a system that can act.
+            <span class="copy-block" data-lang-copy="en">
+              Voice, text, drawing, terminal, IDE, browser, or background process are only
+              surfaces. The real interface is how the human directs, scopes, verifies, and
+              stays aligned with a system that can act.
+            </span>
+            <span class="copy-block" data-lang-copy="de">
+              Stimme, Text, Skizze, Terminal, IDE, Browser oder Hintergrundprozess sind nur
+              Oberflächen. Das echte Interface ist die Frage, wie der Mensch ein handelndes
+              System richtet, begrenzt, prüft und ausgerichtet hält.
+            </span>
           </p>
         </div>
       </section>
@@ -1527,52 +2530,123 @@
       <section class="section authority-teaser" aria-labelledby="authority-title">
         <div class="section-inner authority-grid">
           <div>
-            <p class="kicker reveal">Why trust this work</p>
-            <h2 class="reveal" id="authority-title">Samuel has already lived where agent work breaks.</h2>
+            <p class="kicker reveal">
+              <span class="lang-copy" data-lang-copy="en">Why trust this work</span>
+              <span class="lang-copy" data-lang-copy="de">Warum mir diese Arbeit zuzutrauen ist</span>
+            </p>
+            <h2 class="reveal" id="authority-title">
+              <span class="copy-block" data-lang-copy="en">Samuel has already lived where agent work breaks.</span>
+              <span class="copy-block" data-lang-copy="de">Ich kenne die Stellen, an denen Agentenarbeit bricht.</span>
+            </h2>
             <p class="body-copy reveal">
-              He has already seen the later-stage version of the problem clients feel early:
-              more agents, more output, more dashboards, and less human ownership.
+              <span class="copy-block" data-lang-copy="en">
+                Samuel Fleig develops Human Agent Interface (HAI) from repeated work with terminal agents,
+                coding agents, harnesses, and owner-control artifacts. HAI-MCP is the open-source MCP
+                control-plane implementation of that method.
+              </span>
+              <span class="copy-block" data-lang-copy="de">
+                Ich habe die spätere Version des Problems schon gesehen: mehr Agents,
+                mehr Output, mehr Dashboards und weniger menschliche Ownership.
+              </span>
             </p>
           </div>
           <aside class="authority-panel reveal" aria-label="Samuel trust layer">
-            <span>Proof of depth</span>
+            <span>
+              <span class="lang-copy" data-lang-copy="en">Proof of depth</span>
+              <span class="lang-copy" data-lang-copy="de">Nachweis von Tiefe</span>
+            </span>
             <p>
-              The artifact trail matters because it shows repeated contact with the same failure
-              path: Sidecar, HAI, harnesses, control surfaces, Luis handoffs, and failed
-              control-tower attempts turned into stricter workflow rules.
+              <span class="copy-block" data-lang-copy="en">
+                The artifact trail matters because it shows repeated contact with the same failure
+                path: Sidecar, HAI, harnesses, control surfaces, Luis handoffs, and failed
+                control-tower attempts turned into stricter workflow rules.
+              </span>
+              <span class="copy-block" data-lang-copy="de">
+                Die Artefaktspur ist wichtig, weil sie wiederholt denselben Failure-Pfad zeigt:
+                Sidecar, HAI, Harnesses, Kontrollflächen, Luis-Handoffs und gescheiterte
+                Control-Tower-Versuche wurden zu strengeren Workflow-Regeln.
+              </span>
             </p>
-            <a class="button" href="./sidecar/">See the Sidecar control layer</a>
-            <a class="button" href="./proof/">See proof</a>
+            <a class="button" href="./sidecar/">
+              <span class="lang-copy" data-lang-copy="en">See the Sidecar control layer</span>
+              <span class="lang-copy" data-lang-copy="de">Sidecar-Kontrollschicht ansehen</span>
+            </a>
+            <a class="button" href="./proof/">
+              <span class="lang-copy" data-lang-copy="en">See proof</span>
+              <span class="lang-copy" data-lang-copy="de">Nachweis ansehen</span>
+            </a>
           </aside>
         </div>
       </section>
 
       <section class="section conversion" id="conversion" aria-labelledby="conversion-title">
         <div class="section-inner">
-          <p class="kicker reveal">The product unit is a conversion</p>
-          <h2 class="reveal" id="conversion-title">From scattered agent work to one concrete packet.</h2>
+          <p class="kicker reveal">
+            <span class="lang-copy" data-lang-copy="en">The product unit is a conversion</span>
+            <span class="lang-copy" data-lang-copy="de">Die kleinste Einheit</span>
+          </p>
+          <h2 class="reveal" id="conversion-title">
+            <span class="copy-block" data-lang-copy="en">From scattered agent work to one concrete packet.</span>
+            <span class="copy-block" data-lang-copy="de">Von verstreuter Agentenarbeit zu einem konkreten Paket.</span>
+          </h2>
           <div class="conversion-grid">
             <article class="state before reveal">
               <div class="state-content">
-                <span class="state-label">Before HAI</span>
-                <h3>Messy human state</h3>
+                <span class="state-label">
+                  <span class="lang-copy" data-lang-copy="en">Before HAI</span>
+                  <span class="lang-copy" data-lang-copy="de">Vor HAI</span>
+                </span>
+                <h3>
+                  <span class="lang-copy" data-lang-copy="en">Messy human state</span>
+                  <span class="lang-copy" data-lang-copy="de">Unklarer menschlicher Zustand</span>
+                </h3>
                 <ul>
-                  <li>An idea with no shape.</li>
-                  <li>A stuck project with unclear ownership.</li>
-                  <li>Too many agent threads competing for attention.</li>
-                  <li>No trusted next step.</li>
+                  <li>
+                    <span class="lang-copy" data-lang-copy="en">An idea with no shape.</span>
+                    <span class="lang-copy" data-lang-copy="de">Eine Idee ohne Form.</span>
+                  </li>
+                  <li>
+                    <span class="lang-copy" data-lang-copy="en">A stuck project with unclear ownership.</span>
+                    <span class="lang-copy" data-lang-copy="de">Ein festhängendes Projekt mit unklarer Ownership.</span>
+                  </li>
+                  <li>
+                    <span class="lang-copy" data-lang-copy="en">Too many agent threads competing for attention.</span>
+                    <span class="lang-copy" data-lang-copy="de">Zu viele Agenten-Threads konkurrieren um Aufmerksamkeit.</span>
+                  </li>
+                  <li>
+                    <span class="lang-copy" data-lang-copy="en">No trusted next step.</span>
+                    <span class="lang-copy" data-lang-copy="de">Kein vertrauenswürdiger nächster Schritt.</span>
+                  </li>
                 </ul>
               </div>
             </article>
             <article class="state after reveal">
               <div class="state-content">
-                <span class="state-label">After HAI</span>
-                <h3>Agent-ready next action</h3>
+                <span class="state-label">
+                  <span class="lang-copy" data-lang-copy="en">After HAI</span>
+                  <span class="lang-copy" data-lang-copy="de">Nach HAI</span>
+                </span>
+                <h3>
+                  <span class="lang-copy" data-lang-copy="en">Agent-ready next action</span>
+                  <span class="lang-copy" data-lang-copy="de">Agent-ready nächster Schritt</span>
+                </h3>
                 <ul>
-                  <li>The problem type is named.</li>
-                  <li>Human decisions stay with the human.</li>
-                  <li>Agent work is bounded and verifiable.</li>
-                  <li>The next packet of work is concrete.</li>
+                  <li>
+                    <span class="lang-copy" data-lang-copy="en">The problem type is named.</span>
+                    <span class="lang-copy" data-lang-copy="de">Der Problemtyp ist benannt.</span>
+                  </li>
+                  <li>
+                    <span class="lang-copy" data-lang-copy="en">Human decisions stay with the human.</span>
+                    <span class="lang-copy" data-lang-copy="de">Menschliche Entscheidungen bleiben beim Menschen.</span>
+                  </li>
+                  <li>
+                    <span class="lang-copy" data-lang-copy="en">Agent work is bounded and verifiable.</span>
+                    <span class="lang-copy" data-lang-copy="de">Agentenarbeit ist begrenzt und prüfbar.</span>
+                  </li>
+                  <li>
+                    <span class="lang-copy" data-lang-copy="en">The next packet of work is concrete.</span>
+                    <span class="lang-copy" data-lang-copy="de">Das nächste Arbeitspaket ist konkret.</span>
+                  </li>
                 </ul>
               </div>
             </article>
@@ -1583,21 +2657,36 @@
       <section class="section" aria-labelledby="category-title">
         <div class="section-inner split">
           <div>
-            <p class="kicker reveal">The interface shift</p>
-            <h2 class="reveal" id="category-title">GUI gave us control over screens. HAI gives us control over agency.</h2>
+            <p class="kicker reveal">
+              <span class="lang-copy" data-lang-copy="en">The interface shift</span>
+              <span class="lang-copy" data-lang-copy="de">Der Interface-Wechsel</span>
+            </p>
+            <h2 class="reveal" id="category-title">
+              <span class="copy-block" data-lang-copy="en">GUI gave us control over screens. HAI gives us control over agency.</span>
+              <span class="copy-block" data-lang-copy="de">GUI gab uns Kontrolle über Screens. HAI gibt Kontrolle über Handlung.</span>
+            </h2>
           </div>
           <div class="quote-rail">
             <div class="quote-tile reveal">
               <span>CLI</span>
-              <strong>Tell the machine what to run.</strong>
+              <strong>
+                <span class="lang-copy" data-lang-copy="en">Tell the machine what to run.</span>
+                <span class="lang-copy" data-lang-copy="de">Sag der Maschine, was sie ausführen soll.</span>
+              </strong>
             </div>
             <div class="quote-tile reveal">
               <span>GUI</span>
-              <strong>Point at what the software exposes.</strong>
+              <strong>
+                <span class="lang-copy" data-lang-copy="en">Point at what the software exposes.</span>
+                <span class="lang-copy" data-lang-copy="de">Zeig auf das, was die Software sichtbar macht.</span>
+              </strong>
             </div>
             <div class="quote-tile reveal">
               <span>HAI</span>
-              <strong>Shape what an agent should do next.</strong>
+              <strong>
+                <span class="lang-copy" data-lang-copy="en">Shape what an agent should do next.</span>
+                <span class="lang-copy" data-lang-copy="de">Forme, was ein Agent als Nächstes tun darf.</span>
+              </strong>
             </div>
           </div>
         </div>
@@ -1605,33 +2694,60 @@
 
       <section class="section" aria-labelledby="method-title">
         <div class="section-inner">
-          <p class="kicker reveal">The minimum loop</p>
-          <h2 class="reveal" id="method-title">A human-owned path into agentic work.</h2>
+          <p class="kicker reveal">
+            <span class="lang-copy" data-lang-copy="en">The minimum loop</span>
+            <span class="lang-copy" data-lang-copy="de">Der minimale Loop</span>
+          </p>
+          <h2 class="reveal" id="method-title">
+            <span class="copy-block" data-lang-copy="en">A human-owned path into agentic work.</span>
+              <span class="copy-block" data-lang-copy="de">Ein vom Menschen gesteuerter Weg in agentische Arbeit.</span>
+          </h2>
           <div class="method-grid" aria-label="HAI method">
             <article class="step reveal">
               <span>01</span>
               <h3>Intake</h3>
-              <p>Capture the messy state without pretending it is already a task.</p>
+              <p>
+                <span class="lang-copy" data-lang-copy="en">Capture the messy state without pretending it is already a task.</span>
+                <span class="lang-copy" data-lang-copy="de">Den unklaren Zustand aufnehmen, ohne so zu tun, als wäre er schon ein Task.</span>
+              </p>
             </article>
             <article class="step reveal">
               <span>02</span>
-              <h3>Classify</h3>
-              <p>Name what this is: decision, research, build, repair, or human-only.</p>
+              <h3>
+                <span class="lang-copy" data-lang-copy="en">Classify</span>
+                <span class="lang-copy" data-lang-copy="de">Einordnen</span>
+              </h3>
+              <p>
+                <span class="lang-copy" data-lang-copy="en">Name what this is: decision, research, build, repair, or human-only.</span>
+                <span class="lang-copy" data-lang-copy="de">Benennen, was es ist: Entscheidung, Recherche, Build, Reparatur oder human-only.</span>
+              </p>
             </article>
             <article class="step reveal">
               <span>03</span>
-              <h3>Separate</h3>
-              <p>Keep judgment, risk, and irreversible choices with the human.</p>
+              <h3>
+                <span class="lang-copy" data-lang-copy="en">Separate</span>
+                <span class="lang-copy" data-lang-copy="de">Trennen</span>
+              </h3>
+              <p>
+                <span class="lang-copy" data-lang-copy="en">Keep judgment, risk, and irreversible choices with the human.</span>
+                <span class="lang-copy" data-lang-copy="de">Urteil, Risiko und irreversible Entscheidungen beim Menschen lassen.</span>
+              </p>
             </article>
             <article class="step reveal">
               <span>04</span>
               <h3>Scope</h3>
-              <p>Bound the agent work so it can be executed and checked.</p>
+              <p>
+                <span class="lang-copy" data-lang-copy="en">Bound the agent work so it can be executed and checked.</span>
+                <span class="lang-copy" data-lang-copy="de">Agentenarbeit so begrenzen, dass sie ausgeführt und geprüft werden kann.</span>
+              </p>
             </article>
             <article class="step reveal">
               <span>05</span>
               <h3>Packet</h3>
-              <p>Produce the next concrete action the agent can actually take.</p>
+              <p>
+                <span class="lang-copy" data-lang-copy="en">Produce the next concrete action the agent can actually take.</span>
+                <span class="lang-copy" data-lang-copy="de">Die nächste konkrete Handlung erzeugen, die ein Agent wirklich tun kann.</span>
+              </p>
             </article>
           </div>
         </div>
@@ -1640,20 +2756,38 @@
       <section class="section contact" id="contact" aria-labelledby="contact-title">
         <div class="section-inner contact-panel">
           <div>
-            <p class="kicker reveal">20 min HAI fit call</p>
-            <h2 class="reveal" id="contact-title">Bring one workflow where control breaks.</h2>
+            <p class="kicker reveal">
+              <span class="lang-copy" data-lang-copy="en">20 min HAI fit call</span>
+              <span class="lang-copy" data-lang-copy="de">Fit-Call als Test</span>
+            </p>
+            <h2 class="reveal" id="contact-title">
+              <span class="copy-block" data-lang-copy="en">Bring one workflow where control breaks.</span>
+              <span class="copy-block" data-lang-copy="de">Bring einen Workflow, an dem Kontrolle bricht.</span>
+            </h2>
           </div>
           <div class="contact-note reveal">
             <p>
-              Show me one agent workflow that currently creates confusion. Leave with
-              the next concrete packet of work: what this is, what an agent should do,
-              what you must decide yourself, and what happens next.
+              <span class="copy-block" data-lang-copy="en">
+                Show me one agent workflow that currently creates confusion. Leave with
+                the next concrete packet of work: what this is, what an agent should do,
+                what you must decide yourself, and what happens next.
+              </span>
+              <span class="copy-block" data-lang-copy="de">
+                Zeig mir einen Agenten-Workflow, der gerade Verwirrung erzeugt. Ziel ist kein Verkaufstrick,
+                sondern ein Test: Wird daraus ein konkretes Arbeitspaket, eine klare menschliche Entscheidung
+                und ein prüfbarer nächster Schritt?
+              </span>
             </p>
             <p style="margin-top: 24px;">
               <a
                 class="button primary"
+                data-site-event="cta_click"
+                data-event-target="contact_fit_call"
                 href="mailto:samuel@human-agent-interface.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A"
-              >Book 20 min HAI fit call</a>
+              >
+                <span class="lang-copy" data-lang-copy="en">Test 20 min HAI fit call</span>
+                <span class="lang-copy" data-lang-copy="de">20-Min-Fit-Call testen</span>
+              </a>
             </p>
           </div>
         </div>
@@ -1662,8 +2796,15 @@
 
     <footer>
       <div class="section-inner">
-        <span>Human Agent Interface</span>
-        <span>CLI -> TUI -> GUI -> HAI</span>
+        <span>Human Agent Interface (HAI) by Samuel Fleig</span>
+        <span>
+          <span class="lang-copy" data-lang-copy="en">CLI -> TUI -> GUI -> HAI</span>
+          <span class="lang-copy" data-lang-copy="de">CLI -> TUI -> GUI -> HAI: Kontrolle über Agentenarbeit</span>
+        </span>
+        <span style="display: inline-flex; gap: 14px; flex-wrap: wrap;">
+          <a href="./impressum/" style="color: inherit; text-decoration: underline; text-underline-offset: 3px;">Impressum</a>
+          <a href="./datenschutz/" style="color: inherit; text-decoration: underline; text-underline-offset: 3px;">Datenschutz</a>
+        </span>
       </div>
     </footer>
 
@@ -1890,6 +3031,115 @@
         if (!media.matches) requestAnimationFrame(frame);
       }
 
+      const siteNav = document.querySelector(".nav");
+      const syncNav = () => {
+        if (siteNav) siteNav.classList.toggle("is-scrolled", window.scrollY > 40);
+      };
+      syncNav();
+      window.addEventListener("scroll", syncNav, { passive: true });
+
+      // Mega-Menü: Hover (Desktop), Klick, Tastatur, ESC, Klick daneben.
+      const hoverCapable = window.matchMedia("(hover: hover) and (pointer: fine)");
+      const compactNav = window.matchMedia("(max-width: 760px)");
+      const menuItems = Array.from(document.querySelectorAll(".hainav-item"));
+      const navMenu = document.querySelector(".hainav-menu");
+      const menuToggle = document.querySelector(".nav-menu-toggle");
+      let hoverTimer = null;
+
+      const setMenuOpen = (item, open) => {
+        item.classList.toggle("is-open", open);
+        const trigger = item.querySelector(".hainav-trigger");
+        if (trigger) trigger.setAttribute("aria-expanded", open ? "true" : "false");
+      };
+
+      const closeMenus = (except) => {
+        menuItems.forEach((item) => {
+          if (item !== except) setMenuOpen(item, false);
+        });
+      };
+
+      const setMobileMenuOpen = (open) => {
+        if (!navMenu || !menuToggle) return;
+        navMenu.classList.toggle("is-open", open);
+        menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      };
+
+      menuItems.forEach((item) => {
+        const trigger = item.querySelector(".hainav-trigger");
+        if (!trigger) return;
+
+        item.addEventListener("pointerenter", () => {
+          if (!hoverCapable.matches || compactNav.matches) return;
+          window.clearTimeout(hoverTimer);
+          closeMenus(item);
+          setMenuOpen(item, true);
+        });
+
+        item.addEventListener("pointerleave", () => {
+          if (!hoverCapable.matches || compactNav.matches) return;
+          window.clearTimeout(hoverTimer);
+          hoverTimer = window.setTimeout(() => setMenuOpen(item, false), 140);
+        });
+
+        trigger.addEventListener("click", () => {
+          if (hoverCapable.matches && !compactNav.matches) {
+            // Hover already opens the panel on desktop; a click keeps it open
+            // instead of toggling it shut.
+            window.clearTimeout(hoverTimer);
+            closeMenus(item);
+            setMenuOpen(item, true);
+            return;
+          }
+          const willOpen = !item.classList.contains("is-open");
+          closeMenus(item);
+          setMenuOpen(item, willOpen);
+        });
+
+        item.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            event.stopPropagation();
+            setMenuOpen(item, false);
+            trigger.focus();
+          }
+        });
+
+        item.addEventListener("focusout", (event) => {
+          if (!item.contains(event.relatedTarget)) setMenuOpen(item, false);
+        });
+      });
+
+      if (menuToggle) {
+        menuToggle.addEventListener("click", () => {
+          const willOpen = !(navMenu && navMenu.classList.contains("is-open"));
+          if (willOpen) closeMenus();
+          setMobileMenuOpen(willOpen);
+        });
+      }
+
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest(".hainav-item") && !event.target.closest(".nav-menu-toggle")) {
+          closeMenus();
+        }
+        if (
+          navMenu &&
+          navMenu.classList.contains("is-open") &&
+          !event.target.closest(".hainav-menu") &&
+          !event.target.closest(".nav-menu-toggle")
+        ) {
+          setMobileMenuOpen(false);
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape" || !navMenu || !navMenu.classList.contains("is-open")) return;
+        setMobileMenuOpen(false);
+        if (menuToggle) menuToggle.focus();
+      });
+
+      window.addEventListener("resize", () => {
+        if (!compactNav.matches) setMobileMenuOpen(false);
+      });
+
       window.addEventListener("resize", resize);
       window.addEventListener("pointermove", (event) => {
         pointer = {
@@ -1898,13 +3148,6 @@
         };
       });
 
-      const observer = new IntersectionObserver((entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) entry.target.classList.add("is-visible");
-        }
-      }, { threshold: 0.14 });
-
-      document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
       resize();
       requestAnimationFrame(frame);
     </script>

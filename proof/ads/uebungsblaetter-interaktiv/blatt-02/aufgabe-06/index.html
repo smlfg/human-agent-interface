@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 02 · Aufgabe 06 · McCarthy 91</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation">
+    <a class="brand" href="../../index.html">ADS · Übungsblätter</a>
+    <a class="back" href="../index.html">← Blatt 02</a>
+  </nav>
+
+  <header class="task-head">
+    <div><span class="kicker">REKURSION · VERSCHACHTELTE AUFRUFE</span><h1>Öffne genau den nächsten Aufruf.</h1></div>
+    <div class="counter">06 / 07</div>
+  </header>
+
+  <section class="mission" aria-labelledby="mission-title">
+    <div class="brief">
+      <h2 id="mission-title">Originalauftrag</h2>
+      <p>Implementiere und teste <em>f</em> für Werte von −100 bis 200. Formuliere aus den Testläufen eine einfachere Definition und skizziere, warum sie korrekt ist.</p>
+      <div class="definition" aria-label="Definition von f"><span>f(x) =</span><span>{</span><div><b>x − 10</b><small>falls x &gt; 100</small><b>f(f(x + 11))</b><small>sonst</small></div></div>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF · Seite 2 ↗</a>
+    </div>
+    <div class="card first-action">
+      <p class="eyebrow">Erste Aktion · f(99)</p>
+      <p>Welche Expansion folgt direkt aus der Definition?</p>
+      <div class="choices">
+        <button class="choice first-choice" data-path="correct">f(f(110))</button>
+        <button class="choice first-choice" data-path="single">f(110)</button>
+        <button class="choice first-choice" data-path="always">91</button>
+      </div>
+      <div class="feedback" id="first-feedback" aria-live="polite" hidden></div>
+    </div>
+  </section>
+
+  <section class="step" id="trace-step" hidden>
+    <h2>1 · Aufruftrace</h2>
+    <p>Wähle einen Startwert. <strong>Nächster Schritt</strong> ersetzt immer nur den markierten innersten offenen Aufruf.</p>
+    <div class="trace-controls">
+      <label for="trace-input">x von −100 bis 200</label>
+      <input id="trace-input" type="number" min="-100" max="200" value="99">
+      <button class="action" id="trace-start">Trace starten</button>
+      <button class="action secondary" id="trace-next" disabled>Nächster Schritt</button>
+    </div>
+    <ol class="call-trace" id="call-trace" aria-live="polite"></ol>
+    <div class="feedback" id="trace-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="pattern-step" hidden>
+    <h2>2 · Testläufe lesen</h2>
+    <p>Du hast mindestens einen verschachtelten Trace beendet. Welche vereinfachte Definition passt zu den Beobachtungen?</p>
+    <div class="choices">
+      <button class="choice pattern-choice" data-answer="single">x≤100 → f(x+11), sonst x−10</button>
+      <button class="choice pattern-choice" data-answer="always">für alle x → 91</button>
+      <button class="choice pattern-choice" data-answer="piecewise">x≤101 → 91, sonst x−10</button>
+    </div>
+    <div class="feedback" id="pattern-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step help" aria-labelledby="help-title">
+    <h2 id="help-title">Hinweise</h2>
+    <div class="actions">
+      <button class="action hint-btn" data-hint="hint-1" aria-expanded="false">Hinweis 1 · Klammern</button>
+      <button class="action hint-btn" data-hint="hint-2" aria-expanded="false">Hinweis 2 · Grenze</button>
+    </div>
+    <div class="hint" id="hint-1" hidden>Im sonst-Zweig stehen <strong>zwei</strong> Aufrufe: Erst muss der innere Wert f(x+11) entstehen; dieser wird danach Eingabe des äußeren f.</div>
+    <div class="hint" id="hint-2" hidden>Teste die Nachbarwerte 100, 101 und 102. „Immer 91“ scheitert bereits oberhalb der Grenzzone.</div>
+  </section>
+
+  <section class="step lab-card">
+    <h2>3 · C++-Lab</h2>
+    <p>Implementiere nur den TODO-Rumpf in <code>lab/mc91.cpp</code>. Der Testtreiber prüft Grenzwerte und eine Stichprobe aus −100…200.</p>
+    <pre><code>cd uebungsblaetter-interaktiv/blatt-02/aufgabe-06/lab
+./run-tests.sh</code></pre>
+    <p>Der Starter kompiliert, die Tests sind aber absichtlich rot. Binärdateien landen nur unter <code>/tmp</code>.</p>
+  </section>
+
+  <section class="step solution">
+    <h2>Abschluss · Definition und Beweisidee</h2>
+    <p id="gate-copy">Noch gesperrt: Beende einen verschachtelten Trace und wähle danach die passende vereinfachte Definition — oder decke nach einem Versuch bewusst auf.</p>
+    <button class="action" id="reveal">Abschluss bewusst aufdecken</button>
+    <div id="solution" hidden>
+      <div class="simple-definition"><span>f(x) =</span><div><b>91</b><small>für x ≤ 101</small><b>x − 10</b><small>für x &gt; 101</small></div></div>
+      <h3>Beweisidee in drei Intervallen</h3>
+      <ol>
+        <li><strong>x &gt; 101:</strong> Die Originaldefinition nimmt sofort den ersten Zweig und liefert x−10.</li>
+        <li><strong>91 ≤ x ≤ 101:</strong> x+11&gt;101, also wird der innere Aufruf direkt zu x+1; der äußere Aufruf führt schrittweise zum Wert 91.</li>
+        <li><strong>x &lt; 91:</strong> Jeder sonst-Schritt hebt das Argument um 11 an. Nach endlich vielen Schritten erreicht der Trace das bereits behandelte Intervall.</li>
+      </ol>
+      <p><strong>Terminierung:</strong> Unterhalb der Basisgrenze steigen offene Argumente; oberhalb 100 wird ein Aufruf sofort geschlossen. Eine formale Variante kann die endliche Distanz zum Intervall [91,101] als Maß verwenden.</p>
+      <p><strong>Testidee:</strong> Prüfe alle x von −100 bis 200 gegen die vereinfachte Fallunterscheidung, besonders 100, 101 und 102.</p>
+    </div>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Sitzt die Doppelrekursion?</h2>
+    <p>Prüfungsartefakt: korrekter Aufruftrace, Grenze 101, vereinfachte Definition und Terminierungs-/Intervallargument.</p>
+    <div class="state-row"><button class="state-btn" data-state="sitzt">Sitzt</button><button class="state-btn" data-state="wackelt">Wackelt</button></div>
+    <div class="feedback" id="state-feedback" aria-live="polite" hidden></div>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-05/index.html">← Aufgabe 05</a><a href="../index.html">Blattübersicht</a><a href="../aufgabe-07/index.html">Aufgabe 07 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

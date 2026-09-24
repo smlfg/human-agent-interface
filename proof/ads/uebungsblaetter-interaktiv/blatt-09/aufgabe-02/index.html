@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB09 · Aufgabe 2 · Hashmap mit Verkettung</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · INTERAKTIV</a><a class="back" href="../index.html">← Blatt 09</a></nav>
+    <header class="task-head"><div><span class="kicker">HASHEN · VERKETTEN · ZÄHLEN</span><h1>Wörter in Bucket-Listen</h1></div><div class="counter">PB09 · 02/03</div></header>
+
+    <section class="mission">
+      <div class="brief"><h2>Dein C++-Auftrag</h2><p>Bringe die Hashmap mit <strong>Verkettung der Überläufer</strong> zum Laufen und bestimme damit das häufigste Wort.</p><p>Erster Mikro-Schritt: Entscheide, was bei einer Kollision mit dem vorhandenen Bucketkopf passiert.</p></div>
+      <aside class="contract"><strong>Lab statt Komplettlösung</strong><span><code>lab/</code> enthält Signaturen, TODOs und kleine Verträge. Die echte Buchdatei ist nur der optionale Endlauf.</span></aside>
+    </section>
+
+    <section class="step trainer">
+      <div class="trainer-head"><div><span class="phase">BUCKET 1</span><h2>Zwei Schlüssel, derselbe Index</h2></div><span class="progress" id="progress">Schritt 1 / 3</span></div>
+      <p><code>h("agent") % 3 = 1</code> und <code>h("array") % 3 = 1</code>. Füge zuerst <b>agent</b>, dann <b>array</b> ein.</p>
+      <div class="bucket-board" aria-label="Hashtabelle mit verketteten Buckets">
+        <div class="bucket"><span>0</span><div class="chain muted">nullptr</div></div>
+        <div class="bucket hot"><span>1</span><div class="chain" id="chain"><b>agent · 1</b><i>→</i><em>nullptr</em></div></div>
+        <div class="bucket"><span>2</span><div class="chain muted">nullptr</div></div>
+      </div>
+      <p id="question">Was muss <code>hmv_put("array", 1)</code> tun?</p>
+      <div class="choices" id="choices">
+        <button type="button" data-answer="overwrite">Bucketkopf durch <code>array</code> ersetzen</button>
+        <button type="button" data-answer="chain"><code>array</code> an dieselbe Liste hängen</button>
+        <button type="button" data-answer="next">In Bucket 2 ausweichen</button>
+      </div>
+      <div class="feedback" id="feedback" role="status" aria-live="polite" hidden></div>
+      <div class="hint-controls"><button class="action hint-btn" type="button" data-hint="hint-1" aria-expanded="false">Hinweis 1</button><button class="action hint-btn" type="button" data-hint="hint-2" aria-expanded="false">Hinweis 2</button></div>
+      <div class="hint" id="hint-1" hidden>Verkettung heißt: Ein Tabellenplatz zeigt auf den Anfang einer <em>Liste</em>, nicht nur auf einen Datensatz.</div>
+      <div class="hint" id="hint-2" hidden>Ein neuer Knoten braucht einen erreichbaren Vorgänger: entweder <code>table[index]</code> oder das <code>next</code> des letzten Knotens.</div>
+    </section>
+
+    <section class="step pipeline" id="pipeline" hidden>
+      <span class="phase">WORD COUNT</span><h2>Erst zählen, dann Maximum suchen</h2>
+      <div class="flow" aria-label="Wortzähl-Pipeline"><div>Wörter lesen</div><b>→</b><div><code>get</code><br>vorhanden?</div><b>→</b><div>Count erhöhen<br>oder <code>put(...,1)</code></div><b>→</b><div>alle Einträge<br>iterieren</div><b>→</b><div>Maximum</div></div>
+      <p>Fixture: <code>rot blau rot grün rot blau</code></p>
+      <div class="choices" id="max-choices"><button type="button" data-max="first">Maximum nur bei jedem ersten Insert aktualisieren</button><button type="button" data-max="after">Zuerst alle Counts bilden, danach über die Map iterieren</button></div>
+      <div class="feedback" id="max-feedback" role="status" aria-live="polite" hidden></div>
+    </section>
+
+    <section class="step completion" id="completion" hidden>
+      <h2>Lababschluss</h2><p>Implementiere die TODOs in <code>lab/hashmapv.cpp</code> und <code>lab/mostcommon.cpp</code>. Prüfe erst die kleinen Map-Verträge und dann die Fixture-Pipeline:</p>
+      <pre><code>cd lab
+./run-tests.sh
+g++ -std=c++20 -Wall -Wextra -pedantic hashmapv.cpp mostcommon.cpp -o mostcommon
+printf 'rot blau rot gruen rot blau\n' | ./mostcommon</code></pre>
+      <p class="optional"><strong>Optionaler echter Lauf:</strong> <code>./mostcommon ../../../_course_assets/atwi80d.txt</code></p>
+      <label class="proof-check"><input id="lab-proof" type="checkbox"> Kleine Hashmap-Verträge und die Most-common-Fixture sind grün.</label>
+      <div class="state-row"><button class="state-btn" type="button" data-state="sitzt">✓ Sitzt</button><button class="state-btn" type="button" data-state="wackelt">↻ Wackelt</button></div><p class="tiny" id="state-feedback" aria-live="polite"></p>
+    </section>
+
+    <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-01/index.html">← Aufgabe 1</a><a href="../index.html">Blatt 09</a><a href="../../index.html">Gesamtübersicht</a><a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a><a href="../aufgabe-03/index.html">Aufgabe 3 →</a></nav>
+  </main>
+  <script src="task.js"></script>
+</body>
+</html>

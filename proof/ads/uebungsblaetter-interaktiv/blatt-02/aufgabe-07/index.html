@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 02 · Aufgabe 07 · Floating Point</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <script src="task.js" defer></script>
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Seitennavigation"><a class="brand" href="../../index.html">ADS · Übungsblätter</a><a class="back" href="../index.html">← Blatt 02</a></nav>
+  <header class="task-head"><div><span class="kicker">IEEE 754 · Rundung · Reihenfolge</span><h1>Wann verschluckt <code>double</code> eine Zahl?</h1></div><div class="counter">Aufgabe 07</div></header>
+
+  <section class="mission">
+    <div class="brief">
+      <h2>Originalauftrag, kompakt</h2>
+      <p>Finde endliche <code>double</code>-Werte <em>xᵢ</em>, sodass Vorwärts- minus Rückwärtssumme nicht 0 ist. Der Betrag des Fehlers muss mindestens 1 sein.</p>
+      <p class="tiny">Keine Abkürzung über Overflow, <code>Infinity</code> oder <code>NaN</code>: Alle Eingaben und Zwischensummen bleiben endlich.</p>
+    </div>
+    <form id="experiment" class="step first-action">
+      <h2>1 · Drei Zahlen in die Rechenlupe</h2>
+      <p class="prompt">Starte mit verschiedenen Größenordnungen. Kommagetrennt, höchstens 8 Werte.</p>
+      <div class="input-row"><label for="sequence">Folge xᵢ</label><input id="sequence" value="10000000000000000, 1" inputmode="decimal" autocomplete="off"><button class="action primary" type="submit">Beide Richtungen addieren</button></div>
+      <p id="experimentFeedback" class="feedback" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <section class="step visual-stage" aria-labelledby="traceTitle">
+    <div class="stage-head"><div><h2 id="traceTitle">2 · Zwei Wege, dieselben Zahlen</h2><p>Jede Addition rundet sofort auf den nächsten darstellbaren <code>double</code>.</p></div><div class="legend"><span><i class="dot kept"></i> verändert</span><span><i class="dot lost"></i> absorbiert</span></div></div>
+    <div class="magnitude" aria-label="Größenordnungsanzeige"><span>klein</span><div class="rail"><div id="magnitudeMarker" class="marker"></div></div><span>≈ max double</span></div>
+    <div class="trace-grid"><article><h3>Vorwärts ∑ x₁ … xₙ</h3><div id="forwardTrace" class="trace"></div><p id="forwardResult" class="result"></p></article><article><h3>Rückwärts ∑ xₙ … x₁</h3><div id="reverseTrace" class="trace"></div><p id="reverseResult" class="result"></p></article></div>
+    <div id="difference" class="difference" aria-live="polite"></div>
+  </section>
+
+  <section class="step help-zone">
+    <h2>3 · Hilfe, gestuft</h2>
+    <div class="actions"><button class="action" data-hint="hint1" type="button">Hinweis 1</button><button class="action" data-hint="hint2" type="button">Hinweis 2</button></div>
+    <p id="hint1" class="hint" hidden>Suche drei Werte: zwei sehr große mit entgegengesetztem Vorzeichen und einen kleinen Wert. Entscheidend ist, <em>wann</em> der kleine Wert addiert wird.</p>
+    <p id="hint2" class="hint" hidden>Bei ungefähr 10¹⁶ ist der Abstand benachbarter <code>double</code>-Zahlen bereits 2. Ein Summand 1 kann dort beim Runden verschwinden.</p>
+  </section>
+
+  <section class="step solution-gate">
+    <h2>4 · Welcher Nachweis zählt?</h2>
+    <div class="choice-grid">
+      <button type="button" data-choice="real">Reelle Gleichheit 1:1 auf <code>double</code> übertragen</button>
+      <button type="button" data-choice="nan"><code>max + max → Infinity</code> und dann <code>NaN</code></button>
+      <button type="button" data-choice="round">Endliche Werte, zwei Reihenfolgen, Rundung nach jedem Schritt</button>
+    </div>
+    <p id="gateFeedback" class="feedback" aria-live="polite" hidden></p>
+  </section>
+
+  <section id="contract" class="step" hidden>
+    <h2>5 · Dein Beweis- und Codevertrag</h2>
+    <ol><li>Notiere eine endliche Folge innerhalb <code>±DBL_MAX</code>.</li><li>Zeige die Zwischensummen in beiden Reihenfolgen.</li><li>Prüfe <code>abs(vorwaerts - rueckwaerts) &gt;= 1.0</code>.</li><li>Erkläre: Addition auf <code>double</code> ist wegen Rundung nicht assoziativ.</li></ol>
+  </section>
+
+  <section id="labStep" class="step lab" hidden>
+    <h2>6 · Echter C++20-Abschluss</h2>
+    <p>Ergänze nur die TODOs in <code>lab/floating_sum.cpp</code>. Der Starter kompiliert, besteht den Vertrag aber absichtlich noch nicht.</p>
+    <pre><code>cd uebungsblaetter-interaktiv/blatt-02/aufgabe-07/lab
+./run-tests.sh</code></pre>
+    <p>Der Runner prüft Reihenfolge, endliche Werte/Zwischensummen, Fehlerbetrag ≥ 1 und einen unabhängigen Kontrollfall.</p>
+  </section>
+
+  <section class="step completion"><h2>Selbsteinschätzung</h2><p>Kannst du die zwei Summenreihenfolgen und die nichtassoziative Rundung erklären?</p><div class="state-row"><button class="state-btn" data-state="sitzt" type="button">Sitzt</button><button class="state-btn" data-state="wackelt" type="button">Wackelt</button></div><p id="stateFeedback" class="feedback" aria-live="polite" hidden></p></section>
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-06/index.html">← Aufgabe 06</a><a href="/proof/ads/source-materials-not-included.html">Original-PDF</a><a href="../../index.html">Blatt abschließen →</a></nav>
+</main>
+</body>
+</html>

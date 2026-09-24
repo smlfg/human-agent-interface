@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB05 · Aufgabe 2 · Maximum Subarray mit Divide-and-Conquer</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · INTERAKTIV</a><a class="back" href="../index.html">← Blatt 05</a></nav>
+  <header class="task-head"><div><span class="kicker">TEILE · VERBINDE · TESTE</span><h1>Maximum Subarray: Divide-and-Conquer</h1></div><div class="counter">PB05 · 02/04</div></header>
+
+  <section class="mission">
+    <div class="brief"><h2>Dein Mikro-Schritt</h2><p>Teile das Quellarray in <strong>L</strong> und <strong>R</strong>. Entscheide dann, welche dritte Lösung beim Zusammenfügen neben <code>a</code> und <code>b</code> geprüft werden muss.</p></div>
+    <div class="source-core">P = L | R
+a = beste Lösung in L
+b = beste Lösung in R
+x = maximale rechte Randsumme von L
+y = maximale linke Randsumme von R</div>
+  </section>
+
+  <section class="step">
+    <h2>1 · Split sichtbar machen</h2>
+    <div class="array" id="source-array" aria-label="Quellarray"></div>
+    <div class="split-labels"><span>L · Indizes 0..4</span><span>R · Indizes 5..9</span></div>
+    <button class="action primary" id="split-button" type="button">In L und R teilen</button>
+    <div class="feedback" id="split-feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="merge-step" hidden>
+    <h2>2 · Die überkreuzende Lösung bauen</h2>
+    <div class="merge-board">
+      <article><span>L-Lösung</span><strong>a = 85</strong><small>59 + 26</small></article>
+      <article class="edge left-edge"><span>rechte Randsumme L</span><strong>x = 32</strong><small>59 + 26 − 53</small></article>
+      <div class="plus" aria-hidden="true">+</div>
+      <article class="edge right-edge"><span>linke Randsumme R</span><strong>y = 155</strong><small>58 + 97</small></article>
+      <article><span>R-Lösung</span><strong>b = 155</strong><small>58 + 97</small></article>
+    </div>
+    <p class="equation"><code>Lsg(P) = max(a, <span id="cross-slot">?</span>, b)</code></p>
+    <div class="choices" role="group" aria-label="Merge-Regel">
+      <button class="choice" data-path="halves" type="button">Nur max(a, b)</button>
+      <button class="choice" data-path="quadratic" type="button">Beim Merge alle Teilfolgen erneut testen</button>
+      <button class="choice" data-path="cross" type="button">max(a, x + y, b)</button>
+    </div>
+    <div class="actions"><button class="action hint-btn" data-hint="hint-1" aria-expanded="false" type="button">Hinweis 1</button><button class="action hint-btn" data-hint="hint-2" aria-expanded="false" type="button">Hinweis 2</button></div>
+    <div class="hint" id="hint-1" hidden>Eine neue beste Teilfolge kann die Schnittkante kreuzen. Links darf sie dann nur am rechten Rand enden.</div>
+    <div class="hint" id="hint-2" hidden>Scanne vom Split nach außen: <code>x = 32</code>, <code>y = 155</code>, also <code>x + y = 187</code>.</div>
+    <div class="feedback" id="path-feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step lab-box" id="lab-step" hidden>
+    <h2>3 · Code-Lab ohne Komplettlösung</h2>
+    <p>Implementiere <code>max_subarray_dc</code> in <code>lab/maxsub_dc.cpp</code>. Rekursiv entstehen <code>a</code> und <code>b</code>; beim linearen Merge bestimmst du nur die beiden Randsummen <code>x</code> und <code>y</code>.</p>
+    <code class="command">cd uebungsblaetter-interaktiv/blatt-05/aufgabe-02/lab
+./run-tests.sh</code>
+    <p class="tiny">Der Starter kompiliert und schlägt wegen des TODOs fehl. Der Harness vergleicht gegen eine unabhängige naive Referenz und echte <code>maxsub*.dat</code>-Fixtures.</p>
+  </section>
+
+  <section class="step" id="runtime-step" hidden>
+    <h2>4 · Abschluss-Gate</h2>
+    <label class="runtime-label">Rekurrenz und Laufzeit <select id="runtime"><option value="">– wählen –</option><option value="n2">T(n)=2T(n/2)+Θ(n²) ⇒ Θ(n²)</option><option value="nlogn">T(n)=2T(n/2)+Θ(n) ⇒ Θ(n log n)</option><option value="n">T(n)=T(n/2)+Θ(n) ⇒ Θ(n)</option></select></label>
+    <button class="action primary" id="check-runtime" type="button">Laufzeit prüfen</button>
+    <div class="feedback" id="runtime-feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step completion" id="completion" hidden>
+    <h2>Beleg statt Bauchgefühl</h2>
+    <p><code>maxsubsimple.dat</code>: Index <strong>2..6</strong>, Summe <strong>187</strong>. Das lineare Merge pro Ebene führt zu <strong>Θ(n log n)</strong>.</p>
+    <label class="proof-check"><input id="tests-pass" type="checkbox"> Mein echter Lauf meldet <strong>alle Tests bestanden</strong>.</label>
+    <div class="state-row"><button class="state-btn" data-state="sitzt" type="button">✓ Sitzt</button><button class="state-btn" data-state="wackelt" type="button">↻ Wackelt</button></div>
+    <p class="tiny" id="state-feedback" aria-live="polite"></p>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-01/index.html">← Aufgabe 1</a><a href="../../index.html">Gesamtübersicht</a><a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a><a href="../aufgabe-03/index.html">Aufgabe 3 →</a></nav>
+</main>
+<script src="task.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB08 · Aufgabe 1 · BST bearbeiten</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Hauptnavigation">
+      <a class="brand" href="../../index.html">ADS · INTERAKTIV</a>
+      <a class="back" href="../index.html">← Blatt 08</a>
+    </nav>
+
+    <header class="task-head">
+      <div><span class="kicker">VERGLEICHE · GEHE · ZEICHNE</span><h1>Binären Suchbaum bearbeiten</h1></div>
+      <div class="counter">PB08 · 01/07</div>
+    </header>
+
+    <section class="media-pre">
+    <div class="media-route-top">
+      <h2>Vorher ansehen</h2>
+      <span class="media-duration">Short · 1:07</span>
+    </div>
+    <p class="media-instruction">Anderer Baum als deine Aufgabe — bewusst. Die Mechanik überträgst du selbst.</p>
+    <video class="media-player short-player" controls preload="metadata" poster="../../../media-posters/pb08a01-short.webp" src="../../../notebooklm-study-pack/10_uebungsblaetter/blatt08/short_PB08A01_inorder-nachfolger.mp4">Dein Browser unterstützt Video nicht.</video>
+    <div class="recall-box"><strong>Sofort-Recall</strong>Warum genau der Inorder-Nachfolger und nicht irgendein Blatt aus dem Teilbaum?</div>
+  </section>
+
+  <section class="mission">
+      <div class="brief">
+        <h2>Dein Papierauftrag</h2>
+        <p>Füge <strong>13, 7, 12, 17, 3, 21, 9, 19, 14</strong> ein. Lösche danach <strong>7</strong> und <strong>13</strong>.</p>
+        <p>Erster Mikro-Schritt: Setze <strong>13</strong> als Wurzel, dann entscheide für jeden Schlüssel nur <em>links, rechts oder stoppen</em>.</p>
+      </div>
+      <div class="rule-card"><strong>BST-Regel</strong><span>kleiner → links</span><span>größer → rechts</span></div>
+    </section>
+
+    <section class="step trainer" id="trainer">
+      <div class="trainer-head">
+        <div><span class="phase" id="phase">EINFÜGEN</span><h2 id="instruction">Baue den Baum auf</h2></div>
+        <span class="progress" id="progress">0 / 11 Schritte</span>
+      </div>
+      <p class="prompt" id="prompt">Welche vollständige Einfügefolge erzeugt einen gültigen BST?</p>
+      <div class="tree-wrap" id="tree" aria-label="Aktueller binärer Suchbaum"></div>
+      <div class="choices" id="choices" role="group" aria-label="Nächster Schritt"></div>
+      <div class="feedback" id="feedback" role="status" aria-live="polite" hidden></div>
+      <div class="hint-controls">
+        <button class="action hint-btn" type="button" data-hint="hint-1" aria-expanded="false">Hinweis 1</button>
+        <button class="action hint-btn" type="button" data-hint="hint-2" aria-expanded="false">Hinweis 2</button>
+      </div>
+      <div class="hint" id="hint-1" hidden><strong>Avatar-Regel:</strong> Starte an der Wurzel. Vergleiche nur mit der Box, an der du gerade stehst. Kleiner links, größer rechts, bis ein Platz leer ist.</div>
+      <div class="hint" id="hint-2" hidden><strong>Zwei Kinder:</strong> Wir verwenden immer den <em>Inorder-Nachfolger</em>: das kleinste Element im rechten Unterbaum. Es übernimmt den Schlüssel; seine übrigen Unterbäume bleiben erhalten.</div>
+    </section>
+
+    <section class="step solution" id="solution" hidden>
+      <h2>Kontrollspur: korrekte Zwischenbäume</h2>
+      <p class="solution-rule"><strong>Festgelegte Ersatzregel:</strong> Bei einem Knoten mit zwei Kindern ersetzt ihn immer sein <strong>Inorder-Nachfolger</strong> (Minimum des rechten Unterbaums). Deshalb ersetzt 9 die 7 und danach 14 die 13.</p>
+      <div class="timeline" id="timeline"></div>
+    </section>
+
+    <section class="step completion" id="completion" hidden>
+      <h2>Papierabschluss</h2>
+      <p>Zeichne den Baum nach allen Einfügungen, nach <code>delete(7)</code> und nach <code>delete(13)</code>. Notiere daneben: „Ersatz = Inorder-Nachfolger“.</p>
+      <label class="proof-check"><input id="paper-proof" type="checkbox"> Meine drei Papierbäume stimmen mit der Kontrollspur überein.</label>
+      <div class="state-row">
+        <button class="state-btn" type="button" data-state="sitzt">✓ Sitzt</button>
+        <button class="state-btn" type="button" data-state="wackelt">↻ Wackelt</button>
+      </div>
+      <p class="tiny" id="state-feedback" aria-live="polite"></p>
+    </section>
+
+    <nav class="nav-bottom" aria-label="Aufgabennavigation">
+      <a href="../index.html">← Blatt 08</a>
+      <a href="../../index.html">Gesamtübersicht</a>
+      <a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a>
+      <a href="../aufgabe-02/index.html">Aufgabe 2 →</a>
+    </nav>
+  </main>
+  <script src="task.js"></script>
+</body>
+</html>

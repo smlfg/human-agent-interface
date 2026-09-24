@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ADS · Sortier-Labor</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="lab.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Seitennavigation">
+      <a class="back" href="../index.html">← Probeklausur-Parcours</a>
+      <span class="brand">ADS · Zusatztraining</span>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">SelectionSort-Aufgabe ↗</a>
+    </nav>
+
+    <header class="task-head">
+      <div>
+        <span class="kicker">MINILABOR · BEOBACHTEN → ERKLÄREN</span>
+        <h1>Sortieren in Zeitlupe.</h1>
+        <p class="lead">Dieselben fünf Zahlen. Zwei Strategien. Zähle nur, was wirklich passiert.</p>
+      </div>
+      <div id="overall-progress" class="counter" aria-live="polite">Versuch 1 / 4</div>
+    </header>
+
+    <section id="sortier-labor" class="sort-lab" aria-labelledby="experiment-title">
+      <div class="lab-head">
+        <div>
+          <p id="case-kicker" class="eyebrow">EINGABE 1 · SCHON SORTIERT</p>
+          <h2 id="experiment-title">SelectionSort schaut trotzdem überall nach.</h2>
+          <p id="experiment-goal">Finde den kleinsten Wert im gesamten Restbereich.</p>
+        </div>
+        <div class="count-board" aria-label="Zähler">
+          <div><span>VERGLEICHE</span><strong id="compare-count">0</strong></div>
+          <div><span id="motion-label">TAUSCHE</span><strong id="motion-count">0</strong></div>
+        </div>
+      </div>
+
+      <div class="legend-strip" aria-label="Markierungen">
+        <span><i class="legend-fixed"></i> schon fest</span>
+        <span><i class="legend-next"></i> nächster Blick</span>
+        <span><i class="legend-key"></i> Schlüssel bei InsertionSort</span>
+      </div>
+
+      <section class="array-stage" aria-label="Sortierablauf">
+        <div id="array-role" class="array-role">Restbereich: suche das Minimum.</div>
+        <div id="key-tray" class="key-tray" hidden aria-live="polite"></div>
+        <ol id="array" class="array" aria-label="Array mit fünf Zahlen"></ol>
+      </section>
+
+      <section class="next-card" aria-labelledby="next-title">
+        <p class="eyebrow">NÄCHSTER ZUG</p>
+        <h3 id="next-title">Vergleiche die markierten Zahlen.</h3>
+        <p id="step-status" class="step-status" aria-live="polite">Noch wurde nichts gezählt.</p>
+        <div class="button-row">
+          <button id="next-button" class="action primary" type="button">Vergleich ausführen →</button>
+          <button id="restart-button" class="action" type="button">Von vorn</button>
+        </div>
+      </section>
+
+      <section class="observation-card" aria-labelledby="observation-title">
+        <div>
+          <p class="eyebrow">BEOBACHTET</p>
+          <h3 id="observation-title">Vier kurze Spuren</h3>
+        </div>
+        <div id="ledger" class="ledger" aria-live="polite">
+          <p class="ledger-empty">Die erste Spur entsteht gerade.</p>
+        </div>
+      </section>
+    </section>
+
+    <section id="question" class="question-card" hidden aria-labelledby="question-title">
+      <p class="eyebrow">JETZT DEIN URTEIL</p>
+      <h2 id="question-title">Warum hilft „schon sortiert“ nur InsertionSort asymptotisch?</h2>
+      <div class="answer-options" role="group" aria-label="Abschlussfrage">
+        <button class="answer-option" type="button" data-answer="selection-scans">SelectionSort durchsucht den Restbereich immer vollständig; InsertionSort stoppt beim sortierten Nachbarn.</button>
+        <button class="answer-option" type="button" data-answer="both-fast">Beide werden bei sortierter Eingabe Θ(n), weil kein Tausch nötig ist.</button>
+        <button class="answer-option" type="button" data-answer="swap-decides">SelectionSort ist im Best Case schneller, weil seine Tausche verschwinden.</button>
+      </div>
+      <p id="question-feedback" class="feedback" aria-live="polite"></p>
+    </section>
+
+    <section id="conclusion" class="conclusion-card" hidden aria-labelledby="conclusion-title">
+      <p class="eyebrow">DEIN MERKSATZ</p>
+      <h2 id="conclusion-title">Die Eingabe ändert nicht jede Schleife.</h2>
+      <div class="formula-grid">
+        <div><strong>SelectionSort</strong><span>Best = Worst = Θ(n²)</span><small>Der Restbereich wird immer abgesucht.</small></div>
+        <div><strong>InsertionSort</strong><span>Best Θ(n) · Worst Θ(n²)</span><small>Er läuft nur bei Bedarf weit nach links.</small></div>
+      </div>
+      <a class="action" href="../task-01/index.html">Jetzt auf die Klausuraufgabe übertragen →</a>
+    </section>
+
+    <nav class="nav-bottom" aria-label="Seitennavigation">
+      <a href="../index.html">← Zur Übersicht</a>
+      <a href="../task-01/index.html">SelectionSort in Aufgabe 01 →</a>
+    </nav>
+  </main>
+  <script src="lab.js"></script>
+</body>
+</html>

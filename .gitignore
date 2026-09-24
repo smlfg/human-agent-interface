@@ -24,6 +24,22 @@ HAI_HANDOFF_TRIPWIRE_MAP_PROMPT.md
 
 # --- Downloaded Reference-Material (Chat-Exports etc., evtl. Drittquellen) ---
 downloads/
+V2/
+
+# --- Kursmaterial TH (Drittquellen, Urheberrecht) — spiegelt .assetsignore ---
+proof/ads/**/*.md
+proof/ads/**/*.pdf
+proof/ads/**/lab/
+proof/ads/**/_course_assets/
+
+# --- Funding (Bewerbungen, Pitches — privat) ---
+funding/
+
+# --- Lokale Agent-Configs ---
+.codex/
+
+# --- Lokale Arbeitskopien ---
+_local-clarity-pass/
 
 # --- Generated deploy output ---
 _deploy/

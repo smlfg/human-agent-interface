@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB07 · Aufgabe 4 · Radixsort mit Queues</title>
+  <link rel="stylesheet" href="../../styles.css"><link rel="stylesheet" href="task.css">
+</head>
+<body><main class="shell">
+  <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · INTERAKTIV</a><a class="back" href="../index.html">← Blatt 07</a></nav>
+  <header class="task-head"><div><span class="kicker">LSD · 26 FIFO-QUEUES · STABIL</span><h1>Von rechts nach links sortieren</h1></div><div class="counter">PB07 · 04/04</div></header>
+
+  <section class="mission">
+    <div class="brief"><h2>Dein Auftrag</h2><p>Sortiere gleich lange Kleinbuchstaben-Wörter mit 26 Warteschlangen. Jede Runde betrachtet genau eine Position; die frühere Ordnung muss beim Einsammeln erhalten bleiben.</p><p><strong>Erste Aktion:</strong> Wähle, an welcher Position die erste Runde startet.</p></div>
+    <div class="rule-card"><strong>Rundenregel</strong><span>verteilen: aktueller Buchstabe</span><span>sammeln: Queue a … z</span><span>in jeder Queue: FIFO</span></div>
+  </section>
+
+  <section class="step gate">
+    <h2>Wo beginnt Radixsort?</h2>
+    <div class="choices"><button class="choice" data-path="msd">Position 0 (erste Stelle)</button><button class="choice" data-path="lsd">Position d − 1 (letzte Stelle)</button></div>
+    <div id="gate-feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+    <div class="hint-controls"><button class="action hint-btn" data-hint="hint-1" aria-expanded="false">Hinweis 1</button><button class="action hint-btn" data-hint="hint-2" aria-expanded="false">Hinweis 2</button></div>
+    <div class="hint" id="hint-1" hidden>Die spätere Runde darf die bereits hergestellte feinere Ordnung nicht zerstören.</div>
+    <div class="hint" id="hint-2" hidden>Ohne rekursive Untergruppen ist „erste Stelle zuerst“ kein vollständiger MSD-Radixsort. Hier beginnt der Algorithmus rechts.</div>
+  </section>
+
+  <section class="step playground" id="playground" hidden>
+    <h2>26-Queue-Rundentrace</h2>
+    <div class="controls"><label for="words">Wörter gleicher Länge</label><input id="words" value="bca, abb, aca, baa, abc, aaa" spellcheck="false"><button id="load" type="button">Liste laden</button><button id="round" type="button">nächste Runde</button><button id="reset" type="button">neu</button></div>
+    <p class="round-status"><strong id="position">Bereit</strong> · <span id="order">–</span></p>
+    <div id="queues" class="queues" aria-label="26 Warteschlangen"></div>
+    <p id="trace-feedback" class="feedback" role="status" aria-live="polite">Lade eine kleine Wortliste. Erlaubt sind nur gleich lange Wörter aus a–z.</p>
+  </section>
+
+  <section class="step" id="stability" hidden>
+    <h2>Warum FIFO?</h2><p>Zwei Wörter landen in derselben Buchstaben-Queue. Wie sammelst du sie?</p>
+    <div class="choices"><button class="choice" data-stability="lifo">zuletzt hinein, zuerst heraus</button><button class="choice" data-stability="fifo">zuerst hinein, zuerst heraus</button></div>
+    <div id="stability-feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="step" id="lab" hidden>
+    <h2>Abschluss im C++-Lab</h2>
+    <div class="contracts"><article><strong>Filter</strong><span>feste Länge, lowercase, nur a–z</span></article><article><strong>Sortieren</strong><span>d Runden, Position d−1 bis 0</span></article><article><strong>Laufzeit</strong><span>Θ(d · (n + 26)) ≈ Θ(dn)</span></article></div>
+    <p>Bearbeite die TODOs in <code>lab/radix_words.cpp</code>. Das Lab enthält Signaturen und echte Tests, aber keine Komplettlösung.</p>
+    <pre><code>cd uebungsblaetter-interaktiv/blatt-07/aufgabe-04/lab
+./run-tests.sh
+# optional mit Kursdatei:
+./run-tests.sh ../../../_course_assets/atwi80d.txt</code></pre>
+    <label class="proof-check"><input id="proof" type="checkbox"> Kleine Wortliste sortiert und Tests grün.</label>
+    <div class="state-row"><button class="state-btn" data-state="sitzt">✓ Sitzt</button><button class="state-btn" data-state="wackelt">↻ Wackelt</button></div><p class="tiny" id="state-feedback" aria-live="polite"></p>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-03/index.html">← Aufgabe 3</a><a href="../index.html">Blatt 07</a><a href="../../index.html">Gesamtübersicht</a><a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a></nav>
+</main><script src="task.js"></script></body></html>

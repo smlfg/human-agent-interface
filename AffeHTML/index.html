@@ -1,0 +1,1429 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Du hast 5 Agenten laufen. Und trotzdem schreibst du selbst die E-Mails. HAI ist die Struktur, die dir deine Zeit zurückgibt. 4h Audit. 500€.">
+  <meta property="og:title" content="Der Affe und das Werkzeug — 4h Agenten-Workflow-Audit">
+  <meta property="og:description" content="Du hast 5 Agenten laufen. Und trotzdem schreibst du selbst die E-Mails. HAI macht aus Chaos Kontrolle.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://human-agent-interface.com/affe/">
+  <title>Der Affe und das Werkzeug — 4h Agenten-Workflow-Audit | HAI</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --void: #080806;
+      --ink: #f7f1df;
+      --muted: #b7ad97;
+      --quiet: #776f60;
+      --signal: #a7ff4f;
+      --copper: #ff9f5f;
+      --cyan: #83dbc8;
+      --red: #ff665c;
+      --panel: rgba(247, 241, 223, 0.065);
+      --panel-strong: rgba(247, 241, 223, 0.12);
+      --line: rgba(247, 241, 223, 0.17);
+      --line-strong: rgba(247, 241, 223, 0.31);
+      --max: 1180px;
+      --pad: clamp(18px, 4vw, 56px);
+      --display: Georgia, "Times New Roman", serif;
+      --body: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
+      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--void);
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(167, 255, 79, 0.12), transparent 26rem),
+        radial-gradient(circle at 80% 18%, rgba(255, 159, 95, 0.1), transparent 22rem),
+        linear-gradient(180deg, #080806 0%, #11100d 48%, #070806 100%);
+      font-family: var(--body);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      opacity: 0.25;
+      background-image:
+        linear-gradient(rgba(247, 241, 223, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(247, 241, 223, 0.03) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: linear-gradient(180deg, black, transparent 78%);
+      -webkit-mask-image: linear-gradient(180deg, black, transparent 78%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    p, h1, h2, h3, h4 { margin: 0; }
+
+    .site-shell { position: relative; isolation: isolate; }
+
+    /* Topbar */
+    .topbar {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 30;
+      display: flex;
+      justify-content: center;
+      padding: 14px var(--pad) 0;
+      pointer-events: none;
+    }
+    .topbar-inner {
+      width: min(var(--max), 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(247, 241, 223, 0.13);
+      background: rgba(8, 8, 6, 0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 18px 70px rgba(0, 0, 0, 0.3);
+      pointer-events: auto;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      color: var(--signal);
+      font-size: 12px;
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(12px, 2vw, 24px);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .nav a {
+      opacity: 0.82;
+      transition: color 160ms ease, opacity 160ms ease;
+    }
+    .nav a:hover, .nav a:focus-visible { color: var(--ink); opacity: 1; }
+    .nav .nav-cta {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 12px;
+      border: 1px solid rgba(167, 255, 79, 0.48);
+      background: rgba(167, 255, 79, 0.1);
+      color: var(--ink);
+      opacity: 1;
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: grid;
+      align-items: center;
+      padding: 126px var(--pad) 72px;
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+    }
+    .hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.35;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(8,8,6,0.96) 0%, rgba(8,8,6,0.88) 34%, rgba(8,8,6,0.42) 68%, rgba(8,8,6,0.2) 100%),
+        linear-gradient(180deg, rgba(8,8,6,0.46) 0%, rgba(8,8,6,0.2) 48%, rgba(8,8,6,0.94) 100%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: var(--copper);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 42px;
+      height: 1px;
+      background: var(--copper);
+    }
+    h1 {
+      max-width: 920px;
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: clamp(3.15rem, 7.4vw, 7.2rem);
+      line-height: 0.93;
+      letter-spacing: 0;
+      overflow-wrap: break-word;
+      text-wrap: balance;
+    }
+    .lead {
+      max-width: 720px;
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: clamp(1.12rem, 2vw, 1.62rem);
+      line-height: 1.5;
+      text-wrap: balance;
+    }
+    .lead strong { color: var(--ink); font-weight: 700; }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+      align-items: center;
+    }
+    .button {
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 22px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      font-weight: 800;
+      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+    }
+    .button.primary {
+      border-color: rgba(167, 255, 79, 0.7);
+      background: var(--signal);
+      color: #11150d;
+    }
+    .button:hover, .button:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(247, 241, 223, 0.44);
+      background: var(--panel-strong);
+    }
+    .button.primary:hover, .button.primary:focus-visible {
+      border-color: var(--signal);
+      background: #c4ff86;
+    }
+
+    /* Sections */
+    .section { padding: clamp(70px, 10vw, 132px) var(--pad); }
+    .section-inner { width: min(var(--max), 100%); margin: 0 auto; }
+    .section-head { margin-bottom: 36px; }
+    h2 {
+      margin-top: 12px;
+      font-family: var(--display);
+      font-size: clamp(2.2rem, 5.2vw, 4.9rem);
+      font-weight: 500;
+      line-height: 0.98;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+    h3 {
+      font-family: var(--display);
+      font-size: clamp(1.45rem, 2.4vw, 2.1rem);
+      font-weight: 500;
+      line-height: 1.08;
+    }
+    .section-copy {
+      max-width: 680px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.55vw, 1.18rem);
+    }
+
+    /* Evolution */
+    .evolution-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 42px;
+    }
+    .phase-card {
+      min-height: 320px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 18px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      position: relative;
+      overflow: hidden;
+    }
+    .phase-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .phase-card:nth-child(1)::before { background: var(--red); }
+    .phase-card:nth-child(2)::before { background: var(--copper); }
+    .phase-card:nth-child(3)::before { background: var(--signal); }
+    .phase-number {
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .phase-card h3 { margin-top: 8px; color: var(--ink); }
+    .phase-card p { margin-top: 14px; color: var(--muted); font-size: 1rem; line-height: 1.55; }
+
+    /* Gap / Split */
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(280px, 0.58fr);
+      gap: clamp(28px, 6vw, 90px);
+      align-items: start;
+    }
+    .gap-section {
+      border-block: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(247,241,223,0.035), rgba(247,241,223,0.01)), #0d0e0b;
+    }
+    .gap-section .body-copy {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.55vw, 1.18rem);
+      line-height: 1.6;
+    }
+    .pull-quote {
+      margin: 28px 0;
+      padding-left: 18px;
+      border-left: 2px solid var(--signal);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 18px;
+      font-style: italic;
+      line-height: 1.55;
+    }
+    .stat-panel {
+      border-left: 1px solid var(--line-strong);
+      background: linear-gradient(90deg, rgba(247,241,223,0.075), transparent);
+      padding: 24px;
+    }
+    .stat-panel h3 {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+    .stat-list { display: grid; gap: 14px; margin-top: 18px; }
+    .stat-item {
+      display: grid;
+      gap: 4px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+    .stat-item:last-child { padding-bottom: 0; border-bottom: 0; }
+    .stat-item strong {
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 500;
+      line-height: 1;
+    }
+    .stat-item span { color: var(--muted); font-size: 0.95rem; }
+
+    /* Method */
+    .method-section {
+      background: linear-gradient(180deg, rgba(247,241,223,0.04), rgba(247,241,223,0.01)), #0c0d0a;
+    }
+    .method-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 46px;
+    }
+    .method-step {
+      min-height: 210px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: rgba(247, 241, 223, 0.04);
+      position: relative;
+      overflow: hidden;
+    }
+    .method-step::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.14;
+      background-image: linear-gradient(135deg, transparent 0 47%, currentColor 48% 49%, transparent 50% 100%);
+      background-size: 34px 34px;
+    }
+    .method-step:nth-child(1) { color: rgba(255, 102, 92, 0.72); }
+    .method-step:nth-child(2) { color: rgba(255, 159, 95, 0.72); }
+    .method-step:nth-child(3) { color: rgba(131, 219, 200, 0.72); }
+    .method-step:nth-child(4) { color: rgba(167, 255, 79, 0.72); }
+    .method-step > * { position: relative; z-index: 1; }
+    .method-step .step-num {
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .method-step h3 { margin-top: 42px; color: var(--ink); font-size: clamp(1.3rem, 2vw, 1.65rem); }
+    .method-step p { margin-top: 10px; color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
+
+    /* Proof */
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 42px;
+    }
+    .proof-card {
+      min-height: 230px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      background: rgba(247, 241, 223, 0.035);
+    }
+    .proof-card span {
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .proof-card strong {
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: clamp(1.45rem, 2.35vw, 2.25rem);
+      font-weight: 500;
+      line-height: 1.02;
+    }
+    .proof-card p { color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
+
+    /* Samuel */
+    .samuel-section {
+      border-block: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(247,241,223,0.03), rgba(247,241,223,0.008)), #0d0e0b;
+    }
+    .samuel-section .body-copy {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.55vw, 1.18rem);
+      line-height: 1.6;
+    }
+    .authority-panel {
+      padding: 24px;
+      border-left: 1px solid var(--line-strong);
+      background: linear-gradient(90deg, rgba(247,241,223,0.07), transparent);
+    }
+    .authority-panel span {
+      display: block;
+      margin-bottom: 14px;
+      color: var(--signal);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .authority-panel p { margin: 0 0 22px; color: var(--muted); font-size: 1.05rem; line-height: 1.55; }
+    .authority-panel .button { width: 100%; }
+
+    /* CTA */
+    .cta-section {
+      padding: clamp(80px, 12vw, 160px) var(--pad);
+      background:
+        linear-gradient(180deg, rgba(167,255,79,0.06), rgba(167,255,79,0.02)),
+        linear-gradient(180deg, #0b1108 0%, #080806 100%);
+      border-top: 1px solid var(--line);
+      text-align: center;
+    }
+    .cta-section .section-inner { display: grid; gap: 18px; justify-items: center; }
+    .cta-section h2 { max-width: 800px; }
+    .cta-section p { max-width: 560px; color: var(--muted); font-size: clamp(1rem, 1.7vw, 1.28rem); }
+    .cta-section .button { margin-top: 14px; min-height: 56px; padding: 0 32px; font-size: 1.05rem; }
+
+    /* Form */
+    .hai-form {
+      width: 100%;
+      max-width: 480px;
+      margin: 14px auto 0;
+      display: grid;
+      gap: 18px;
+    }
+    .hai-form-group {
+      display: grid;
+      gap: 6px;
+      text-align: left;
+    }
+    .hai-form-label {
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .hai-form-input,
+    .hai-form-textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      background: rgba(247, 241, 223, 0.04);
+      color: var(--ink);
+      font-family: var(--body);
+      font-size: 1rem;
+      line-height: 1.5;
+      outline: none;
+      transition: border-color 180ms ease, background 180ms ease;
+      border-radius: 0;
+    }
+    .hai-form-input::placeholder,
+    .hai-form-textarea::placeholder {
+      color: var(--quiet);
+      opacity: 0.7;
+    }
+    .hai-form-input:focus,
+    .hai-form-textarea:focus {
+      border-color: rgba(167, 255, 79, 0.7);
+      background: rgba(247, 241, 223, 0.06);
+    }
+    .hai-form-textarea {
+      resize: vertical;
+      min-height: calc(3 * 1.5em + 28px);
+    }
+    .hai-form .button.primary {
+      margin-top: 4px;
+    }
+
+    /* Footer */
+    footer {
+      padding: 28px var(--pad);
+      border-top: 1px solid var(--line);
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .footer-inner {
+      width: min(var(--max), 100%);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .footer-links { display: flex; gap: 18px; flex-wrap: wrap; }
+    .footer-links a { opacity: 0.82; transition: color 160ms ease, opacity 160ms ease; }
+    .footer-links a:hover, .footer-links a:focus-visible { color: var(--ink); opacity: 1; }
+
+    /* Scroll reveal */
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 700ms ease, transform 700ms ease; }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+    /* Responsive */
+    @media (max-width: 920px) {
+      .evolution-grid, .proof-grid, .method-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .split { grid-template-columns: 1fr; }
+      .hero { min-height: auto; }
+      .stat-panel { border-left: 0; border-top: 1px solid var(--line-strong); background: linear-gradient(180deg, rgba(247,241,223,0.075), transparent); }
+      .authority-panel { border-left: 0; border-top: 1px solid var(--line-strong); background: linear-gradient(180deg, rgba(247,241,223,0.07), transparent); }
+    }
+
+    @media (max-width: 720px) {
+      .topbar { position: absolute; }
+      .topbar-inner { align-items: flex-start; flex-direction: column; }
+      .brand span:last-child { display: none; }
+      .nav { width: 100%; display: flex; gap: 14px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+      .nav::-webkit-scrollbar { display: none; }
+      .nav .nav-cta { display: none; }
+      .hero { width: 100vw; padding: 148px 20px 58px; }
+      .section { width: 100vw; padding-left: 20px; padding-right: 20px; }
+      .hero-inner, .section-inner, .footer-inner { width: 350px; max-width: calc(100vw - 40px); margin-left: 0; margin-right: 0; }
+      h1 { font-size: clamp(2.6rem, 12vw, 4rem); line-height: 0.96; }
+      h2 { font-size: clamp(2rem, 9vw, 3rem); }
+      .evolution-grid, .proof-grid, .method-strip { grid-template-columns: 1fr; }
+      .hero-actions, .cta-section .button { display: grid; width: 100%; }
+      .button { width: 100%; }
+      .authority-panel, .stat-panel { padding: 22px; }
+    }
+
+    /* Workflow Diagram */
+    .workflow-section {
+      border-block: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(247,241,223,0.03), rgba(247,241,223,0.008)), #0d0e0b;
+    }
+    .workflow-diagram {
+      margin-top: 42px;
+      width: 100%;
+    }
+    .workflow-diagram svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .workflow-legend {
+      margin-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: center;
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .workflow-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .workflow-legend i {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 1px solid var(--line-strong);
+    }
+    .workflow-legend i.signal { background: rgba(167, 255, 79, 0.25); border-color: rgba(167, 255, 79, 0.5); }
+    .workflow-legend i.copper { background: rgba(255, 159, 95, 0.25); border-color: rgba(255, 159, 95, 0.5); }
+    .workflow-legend i.cyan { background: rgba(131, 219, 200, 0.25); border-color: rgba(131, 219, 200, 0.5); }
+
+    .workflow-svg-desktop { display: block; }
+    .workflow-svg-mobile { display: none; }
+
+    @media (max-width: 920px) {
+      .workflow-svg-desktop { display: none; }
+      .workflow-svg-mobile { display: block; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar" aria-label="Site navigation">
+      <div class="topbar-inner">
+        <a class="brand" href="../index.html" aria-label="Human Agent Interface home">
+          <span class="brand-mark">HAI</span>
+          <span>Human Agent Interface</span>
+        </a>
+        <nav class="nav" aria-label="Site navigation">
+          <a href="../what_it_is/">Method</a>
+          <a href="../proof/">Proof</a>
+          <a href="../samuel/">Samuel</a>
+          <a href="../product/">Offer</a>
+          <a class="nav-cta" href="#cta">Audit buchen</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <canvas class="hero-canvas" id="particleCanvas" aria-hidden="true"></canvas>
+        <div class="hero-inner">
+          <p class="eyebrow reveal">Du hast 5 Agenten laufen. Und trotzdem schreibst du selbst die E-Mails.</p>
+          <h1 class="reveal" id="hero-title">Der Affe und das Werkzeug</h1>
+          <p class="lead reveal">
+            Du bist kein Affe. Du bist ein Manager, der sich wie einer fühlt. Weil du Werkzeuge bedienst, statt sie zu beherrschen.
+            <strong>HAI ist die Struktur, die dir deine Zeit zurückgibt.</strong>
+          </p>
+          <div class="hero-actions reveal" aria-label="Primary actions">
+            <a class="button primary" href="#cta">Kontrolle zurückholen</a>
+            <a class="button" href="../proof/">Die Zahlen sehen</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="evolution-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <p class="eyebrow reveal">Die drei Phasen</p>
+            <h2 class="reveal" id="evolution-title">Vom Chaos zur Beherrschung</h2>
+          </div>
+          <div class="evolution-grid">
+            <article class="phase-card reveal" aria-labelledby="phase1-title">
+              <div>
+                <span class="phase-number">Tag 01</span>
+                <h3 id="phase1-title">Der große Angriff</h3>
+              </div>
+              <p>Du startest voll motiviert. Drei Agenten gleichzeitig. Einer soll den Code refactoren, einer die Kundenmail schreiben, einer die Recherche machen. Um 18 Uhr hast du 17 Tabs offen. Der Code hat einen Bug. Die Mail enthält falsche Zahlen. Die Analyse widerspricht dem, was du gestern gelesen hast. Du schließt den Laptop. Nicht zufrieden. Erschöpft.</p>
+            </article>
+            <article class="phase-card reveal" aria-labelledby="phase2-title">
+              <div>
+                <span class="phase-number">Tag 14</span>
+                <h3 id="phase2-title">Die erste Grenze</h3>
+              </div>
+              <p>Heute passiert es zum dritten Mal: Ein Agent meldet "Done", aber das Ergebnis ist unbrauchbar. Du merkst, dass du der Meldung nicht blind vertrauen kannst. Du definierst deine erste Verifikationsregel: "Done" bedeutet nichts, bevor du den Output nicht gesehen und ein Artefakt geprüft hast. Zum ersten Mal hast du das Gefühl, wieder am Steuer zu sitzen.</p>
+            </article>
+            <article class="phase-card reveal" aria-labelledby="phase3-title">
+              <div>
+                <span class="phase-number">Tag 30</span>
+                <h3 id="phase3-title">Das System</h3>
+              </div>
+              <p>Du hast jetzt einen klaren Tagesablauf. Jeder Agent bekommt vor dem Start eine Aufgabe mit festem Scope. An drei definierten Gates pro Tag stoppt die Arbeit — und du entscheidest, ob weitergeht oder korrigiert wird. Du delegierst wieder. Aber diesmal mit Kontrolle. Um 18 Uhr schließt du den Laptop. Und öffnest ihn nicht wieder.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section gap-section" aria-labelledby="gap-title">
+        <div class="section-inner">
+          <div class="split">
+            <div>
+              <p class="eyebrow reveal">Dienstag, 14:30 Uhr</p>
+              <h2 class="reveal" id="gap-title">Der digitale Dschungel</h2>
+              <p class="body-copy reveal">
+                Du hast fünf Agenten parallel laufen. Codex schreibt gerade eine Funktion, die auf den Daten des Recherche-Agents aufbauen soll. Der Recherche-Agent hat aber gestern andere Zahlen geliefert als heute. Ein dritter Agent hat in der Zwischenzeit eine E-Mail an den Kunden verfasst — mit den alten Zahlen. Du merkst es nicht sofort. Du merkst es um 16 Uhr, als der Kunde antwortet und fragt, warum die Zahlen nicht stimmen.                 Zwei Stunden verbringst du damit, Schaden zu begrenzen, statt voranzukommen.
+              </p>
+              <blockquote class="pull-quote reveal">
+                "Information Overload ist nicht das Problem. Das Problem ist fehlende Struktur. Wer Agenten einsetzt, ohne Grenzen zu ziehen, baut keinen Vorteil auf. Er baut Tokenverschwendung, Scope Creep und falsche Entscheidungen."
+              </blockquote>
+              <p class="body-copy reveal">
+                Das ist nicht mehr Arbeitsteilung. Das ist ein Kontrollverlust, den du dir selbst baust. 11x setzt den Agenten in eine definierte Rolle — und lässt dich im Regen stehen. Kein Interface-Design, kein Harness, kein Feedback-Loop. Manus? Kein Intake, kein Setup, keine Guardrails. Devin behandelt den Agenten als Teammitglied, nicht als Werkzeug. Replit nennt es Vibe Coding: Du gibst den Vibe vor, die KI trägt die kognitive Last. Was übrig bleibt? Du. Mit dem Chaos. <strong>Das ist nicht 11x. Das ist nicht Devin. Das ist HAI.</strong>
+              </p>
+            </div>
+            <aside class="stat-panel reveal" aria-label="Key statistics">
+              <h3>Das Chaos in Zahlen</h3>
+              <div class="stat-list">
+                <div class="stat-item">
+                  <strong>5</strong>
+                  <span>Agenten parallel</span>
+                </div>
+                <div class="stat-item">
+                  <strong>3</strong>
+                  <span>Widersprüchliche Outputs</span>
+                </div>
+                <div class="stat-item">
+                  <strong>2h</strong>
+                  <span>Schadenbegrenzung statt Vorankommen</span>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="section method-section" aria-labelledby="method-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <p class="eyebrow reveal">Die Methode</p>
+            <h2 class="reveal" id="method-title">4 Stunden, die deinen Workflow retten</h2>
+          </div>
+          <div class="method-strip">
+            <article class="method-step reveal">
+              <span class="step-num">Schritt 01</span>
+              <h3>Sichtbar machen</h3>
+              <p>Wir listen auf, was gerade läuft. Jeder Agent-Thread wird zu einer inspectierbaren Arbeitseinheit. Kein Blackbox-Hoffen mehr.</p>
+            </article>
+            <article class="method-step reveal">
+              <span class="step-num">Schritt 02</span>
+              <h3>Reibung finden</h3>
+              <p>Wo bricht es wirklich? Wo glaubst du der Done-Meldung? Wo sind die Aufgaben zu schwammig? Wir markieren die drei größten Zeitfresser.</p>
+            </article>
+            <article class="method-step reveal">
+              <span class="step-num">Schritt 03</span>
+              <h3>Grenzen setzen</h3>
+              <p>Was darf der Agent allein? Was braucht ein menschliches Gate? Klare Scope-Definition statt endloser Delegation.</p>
+            </article>
+            <article class="method-step reveal">
+              <span class="step-num">Schritt 04</span>
+              <h3>Verifizieren & Planen</h3>
+              <p>Jeder Output braucht ein prüfbares Artefakt. Du bekommst ein Owner-Packet mit konkreten Änderungen, Gates und einem Next Action Packet.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section workflow-section" aria-labelledby="workflow-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <p class="eyebrow reveal">Der Ablauf</p>
+            <h2 class="reveal" id="workflow-title">So funktioniert kontrollierte Agenten-Arbeit</h2>
+          </div>
+          <div class="workflow-diagram reveal">
+            <!-- Desktop: horizontal flow -->
+            <svg class="workflow-svg-desktop" viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HAI Workflow: Intake, Agent, Gate, Verifikation, Next Action mit Feedback-Loop">
+              <defs>
+                <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" fill="rgba(247,241,223,0.31)"/>
+                </marker>
+                <marker id="arrow-copper" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#ff9f5f"/>
+                </marker>
+              </defs>
+
+              <!-- Nodes -->
+              <!-- 1. Intake -->
+              <rect x="40" y="50" width="140" height="100" rx="4" fill="rgba(247,241,223,0.065)" stroke="rgba(247,241,223,0.31)" stroke-width="1"/>
+              <path d="M 100,100 L 125,110 L 100,120 Z" fill="none" stroke="#ff9f5f" stroke-width="2" stroke-linejoin="round"/>
+              <text x="110" y="175" text-anchor="middle" fill="#f7f1df" font-family="Georgia, serif" font-size="16" font-weight="500">Intake</text>
+              <text x="110" y="195" text-anchor="middle" fill="#776f60" font-family="IBM Plex Mono, monospace" font-size="10" letter-spacing="0.06em">WUNSCH REIN</text>
+
+              <!-- 2. Agent -->
+              <rect x="210" y="50" width="140" height="100" rx="4" fill="rgba(247,241,223,0.065)" stroke="rgba(247,241,223,0.31)" stroke-width="1"/>
+              <circle cx="280" cy="105" r="14" fill="none" stroke="#a7ff4f" stroke-width="2"/>
+              <circle cx="280" cy="105" r="5" fill="#a7ff4f"/>
+              <text x="280" y="175" text-anchor="middle" fill="#f7f1df" font-family="Georgia, serif" font-size="16" font-weight="500">Agent</text>
+              <text x="280" y="195" text-anchor="middle" fill="#776f60" font-family="IBM Plex Mono, monospace" font-size="10" letter-spacing="0.06em">BEGRENZT ARBEITEN</text>
+
+              <!-- 3. Gate -->
+              <rect x="380" y="50" width="140" height="100" rx="4" fill="rgba(247,241,223,0.065)" stroke="rgba(247,241,223,0.31)" stroke-width="1"/>
+              <path d="M 450,96 L 464,110 L 450,124 L 436,110 Z" fill="none" stroke="#83dbc8" stroke-width="2" stroke-linejoin="round"/>
+              <text x="450" y="175" text-anchor="middle" fill="#f7f1df" font-family="Georgia, serif" font-size="16" font-weight="500">Gate</text>
+              <text x="450" y="195" text-anchor="middle" fill="#776f60" font-family="IBM Plex Mono, monospace" font-size="10" letter-spacing="0.06em">MENSCH STOPPT</text>
+
+              <!-- 4. Verify -->
+              <rect x="550" y="50" width="140" height="100" rx="4" fill="rgba(247,241,223,0.065)" stroke="rgba(247,241,223,0.31)" stroke-width="1"/>
+              <path d="M 608,108 L 616,116 L 632,100" fill="none" stroke="#a7ff4f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="620" y="175" text-anchor="middle" fill="#f7f1df" font-family="Georgia, serif" font-size="16" font-weight="500">Verify</text>
+              <text x="620" y="195" text-anchor="middle" fill="#776f60" font-family="IBM Plex Mono, monospace" font-size="10" letter-spacing="0.06em">ARTEFAKT PRÜFEN</text>
+
+              <!-- 5. Next Action -->
+              <rect x="720" y="50" width="140" height="100" rx="4" fill="rgba(247,241,223,0.065)" stroke="rgba(247,241,223,0.31)" stroke-width="1"/>
+              <path d="M 775,110 L 800,110 M 792,102 L 800,110 L 792,118" fill="none" stroke="#a7ff4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="790" y="175" text-anchor="middle" fill="#f7f1df" font-family="Georgia, serif" font-size="16" font-weight="500">Next Action</text>
+              <text x="790" y="195" text-anchor="middle" fill="#776f60" font-family="IBM Plex Mono, monospace" font-size="10" letter-spacing="0.06em">ENTSCHEIDUNG</text>
+
+              <!-- Forward connections -->
+              <line x1="180" y1="100" x2="210" y2="100" stroke="rgba(247,241,223,0.31)" stroke-width="1.5" marker-end="url(#arrow)"/>
+              <line x1="350" y1="100" x2="380" y2="100" stroke="rgba(247,241,223,0.31)" stroke-width="1.5" marker-end="url(#arrow)"/>
+              <line x1="520" y1="100" x2="550" y2="100" stroke="rgba(247,241,223,0.31)" stroke-width="1.5" marker-end="url(#arrow)"/>
+              <line x1="690" y1="100" x2="720" y2="100" stroke="rgba(247,241,223,0.31)" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+              <!-- Feedback loop -->
+              <path d="M 620,150 Q 620,230 280,230 Q 280,150 280,150" fill="none" stroke="#ff9f5f" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-copper)"/>
+              <text x="450" y="245" text-anchor="middle" fill="#ff9f5f" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="0.06em">NICHT OK → KORRIGIEREN</text>
+            </svg>
+
+            <!-- Mobile: vertical flow -->
+            <svg class="workflow-svg-mobile" viewBox="0 0 320 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HAI Workflow: Intake, Agent, Gate, Verifikation, Next Action mit Feedback-Loop">
+              <defs>
+                <marker id="arrow-m" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" fill="rgba(247,241,223,0.31)"/>
+                </marker>
+                <marker id="arrow-copper-m" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#ff9f5f"/>
+                </marker>
+              </defs>
+
+              <!-- 1. Intake -->
+              <rect x="90" y="30" width="140" height="100" rx="4" fill="rgba(247,241,223,0.065)" stroke="rgba(247,241,223,0.31)" stroke-width="1"/>
+              <path d="M 148,70 L 173,80 L 148,90 Z" fill="none" stroke="#ff9f5f" stroke-width="2" stroke-linejoin="round"/>
+              <text x="160" y="155" text-anchor="middle" fill="#f7f1df" font-family="Georgia, serif" font-size="16" font-weight="500">Intake</text>
+              <text x="160" y="175" text-anchor="middle" fill="#776f60" font-family="IBM Plex Mono, monospace" font-size="10" letter-spacing="0.06em">WUNSCH REIN</text>
+
+              <!-- 2. Agent -->
+              <rect x="90" y="170" width="140" height="100" rx="4" fill="rgba(247,241,223,0.065)" stroke="rgba(247,241,223,0.31)" stroke-width="1"/>
+              <circle cx="160" cy="220" r="14" fill="none" stroke="#a7ff4f" stroke-width="2"/>
+              <circle cx="160" cy="220" r="5" fill="#a7ff4f"/>
+              <text x="160" y="295" text-anchor="middle" fill="#f7f1df" font-family="Georgia, serif" font-size="16" font-weight="500">Agent</text>
+              <text x="160" y="315" text-anchor="middle" fill="#776f60" font-family="IBM Plex Mono, monospace" font-size="10" letter-spacing="0.06em">BEGRENZT ARBEITEN</text>
+
+              <!-- 3. Gate -->
+              <rect x="90" y="310" width="140" height="100" rx="4" fill="rgba(247,241,223,0.065)" stroke="rgba(247,241,223,0.31)" stroke-width="1"/>
+              <path d="M 160,346 L 174,360 L 160,374 L 146,360 Z" fill="none" stroke="#83dbc8" stroke-width="2" stroke-linejoin="round"/>
+              <text x="160" y="435" text-anchor="middle" fill="#f7f1df" font-family="Georgia, serif" font-size="16" font-weight="500">Gate</text>
+              <text x="160" y="455" text-anchor="middle" fill="#776f60" font-family="IBM Plex Mono, monospace" font-size="10" letter-spacing="0.06em">MENSCH STOPPT</text>
+
+              <!-- 4. Verify -->
+              <rect x="90" y="450" width="140" height="100" rx="4" fill="rgba(247,241,223,0.065)" stroke="rgba(247,241,223,0.31)" stroke-width="1"/>
+              <path d="M 148,488 L 156,496 L 172,480" fill="none" stroke="#a7ff4f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="160" y="575" text-anchor="middle" fill="#f7f1df" font-family="Georgia, serif" font-size="16" font-weight="500">Verify</text>
+              <text x="160" y="595" text-anchor="middle" fill="#776f60" font-family="IBM Plex Mono, monospace" font-size="10" letter-spacing="0.06em">ARTEFAKT PRÜFEN</text>
+
+              <!-- 5. Next Action -->
+              <rect x="90" y="590" width="140" height="100" rx="4" fill="rgba(247,241,223,0.065)" stroke="rgba(247,241,223,0.31)" stroke-width="1"/>
+              <path d="M 145,640 L 175,640 M 167,632 L 175,640 L 167,648" fill="none" stroke="#a7ff4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="160" y="715" text-anchor="middle" fill="#f7f1df" font-family="Georgia, serif" font-size="16" font-weight="500">Next Action</text>
+              <text x="160" y="735" text-anchor="middle" fill="#776f60" font-family="IBM Plex Mono, monospace" font-size="10" letter-spacing="0.06em">ENTSCHEIDUNG</text>
+
+              <!-- Forward connections -->
+              <line x1="160" y1="130" x2="160" y2="170" stroke="rgba(247,241,223,0.31)" stroke-width="1.5" marker-end="url(#arrow-m)"/>
+              <line x1="160" y1="270" x2="160" y2="310" stroke="rgba(247,241,223,0.31)" stroke-width="1.5" marker-end="url(#arrow-m)"/>
+              <line x1="160" y1="410" x2="160" y2="450" stroke="rgba(247,241,223,0.31)" stroke-width="1.5" marker-end="url(#arrow-m)"/>
+              <line x1="160" y1="550" x2="160" y2="590" stroke="rgba(247,241,223,0.31)" stroke-width="1.5" marker-end="url(#arrow-m)"/>
+
+              <!-- Feedback loop (right side) -->
+              <path d="M 230,690 Q 270,690 270,450 Q 270,220 230,220" fill="none" stroke="#ff9f5f" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-copper-m)"/>
+              <text x="265" y="460" text-anchor="end" fill="#ff9f5f" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="0.06em">NICHT OK → KORRIGIEREN</text>
+            </svg>
+          </div>
+          <p class="section-copy reveal" style="text-align:center; max-width:600px; margin-left:auto; margin-right:auto; margin-top:22px;">
+            Nicht autonom. Nicht magisch. Ein wiederholbarer Kreislauf mit einem Menschen an den entscheidenden Punkten.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="proof-title">
+        <div class="section-inner">
+          <div class="section-head">
+            <p class="eyebrow reveal">Keine Theorie. Kein Marketing. Fakten.</p>
+            <h2 class="reveal" id="proof-title">786 Sessions. Ein Überlebender.</h2>
+          </div>
+          <div class="proof-grid">
+            <article class="proof-card reveal">
+              <span>Agent Sessions</span>
+              <strong>786 Sessions</strong>
+              <p>2.573 Stunden Agent-Arbeit analysiert, strukturiert und kontrolliert. Nicht simuliert. Nicht theoretisch. Aus echter Arbeit.</p>
+            </article>
+            <article class="proof-card reveal">
+              <span>Eval Accuracy</span>
+              <strong>97,3%</strong>
+              <p>Sidecar-NG Benchmarks. Intern. Hart. Keine schönen Zahlen für Pitchdecks. Zahlen, die halten.</p>
+            </article>
+            <article class="proof-card reveal">
+              <span>Benchmarks</span>
+              <strong>166 Runs</strong>
+              <p>AgentArena Benchmarks unter kontrollierten Bedingungen. Weil mehr Output nicht automatisch mehr Fortschritt bedeutet.</p>
+            </article>
+            <article class="proof-card reveal">
+              <span>Kontrollregeln</span>
+              <strong>44 Gates</strong>
+              <p>Tripwire Map Kontrollregeln. 44 Stop-Punkte, die verhindern, dass ein Agent ohne dich entscheidet. Größer ist nicht automatisch echter.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section samuel-section" aria-labelledby="samuel-title">
+        <div class="section-inner">
+          <div class="split">
+            <div>
+              <p class="eyebrow reveal">Kein Guru. Ein Überlebender.</p>
+              <h2 class="reveal" id="samuel-title">Ich war genau da, wo du jetzt stehst.</h2>
+              <p class="body-copy reveal">
+                Ich habe den Agenten-Dschungel selbst durchquert. Von der ersten unstrukturierten Session bis zu einem orchestrierten System mit Gates, Verifikation und klaren menschlichen Entscheidungspunkten. Ich kenne den Moment, in dem man der "Done"-Meldung glaubt und später merkt, dass alles falsch ist.
+              </p>
+              <p class="body-copy reveal">
+                Ich begleite dich nicht als Guru von oben. Ich schaue mit echter Agentenpraxis auf deinen Workflow und baue mit dir eine klarere, begrenztere und überprüfbarere Arbeitsweise. Die Maschine ist nicht der Ursprung. Die Maschine ist nur das Objekt, das ein Mensch bedienen können muss.
+              </p>
+            </div>
+            <aside class="authority-panel reveal" aria-label="About Samuel">
+              <span>Philosophie</span>
+              <p>Nicht ein Guru. Ein Affe, der weiß, welche Steine wirklich funktionieren.</p>
+              <a class="button primary" href="mailto:samuel@human-agent-interface.com?subject=HAI%20Kontakt%20Affe">Mit Samuel sprechen</a>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-section" id="cta" aria-labelledby="cta-title">
+        <div class="section-inner">
+          <p class="eyebrow reveal">Keine Bitte. Eine Aufforderung.</p>
+          <h2 class="reveal" id="cta-title">In 4 Stunden wissen wir, ob du wirklich kontrollierst — oder nur glaubst zu kontrollieren.</h2>
+          <p class="reveal">Kein Verkaufsgespräch. Ein Arbeitstermin. Wir nehmen deinen Ist-Zustand, finden die drei größten Reibungspunkte und packen dir ein Owner-Packet mit konkreten Änderungen, Human Gates und einer Verifikationsregel. Danach: 7 Tage Follow-up, ob es hält. Pilotpreis: 500 €.</p>
+          <form class="hai-form reveal" id="cta-form" onsubmit="handleCtaSubmit(event)">
+            <div class="hai-form-group">
+              <label class="hai-form-label" for="cta-name">Name</label>
+              <input class="hai-form-input" type="text" id="cta-name" name="name" required placeholder="Dein Name">
+            </div>
+            <div class="hai-form-group">
+              <label class="hai-form-label" for="cta-email">E-Mail</label>
+              <input class="hai-form-input" type="email" id="cta-email" name="email" required placeholder="deine@email.de">
+            </div>
+            <div class="hai-form-group">
+              <label class="hai-form-label" for="cta-problem">Was ist dein größtes Agenten-Problem?</label>
+              <textarea class="hai-form-textarea" id="cta-problem" name="problem" rows="3" placeholder="Z.B.: Ich habe 5 Agenten parallel laufen und verliere den Überblick..."></textarea>
+            </div>
+            <button class="button primary" type="submit">Audit anfragen</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <span>Human Agent Interface &copy; 2026</span>
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a href="../what_it_is/">Method</a>
+          <a href="../proof/">Proof</a>
+          <a href="../samuel/">Samuel</a>
+          <a href="../product/">Offer</a>
+        </nav>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+/**
+ * Particle Animation: Chaos → Order
+ * A full-viewport canvas particle system that morphs from chaotic brownian motion
+ * to an ordered grid formation.
+ */
+
+(function () {
+  'use strict';
+
+  // --- Configuration ---
+  const CONFIG = {
+    PARTICLE_COUNT: 250,
+    MIN_SIZE: 1.5,
+    MAX_SIZE: 3,
+    COLOR_CHAOS: [255, 102, 92],   // #ff665c
+    COLOR_ORDER: [167, 255, 79],   // #a7ff4f
+    MOUSE_RADIUS: 120,
+    MOUSE_REPULSION_STRENGTH: 300,
+    MAX_CONNECTIONS: 5,
+    CHAOS_CONNECTION_DIST: 100,
+    ORDER_CONNECTION_DIST: 60,
+    CHAOS_JITTER: 2,
+    ORDER_DRIFT: 0.5,
+    VELOCITY_EASE: 0.08,
+    GRID_COLS: 16,
+    GRID_ROWS: 16,
+  };
+
+  // --- State ---
+  let canvas = null;
+  let ctx = null;
+  let particles = [];
+  let morphFactor = 0.0;
+  let targetMorphFactor = 0.0;
+  let animationId = null;
+  let isVisible = false;
+  let observer = null;
+  let mouse = { x: -9999, y: -9999 };
+  let width = 0;
+  let height = 0;
+  let dpr = 1;
+
+  // --- Utilities ---
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
+  const random = (min, max) => Math.random() * (max - min) + min;
+
+  /**
+   * Linearly interpolate between two RGB colors.
+   */
+  function lerpColor(c1, c2, t) {
+    const r = Math.round(lerp(c1[0], c2[0], t));
+    const g = Math.round(lerp(c1[1], c2[1], t));
+    const b = Math.round(lerp(c1[2], c2[2], t));
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  /**
+   * Get distance between two points.
+   */
+  function dist(x1, y1, x2, y2) {
+    const dx = x1 - x2;
+    const dy = y1 - y2;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  // --- Particle Class ---
+  class Particle {
+    constructor() {
+      this.size = random(CONFIG.MIN_SIZE, CONFIG.MAX_SIZE);
+      this.initPositions();
+      this.vx = 0;
+      this.vy = 0;
+    }
+
+    /**
+     * Initialize chaos and order targets, and current position.
+     */
+    initPositions() {
+      // Current position starts randomly (chaos)
+      this.x = random(0, width);
+      this.y = random(0, height);
+
+      // Chaos target: random position on canvas
+      this.chaosX = random(0, width);
+      this.chaosY = random(0, height);
+
+      // Order target: position on a 16x16 grid
+      const col = Math.floor(random(0, CONFIG.GRID_COLS));
+      const row = Math.floor(random(0, CONFIG.GRID_ROWS));
+      const cellW = width / CONFIG.GRID_COLS;
+      const cellH = height / CONFIG.GRID_ROWS;
+      this.orderX = col * cellW + cellW / 2;
+      this.orderY = row * cellH + cellH / 2;
+    }
+
+    /**
+     * Update particle position based on morph factor and mouse interaction.
+     */
+    update() {
+      // 1. Calculate target position based on morph factor
+      const targetX = lerp(this.chaosX, this.orderX, morphFactor);
+      const targetY = lerp(this.chaosY, this.orderY, morphFactor);
+
+      // 2. Apply behavior based on mode
+      let desiredVx = 0;
+      let desiredVy = 0;
+
+      if (morphFactor < 0.5) {
+        // Chaos mode: Brownian motion / jitter
+        desiredVx = (Math.random() - 0.5) * CONFIG.CHAOS_JITTER * 2;
+        desiredVy = (Math.random() - 0.5) * CONFIG.CHAOS_JITTER * 2;
+
+        // Slowly drift towards chaos target
+        desiredVx += (this.chaosX - this.x) * 0.005;
+        desiredVy += (this.chaosY - this.y) * 0.005;
+      } else {
+        // Order mode: Drift towards grid position
+        desiredVx = (targetX - this.x) * 0.02;
+        desiredVy = (targetY - this.y) * 0.02;
+
+        // Add slight drift/noise even when ordered
+        desiredVx += (Math.random() - 0.5) * CONFIG.ORDER_DRIFT;
+        desiredVy += (Math.random() - 0.5) * CONFIG.ORDER_DRIFT;
+      }
+
+      // 3. Mouse repulsion
+      const d = dist(this.x, this.y, mouse.x, mouse.y);
+      if (d < CONFIG.MOUSE_RADIUS && d > 0) {
+        const force = (CONFIG.MOUSE_RADIUS - d) / CONFIG.MOUSE_RADIUS;
+        const angle = Math.atan2(this.y - mouse.y, this.x - mouse.x);
+        const strength = force * CONFIG.MOUSE_REPULSION_STRENGTH * 0.1;
+        desiredVx += Math.cos(angle) * strength;
+        desiredVy += Math.sin(angle) * strength;
+      }
+
+      // 4. Smooth velocity easing
+      this.vx = lerp(this.vx, desiredVx, CONFIG.VELOCITY_EASE);
+      this.vy = lerp(this.vy, desiredVy, CONFIG.VELOCITY_EASE);
+
+      // 5. Update position
+      this.x += this.vx;
+      this.y += this.vy;
+
+      // 6. Boundary wrapping (optional, keeps particles on screen in chaos)
+      if (morphFactor < 0.5) {
+        if (this.x < 0) this.x = width;
+        if (this.x > width) this.x = 0;
+        if (this.y < 0) this.y = height;
+        if (this.y > height) this.y = 0;
+      }
+    }
+
+    /**
+     * Draw the particle with a subtle glow.
+     */
+    draw(context) {
+      const color = lerpColor(CONFIG.COLOR_CHAOS, CONFIG.COLOR_ORDER, morphFactor);
+
+      context.beginPath();
+      context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      context.fillStyle = color;
+      // Subtle glow
+      context.shadowBlur = this.size * 2;
+      context.shadowColor = color;
+      context.fill();
+      context.shadowBlur = 0; // Reset to avoid affecting lines
+    }
+  }
+
+  // --- Core Functions ---
+
+  function initParticles() {
+    particles = [];
+    for (let i = 0; i < CONFIG.PARTICLE_COUNT; i++) {
+      particles.push(new Particle());
+    }
+  }
+
+  function handleResize() {
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    width = rect.width;
+    height = rect.height;
+    dpr = window.devicePixelRatio || 1;
+
+    // Set actual canvas size for sharp rendering on retina
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+
+    // Scale context to match CSS size
+    ctx.scale(dpr, dpr);
+
+    // Update particle order targets on resize
+    particles.forEach(p => {
+      const col = Math.floor(random(0, CONFIG.GRID_COLS)); // Re-randomize grid slot on resize
+      const row = Math.floor(random(0, CONFIG.GRID_ROWS));
+      const cellW = width / CONFIG.GRID_COLS;
+      const cellH = height / CONFIG.GRID_ROWS;
+      p.orderX = col * cellW + cellW / 2;
+      p.orderY = row * cellH + cellH / 2;
+      // Also update chaos bounds
+      p.chaosX = clamp(p.chaosX, 0, width);
+      p.chaosY = clamp(p.chaosY, 0, height);
+      p.x = clamp(p.x, 0, width);
+      p.y = clamp(p.y, 0, height);
+    });
+  }
+
+  function drawConnections() {
+    // Determine connection style based on morph factor
+    const isOrder = morphFactor >= 0.5;
+    const maxDist = isOrder ? CONFIG.ORDER_CONNECTION_DIST : CONFIG.CHAOS_CONNECTION_DIST;
+    const lineColor = isOrder ? 'rgba(167, 255, 79,' : 'rgba(255, 102, 92,';
+
+    ctx.lineWidth = 1;
+
+    for (let i = 0; i < particles.length; i++) {
+      let connections = 0;
+      const p1 = particles[i];
+
+      for (let j = i + 1; j < particles.length; j++) {
+        if (connections >= CONFIG.MAX_CONNECTIONS) break;
+
+        const p2 = particles[j];
+        const d = dist(p1.x, p1.y, p2.x, p2.y);
+
+        if (d < maxDist) {
+          const opacity = 1 - (d / maxDist);
+          // Order mode has lower opacity lines
+          const finalOpacity = isOrder ? opacity * 0.3 : opacity * 0.6;
+
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = `${lineColor} ${finalOpacity})`;
+          ctx.stroke();
+          connections++;
+        }
+      }
+    }
+  }
+
+  function animate() {
+    if (!isVisible) return;
+
+    // Smoothly interpolate global morph factor
+    morphFactor = lerp(morphFactor, targetMorphFactor, 0.05);
+
+    // Clear canvas (transparent background)
+    ctx.clearRect(0, 0, width, height);
+
+    // Update and draw connections first (behind particles)
+    drawConnections();
+
+    // Update and draw particles
+    particles.forEach(p => {
+      p.update();
+      p.draw(ctx);
+    });
+
+    animationId = requestAnimationFrame(animate);
+  }
+
+  function onMouseMove(e) {
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+  }
+
+  function onMouseLeave() {
+    mouse.x = -9999;
+    mouse.y = -9999;
+  }
+
+  // --- Public API ---
+  window.ParticleField = {
+    /**
+     * Initialize the particle field on a canvas element.
+     * @param {HTMLCanvasElement} canvasElement
+     */
+    init(canvasElement) {
+      if (!canvasElement || !(canvasElement instanceof HTMLCanvasElement)) {
+        console.error('ParticleField.init requires a valid <canvas> element.');
+        return;
+      }
+
+      // Cleanup if already initialized
+      this.destroy();
+
+      canvas = canvasElement;
+      ctx = canvas.getContext('2d');
+
+      // Setup initial size
+      handleResize();
+      initParticles();
+
+      // Event listeners
+      window.addEventListener('resize', handleResize);
+      canvas.addEventListener('mousemove', onMouseMove);
+      canvas.addEventListener('mouseleave', onMouseLeave);
+
+      // IntersectionObserver to pause when off-screen
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          isVisible = entry.isIntersecting;
+          if (isVisible && !animationId) {
+            animate();
+          } else if (!isVisible && animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+          }
+        });
+      }, { threshold: 0 });
+
+      observer.observe(canvas);
+
+      // Start loop if visible immediately
+      if (isVisible) {
+        animate();
+      }
+    },
+
+    /**
+     * Set the morph factor (0.0 = full chaos, 1.0 = full order).
+     * @param {number} value
+     */
+    setMorphFactor(value) {
+      targetMorphFactor = clamp(value, 0.0, 1.0);
+    },
+
+    /**
+     * Manually trigger a resize recalculation.
+     */
+    resize() {
+      handleResize();
+    },
+
+    /**
+     * Destroy the particle field and clean up resources.
+     */
+    destroy() {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+      if (observer) {
+        if (canvas) observer.unobserve(canvas);
+        observer.disconnect();
+        observer = null;
+      }
+      if (canvas) {
+        canvas.removeEventListener('mousemove', onMouseMove);
+        canvas.removeEventListener('mouseleave', onMouseLeave);
+      }
+      window.removeEventListener('resize', handleResize);
+
+      canvas = null;
+      ctx = null;
+      particles = [];
+      isVisible = false;
+      morphFactor = 0.0;
+      targetMorphFactor = 0.0;
+    }
+  };
+
+})();
+
+    function handleCtaSubmit(event) {
+      event.preventDefault();
+      const name = document.getElementById('cta-name').value.trim();
+      const email = document.getElementById('cta-email').value.trim();
+      const problem = document.getElementById('cta-problem').value.trim();
+
+      const subject = 'HAI Audit Anfrage von ' + encodeURIComponent(name);
+      const body = 'Name: ' + name + '\nE-Mail: ' + email + '\n\nAgenten-Problem:\n' + problem;
+      const encodedBody = encodeURIComponent(body);
+
+      window.location.href = 'mailto:samuel@human-agent-interface.com?subject=' + subject + '&body=' + encodedBody;
+    }
+
+    (function() {
+      // Initialize particle field
+      const canvas = document.getElementById('particleCanvas');
+      if (canvas && window.ParticleField) {
+        window.ParticleField.init(canvas);
+
+        // Scroll-based morph: 0 at top, 1 after 60vh scroll
+        let ticking = false;
+        function updateMorph() {
+          const scrollY = window.scrollY || window.pageYOffset;
+          const vh = window.innerHeight;
+          const maxScroll = vh * 0.6;
+          const factor = Math.min(Math.max(scrollY / maxScroll, 0), 1);
+          window.ParticleField.setMorphFactor(factor);
+          ticking = false;
+        }
+        window.addEventListener('scroll', function() {
+          if (!ticking) {
+            requestAnimationFrame(updateMorph);
+            ticking = true;
+          }
+        }, { passive: true });
+        updateMorph();
+      }
+
+      // Scroll reveal with IntersectionObserver
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!prefersReduced) {
+        const observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry, index) {
+            if (entry.isIntersecting) {
+              // Stagger siblings
+              const siblings = Array.from(entry.target.parentElement.children);
+              const idx = siblings.indexOf(entry.target);
+              setTimeout(function() {
+                entry.target.classList.add('is-visible');
+              }, idx * 100);
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(function(el) {
+          observer.observe(el);
+        });
+      } else {
+        document.querySelectorAll('.reveal').forEach(function(el) {
+          el.classList.add('is-visible');
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

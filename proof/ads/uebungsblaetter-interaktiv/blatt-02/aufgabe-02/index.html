@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 02 · Aufgabe 02 · intvec</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <script src="task.js" defer></script>
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Seitennavigation">
+    <a class="brand" href="../../index.html">ADS · Übungsblätter</a>
+    <a class="back" href="../index.html">← Blatt 02</a>
+  </nav>
+
+  <header class="task-head">
+    <div><span class="kicker">Freispeicher · Besitz · Invarianten</span><h1>Ein intvec wächst, ohne Werte zu verlieren</h1></div>
+    <div class="counter">Aufgabe 02</div>
+  </header>
+
+  <section class="mission">
+    <div class="brief">
+      <h2>Originalauftrag, kompakt</h2>
+      <p>Verwalte <code>capacity</code>, <code>size</code> und <code>arr</code> selbst. Bei vollem Array verdoppelt <code>ivec_pushback</code> die Kapazität und erhält alle alten Werte.</p>
+      <p class="tiny">Abschluss: die Verträge von <code>init</code>, <code>clear</code>, <code>pushback</code>, <code>at</code> und <code>sum</code> im C++20-Lab erfüllen.</p>
+    </div>
+
+    <div class="step first-action">
+      <h2>1 · Werkbank: pushback(17)</h2>
+      <div class="meters" aria-label="Zustand des intvec">
+        <span>size <strong id="sizeValue">2</strong></span>
+        <span>capacity <strong id="capacityValue">2</strong></span>
+        <span>arr <strong id="pointerValue">A</strong></span>
+      </div>
+      <div id="memory" class="memory" aria-label="Speicherzellen"></div>
+      <p id="pending">anzuhängen: <strong>17</strong></p>
+      <div class="action-row">
+        <button class="action primary" type="button" data-op="allocate">1 · new int[4]</button>
+        <button class="action" type="button" data-op="copy">2 · alte Werte kopieren</button>
+        <button class="action" type="button" data-op="release">3 · delete[] alt</button>
+        <button class="action" type="button" data-op="switch">4 · Attribute umstellen</button>
+        <button class="action" type="button" data-op="append">5 · 17 anhängen</button>
+      </div>
+      <button id="reset" class="text-button" type="button">Werkbank zurücksetzen</button>
+      <p id="workFeedback" class="feedback" aria-live="polite">Der alte Block A enthält 4 und 9. Was muss vor dem Umschalten passieren?</p>
+    </div>
+  </section>
+
+  <section class="step help-zone">
+    <h2>2 · Hilfe, gestuft</h2>
+    <div class="actions">
+      <button class="action" type="button" data-hint="hint1">Hinweis 1</button>
+      <button class="action" type="button" data-hint="hint2">Hinweis 2</button>
+    </div>
+    <p id="hint1" class="hint" hidden>Während des Wachstums existieren kurz zwei Blöcke. Der alte Block bleibt die Quelle, bis seine <code>size</code> benutzten Werte kopiert sind.</p>
+    <p id="hint2" class="hint" hidden>Reihenfolge: neuen Block mit <code>2 * capacity</code> anlegen → Indizes <code>0 .. size-1</code> kopieren → alten Block mit <code>delete[]</code> freigeben → <code>arr</code>/<code>capacity</code> umstellen → Element an <code>arr[size]</code>, dann <code>size</code> erhöhen.</p>
+  </section>
+
+  <section id="gate" class="step solution-gate">
+    <h2>3 · Speicherfehler erkennen</h2>
+    <p>Welche Aussage muss nach <code>ivec_clear(&amp;v)</code> gelten?</p>
+    <div class="choice-grid">
+      <button type="button" data-choice="dangling"><code>delete[] v.arr</code>, Attribute bleiben unverändert</button>
+      <button type="button" data-choice="scalar"><code>delete v.arr</code>, dann alles auf 0</button>
+      <button type="button" data-choice="clean"><code>delete[]</code>, dann <code>arr=nullptr</code>, <code>size=capacity=0</code></button>
+    </div>
+    <p id="gateFeedback" class="feedback" aria-live="polite" hidden></p>
+  </section>
+
+  <section id="contracts" class="step contracts" hidden>
+    <h2>4 · Funktionsverträge</h2>
+    <dl>
+      <div><dt><code>ivec_init(v, cap)</code></dt><dd>frischer Block für <code>cap</code> ints; <code>size == 0</code></dd></div>
+      <div><dt><code>ivec_clear(v)</code></dt><dd>Arrayfreigabe mit <code>delete[]</code>; leerer, gefahrloser Zustand</dd></div>
+      <div><dt><code>ivec_pushback(v, x)</code></dt><dd>hängt an; verdoppelt nur wenn voll; erhält alte Werte</dd></div>
+      <div><dt><code>ivec_at(v, i)</code></dt><dd>liefert Referenz für <code>i &lt; size</code>, sonst Prozessabbruch</dd></div>
+      <div><dt><code>ivec_sum(v)</code></dt><dd>summiert genau die <code>size</code> benutzten Werte</dd></div>
+    </dl>
+  </section>
+
+  <section id="labStep" class="step lab" hidden>
+    <h2>5 · Echter Lab-Abschluss</h2>
+    <p>Ersetze die TODOs in <code>lab/intvec.cpp</code>. Die Starterdatei enthält bewusst keine Komplettlösung.</p>
+    <pre><code>cd uebungsblaetter-interaktiv/blatt-02/aufgabe-02/lab
+./run-tests.sh</code></pre>
+    <p>Der dependency-freie Runner überträgt die offiziellen Prüfungen für Initialisierung, Freigabe, Wachstum bis Kapazität 2048, Zugriff und Summen. Zusätzlich prüft ein separater Prozess, dass ein ungültiger <code>ivec_at</code>-Zugriff abbricht.</p>
+  </section>
+
+  <section class="step completion">
+    <h2>Selbsteinschätzung</h2>
+    <p>Kannst du Wachstum, Besitzwechsel und alle fünf Verträge ohne dangling pointer erklären?</p>
+    <div class="state-row">
+      <button class="state-btn" type="button" data-state="sitzt">Sitzt</button>
+      <button class="state-btn" type="button" data-state="wackelt">Wackelt</button>
+    </div>
+    <p id="stateFeedback" class="feedback" aria-live="polite" hidden></p>
+  </section>
+
+  <nav class="nav-bottom" aria-label="Aufgabennavigation">
+    <a href="../aufgabe-01/index.html">← Aufgabe 01</a>
+    <a href="/proof/ads/source-materials-not-included.html">Original-PDF</a>
+    <a href="../aufgabe-03/index.html">Aufgabe 03 →</a>
+  </nav>
+</main>
+</body>
+</html>

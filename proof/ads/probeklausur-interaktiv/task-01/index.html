@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aufgabe 01 · SelectionSort unter der Lupe</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="task.css">
+  <style>.state-btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none}</style>
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Aufgabennavigation">
+      <a class="back" href="../index.html">← Übersicht</a>
+      <span class="brand">ADS · Laufzeitwerkstatt</span>
+      <a class="source-link" href="/proof/ads/source-materials-not-included.html">Original-PDF ↗</a>
+    </nav>
+
+    <header class="task-head">
+      <div>
+        <span class="kicker">MISSION 01 · 5 MINUTEN</span>
+        <h1>Finde den Takt von SelectionSort.</h1>
+      </div>
+      <div class="counter" aria-label="Aufgabe 1 von 17">01 / 17</div>
+    </header>
+
+    <section class="mission" aria-labelledby="mission-title">
+      <div class="brief">
+        <h2 id="mission-title">Dein Auftrag</h2>
+        <p>Bestimme die Laufzeit im schlechtesten Fall und in O-Notation. Starte nicht mit Formeln: Zeige zuerst auf die Arbeit, die sich oft wiederholt.</p>
+        <p class="translation"><strong>C++ → Alltag:</strong> Für jede Position <code>i</code> durchsucht <code>j</code> den gesamten noch unsortierten Rest nach dem kleinsten Wert.</p>
+      </div>
+      <pre class="code" aria-label="Originalkern des SelectionSort-Codes"><code>for (int i = 0; i &lt; n; ++i) {
+  int minidx = i;
+  for (int j = i + 1; j &lt; n; ++j) {
+    if (a[j] &lt; a[minidx]) {
+      minidx = j;
+    }
+  }
+  swap(a, i, minidx);
+}</code></pre>
+    </section>
+
+    <section class="step first-move" aria-labelledby="first-title">
+      <h2 id="first-title">Dein erster Zug</h2>
+      <p class="prompt">Welche Operation bestimmt den Takt, wenn das Array wächst?</p>
+      <div class="choices" role="group" aria-label="Zentrale Operation wählen">
+        <button class="choice" type="button" data-operation="swap">Den Aufruf <code>swap(...)</code> zählen</button>
+        <button class="choice" type="button" data-operation="compare">Den Vergleich <code>a[j] &lt; a[minidx]</code> zählen</button>
+        <button class="choice" type="button" data-operation="assign">Nur <code>minidx = i</code> zählen</button>
+      </div>
+      <div id="operation-feedback" class="feedback" aria-live="polite"></div>
+      <div class="hint-controls">
+        <button class="action hint-button" type="button" data-hint="hint-1">Hinweis 1: Wo wächst Arbeit?</button>
+        <button class="action hint-button" type="button" data-hint="hint-2">Hinweis 2: Mechanik sehen</button>
+      </div>
+      <div id="hint-1" class="hint">Suche die Zeile in der inneren Schleife, die bei jedem Durchlauf geprüft wird – unabhängig von den Zahlenwerten.</div>
+      <div id="hint-2" class="hint"><code>swap</code> passiert nur einmal pro äußerem <code>i</code>. Der Vergleich passiert dagegen für jedes verbleibende <code>j</code>: erst oft, dann immer seltener.</div>
+    </section>
+
+    <section id="trace-step" class="step locked" aria-labelledby="trace-title" aria-disabled="true">
+      <h2 id="trace-title">Baue die Dreieckssumme</h2>
+      <p class="prompt">Nimm <strong>n = 5</strong>. Klicke die äußeren Runden der Reihe nach an. Wie viele Elemente liegen jeweils noch rechts von <code>i</code>?</p>
+      <div class="rounds" aria-label="Äußere Schleifenrunden">
+        <button type="button" class="round" data-count="4" disabled><span>i = 0</span><b>?</b></button>
+        <button type="button" class="round" data-count="3" disabled><span>i = 1</span><b>?</b></button>
+        <button type="button" class="round" data-count="2" disabled><span>i = 2</span><b>?</b></button>
+        <button type="button" class="round" data-count="1" disabled><span>i = 3</span><b>?</b></button>
+        <button type="button" class="round" data-count="0" disabled><span>i = 4</span><b>?</b></button>
+      </div>
+      <p id="trace-total" class="trace-total" aria-live="polite">Vergleiche sichtbar: 0</p>
+    </section>
+
+    <section id="finish-step" class="step locked" aria-labelledby="finish-title" aria-disabled="true">
+      <h2 id="finish-title">Prüfungsabschluss</h2>
+      <p class="prompt">Vervollständige die Aussage. Schreibe eine echte Begründung, nicht nur „O(n²)“.</p>
+      <label for="final-answer">Dein Prüfungssatz</label>
+      <textarea id="final-answer" class="answer" disabled placeholder="Die innere Schleife macht … Vergleiche. Daher gilt …; Best und Worst sind …, weil …"></textarea>
+      <button id="check-answer" class="action primary" type="button" disabled>Prüfungssatz prüfen</button>
+      <div id="final-feedback" class="feedback" aria-live="polite"></div>
+
+      <div id="solution-lock" class="solution-lock">
+        <button id="reveal-solution" class="action" type="button" disabled>Vollständigen Musterweg aufdecken</button>
+        <span>Noch gesperrt: erst selbst versuchen.</span>
+      </div>
+      <div id="solution" class="solution" hidden>
+        <h3>Musterweg</h3>
+        <p>Zentrale Operation: <code>a[j] &lt; a[minidx]</code>.</p>
+        <p><code>(n−1) + (n−2) + … + 1 = n(n−1)/2 ∈ Θ(n²)</code>.</p>
+        <p>Die Werte im Array ändern nur, ob <code>minidx = j</code> ausgeführt wird. Die beiden Schleifen laufen trotzdem vollständig. Deshalb sind bester und schlechtester Fall <code>Θ(n²)</code>. Die detaillierte PDF-Zählung ergibt im Worst Case <code>T(n)=2+6n+2n²</code>.</p>
+      </div>
+    </section>
+
+    <section class="step status-card" aria-labelledby="status-title">
+      <h2 id="status-title">Wie steht Aufgabe 01?</h2>
+      <p>Markiere ehrlich. Das ist Navigation für den nächsten Lernblock, keine Wertung.</p>
+      <div class="state-row" role="group" aria-label="Lernstatus Aufgabe 01">
+        <button class="state-btn" type="button" data-value="wackelt" aria-pressed="false">Wackelt · nochmal traceen</button>
+        <button class="state-btn" type="button" data-value="sitzt" aria-pressed="false">Sitzt · ich kann es begründen</button>
+      </div>
+      <p id="state-feedback" class="tiny" aria-live="polite">Noch nicht markiert.</p>
+    </section>
+
+    <nav class="nav-bottom" aria-label="Vorherige und nächste Aufgabe">
+      <a href="../index.html">← Übersicht</a>
+      <a href="../task-02/index.html">Aufgabe 02 →</a>
+    </nav>
+  </main>
+  <script src="task.js"></script>
+</body>
+</html>

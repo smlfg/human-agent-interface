@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blatt 07 · Aufgabe 01 · Flex Queue</title>
+  <link rel="stylesheet" href="../../styles.css"><link rel="stylesheet" href="task.css">
+</head>
+<body>
+<header class="top"><a href="../../index.html">Alle Blätter</a><span>Blatt 07 · A1</span><a href="/proof/ads/source-materials-not-included.html">Original-PDF</a></header>
+<main>
+  <section class="hero"><p class="eyebrow">Ringpuffer-Werkbank</p><h1>Welche Zahl ist wirklich <em>first</em>?</h1><p>Die Queue ist logisch zusammenhängend, auch wenn sie im Array über das Ende springt. Baue erst den Wraparound; entscheide dann, wie Resize kopiert.</p></section>
+  <section class="workbench" aria-labelledby="lab-title">
+    <div><h2 id="lab-title">1 · Queue bewegen</h2><p class="micro">Mikro-Schritt: Fülle, entnimm und fülle erneut, bis <code>first &gt; last</code>.</p></div>
+    <div class="stats"><span>capacity <b id="cap">8</b></span><span>size <b id="size">0</b></span><span>first <b id="first">0</b></span><span>last <b id="last">0</b></span></div>
+    <div id="cells" class="cells" aria-label="Physisches Array"></div>
+    <div class="controls"><label>Wert <input id="value" type="number" value="10"></label><button id="enter">enter</button><button id="leave">leave</button><button id="reset" class="quiet">Reset</button></div>
+    <p id="feedback" class="feedback" aria-live="polite">Starte mit drei bis acht <code>enter</code>-Schritten.</p>
+    <div class="trace"><strong>FIFO-/Capacity-Spur</strong><ol id="trace"></ol></div>
+  </section>
+  <section class="decision locked" id="decision"><h2>2 · Resize-Entscheidung</h2><p>Du hast Wraparound erzeugt. Was muss in das neue Array kopiert werden?</p>
+    <div class="choices"><button data-choice="physical">Arrayindex 0, 1, 2, …</button><button data-choice="logical">Ab first zyklisch: (first+i) % capacity</button><button data-choice="quarter">Bei size·4 ≤ capacity halbieren</button></div>
+    <p id="decision-feedback" class="feedback" aria-live="polite"></p>
+    <details><summary>Hinweis 1</summary><p>FIFO fragt nicht, wo ein Wert physisch liegt, sondern wann er eingereiht wurde.</p></details>
+    <details><summary>Hinweis 2</summary><p>Für das i-te Queue-Element ist der Quellindex <code>(first + i) % capacity</code>. „Unter 25 %“ bedeutet strikt <code>size*4 &lt; capacity</code>.</p></details>
+  </section>
+  <section class="gate locked" id="gate"><h2>3 · Echter Abschluss</h2><p>Implementiere nur die TODOs in <code>lab/flexqueue.cpp</code>. Der Test prüft Wraparound, Grow, Shrink-Grenze, Mindestkapazität und 1.000 FIFO-Werte.</p><pre><code>cd uebungsblaetter-interaktiv/blatt-07/aufgabe-01/lab
+./run-tests.sh</code></pre><button id="reveal">Nur nächsten TODO anzeigen</button><p id="todo" aria-live="polite"></p></section>
+  <section class="mark"><h2>Selbsteinschätzung</h2><button data-mark="sitzt">Sitzt</button><button data-mark="wackelt">Wackelt</button><span id="saved" aria-live="polite"></span></section>
+</main>
+<nav class="bottom"><a href="../index.html">Blatt 07</a><span aria-current="page">Aufgabe 1</span><a href="../aufgabe-02/index.html">Nächste: A2</a></nav>
+<script src="task.js"></script></body></html>

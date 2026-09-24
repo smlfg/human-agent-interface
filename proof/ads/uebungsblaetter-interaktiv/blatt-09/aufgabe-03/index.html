@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PB09 · Aufgabe 3 · Hashfunktionen messen</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="task.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar" aria-label="Hauptnavigation"><a class="brand" href="../../index.html">ADS · INTERAKTIV</a><a class="back" href="../index.html">← Blatt 09</a></nav>
+    <header class="task-head"><div><span class="kicker">VERTEILEN · MESSEN · ERKLÄREN</span><h1>Hash-Benchmark ohne Messfalle</h1></div><div class="counter">PB09 · 03/03</div></header>
+
+    <section class="mission">
+      <div class="brief"><h2>Dein erster Mikro-Schritt</h2><p>Wähle eine Hashfunktion und beobachte, auf wie viele Start-Buckets dieselben Werte verteilt werden. Erst danach planst du den Zeitvergleich.</p></div>
+      <aside class="source-gap"><strong>Diskrepanz im Original</strong><span>Aufgabe 3 definiert <code>int1</code> bis <code>int4</code>, fordert später aber „alle 5 Hash-Funktionen“. Hier werden nur die vier tatsächlich genannten Funktionen verwendet; keine fünfte wird erfunden.</span></aside>
+    </section>
+
+    <section class="step trainer">
+      <div class="trainer-head"><div><span class="phase">BUCKET-LUPE</span><h2>Was liefert der Funktionszeiger?</h2></div><span id="coverage" class="progress">0 / 4 Funktionen geprüft</span></div>
+      <p class="formula"><code>raw = hash_func(val)</code> → <code>bucket = raw % table_size</code>. Die Tabellenlänge gehört zur Index-Normalisierung, nicht in jede Hashfunktion.</p>
+      <div class="controls">
+        <label>Hashfunktion <select id="hash-select"><option value="1">int1: val</option><option value="1000">int2: val % 1000</option><option value="100">int3: val % 100</option><option value="10">int4: val % 10</option></select></label>
+        <label>Tabellenlänge <select id="size-select"><option value="1000">1.000</option><option value="10000">10.000</option><option value="100000">100.000</option></select></label>
+        <button class="action" id="inspect" type="button">Verteilung prüfen</button>
+      </div>
+      <p class="sample">Fester Mini-Datensatz: <code>17, 1017, 2017, 42, 1042, 999999</code></p>
+      <div id="buckets" class="bucket-strip" aria-label="Belegte Start-Buckets"></div>
+      <div id="feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+      <div class="hint-controls"><button class="action hint-btn" data-hint="hint-1" type="button" aria-expanded="false">Hinweis 1</button><button class="action hint-btn" data-hint="hint-2" type="button" aria-expanded="false">Hinweis 2</button><button class="action" id="open-design" type="button">Messdesign prüfen</button></div>
+      <div class="hint" id="hint-1" hidden><strong>Funktionszeiger:</strong> Die Map ruft dieselbe Stelle auf; nur der gespeicherte Zeiger wechselt zwischen <code>hash_func_int1</code> … <code>int4</code>.</div>
+      <div class="hint" id="hint-2" hidden><strong>Kollision:</strong> Wenn die Funktion nur 10 mögliche Rohwerte erzeugt, helfen 100.000 Tabellenplätze nicht bei der Startverteilung.</div>
+    </section>
+
+    <section class="step design" id="design" hidden>
+      <h2>Welche Messschleife ist fair?</h2>
+      <div class="choice-grid">
+        <button class="design-choice" data-choice="wrong-pointer" type="button">Für jeden Fall direkt <code>hash_func_int1</code> aufrufen</button>
+        <button class="design-choice" data-choice="wrong-rng" type="button">Zufallszahlen innerhalb jeder Zeitmessung erzeugen</button>
+        <button class="design-choice" data-choice="right" type="button">Einmal mit festem Seed erzeugen; je Funktionszeiger Insert, Find und Remove getrennt messen</button>
+      </div>
+      <div id="design-feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+    </section>
+
+    <section class="step interpretation" id="interpretation" hidden>
+      <h2>Interpretation statt Stoppuhr-Erzählung</h2>
+      <p>Vervollständige: Eine langsamere Messung bei größerer Tabelle beweist allein …</p>
+      <div class="choice-grid"><button class="interpret-choice" data-answer="wrong" type="button">… dass die Tabellenlänge die Operation asymptotisch langsam macht.</button><button class="interpret-choice" data-answer="right" type="button">… noch keine Ursache; Lastfaktor, Kollisionsverteilung, Speicherlokalität und Messrauschen müssen mitberichtet werden.</button></div>
+      <div id="interpret-feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+    </section>
+
+    <section class="step completion" id="completion" hidden>
+      <h2>Lababschluss</h2>
+      <p>Öffne <code>lab/hash_bench.cpp</code>, verbinde das TODO mit deiner <code>hashmapvint</code> und führe <code>./run-tests.sh</code> aus. Berichte je Lauf: Seed, n, Tabellenlänge, Funktion, Insert/Find/Remove sowie belegte Start-Buckets und größte Bucketlast.</p>
+      <label class="proof-check"><input id="proof" type="checkbox"> API-Tests und der kleine reproduzierbare Benchmark laufen; meine Interpretation nennt Kollisionen/Last statt nur Tabellenlänge.</label>
+      <div class="state-row"><button class="state-btn" data-state="sitzt" type="button">✓ Sitzt</button><button class="state-btn" data-state="wackelt" type="button">↻ Wackelt</button></div>
+      <p class="tiny" id="state-feedback" aria-live="polite"></p>
+    </section>
+
+    <nav class="nav-bottom" aria-label="Aufgabennavigation"><a href="../aufgabe-02/index.html">← Aufgabe 2</a><a href="../index.html">Blatt 09</a><a href="../../index.html">Gesamtübersicht</a><a href="/proof/ads/source-materials-not-included.html" target="_blank" rel="noopener">Original-PDF ↗</a></nav>
+  </main>
+  <script src="task.js"></script>
+</body>
+</html>
