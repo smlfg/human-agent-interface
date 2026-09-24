@@ -44,3 +44,7 @@ proof/ads/**/*.md
 proof/ads/**/*.pdf
 proof/ads/**/lab/**
 proof/ads/**/_course_assets/**
+
+# Private research and chat exports (never deploy)
+V2/**
+Konkurz/**
