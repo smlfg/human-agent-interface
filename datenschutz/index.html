@@ -219,8 +219,6 @@
     </header>
 
     <main class="wrap">
-      <p class="notice">Entwurf – vor Veröffentlichung rechtlich prüfen. Gelbe Stellen sind noch offen.</p>
-
       <h1>Datenschutzerklärung</h1>
       <p>
         Diese Erklärung informiert Sie nach Art. 13 DSGVO darüber, welche personenbezogenen Daten beim Besuch dieser Website und
@@ -325,7 +323,30 @@
         <strong>Speicherdauer:</strong> Anfragen werden so lange gespeichert, wie es zur Bearbeitung und zur Erfüllung gesetzlicher Aufbewahrungsfristen (in der Regel bis zu 10 Jahre für Geschäftsbriefe nach § 257 HGB / § 147 AO) erforderlich ist; gesetzliche Aufbewahrungsfristen bleiben unberührt.
       </p>
 
-      <h2>6. Client-Handoff-Upload (/api/client-handoff-upload)</h2>
+      <h2>6. Terminbuchung über Cal.com</h2>
+      <p>
+        Für einen Fit-Call können Sie alternativ zur E-Mail einen Termin über den Buchungsdienst Cal.com vereinbaren. Anbieter ist
+        die Cal.com, Inc., USA. Die Buchungsseite ist nur verlinkt und nicht in diese Website eingebettet: Beim bloßen Besuch dieser
+        Website werden keine Daten an Cal.com übertragen. Erst wenn Sie den Link „Fit-Call buchen“ anklicken, gelangen Sie auf die
+        Seite von Cal.com, für die deren eigene Datenschutzhinweise gelten
+        (<a href="https://cal.com/privacy">cal.com/privacy</a>).
+      </p>
+      <p>
+        Bei einer Buchung verarbeiten Cal.com und ich die von Ihnen eingegebenen Angaben (Name, E-Mail-Adresse, gewählter Termin,
+        optionale Notizen) zur Vereinbarung und Durchführung des Gesprächs. Der Termin wird in meinen Kalender (Google Calendar)
+        übernommen; für das Gespräch wird ein Videokonferenz-Link des im Termin angegebenen Dienstes erzeugt.
+      </p>
+      <p class="meta">
+        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Durchführung vorvertraglicher Maßnahmen auf Ihre Anfrage)
+        sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer einfachen Terminvereinbarung).<br>
+        <strong>Empfänger:</strong> Cal.com, Inc. (Buchung), Google Ireland Limited / Google LLC (Kalender und ggf. Videokonferenz).
+        Dabei kann eine Übermittlung in die USA stattfinden; sie erfolgt auf Grundlage der von den Anbietern eingesetzten
+        Garantien nach Art. 44 ff. DSGVO (EU-US Data Privacy Framework bzw. EU-Standardvertragsklauseln).<br>
+        <strong>Speicherdauer:</strong> Buchungsdaten werden gelöscht, sobald sie für die Terminabwicklung und eine etwaige
+        Zusammenarbeit nicht mehr erforderlich sind; gesetzliche Aufbewahrungsfristen bleiben unberührt.
+      </p>
+
+      <h2>7. Client-Handoff-Upload (/api/client-handoff-upload)</h2>
       <p>
         Im Rahmen der Vorbereitung eines angenommenen Falls können Sie über <code>/api/client-handoff-upload</code> eine
         Markdown-Datei mit Kontext hochladen. Die Datei und die Formularangaben werden im Cloudflare-R2-Bucket
@@ -356,7 +377,7 @@
         <strong>Speicherdauer:</strong> Handoff-Uploads werden 12 Monate nach Abschluss des jeweiligen Falls gelöscht; bei Zurückweisung oder Abbruch spätestens 90 Tage nach Eingang.
       </p>
 
-      <h2>7. Harness-Check-Chat über die OpenAI-API (/api/harness-check/chat)</h2>
+      <h2>8. Harness-Check-Chat über die OpenAI-API (/api/harness-check/chat)</h2>
       <p>
         Beim Harness-Check-Chat sendet der Worker Ihre Eingaben an die OpenAI-API (<code>https://api.openai.com/v1/responses</code>,
         <code>src/worker.js</code>, Zeilen 234–344). Übermittelt werden:
@@ -380,7 +401,7 @@
         <strong>Speicherdauer:</strong> Anfragen werden mit <code>store: false</code> gesendet, sodass Inhalte nicht im OpenAI-Antwortverlauf gespeichert werden; eine darüber hinausgehende Speicherung bei OpenAI findet nicht statt.
       </p>
 
-      <h2>8. Cookies, lokale Speicherung und externe Ressourcen</h2>
+      <h2>9. Cookies, lokale Speicherung und externe Ressourcen</h2>
       <p>
         Es werden <strong>keine Cookies zu Werbe- oder websiteübergreifenden Tracking-Zwecken</strong> gesetzt. Das einzige
         gesetzte Cookie ist das funktionale Erstanbieter-Cookie <code>haiHeroVariant</code>, das ausschließlich der Zuordnung einer
@@ -396,7 +417,7 @@
         eingefügtes Skript ist das Analytics-Beacon <code>/cdn-cgi/rum</code> (siehe Abschnitt 3).
       </p>
 
-      <h2>9. Ihre Rechte</h2>
+      <h2>10. Ihre Rechte</h2>
       <p>Sie haben mir gegenüber folgende Rechte hinsichtlich Ihrer personenbezogenen Daten:</p>
       <ul>
         <li>Recht auf Auskunft (Art. 15 DSGVO),</li>
@@ -417,7 +438,7 @@
         Postfach 10 29 32, 70025 Stuttgart, <a href="https://www.baden-wuerttemberg.datenschutz.de">baden-wuerttemberg.datenschutz.de</a>.
       </p>
 
-      <h2>10. Stand</h2>
+      <h2>11. Stand</h2>
       <p>Stand dieser Datenschutzerklärung: September 2026.</p>
     </main>
 
