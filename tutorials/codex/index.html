@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Codex Tutorial: Schnellstart, Workflow, Stärken und Schwächen — Human Agent Interface</title>
+  <meta name="description" content="Praxis-Tutorial für Codex als Coding-Agent: Schnellstart, typischer Workflow, Stärken nutzen, Schwächen kompensieren, Übergaben an andere Agenten.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/tutorials/codex/">
+  <link rel="icon" href="/favicon.png">
+  <style>
+    :root { color-scheme: dark; --ink:#f7f1df; --muted:#b7ad97; --void:#090a08; --panel:rgba(247,241,223,.06); --line:rgba(247,241,223,.18); --signal:#a7ff4f; --mono:ui-monospace,SFMono-Regular,Menlo,monospace; }
+    @media (prefers-color-scheme: light) { :root { color-scheme: light; --ink:#16180f; --muted:#5c5647; --void:#f6f1e4; --panel:rgba(22,24,15,.05); --line:rgba(22,24,15,.16); --signal:#3d7a00; } }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--void); color:var(--ink); font:17px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    .wrap { width:min(100% - 32px, 780px); margin:0 auto; }
+    header, footer { border-bottom:1px solid var(--line); padding:14px 0; font-size:.9rem; }
+    footer { border-top:1px solid var(--line); border-bottom:0; margin-top:56px; color:var(--muted); }
+    a { color:var(--signal); }
+    .crumbs a { color:var(--muted); text-decoration:none; }
+    .stand { border-left:3px solid var(--signal); background:var(--panel); padding:10px 14px; color:var(--muted); font-size:.92rem; margin:22px 0; }
+    h1 { font-size:clamp(1.7rem,4vw,2.4rem); line-height:1.15; margin:28px 0 8px; }
+    h2 { margin-top:40px; border-top:1px solid var(--line); padding-top:20px; }
+    pre { background:var(--panel); border:1px solid var(--line); padding:14px; overflow-x:auto; font:14px/1.5 var(--mono); }
+    code { font-family:var(--mono); font-size:.92em; }
+    table { border-collapse:collapse; width:100%; display:block; overflow-x:auto; font-size:.92rem; }
+    th, td { border:1px solid var(--line); padding:6px 10px; text-align:left; vertical-align:top; }
+    blockquote { margin:0; padding:4px 16px; border-left:3px solid var(--line); color:var(--muted); }
+    .cta { margin:48px 0 0; padding:20px; border:1px solid var(--signal); }
+    .cta strong { display:block; font-size:1.1rem; margin-bottom:6px; }
+  </style>
+</head>
+<body>
+  <header><div class="wrap crumbs"><a href="/">Human Agent Interface</a> / <a href="/tutorials/">Tutorials</a> / Codex Tutorial</div></header>
+  <main class="wrap">
+    <h1>Codex — Harness Tutorial</h1>
+    <p class="stand">Stand: März 2026. Aus der täglichen Praxis mit Codex; Flags, Preise und Bugs können sich seitdem geändert haben. Siehe auch: <a href="https://www.human-agent-interface.com/tutorials/codex/referenz/">Codex Referenz</a>.</p>
+
+<blockquote>
+<p>Pipeline-Rolle: <strong>Finish und Ship</strong> (Wave 3, Polishing)
+Codex liefert das beste Endprodukt aller Harnesses — aber nur wenn der Input gut ist.</p>
+</blockquote>
+<hr />
+<h2>1. Quick Start</h2>
+<pre><code class="language-bash">cd ~/Projekte/MeinProjekt     # im Projektordner starten
+
+codex                         # interaktive Session
+# oder non-interactive:
+codex exec &quot;Lies src/api.py und schreibe Type Hints fuer alle Funktionen&quot;
+</code></pre>
+<p>Fuer Code-Review:</p>
+<pre><code class="language-bash">codex review                  # automatischer Code-Review des aktuellen Repos
+codex review src/api.py       # nur eine Datei reviewen
+</code></pre>
+<p>Erste Schritte:</p>
+<pre><code>&gt; Lies das Tasksheet: [Inhalt aus harness-tasksheets/task-codex-polish.md]
+&gt; Lies src/ und gib mir eine Einschaetzung: Was muss noch getan werden?
+</code></pre>
+<p>Codex wird jetzt ~10 Rueckfragen stellen. <strong>Das ist kein Bug — das ist das Feature.</strong>
+Alle Fragen beantworten, dann baut Codex sauber.</p>
+<hr />
+<h2>2. Typischer Workflow</h2>
+<p><strong>Codex ist der letzte Schritt — nicht der erste.</strong></p>
+<ol>
+<li><strong>Code von Hermes liegt vor</strong> — funktional, aber roh.</li>
+<li><strong>Tasksheet lesen</strong> — Was hat Hermes gebaut? Was fehlt?</li>
+<li><strong>Ruckfragen beantworten</strong> — Codex fragt ~10x nach. Geduld zahlt sich aus.</li>
+<li><strong>Polishing</strong> — Type Hints, Error Handling, Docstrings, README.</li>
+<li><strong>Review</strong> — <code>codex review</code> laufen lassen.</li>
+<li><strong>Der Owner prüft</strong> — Fertiges Produkt dem Owner zeigen.</li>
+<li><strong>Ship</strong> — Commit-Freigabe vom Owner.</li>
+</ol>
+<p>Beispiel-Flow:</p>
+<pre><code>&gt; Lies DECISIONS.md und src/. Hermes hat die Implementierung gebaut.
+  Deine Aufgabe: Polishing. Type Hints, Error Handling, Docstrings.
+  Dann README.md aktualisieren.
+[Codex stellt Rueckfragen]
+&gt; Antwort auf Frage 1: Python 3.11+
+&gt; Antwort auf Frage 2: FastAPI-Style Docstrings
+&gt; Antwort auf Frage 3: Ja, pytest fuer alle neuen Funktionen
+[Codex baut]
+&gt; Lauf `codex review` und zeig mir das Ergebnis.
+</code></pre>
+<hr />
+<h2>3. Starken nutzen</h2>
+<p><strong>Bestes Endprodukt:</strong> Codex liefert Code der tatsaechlich production-ready
+aussieht. Type Hints, Error Handling, Docstrings — alles dabei.</p>
+<p><strong>Grundliche Ruckfragen (~10x bevor gebaut):</strong>
+Das klingt nervig ist aber wertvoll. Jede Frage verhindert eine Annahme
+die spaeter korrigiert werden muss.</p>
+<pre><code>Codex: &quot;Soll die agents-Liste aus YAML oder aus einer Datenbank geladen werden?&quot;
+→ Ohne diese Frage: Codex haette geraten → moegliche Re-Arbeit
+→ Mit Antwort: saubere Implementierung beim ersten Mal
+</code></pre>
+<p><strong>Scope-Treue:</strong> Codex bleibt nah am Referenz-Material. Was im Tasksheet
+steht wird gebaut — nicht mehr, nicht weniger.</p>
+<p><strong>Hugbsches Dashboard-Output:</strong> Wenn Codex ein Dashboard baut, sieht
+es professionell aus. Besser als Hermes-Output, besser als OpenCode-Output.</p>
+<p><strong><code>codex review</code> fuer automatischen Code-Review:</strong></p>
+<pre><code class="language-bash">codex review                  # Review des gesamten Repos
+codex review src/api.py       # nur api.py
+# Output: Konkrete Verbesserungsvorschlaege mit Zeilennummern
+</code></pre>
+<hr />
+<h2>4. Schwachen kompensieren</h2>
+<p><strong>Langsam am Start:</strong> Codex braucht Zeit um sich einzulesen.
+Nicht nach 30 Sekunden abbrechen — Codex denkt noch.</p>
+<p><strong>Dashboard-Stabilitaet:</strong> In der Eval-Phase ist Codex 2x abgestuerzt
+beim Generieren grosser Dashboards. Bei komplexen Outputs:
+- Scope in kleinere Chunks aufteilen
+- Nicht "baue das ganze Dashboard" sondern "baue zuerst die Navbar"</p>
+<pre><code class="language-bash"># Statt:
+codex exec &quot;Baue das komplette Dashboard&quot;
+
+# Besser:
+codex exec &quot;Baue nur die Navbar-Komponente in src/templates/navbar.html&quot;
+codex exec &quot;Baue nur die Sidebar in src/templates/sidebar.html&quot;
+codex exec &quot;Integriere Navbar und Sidebar in src/templates/index.html&quot;
+</code></pre>
+<p><strong>Wenig Selbstkritik ("erhaben/selbstbewusst"):</strong> Codex gibt selten zu
+wenn etwas nicht stimmt. Besser <code>codex review</code> laufen lassen als
+Codex selbst fragen ob der Code gut ist.</p>
+<p><strong>GPT 5.4 Medium = mittel-teuer:</strong> Nicht fuer Exploration nutzen.
+Codex nur einsetzen wenn der Code fast fertig ist.</p>
+<p><strong>Nicht fuer Recherche oder Drafts:</strong> Das ist Verschwendung.
+- Recherche → Claude Code Subagent
+- Drafts → OpenCode
+- Implementierung → Hermes
+- Polishing → Codex</p>
+<hr />
+<h2>5. Handoff-Muster</h2>
+<p><strong>Von Hermes zu Codex:</strong></p>
+<pre><code>&gt; [Inhalt des Hermes-Summary-Tasksheets]
+  Hermes hat implementiert. Deine Aufgabe:
+  1. Type Hints fuer alle Funktionen in src/api.py und src/services/
+  2. Error Handling: HTTPException fuer alle FastAPI Endpunkte
+  3. Docstrings: Google-Style
+  4. README.md: Installation + Usage aktualisieren
+  Scope: NUR diese 4 Punkte. Kein neues Feature.
+</code></pre>
+<p><strong>Codex an den Owner (Ship):</strong></p>
+<pre><code class="language-bash"># Nach Codex-Session:
+codex review                  # automatischer Review
+# Ergebnis an den Owner:
+&gt; Review ist sauber. Aenderungen:
+  - src/api.py: Type Hints, Error Handling, Docstrings
+  - README.md: Installation + Usage
+  Bereit fuer git commit wenn du freigibst.
+</code></pre>
+<p><strong>Fertiges Produkt zeigen:</strong></p>
+<pre><code class="language-bash"># Server starten und dem Owner zeigen:
+uvicorn src.main:app --reload --port 8000
+# dann: http://localhost:8000 im Browser
+</code></pre>
+<p><strong><code>codex review</code> in Pipeline integrieren:</strong></p>
+<pre><code>Wave 3 Checkpoints:
+1. codex review → Qualitaets-Check
+2. pytest → Tests gruen
+3. Der Owner prüft → Ship-Entscheidung
+</code></pre>
+<hr />
+<h2>6. Kosten-Tipps</h2>
+<p><strong>Ruckfragen sind Features, nicht Bugs — Geduld spart Re-Work:</strong>
+Eine beantwortete Ruckfrage verhindert eine falsche Annahme.
+Falsche Annahme = Re-Run = doppelte Kosten.</p>
+<pre><code># Nicht ungeduldig werden:
+Codex: &quot;Welches Python-Version minimum?&quot;
+&gt; 3.11+
+# Diese 2 Sekunden sparen moegliche 5 Minuten Korrektur
+</code></pre>
+<p><strong>Nur fuer Polishing nutzen, nicht fuer Exploration:</strong></p>
+<pre><code># Teuer und schlechter ROI:
+codex exec &quot;Erkunde die Codebase und finde Verbesserungsmoeglichkeiten&quot;
+
+# Guenstig und guter ROI:
+codex exec &quot;Fuege Type Hints zu src/api.py hinzu&quot;
+</code></pre>
+<p><strong>Scope begrenzen = Kosten begrenzen:</strong>
+Je enger der Scope, desto weniger Tokens, desto guenstiger.</p>
+<p><strong>Nach Hermes einsetzen, nicht vor:</strong>
+Codex auf rohem, unstrukturierten Code einzusetzen ist teuer weil
+viel mehr Korrekturen noetig sind. Erst Hermes, dann Codex.</p>
+<p><strong><code>codex exec</code> fuer automatisierbare Tasks:</strong></p>
+<pre><code class="language-bash"># Guenstiger als interaktive Session fuer klare Aufgaben:
+codex exec &quot;Schreibe pytest-Tests fuer alle Funktionen in src/api.py&quot;
+codex exec &quot;Generiere OpenAPI-Dokumentation aus den FastAPI-Endpunkten&quot;
+</code></pre>
+<p><strong>Faustregeln:</strong>
+- Type Hints fuer eine Datei: ~$0.05-0.10
+- Vollstaendiges Polishing (5 Dateien): ~$0.20-0.50
+- README generieren: ~$0.05-0.10
+- <code>codex review</code> fuer gesamtes Repo: ~$0.10-0.20
+- Exploration (nicht empfohlen): $0.50+ fuer schlechten ROI</p>
+    <aside class="cta">
+      <strong>Dein Setup hakt trotzdem?</strong>
+      Setup-Rettung: 90 Minuten remote an deinem Rechner, 190 € Festpreis.
+      <a href="/agentfaehig/">Angebote ansehen</a> oder
+      <a href="https://cal.com/human-agent-interface/agent-check" target="_blank" rel="noopener">kostenlosen 20-Min-Termin buchen</a>.
+    </aside>
+  </main>
+  <footer><div class="wrap"><a href="/">Human Agent Interface</a> · <a href="/tutorials/">Tutorials</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></div></footer>
+</body>
+</html>

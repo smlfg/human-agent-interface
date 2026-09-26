@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claude Code Referenz: Architektur, Konfiguration und Tuning — Human Agent Interface</title>
+  <meta name="description" content="Referenz für Claude Code: Architektur, Konfigurationsdateien, Tuning, Vor- und Nachteile und wichtige Befehle — aus der täglichen Praxis.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/tutorials/claude-code/referenz/">
+  <link rel="icon" href="/favicon.png">
+  <style>
+    :root { color-scheme: dark; --ink:#f7f1df; --muted:#b7ad97; --void:#090a08; --panel:rgba(247,241,223,.06); --line:rgba(247,241,223,.18); --signal:#a7ff4f; --mono:ui-monospace,SFMono-Regular,Menlo,monospace; }
+    @media (prefers-color-scheme: light) { :root { color-scheme: light; --ink:#16180f; --muted:#5c5647; --void:#f6f1e4; --panel:rgba(22,24,15,.05); --line:rgba(22,24,15,.16); --signal:#3d7a00; } }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--void); color:var(--ink); font:17px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    .wrap { width:min(100% - 32px, 780px); margin:0 auto; }
+    header, footer { border-bottom:1px solid var(--line); padding:14px 0; font-size:.9rem; }
+    footer { border-top:1px solid var(--line); border-bottom:0; margin-top:56px; color:var(--muted); }
+    a { color:var(--signal); }
+    .crumbs a { color:var(--muted); text-decoration:none; }
+    .stand { border-left:3px solid var(--signal); background:var(--panel); padding:10px 14px; color:var(--muted); font-size:.92rem; margin:22px 0; }
+    h1 { font-size:clamp(1.7rem,4vw,2.4rem); line-height:1.15; margin:28px 0 8px; }
+    h2 { margin-top:40px; border-top:1px solid var(--line); padding-top:20px; }
+    pre { background:var(--panel); border:1px solid var(--line); padding:14px; overflow-x:auto; font:14px/1.5 var(--mono); }
+    code { font-family:var(--mono); font-size:.92em; }
+    table { border-collapse:collapse; width:100%; display:block; overflow-x:auto; font-size:.92rem; }
+    th, td { border:1px solid var(--line); padding:6px 10px; text-align:left; vertical-align:top; }
+    blockquote { margin:0; padding:4px 16px; border-left:3px solid var(--line); color:var(--muted); }
+    .cta { margin:48px 0 0; padding:20px; border:1px solid var(--signal); }
+    .cta strong { display:block; font-size:1.1rem; margin-bottom:6px; }
+  </style>
+</head>
+<body>
+  <header><div class="wrap crumbs"><a href="/">Human Agent Interface</a> / <a href="/tutorials/">Tutorials</a> / Claude Code Referenz</div></header>
+  <main class="wrap">
+    <h1>Claude Code Harness — Referenz für AI Engineers</h1>
+    <p class="stand">Stand: März 2026. Aus der täglichen Praxis mit Claude Code; Flags, Preise und Bugs können sich seitdem geändert haben. Siehe auch: <a href="https://www.human-agent-interface.com/tutorials/claude-code/">Claude Code Tutorial</a>.</p>
+
+<blockquote>
+<p>Zielgruppe: Leute, die Claude Code schon nutzen. Fokus: Tuning, Config, Betrieb — kein Onboarding.</p>
+</blockquote>
+<hr />
+<h2>1. Architektur</h2>
+<p>Claude Code ist kein Wrapper, sondern ein natives Harness mit direktem API-Zugriff. Die Architektur besteht aus fünf Schichten:</p>
+<pre><code>CLAUDE.md (global + per-project)     ← deklarative Verhaltenssteuerung
+       ↓
+settings.json / settings.local.json  ← Permissions, Hooks, Modell
+       ↓
+Hooks (5 Lifecycle-Points)           ← Prozess-Steuerung
+       ↓
+Agents / Skills / Commands           ← Capability-Erweiterung
+       ↓
+MCP-Tools                            ← externe Tool-Integration
+</code></pre>
+<p><strong>Lifecycle-Points:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>Zeitpunkt</th>
+<th>Kann blocken?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SessionStart</code></td>
+<td>Session-Init</td>
+<td>nein</td>
+</tr>
+<tr>
+<td><code>UserPromptSubmit</code></td>
+<td>vor LLM-Call</td>
+<td>ja (additionalContext-Injection)</td>
+</tr>
+<tr>
+<td><code>PreToolUse</code></td>
+<td>vor Tool-Aufruf</td>
+<td>ja (Blocking-Gate)</td>
+</tr>
+<tr>
+<td><code>PostToolUse</code></td>
+<td>nach Tool-Aufruf</td>
+<td>nein</td>
+</tr>
+<tr>
+<td><code>Stop</code></td>
+<td>Session-Ende</td>
+<td>nein</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Config-Hierarchie (letzte Regel gewinnt nicht — Regeln akkumulieren):</strong></p>
+<pre><code>~/.claude/settings.json
+~/.claude/settings.local.json   (Overrides)
+~/.claude/CLAUDE.md             (globale Verhaltensregeln)
+&lt;project-root&gt;/CLAUDE.md        (projektspezifische Regeln)
+</code></pre>
+<hr />
+<h2>2. Konfiguration</h2>
+<h3>settings.json — Hauptfelder</h3>
+<pre><code class="language-jsonc">{
+  &quot;model&quot;: &quot;claude-opus-4-6&quot;,           // Default-Modell
+  &quot;env&quot;: {
+    &quot;CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS&quot;: &quot;1&quot;
+  },
+  &quot;permissions&quot;: {
+    &quot;allow&quot;: [&quot;Edit&quot;, &quot;Write&quot;, &quot;Glob&quot;, &quot;Grep&quot;, &quot;Agent&quot;, &quot;Bash(git*)&quot;],
+    &quot;deny&quot;:  [&quot;Bash(rm*)&quot;, &quot;Bash(apt*)&quot;, &quot;Bash(dd*)&quot;]
+  },
+  &quot;hooks&quot;: {
+    &quot;PreToolUse&quot;: [
+      { &quot;matcher&quot;: &quot;Agent&quot;, &quot;hooks&quot;: [{&quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;~/.claude/hooks/enforce-background-agents.py&quot;}] }
+    ],
+    &quot;UserPromptSubmit&quot;: [
+      { &quot;hooks&quot;: [{&quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;~/.claude/hooks/hook_inject.py&quot;}] }
+    ]
+  }
+}
+</code></pre>
+<p><strong>Bash-Permissions nutzen Glob-Pattern:</strong>
+- <code>Bash(git*)</code> — alle git-Befehle
+- <code>Bash(python3 /home/*)</code> — python3 mit absolutem Pfad
+- <code>Bash(*)</code> — alles (gefährlich, nur in settings.local.json)</p>
+<h3>settings.local.json — Lokale Overrides</h3>
+<p>Nicht ins Git. Für Permissions die auf dem eigenen Rechner OK sind, aber nicht im Repo.</p>
+<pre><code class="language-jsonc">{
+  &quot;permissions&quot;: {
+    &quot;allow&quot;: [&quot;Bash(gh api*)&quot;, &quot;Bash(python3*)&quot;]
+  }
+}
+</code></pre>
+<h3>CLAUDE.md — Verhaltenssteuerung</h3>
+<p>Nicht wie ein Config-File behandeln — ist ein Aufmerksamkeitsbudget. Jede Regel konkurriert um Kontext.</p>
+<p><strong>Kritische Faustregel:</strong> Weniger Regeln, schärfer formuliert &gt; viele Regeln, weich formuliert. Ab ~50 Regeln sinkt die Compliance messbar.</p>
+<hr />
+<h2>3. Tuning</h2>
+<h3>Hook hinzufügen</h3>
+<pre><code class="language-jsonc">// In settings.json, hooks.[HookPoint]:
+{
+  &quot;matcher&quot;: &quot;Write&quot;,   // Tool-Name oder &quot;&quot; für alle
+  &quot;hooks&quot;: [{
+    &quot;type&quot;: &quot;command&quot;,
+    &quot;command&quot;: &quot;~/.claude/hooks/my-hook.py&quot;
+  }]
+}
+</code></pre>
+<p>Hook-Script bekommt JSON via stdin (<code>tool</code>, <code>input</code>, <code>session_id</code>). Exit-Code 0 = erlaubt, non-zero = geblockt (nur PreToolUse).</p>
+<h3>Skill erstellen</h3>
+<pre><code>~/.claude/skills/my-skill/SKILL.md
+</code></pre>
+<p>Frontmatter + Inhalt. Wird via <code>/my-skill</code> getriggert. Skills sind Kontext-Injektionen, keine Tools.</p>
+<h3>Agent definieren</h3>
+<pre><code class="language-markdown">---
+name: my-agent
+model: claude-sonnet-4-6
+tools: [Read, Edit, Write, Bash]
+subagent_type: general
+---
+Hier steht das System-Prompt des Agents.
+</code></pre>
+<p>Datei nach <code>~/.claude/agents/my-agent.md</code>. Agents erben alle aktiven Hooks — kein selektives Gate pro Agent möglich (aktuelles Limitation).</p>
+<h3>Custom Command erstellen</h3>
+<pre><code>~/.claude/commands/my-cmd.md
+</code></pre>
+<p>Wird via <code>/my-cmd</code> aufgerufen. Verhält sich wie ein Slash-Command der den Datei-Inhalt als System-Prompt setzt.</p>
+<h3>Modell wechseln</h3>
+<pre><code class="language-jsonc">// settings.json:
+&quot;model&quot;: &quot;claude-sonnet-4-6&quot;
+</code></pre>
+<p>Kein Runtime-Switching ohne Session-Neustart. Subagents können über Frontmatter ein anderes Modell nutzen.</p>
+<h3>Statusline anpassen</h3>
+<p><code>~/.claude/statusline.sh</code> liest JSON von stdin (Context%, Token-Usage, Git-Branch, aktive Hooks) und gibt ANSI-formatierte Ausgabe zurück. Direktes Bash/Python-Skript, editierbar ohne Neustart.</p>
+<h3>Sidecar-NG Integration (Beispiel aus meinem Setup)</h3>
+<p>Der <code>UserPromptSubmit</code>-Hook ruft <code>hook_inject.py</code> auf. Dieser klassifiziert den Prompt (Keyword-First → LLM-Fallback) und injiziert <code>additionalContext</code> in den Hook-Response. Die Injection landet im nächsten LLM-Call, nicht im Session-Kontext dauerhaft.</p>
+<p><strong>Bekannter Bug #13650:</strong> SessionStart-Injections werden verworfen. Workaround: Injection über <code>UserPromptSubmit</code> statt <code>SessionStart</code>.</p>
+<hr />
+<h2>4. Vor- und Nachteile</h2>
+<h3>Vorteile</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Bewertung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hook-System</td>
+<td>Stärkstes auf dem Markt — PreToolUse-Blocking ist einzigartig</td>
+</tr>
+<tr>
+<td>Subagent-System</td>
+<td>21 typisierte Agents, parallele Ausführung, Background-Support</td>
+</tr>
+<tr>
+<td>CLAUDE.md</td>
+<td>Deklarative Verhaltenssteuerung ohne Code</td>
+</tr>
+<tr>
+<td>Plan Mode (<code>--plan</code>)</td>
+<td>Strukturiertes Denken vor Implementierung</td>
+</tr>
+<tr>
+<td>MCP-Integration</td>
+<td>Externe Tools (Gemini, OpenCode) nativ einbindbar</td>
+</tr>
+<tr>
+<td>Tooling-Ökosystem</td>
+<td>Skills + Commands + Agents + Hooks + Statusline kombinierbar</td>
+</tr>
+</tbody>
+</table>
+<h3>Nachteile</h3>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kostenstruktur</td>
+<td>Opus ~$15/1M Tokens — teuerster Harness</td>
+</tr>
+<tr>
+<td>Modell-Lock</td>
+<td>Nur Anthropic-Modelle, kein Runtime-Switch</td>
+</tr>
+<tr>
+<td>Attention Budget</td>
+<td>&gt;50 CLAUDE.md-Regeln → messbare Compliance-Degradation</td>
+</tr>
+<tr>
+<td>Session Hoarding</td>
+<td>Lange Sessions akkumulieren toten Kontext</td>
+</tr>
+<tr>
+<td>Hook-Freeze</td>
+<td>Hooks-Änderungen erfordern Session-Neustart</td>
+</tr>
+<tr>
+<td>Kein SessionEnd-Hook</td>
+<td>Cleanup nach Session-Ende nicht möglich</td>
+</tr>
+<tr>
+<td>Bug #13650</td>
+<td>SessionStart additionalContext wird verworfen</td>
+</tr>
+<tr>
+<td>Hook-Inheritance</td>
+<td>Subagents erben alle Hooks — keine differenzierten Gates</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>5. Referenz</h2>
+<h3>Dateipfade</h3>
+<table>
+<thead>
+<tr>
+<th>Pfad</th>
+<th>Zweck</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>~/.claude/settings.json</code></td>
+<td>Hauptconfig: Modell, Permissions, Hooks</td>
+</tr>
+<tr>
+<td><code>~/.claude/settings.local.json</code></td>
+<td>Lokale Overrides (nicht im Git)</td>
+</tr>
+<tr>
+<td><code>~/.claude/CLAUDE.md</code></td>
+<td>Globale Verhaltensregeln</td>
+</tr>
+<tr>
+<td><code>~/.claude/agents/</code></td>
+<td>Agent-Definitionen (21 aktive)</td>
+</tr>
+<tr>
+<td><code>~/.claude/skills/</code></td>
+<td>Skill-Definitionen</td>
+</tr>
+<tr>
+<td><code>~/.claude/commands/</code></td>
+<td>Custom Slash-Commands</td>
+</tr>
+<tr>
+<td><code>~/.claude/hooks/</code></td>
+<td>Hook-Scripts</td>
+</tr>
+<tr>
+<td><code>~/.claude/statusline.sh</code></td>
+<td>Statusbar-Script</td>
+</tr>
+<tr>
+<td><code>~/.claude/usage/*.jsonl</code></td>
+<td>Token-Tracking</td>
+</tr>
+<tr>
+<td><code>~/.claude/events/*.jsonl</code></td>
+<td>Event-Logs (Telemetrie)</td>
+</tr>
+</tbody>
+</table>
+<h3>Aktive Hooks (Beispiel aus meinem Setup)</h3>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>Trigger</th>
+<th>Funktion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enforce-background-agents.py</code></td>
+<td>PreToolUse → Agent</td>
+<td>Blockt Agent-Calls ohne <code>run_in_background</code></td>
+</tr>
+<tr>
+<td><code>coach-before.sh</code></td>
+<td>SessionStart</td>
+<td>Rotiert Playbook-Regeln, Streak-Counter</td>
+</tr>
+<tr>
+<td><code>event_logger.py</code></td>
+<td>alle Events</td>
+<td>JSON-Telemetrie aller Tool-Calls</td>
+</tr>
+<tr>
+<td><code>gsd-context-monitor.js</code></td>
+<td>PostToolUse</td>
+<td>Context-Window-Überwachung</td>
+</tr>
+<tr>
+<td><code>hook_inject.py</code> (Sidecar-NG)</td>
+<td>UserPromptSubmit</td>
+<td>Prompt-Klassifikation + Context-Injection</td>
+</tr>
+</tbody>
+</table>
+<h3>Wichtige Befehle</h3>
+<pre><code class="language-bash">claude                    # Session starten (Standard-Modell aus settings.json)
+claude --plan             # Plan Mode — denkt vor Implementierung
+/compact                  # Context komprimieren (lossless summary)
+/status                   # Session-Status: Context%, Token-Usage, aktive Hooks
+/my-skill                 # Skill triggern (Dateiname ohne .md)
+</code></pre>
+<h3>Debugging</h3>
+<pre><code class="language-bash"># Hook-Output testen (stdin simulieren):
+echo '{&quot;tool&quot;:&quot;Write&quot;,&quot;input&quot;:{&quot;file_path&quot;:&quot;/tmp/test&quot;}}' | ~/.claude/hooks/my-hook.py
+
+# Event-Logs lesen:
+# ~/.claude/events/YYYY-MM-DD.jsonl
+
+# Token-Usage prüfen:
+# ~/.claude/usage/YYYY-MM.jsonl
+</code></pre>
+    <aside class="cta">
+      <strong>Dein Setup hakt trotzdem?</strong>
+      Setup-Rettung: 90 Minuten remote an deinem Rechner, 190 € Festpreis.
+      <a href="/agentfaehig/">Angebote ansehen</a> oder
+      <a href="https://cal.com/human-agent-interface/agent-check" target="_blank" rel="noopener">kostenlosen 20-Min-Termin buchen</a>.
+    </aside>
+  </main>
+  <footer><div class="wrap"><a href="/">Human Agent Interface</a> · <a href="/tutorials/">Tutorials</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></div></footer>
+</body>
+</html>

@@ -16,6 +16,14 @@ Samuel Fleig bietet unter dem Namen Human Agent Interface Einrichtung, Reparatur
 - [Agent-Harness-Tutorial](https://www.human-agent-interface.com/tutorials/): Interaktives Tutorial, wie KI-Coding-Agenten mit Owner Packet, Delegation Card und Verification Report kontrolliert eingesetzt werden.
 - [Codex-App-Harness-Tutorial](https://www.human-agent-interface.com/tutorials/CODEX_APP_HARNESS_TUTORIAL.md): Harness-Ablauf für die Codex-App.
 - [Multi-Tool-Harness-Tutorial](https://www.human-agent-interface.com/tutorials/MULTI_TOOL_HARNESS_TUTORIAL.md): derselbe Ablauf über Claude Code, Hermes, OpenCode und weitere Tools.
+- [Claude Code Tutorial](https://www.human-agent-interface.com/tutorials/claude-code/): Schnellstart, Workflow, Stärken und Schwächen.
+- [Claude Code Referenz](https://www.human-agent-interface.com/tutorials/claude-code/referenz/): Architektur, Konfiguration und Tuning.
+- [Codex Tutorial](https://www.human-agent-interface.com/tutorials/codex/): Schnellstart, Workflow, Stärken und Schwächen.
+- [Codex Referenz](https://www.human-agent-interface.com/tutorials/codex/referenz/): Architektur, Konfiguration und Tuning.
+- [Hermes Tutorial](https://www.human-agent-interface.com/tutorials/hermes/): Schnellstart, Workflow, Stärken und Schwächen.
+- [Hermes Referenz](https://www.human-agent-interface.com/tutorials/hermes/referenz/): Architektur, Konfiguration und Tuning.
+- [OpenCode Tutorial](https://www.human-agent-interface.com/tutorials/opencode/): Schnellstart, Workflow, Stärken und Schwächen.
+- [OpenCode Referenz](https://www.human-agent-interface.com/tutorials/opencode/referenz/): Architektur, Konfiguration und Tuning.
 
 ## HAI
 
