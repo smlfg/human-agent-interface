@@ -66,6 +66,7 @@
     .cta { display: inline-block; margin-top: 22px; padding: 14px 22px; background: var(--signal); color: #0b0d08; font-weight: 700; text-decoration: none; }
     .cta:hover { filter: brightness(1.08); }
     .cta-note { display: block; margin-top: 8px; color: var(--dim); font-size: 0.85rem; }
+    .cta-note a.cta-mail { color: var(--ink); }
     .how { padding: 8px 0 56px; }
     .how h2 { font-size: 1.4rem; }
     .steps { display: grid; gap: 14px; grid-template-columns: 1fr; counter-reset: s; padding: 0; list-style: none; }
@@ -113,8 +114,8 @@
             <dt>Gut für</dt><dd>Entwickler, Gründer, Power-User</dd>
           </dl>
         </div>
-        <a class="cta" data-offer="Setup-Rettung" href="mailto:samuel@human-agent-interface.com">Setup-Rettung anfragen</a>
-        <span class="cta-note">Öffnet eine vorausgefüllte E-Mail. Antwort innerhalb eines Werktags.</span>
+        <a class="cta" data-cal data-track="af_rescue_cal" href="https://cal.com/human-agent-interface/agent-check" target="_blank" rel="noopener">20-Min-Termin buchen</a>
+        <span class="cta-note">20 Minuten kostenlos klären, ob es passt. Lieber schriftlich? <a class="cta-mail" data-offer="Setup-Rettung" data-track="af_rescue_mail" href="mailto:samuel@human-agent-interface.com">Setup-Rettung anfragen per Mail</a></span>
       </article>
 
       <article class="offer" id="geschaeft">
@@ -134,8 +135,8 @@
             <dt>Gut für</dt><dd>Selbstständige, Berater, kleine Firmen</dd>
           </dl>
         </div>
-        <a class="cta" data-offer="Rechner agentenfähig" href="mailto:samuel@human-agent-interface.com">Termin anfragen</a>
-        <span class="cta-note">Vorab 15 Minuten kostenlos klären, ob es passt.</span>
+        <a class="cta" data-cal data-track="af_rechner_cal" href="https://cal.com/human-agent-interface/agent-check" target="_blank" rel="noopener">20-Min-Termin buchen</a>
+        <span class="cta-note">20 Minuten kostenlos klären, ob es passt. Lieber schriftlich? <a class="cta-mail" data-offer="Rechner agentenfähig" data-track="af_rechner_mail" href="mailto:samuel@human-agent-interface.com">Termin anfragen per Mail</a></span>
       </article>
 
       <article class="offer" id="teams">
@@ -155,8 +156,8 @@
             <dt>Gut für</dt><dd>Entwicklungs-, Produkt- und Wissensteams</dd>
           </dl>
         </div>
-        <a class="cta" data-offer="Team-Workshop" href="mailto:samuel@human-agent-interface.com">Workshop anfragen</a>
-        <span class="cta-note">Vorab 20 Minuten Gespräch, um den Ablauf auszuwählen.</span>
+        <a class="cta" data-cal data-track="af_team_cal" href="https://cal.com/human-agent-interface/agent-check" target="_blank" rel="noopener">20-Min-Termin buchen</a>
+        <span class="cta-note">20 Minuten Gespräch, um den Ablauf auszuwählen. Lieber schriftlich? <a class="cta-mail" data-offer="Team-Workshop" data-track="af_team_mail" href="mailto:samuel@human-agent-interface.com">Workshop anfragen per Mail</a></span>
       </article>
     </section>
 
@@ -187,11 +188,37 @@
     (function () {
       var p = new URLSearchParams(location.search);
       var source = [p.get("utm_source"), p.get("utm_campaign"), p.get("utm_content")].filter(Boolean).join(" / ");
-      document.querySelectorAll("a.cta[data-offer]").forEach(function (a) {
+      document.querySelectorAll("a[data-offer]").forEach(function (a) {
         var offer = a.getAttribute("data-offer");
         var body = "Hallo Samuel,\n\nich interessiere mich für: " + offer + "\n\nMein Problem in zwei Sätzen:\n\n\nTools, die ich nutze:\n\nMögliche Zeiten:\n" +
           (source ? "\n---\nQuelle: " + source + "\n" : "");
         a.href = "mailto:samuel@human-agent-interface.com?subject=" + encodeURIComponent("Anfrage: " + offer) + "&body=" + encodeURIComponent(body);
+      });
+
+      // Pass the ad source on to Cal.com and record page views and CTA clicks per ad variant.
+      document.querySelectorAll("a[data-cal]").forEach(function (a) {
+        var u = new URL(a.href);
+        ["utm_source", "utm_campaign", "utm_content"].forEach(function (k) { if (p.get(k)) u.searchParams.set(k, p.get(k)); });
+        a.href = u.toString();
+      });
+      var AD_VARIANTS = ["enthusiasten_a", "enthusiasten_b", "geschaeft_a", "geschaeft_b", "teams_a", "teams_b"];
+      var content = p.get("utm_content") || "";
+      function send(event, target) {
+        var payload = JSON.stringify({
+          experiment_id: "homepage-hero-2026-05-23",
+          variant: "A_control",
+          event: event,
+          target: target,
+          path: location.pathname,
+          language: "de",
+          viewport_class: matchMedia("(max-width: 620px)").matches ? "mobile" : matchMedia("(max-width: 900px)").matches ? "tablet" : "desktop"
+        });
+        if (navigator.sendBeacon && navigator.sendBeacon("/api/site-event", new Blob([payload], { type: "application/json" }))) return;
+        fetch("/api/site-event", { method: "POST", headers: { "Content-Type": "application/json" }, body: payload, keepalive: true }).catch(function () {});
+      }
+      send("hero_impression", AD_VARIANTS.indexOf(content) >= 0 ? "af_view_" + content : "af_view_direct");
+      document.querySelectorAll("a[data-track]").forEach(function (a) {
+        a.addEventListener("click", function () { send("cta_click", a.getAttribute("data-track")); });
       });
     })();
   </script>
