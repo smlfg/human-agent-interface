@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent-Harness-Tutorial: Claude Code, Codex, Hermes und OpenCode kontrolliert einsetzen — Human Agent Interface</title>
+  <meta name="description" content="Kostenloses, interaktives Tutorial: Wie du KI-Coding-Agenten (Claude Code, Codex, Hermes, OpenCode) mit Owner Packet, Delegation Card und Verification Report kontrolliert einsetzt.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/tutorials/">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero" id="top">
+    <canvas id="harnessCanvas" aria-hidden="true"></canvas>
+    <nav class="topbar" aria-label="Seitennavigation">
+      <a class="brand" href="#top" aria-label="Zur Startansicht">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Agent Harness</span>
+      </a>
+      <div class="nav-links">
+        <a href="#map">Map</a>
+        <a href="#tools">Tools</a>
+        <a href="#builder">Packet</a>
+        <a href="#gates">Gates</a>
+        <a href="#runbook">Runbook</a>
+        <a href="#docs">Docs</a>
+      </div>
+    </nav>
+
+    <div class="hero-inner">
+      <p class="eyebrow">Interactive Visual Explainer</p>
+      <h1>Agenten werden brauchbar, wenn der Mensch das Harness fuehrt.</h1>
+      <p class="hero-copy">
+        Diese Website macht das Tutorial bedienbar: Waehle eine Harness-Phase,
+        beobachte die Kontrollschicht und erzeuge daraus ein konkretes Packet
+        fuer Claude Code, Hermes, OpenClaw, OpenCode, Pi, Conductor oder Codex.
+      </p>
+
+      <div class="stage-control" aria-label="Harness Phasen">
+        <button class="stage-button is-active" type="button" data-stage="owner">Owner</button>
+        <button class="stage-button" type="button" data-stage="scope">Scope</button>
+        <button class="stage-button" type="button" data-stage="delegate">Delegate</button>
+        <button class="stage-button" type="button" data-stage="verify">Verify</button>
+        <button class="stage-button" type="button" data-stage="handoff">Handoff</button>
+      </div>
+
+      <section class="stage-readout" aria-live="polite" aria-label="Aktive Harness Phase">
+        <div>
+          <span id="stageKicker">01 / Human Ownership</span>
+          <h2 id="stageTitle">Der Mensch setzt Ziel, Risiko und Abbruchlinie.</h2>
+        </div>
+        <p id="stageBody">
+          Agenten arbeiten erst sinnvoll, wenn Ziel, Nicht-Ziel und Human-only
+          Entscheidungen sichtbar sind.
+        </p>
+      </section>
+    </div>
+  </header>
+
+  <main>
+    <section class="band map-band" id="map">
+      <div class="section-inner">
+        <div class="section-head">
+          <p class="kicker">Harness Map</p>
+          <h2>Das Harness ist keine App-Schale. Es ist die Entscheidungskette.</h2>
+          <p>
+            Jeder Block hat eine andere Aufgabe. Wenn ein Block fehlt, sieht
+            Agentenarbeit produktiv aus, aber der Mensch verliert Kontrolle.
+          </p>
+        </div>
+
+        <div class="flow-grid" aria-label="Agent Harness Komponenten">
+          <button class="flow-node is-active" type="button" data-stage="owner">
+            <span>01</span>
+            <strong>Owner Packet</strong>
+            <em>Ziel, Risiko, Human-only</em>
+          </button>
+          <button class="flow-node" type="button" data-stage="scope">
+            <span>02</span>
+            <strong>Scope Boundary</strong>
+            <em>kleiner Auftrag statt Rohwunsch</em>
+          </button>
+          <button class="flow-node" type="button" data-stage="delegate">
+            <span>03</span>
+            <strong>Delegation Card</strong>
+            <em>erlaubt, verboten, Artefakt</em>
+          </button>
+          <button class="flow-node" type="button" data-stage="verify">
+            <span>04</span>
+            <strong>Verifier Loop</strong>
+            <em>Belege statt Done-Text</em>
+          </button>
+          <button class="flow-node" type="button" data-stage="handoff">
+            <span>05</span>
+            <strong>Next Action</strong>
+            <em>anschlussfaehige Entscheidung</em>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="band tools-band" id="tools">
+      <div class="section-inner">
+        <div class="section-head">
+          <p class="kicker">Tool Profiles</p>
+          <h2>Dasselbe HAI-Muster, aber jede Oberflaeche braucht einen anderen Griff.</h2>
+          <p>
+            Waehle ein Tool. Die Website zeigt, welche Rolle es im Harness hat,
+            welches Artefakt es liefern soll und wo der Mensch stoppen muss.
+          </p>
+        </div>
+
+        <div class="tool-switcher" role="group" aria-label="Harness Tool waehlen">
+          <button class="tool-tab is-active" type="button" data-tool="codex">Codex</button>
+          <button class="tool-tab" type="button" data-tool="claude">Claude Code</button>
+          <button class="tool-tab" type="button" data-tool="hermes">Hermes</button>
+          <button class="tool-tab" type="button" data-tool="openclaw">OpenClaw</button>
+          <button class="tool-tab" type="button" data-tool="opencode">OpenCode</button>
+          <button class="tool-tab" type="button" data-tool="pi">Pi</button>
+          <button class="tool-tab" type="button" data-tool="conductor">Conductor</button>
+        </div>
+
+        <div class="tool-readout" aria-live="polite">
+          <aside>
+            <span id="toolSource">source: official OpenAI docs + local tutorial</span>
+            <h3 id="toolName">Codex</h3>
+            <p id="toolRole">Lokaler Coding-Agent fuer Repo-Arbeit, Review, Tests und sichtbare Diffs.</p>
+          </aside>
+          <div class="tool-spec">
+            <div><strong>Best use</strong><span id="toolUse">bounded implementation, repo audit, tests, docs</span></div>
+            <div><strong>Needs</strong><span id="toolNeeds">AGENTS.md, konkrete Aufgabe, Done when, Verifikation</span></div>
+            <div><strong>Artifact</strong><span id="toolArtifact">Diff, Tests, Verification Report, Next Action</span></div>
+            <div><strong>Human Gate</strong><span id="toolGate">Scope drift, dependencies, destructive actions, deploy</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band builder-band" id="builder">
+      <div class="section-inner workbench">
+        <div class="section-head compact">
+          <p class="kicker">Packet Builder</p>
+          <h2>Aus einem diffusen Wunsch wird ein Agent-Auftrag.</h2>
+          <p>Waehle Tool, Aufgabe und Risiko. Das Packet bleibt absichtlich eng.</p>
+        </div>
+
+        <div class="builder-layout">
+          <div class="tool-panel" aria-label="Packet Auswahl">
+            <div class="field-group">
+              <h3>Tool</h3>
+              <select id="toolSelect" aria-label="Tool fuer Packet Builder">
+                <option value="codex">Codex</option>
+                <option value="claude">Claude Code</option>
+                <option value="hermes">Hermes</option>
+                <option value="openclaw">OpenClaw</option>
+                <option value="opencode">OpenCode</option>
+                <option value="pi">Pi</option>
+                <option value="conductor">Conductor</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <h3>Aufgabentyp</h3>
+              <div class="chip-row" role="group" aria-label="Aufgabentyp waehlen">
+                <button class="chip is-active" type="button" data-task="docs">Doku</button>
+                <button class="chip" type="button" data-task="bug">Bugfix</button>
+                <button class="chip" type="button" data-task="ui">UI</button>
+                <button class="chip" type="button" data-task="audit">Audit</button>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <h3>Risikoprofil</h3>
+              <div class="chip-row" role="group" aria-label="Risiko waehlen">
+                <button class="chip risk is-active" type="button" data-risk="low">Low</button>
+                <button class="chip risk" type="button" data-risk="medium">Medium</button>
+                <button class="chip risk" type="button" data-risk="high">High</button>
+              </div>
+            </div>
+
+            <div class="packet-meter" aria-label="Harness Qualitaet">
+              <span>Harness readiness</span>
+              <div><i id="readinessMeter"></i></div>
+              <strong id="readinessLabel">bounded</strong>
+            </div>
+          </div>
+
+          <div class="prompt-panel" aria-label="Generiertes Packet">
+            <div class="panel-topline">
+              <span>Delegation Card</span>
+              <button class="copy-button" type="button" id="copyPrompt">Copy</button>
+            </div>
+            <pre id="promptOutput"></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band gates-band" id="gates">
+      <div class="section-inner">
+        <div class="section-head">
+          <p class="kicker">Human Gate Simulator</p>
+          <h2>Der Agent darf nicht jede Unsicherheit in Aktion umwandeln.</h2>
+          <p>
+            Markiere, was in deiner Aufgabe vorkommt. Das Gate entscheidet, ob
+            das Tool laufen darf oder erst eine menschliche Freigabe braucht.
+          </p>
+        </div>
+
+        <div class="gate-layout">
+          <div class="gate-list" aria-label="Gate Faktoren">
+            <label><input type="checkbox" value="dependency"> neue Dependency</label>
+            <label><input type="checkbox" value="destructive"> destruktive Aktion</label>
+            <label><input type="checkbox" value="secret"> Secrets, Auth oder Deploy</label>
+            <label><input type="checkbox" value="scope"> Scope wird groesser</label>
+            <label><input type="checkbox" value="unknown"> unklare Tests oder unbekannter Fehler</label>
+          </div>
+
+          <aside class="gate-verdict" aria-live="polite">
+            <span id="gateMode">RUN</span>
+            <h3 id="gateTitle">Das Tool darf bounded arbeiten.</h3>
+            <p id="gateBody">
+              Kein harter Human Gate aktiv. Der Auftrag braucht trotzdem
+              Artefaktpflicht und Verifikation.
+            </p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="band runbook-band" id="runbook">
+      <div class="section-inner">
+        <div class="section-head">
+          <p class="kicker">Runbook</p>
+          <h2>Eine Agenten-Session laeuft in sechs kontrollierten Bewegungen.</h2>
+          <p>Oeffne die Schritte. Jeder Schritt ist ein eigener Gate-Punkt.</p>
+        </div>
+
+        <div class="accordion" id="runbookAccordion">
+          <button class="run-step is-open" type="button" data-step="0">
+            <span>01</span>
+            <strong>Intake</strong>
+            <em>lesen, nicht bauen</em>
+          </button>
+          <div class="run-detail is-open">
+            <p>Das Tool liest Kontext, HAI-Ziel und Auftrag. Output: Was ist klar, was ist unklar, welche Artefakte waeren sinnvoll?</p>
+          </div>
+
+          <button class="run-step" type="button" data-step="1">
+            <span>02</span>
+            <strong>Plan</strong>
+            <em>maximal sechs Schritte</em>
+          </button>
+          <div class="run-detail">
+            <p>Der Plan nennt Artefakt, Beleg und Human Gate pro Schritt. Noch keine Datei-Aenderung.</p>
+          </div>
+
+          <button class="run-step" type="button" data-step="2">
+            <span>03</span>
+            <strong>Bounded Build</strong>
+            <em>nur der vereinbarte Scope</em>
+          </button>
+          <div class="run-detail">
+            <p>Der Agent arbeitet klein. Wenn der Ansatz kippt oder breiter wird, stoppt der Lauf.</p>
+          </div>
+
+          <button class="run-step" type="button" data-step="3">
+            <span>04</span>
+            <strong>Evidence</strong>
+            <em>Tests, Diffs, Dateien</em>
+          </button>
+          <div class="run-detail">
+            <p>Erfolg wird als Beleg sichtbar: Checks, Smoke-Test, Doku-Struktur, Screenshot oder Diff.</p>
+          </div>
+
+          <button class="run-step" type="button" data-step="4">
+            <span>05</span>
+            <strong>Review</strong>
+            <em>kritische Gegenpruefung</em>
+          </button>
+          <div class="run-detail">
+            <p>Der Agent sucht Scope Drift, falsche Claims, fehlende Belege und riskante Empfehlungen.</p>
+          </div>
+
+          <button class="run-step" type="button" data-step="5">
+            <span>06</span>
+            <strong>Handoff</strong>
+            <em>naechste Entscheidung</em>
+          </button>
+          <div class="run-detail">
+            <p>Der Mensch bekommt keine Rohgeschichte, sondern: geaendert, Belege, offen, naechste Entscheidung.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band docs-band" id="docs">
+      <div class="section-inner">
+        <div class="section-head">
+          <p class="kicker">Artifacts</p>
+          <h2>Die Website ist die visuelle Schicht. Markdown bleibt die Wahrheitsebene.</h2>
+          <p>Oeffne die kanonischen Artefakte, wenn du den Ablauf in einer Agenten-Session verwenden willst.</p>
+        </div>
+
+        <div class="doc-grid">
+          <a class="doc-link" href="CODEX_APP_HARNESS_TUTORIAL.md">
+            <span>Tutorial</span>
+            <strong>CODEX_APP_HARNESS_TUTORIAL.md</strong>
+          </a>
+          <a class="doc-link" href="MULTI_TOOL_HARNESS_TUTORIAL.md">
+            <span>Tutorial</span>
+            <strong>MULTI_TOOL_HARNESS_TUTORIAL.md</strong>
+          </a>
+          <a class="doc-link" href="templates/OWNER_PACKET.md">
+            <span>Template</span>
+            <strong>OWNER_PACKET.md</strong>
+          </a>
+          <a class="doc-link" href="templates/DELEGATION_CARD.md">
+            <span>Template</span>
+            <strong>DELEGATION_CARD.md</strong>
+          </a>
+          <a class="doc-link" href="templates/VERIFICATION_REPORT.md">
+            <span>Template</span>
+            <strong>VERIFICATION_REPORT.md</strong>
+          </a>
+          <a class="doc-link" href="examples/ONE_SESSION_WALKTHROUGH.md">
+            <span>Example</span>
+            <strong>ONE_SESSION_WALKTHROUGH.md</strong>
+          </a>
+          <a class="doc-link" href="SOURCES.md">
+            <span>Trace</span>
+            <strong>SOURCES.md</strong>
+          </a>
+        </div>
+      </div>
+    </section>
+    <section class="band cta-band" id="hilfe">
+      <div class="section-inner">
+        <div class="section-head">
+          <p class="kicker">Hilfe beim Einrichten</p>
+          <h2>Dein Setup hakt trotzdem? Ich richte es mit dir ein.</h2>
+          <p>Setup-Rettung: 90 Minuten remote am eigenen Rechner, 190 € Festpreis. Oder ein 3-Stunden-Workshop fürs Team.
+            <a href="/agentfaehig/">Angebote ansehen</a> oder direkt einen
+            <a href="https://cal.com/human-agent-interface/agent-check" target="_blank" rel="noopener">kostenlosen 20-Min-Termin buchen</a>.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span><a href="/">Human Agent Interface</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></span>
+    <span>Human-owned agent work.</span>
+    <span>No silent success.</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

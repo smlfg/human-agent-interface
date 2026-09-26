@@ -48,3 +48,19 @@ proof/ads/**/_course_assets/**
 # Private research and chat exports (never deploy)
 V2/**
 Konkurz/**
+
+# Internal material that is not part of the website (audit 2026-09-26)
+/06-08 Vorlesung*
+/README.md
+GEO/**
+HAI-GEO/**
+Konkurz/**
+V2/**
+Münztelfon/server.py
+Münztelfon/start.sh
+Münztelfon/requirements.txt
+/signatur.html
+/signatur2.html
+hai-versions/tests/**
+samuel/why-hai-matters/grid-bedeutung.md
+what_it_is/deep-dive/index.md
