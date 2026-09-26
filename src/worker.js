@@ -10,6 +10,9 @@ const SITE_EVENTS = ["hero_impression", "hero_cta_click", "cta_click"];
 const SITE_EVENT_TARGETS = [
   "",
   "contact_fit_call",
+  "contact_fit_call_cal",
+  "hero_fit_call_cal",
+  "fit_cal",
   "intake_start",
   "hero_choose_path",
   "hero_fit",
