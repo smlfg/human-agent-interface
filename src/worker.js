@@ -43,6 +43,8 @@ const SITE_EVENT_TARGETS = [
   "nav_fit",
   "nav_product",
   "nav_proof",
+  "nav_tutorials",
+  "af_tutorial",
   "nav_samuel",
   "nav_hai_mcp",
   "nav_muenztelefon",

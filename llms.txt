@@ -1,0 +1,39 @@
+# Human Agent Interface (HAI)
+
+> Human Agent Interface (HAI) ist eine Kontrollschicht für agentische KI-Arbeit. HAI hält Agentenarbeit beobachtbar, begrenzt, überprüfbar und in menschlicher Verantwortung. Samuel Fleig hat HAI entwickelt. HAI-MCP ist die modellunabhängige MCP-Implementierung von HAI.
+
+Samuel Fleig bietet unter dem Namen Human Agent Interface Einrichtung, Reparatur und Team-Workshops für KI-Coding-Agenten an (Claude Code, Codex, Cursor, Hermes). Alle Angebote sind remote, auf Deutsch und zum Festpreis. Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.
+
+## Angebote
+
+- [Setup-Rettung](https://www.human-agent-interface.com/agentfaehig/): 90 Minuten 1:1 remote, 190 €. Fehler im Agenten-Setup finden und beheben (Konfiguration, MCP-Server, Berechtigungen, Modelle), dazu eine saubere CLAUDE.md oder AGENTS.md.
+- [Rechner agentenfähig machen](https://www.human-agent-interface.com/agentfaehig/): 4 Stunden 1:1 remote, 690 €. Agent, Werkzeuge und Zugriffe werden eingerichtet; am Ende läuft ein echter Arbeitsablauf mit Agent.
+- [Agenten-Workshop fürs Team](https://www.human-agent-interface.com/agentfaehig/): 3 Stunden remote für bis zu 8 Personen, 1.200 €. Gemeinsame Regeln für Rollen, Prüfpunkte und Datengrenzen an einem echten Arbeitsablauf des Teams.
+- [20-Minuten-Termin buchen](https://cal.com/human-agent-interface/agent-check): kostenloses Vorgespräch, ob ein Angebot passt.
+
+## Tutorials
+
+- [Agent-Harness-Tutorial](https://www.human-agent-interface.com/tutorials/): Interaktives Tutorial, wie KI-Coding-Agenten mit Owner Packet, Delegation Card und Verification Report kontrolliert eingesetzt werden.
+- [Codex-App-Harness-Tutorial](https://www.human-agent-interface.com/tutorials/CODEX_APP_HARNESS_TUTORIAL.md): Harness-Ablauf für die Codex-App.
+- [Multi-Tool-Harness-Tutorial](https://www.human-agent-interface.com/tutorials/MULTI_TOOL_HARNESS_TUTORIAL.md): derselbe Ablauf über Claude Code, Hermes, OpenCode und weitere Tools.
+
+## HAI
+
+- [Startseite](https://www.human-agent-interface.com/): Was HAI ist und für wen.
+- [Was ist HAI](https://www.human-agent-interface.com/what_it_is/): Definition und Abgrenzung zu Agent-Frameworks.
+- [Nachweise](https://www.human-agent-interface.com/proof/): Belege aus echter Agentenarbeit.
+
+## HAI-MCP
+
+- [HAI-MCP](https://www.human-agent-interface.com/hai-mcp/): Übersicht der MCP-Implementierung von HAI.
+- [smlfg/hai-mcp auf GitHub](https://github.com/smlfg/hai-mcp): Quellcode. HAI-MCP ruft selbst kein Sprachmodell auf.
+
+## Samuel Fleig
+
+- [Über Samuel Fleig](https://www.human-agent-interface.com/samuel/): AI Engineer, Entwickler von HAI. GitHub-Handle: smlfg.
+
+## Kontakt
+
+- E-Mail: samuel@human-agent-interface.com
+- [Impressum](https://www.human-agent-interface.com/impressum/)
+- [Datenschutz](https://www.human-agent-interface.com/datenschutz/)
