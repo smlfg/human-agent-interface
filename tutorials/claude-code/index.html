@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claude Code Tutorial: Schnellstart, Workflow, Stärken und Schwächen — Human Agent Interface</title>
+  <meta name="description" content="Praxis-Tutorial für Claude Code als Coding-Agent: Schnellstart, typischer Workflow, Stärken nutzen, Schwächen kompensieren, Übergaben an andere Agenten.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/tutorials/claude-code/">
+  <link rel="icon" href="/favicon.png">
+  <style>
+    :root { color-scheme: dark; --ink:#f7f1df; --muted:#b7ad97; --void:#090a08; --panel:rgba(247,241,223,.06); --line:rgba(247,241,223,.18); --signal:#a7ff4f; --mono:ui-monospace,SFMono-Regular,Menlo,monospace; }
+    @media (prefers-color-scheme: light) { :root { color-scheme: light; --ink:#16180f; --muted:#5c5647; --void:#f6f1e4; --panel:rgba(22,24,15,.05); --line:rgba(22,24,15,.16); --signal:#3d7a00; } }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--void); color:var(--ink); font:17px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    .wrap { width:min(100% - 32px, 780px); margin:0 auto; }
+    header, footer { border-bottom:1px solid var(--line); padding:14px 0; font-size:.9rem; }
+    footer { border-top:1px solid var(--line); border-bottom:0; margin-top:56px; color:var(--muted); }
+    a { color:var(--signal); }
+    .crumbs a { color:var(--muted); text-decoration:none; }
+    .stand { border-left:3px solid var(--signal); background:var(--panel); padding:10px 14px; color:var(--muted); font-size:.92rem; margin:22px 0; }
+    h1 { font-size:clamp(1.7rem,4vw,2.4rem); line-height:1.15; margin:28px 0 8px; }
+    h2 { margin-top:40px; border-top:1px solid var(--line); padding-top:20px; }
+    pre { background:var(--panel); border:1px solid var(--line); padding:14px; overflow-x:auto; font:14px/1.5 var(--mono); }
+    code { font-family:var(--mono); font-size:.92em; }
+    table { border-collapse:collapse; width:100%; display:block; overflow-x:auto; font-size:.92rem; }
+    th, td { border:1px solid var(--line); padding:6px 10px; text-align:left; vertical-align:top; }
+    blockquote { margin:0; padding:4px 16px; border-left:3px solid var(--line); color:var(--muted); }
+    .cta { margin:48px 0 0; padding:20px; border:1px solid var(--signal); }
+    .cta strong { display:block; font-size:1.1rem; margin-bottom:6px; }
+  </style>
+</head>
+<body>
+  <header><div class="wrap crumbs"><a href="/">Human Agent Interface</a> / <a href="/tutorials/">Tutorials</a> / Claude Code Tutorial</div></header>
+  <main class="wrap">
+    <h1>Claude Code — Harness Tutorial</h1>
+    <p class="stand">Stand: März 2026. Aus der täglichen Praxis mit Claude Code; Flags, Preise und Bugs können sich seitdem geändert haben. Siehe auch: <a href="https://www.human-agent-interface.com/tutorials/claude-code/referenz/">Claude Code Referenz</a>.</p>
+
+<blockquote>
+<p>Pipeline-Rolle: <strong>Richtung geben</strong> (Wave 1 Scout)
+Claude Code entscheidet wo es lang geht. Die anderen Harnesses bauen.</p>
+</blockquote>
+<hr />
+<h2>1. Quick Start</h2>
+<pre><code class="language-bash">cd ~/Projekte/MeinProjekt
+claude                        # interaktive Session starten
+# oder direkt in Plan Mode:
+claude --plan                 # Architektur-Modus, kein Code wird geschrieben
+</code></pre>
+<p>Erste 3 Befehle in jeder Session:</p>
+<pre><code>&gt; /status                    # Was ist offen? Welche Tasks?
+&gt; git status                 # Sauberer Working Tree?
+&gt; Lies BACKLOG.md            # Was steht an?
+</code></pre>
+<p>Dann Plan Mode aktivieren für Architektur-Entscheidungen:</p>
+<pre><code>&gt; Plan Mode: Wie baue ich Feature X?
+</code></pre>
+<hr />
+<h2>2. Typischer Workflow</h2>
+<p><strong>Reihenfolge einhalten — nicht improvisieren:</strong></p>
+<ol>
+<li><strong>Plan Mode</strong> — Erst denken, dann bauen. Architektur skizzieren lassen.</li>
+<li><strong>Subagents spawnen</strong> — Recherche parallel delegieren (<code>run_in_background: true</code>).</li>
+<li><strong>Entscheidung treffen</strong> — Du entscheidest zwischen Optionen, Claude Code schlägt vor.</li>
+<li><strong>Tasksheet schreiben</strong> — Ergebnis als Briefing fuer das naechste Harness exportieren.</li>
+</ol>
+<p>Beispiel-Flow:</p>
+<pre><code>&gt; Plan: Ich brauche ein Dashboard fuer AgentArena. Was sind meine Optionen?
+[Plan Mode Output lesen]
+&gt; Spawne einen Subagent um FastAPI vs Flask zu vergleichen.
+[Ergebnis abwarten]
+&gt; Entscheidung: FastAPI. Schreib ein Tasksheet fuer Hermes.
+</code></pre>
+<p>Tasksheet-Template liegt in <code>~/Projekte/harness-tasksheets/</code>.</p>
+<hr />
+<h2>3. Starken nutzen</h2>
+<p><strong>Orchestrierung:</strong> Claude Code ist der einzige Harness der Subagents sauber koordiniert.
+Parallel-Spawning nutzen wann immer Teilaufgaben unabhaengig sind.</p>
+<pre><code>&gt; Spawne 3 Subagents parallel:
+  - Agent 1: Lies src/api.py und fasse die Endpunkte zusammen
+  - Agent 2: Recherchiere FastAPI WebSocket Best Practices
+  - Agent 3: Pruefe ob tests/ aktuell sind
+</code></pre>
+<p><strong>Codebase-Analyse:</strong> Grosse Codebases (100+ Dateien) — Claude Code liest
+schneller und vollstaendiger als alle anderen Harnesses.</p>
+<p><strong>CLAUDE.md als Verhaltenssteuerung:</strong> Projektspezifische Regeln in
+<code>~/Projekte/MeinProjekt/CLAUDE.md</code> schreiben. Claude Code haelt sich daran.</p>
+<p><strong>Skills und Slash-Commands:</strong> <code>/research</code>, <code>/status</code>, <code>/plan</code> — nutzen statt
+manuell briefe formulieren.</p>
+<hr />
+<h2>4. Schwachen kompensieren</h2>
+<p><strong>Kosten:</strong> Opus kostet ~$15/1M Tokens. Jede unnoetige Aktion verbrennt Geld.
+- Nie Opus fuer Recherche nutzen — Sonnet-Subagent reicht
+- Nie <code>cat grosse_datei.py</code> — Read-Tool mit Limit nutzen
+- Explorationen begrenzen: nach 1 fehlgeschlagenen Ansatz STOPP, den Owner fragen</p>
+<p><strong>Over-Engineering:</strong> Claude Code neigt dazu mehr zu bauen als beauftragt.
+- Scope explizit eingrenzen: "Nur Funktion X, nicht das ganze Modul"
+- Nach Plan Mode pruefen: Ist das was geplant wurde was ich wollte?</p>
+<p><strong>Session Hoarding:</strong> Lange Sessions akkumulieren Context. Nach ~45 Minuten:
+- <code>/compact</code> ausfuehren oder neue Session starten
+- Wichtige Entscheidungen in Dateien schreiben, nicht im Chat lassen</p>
+<p><strong>Nicht fuer Implementierung:</strong> Claude Code plant und orchestriert.
+Implementierung gehoert in Hermes oder OpenCode.</p>
+<hr />
+<h2>5. Handoff-Muster</h2>
+<p><strong>Von Claude Code zu OpenCode (Reality-Check):</strong></p>
+<pre><code class="language-bash"># Architektur-Doc exportieren
+&gt; Schreib ARCHITECTURE.md mit dem Plan den wir gerade erarbeitet haben
+# Dann OpenCode briefen:
+opencode run &quot;Lies ARCHITECTURE.md und erstelle einen Gegenentwurf&quot;
+</code></pre>
+<p><strong>Von Claude Code zu Hermes (Implementierung):</strong></p>
+<pre><code class="language-bash"># Tasksheet ausfullen
+&gt; Schreib ein Tasksheet fuer Hermes: Feature X, Scope Y, Output-Pfad Z
+# Datei speichern als:
+~/Projekte/harness-tasksheets/task-feature-x.md
+# Hermes starten mit:
+hermes chat
+&gt; [Tasksheet einfuegen]
+</code></pre>
+<p><strong>Kontext-Export fuer jedes Harness:</strong>
+- Entscheidungen → <code>ARCHITECTURE.md</code> oder <code>DECISIONS.md</code>
+- Offene Tasks → <code>BACKLOG.md</code>
+- Naechster Schritt → Tasksheet in <code>harness-tasksheets/</code></p>
+<hr />
+<h2>6. Kosten-Tipps</h2>
+<p><strong>Wellenmodus respektieren:</strong> Claude Code ist Wave 1 Scout. Nicht Wave 2 (Implementierung) oder Wave 3 (Polishing) ubernehmen.</p>
+<pre><code>Wave 1: Claude Code → Plan, Architektur, Briefing
+Wave 2: OpenCode + Hermes → Implementierung, Reality-Check
+Wave 3: Codex → Polishing, Docs, Ship
+</code></pre>
+<p><strong>Sonnet-Subagents statt Opus direkt:</strong></p>
+<pre><code># Teuer:
+&gt; Recherchiere WebSocket-Patterns in Python
+# Guenstig:
+&gt; Spawne Sonnet-Subagent: Recherchiere WebSocket-Patterns in Python
+</code></pre>
+<p><strong>Max 2 aktive Sessions:</strong> Mehr als 2 parallele Claude Code Sessions = Context-Chaos und doppelte Kosten.</p>
+<p><strong>Lesen vor Spawn:</strong> Immer erst relevante Dateien lesen bevor ein Subagent gestartet wird. Verhindert dass der Subagent Dinge nochmal herausfindet die schon bekannt sind.</p>
+<p><strong>Plan Mode vor allem anderen:</strong> Plan Mode generiert keinen Code, kostet aber fast gleich viel. Trotzdem sinnvoll weil ein schlechter Plan = viel mehr Tokens fuer Korrekturen.</p>
+<p><strong>Faustregeln:</strong>
+- Kurze Analyse: &lt;$0.05
+- Vollstaendige Codebase-Analyse: ~$0.20-0.50
+- Subagent-Wave mit 3 Agents: ~$0.10-0.30
+- Session ohne Fokus (&gt;1h): $1-3+ → abbrechen</p>
+    <aside class="cta">
+      <strong>Dein Setup hakt trotzdem?</strong>
+      Setup-Rettung: 90 Minuten remote an deinem Rechner, 190 € Festpreis.
+      <a href="/agentfaehig/">Angebote ansehen</a> oder
+      <a href="https://cal.com/human-agent-interface/agent-check" target="_blank" rel="noopener">kostenlosen 20-Min-Termin buchen</a>.
+    </aside>
+  </main>
+  <footer><div class="wrap"><a href="/">Human Agent Interface</a> · <a href="/tutorials/">Tutorials</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></div></footer>
+</body>
+</html>

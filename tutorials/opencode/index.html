@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OpenCode Tutorial: Schnellstart, Workflow, Stärken und Schwächen — Human Agent Interface</title>
+  <meta name="description" content="Praxis-Tutorial für OpenCode als Coding-Agent: Schnellstart, typischer Workflow, Stärken nutzen, Schwächen kompensieren, Übergaben an andere Agenten.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/tutorials/opencode/">
+  <link rel="icon" href="/favicon.png">
+  <style>
+    :root { color-scheme: dark; --ink:#f7f1df; --muted:#b7ad97; --void:#090a08; --panel:rgba(247,241,223,.06); --line:rgba(247,241,223,.18); --signal:#a7ff4f; --mono:ui-monospace,SFMono-Regular,Menlo,monospace; }
+    @media (prefers-color-scheme: light) { :root { color-scheme: light; --ink:#16180f; --muted:#5c5647; --void:#f6f1e4; --panel:rgba(22,24,15,.05); --line:rgba(22,24,15,.16); --signal:#3d7a00; } }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--void); color:var(--ink); font:17px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    .wrap { width:min(100% - 32px, 780px); margin:0 auto; }
+    header, footer { border-bottom:1px solid var(--line); padding:14px 0; font-size:.9rem; }
+    footer { border-top:1px solid var(--line); border-bottom:0; margin-top:56px; color:var(--muted); }
+    a { color:var(--signal); }
+    .crumbs a { color:var(--muted); text-decoration:none; }
+    .stand { border-left:3px solid var(--signal); background:var(--panel); padding:10px 14px; color:var(--muted); font-size:.92rem; margin:22px 0; }
+    h1 { font-size:clamp(1.7rem,4vw,2.4rem); line-height:1.15; margin:28px 0 8px; }
+    h2 { margin-top:40px; border-top:1px solid var(--line); padding-top:20px; }
+    pre { background:var(--panel); border:1px solid var(--line); padding:14px; overflow-x:auto; font:14px/1.5 var(--mono); }
+    code { font-family:var(--mono); font-size:.92em; }
+    table { border-collapse:collapse; width:100%; display:block; overflow-x:auto; font-size:.92rem; }
+    th, td { border:1px solid var(--line); padding:6px 10px; text-align:left; vertical-align:top; }
+    blockquote { margin:0; padding:4px 16px; border-left:3px solid var(--line); color:var(--muted); }
+    .cta { margin:48px 0 0; padding:20px; border:1px solid var(--signal); }
+    .cta strong { display:block; font-size:1.1rem; margin-bottom:6px; }
+  </style>
+</head>
+<body>
+  <header><div class="wrap crumbs"><a href="/">Human Agent Interface</a> / <a href="/tutorials/">Tutorials</a> / OpenCode Tutorial</div></header>
+  <main class="wrap">
+    <h1>OpenCode — Harness Tutorial</h1>
+    <p class="stand">Stand: März 2026. Aus der täglichen Praxis mit OpenCode; Flags, Preise und Bugs können sich seitdem geändert haben. Siehe auch: <a href="https://www.human-agent-interface.com/tutorials/opencode/referenz/">OpenCode Referenz</a>.</p>
+
+<blockquote>
+<p>Pipeline-Rolle: <strong>Reality-Check</strong> (Wave 2, Gegenentwurf)
+OpenCode prueft ob der Plan von Claude Code Sinn ergibt — und baut schnell erste Strukturen.</p>
+</blockquote>
+<hr />
+<h2>1. Quick Start</h2>
+<pre><code class="language-bash">cd ~/Projekte/MeinProjekt     # WICHTIG: im Projektordner starten, nicht woanders
+
+opencode                      # interaktive TUI-Session
+# oder one-shot:
+opencode run &quot;Erstelle eine index.html fuer das Dashboard&quot;
+</code></pre>
+<p>Erste Schritte nach dem Start:</p>
+<pre><code>&gt; Lies ARCHITECTURE.md        # Was hat Claude Code geplant?
+&gt; Lies harness-tasksheets/task-aktuell.md   # Was ist mein Auftrag?
+&gt; Erstelle einen Gegenentwurf zu Abschnitt 2
+</code></pre>
+<p>TUI-Navigation:
+- <code>Tab</code> — zwischen Panels wechseln
+- <code>Ctrl+C</code> — Session beenden
+- <code>/model</code> — Modell wechseln (MiniMax fuer guenstige Runs)</p>
+<hr />
+<h2>2. Typischer Workflow</h2>
+<p><strong>OpenCode ist kein Planer — es ist ein Prufer und schneller Builder.</strong></p>
+<ol>
+<li><strong>Vorarbeit lesen</strong> — Was hat Claude Code in ARCHITECTURE.md entschieden?</li>
+<li><strong>Gegenentwurf erstellen</strong> — Alternativen aufzeigen, Annahmen hinterfragen.</li>
+<li><strong>Scope-Check</strong> — Stimmt das Tasksheet? Ist der Output-Pfad klar?</li>
+<li><strong>Bauen</strong> — Dateistruktur anlegen, HTML-Skeleton, Python-Geruest.</li>
+<li><strong>Ergebnis dokumentieren</strong> — Was wurde gebaut, was wurde weggelassen, warum.</li>
+</ol>
+<p>Beispiel Reality-Check Session:</p>
+<pre><code class="language-bash">opencode run &quot;Lies ARCHITECTURE.md. Identifiziere die 3 groessten Risiken im Plan.&quot;
+</code></pre>
+<p>Beispiel Schnell-Build:</p>
+<pre><code class="language-bash">opencode run &quot;
+Erstelle folgende Dateistruktur fuer ein FastAPI-Dashboard:
+- src/main.py (FastAPI App mit /health Endpunkt)
+- src/templates/index.html (Bootstrap 5, leeres Dashboard-Layout)
+- requirements.txt (fastapi, uvicorn, jinja2)
+Scope: NUR diese 3 Dateien, kein extra Code.
+&quot;
+</code></pre>
+<hr />
+<h2>3. Starken nutzen</h2>
+<p><strong>Schnelles Planen:</strong> OpenCode liefert in &lt;30 Sekunden einen Gegenplan.
+Ideal wenn Claude Code Bedenken hat die validiert werden muessen.</p>
+<p><strong>Parallele Recherche:</strong> Mehrere opencode-Instanzen parallel starten:</p>
+<pre><code class="language-bash">opencode run &quot;Recherchiere FastAPI WebSocket&quot; &amp;
+opencode run &quot;Recherchiere Svelte vs React fuer Dashboards&quot; &amp;
+wait
+</code></pre>
+<p><strong>Saubere Dateistruktur:</strong> OpenCode legt Dateien ordentlich an.
+HTML + Python zusammen — besser als Hermes darin.</p>
+<p><strong>Guenstig fuer Drafts:</strong> Mit MiniMax (~$0.10/1M) kostet ein komplettes
+HTML-Skeleton fast nichts. Lieber einen Draft wegwerfen als ihn teuer planen.</p>
+<p><strong>One-shot gut geeignet fuer:</strong>
+- README-Drafts generieren
+- requirements.txt aus Codebase ableiten
+- Dateistruktur anlegen
+- Bestehenden Code in andere Sprache uebersetzen</p>
+<hr />
+<h2>4. Schwachen kompensieren</h2>
+<p><strong>Scope-Drift:</strong> OpenCode fragt NICHT zurueck. Es baut was es fuer richtig haelt.
+Ohne explizites Briefing entsteht oft das Falsche.</p>
+<p>Schlecht:</p>
+<pre><code>&gt; Bau ein Dashboard
+</code></pre>
+<p>Gut:</p>
+<pre><code>&gt; Bau ein Dashboard. Scope: NUR src/templates/index.html.
+  Bootstrap 5. Kein JavaScript ausser was Bootstrap mitbringt.
+  Kein Backend, keine API-Calls. Nur HTML-Skeleton.
+  Output-Pfad: src/templates/index.html
+</code></pre>
+<p><strong>Website statt Dashboard:</strong> OpenCode neigt dazu bei "Dashboard" eine
+Marketing-Website zu bauen. Immer explizit sagen: "Admin-Dashboard, nicht Landing Page."</p>
+<p><strong>Feedback-Annahme schwach:</strong> Wenn OpenCode etwas falsch gebaut hat:
+- NICHT: "Das ist falsch, mach nochmal"
+- BESSER: Session beenden, neues Briefing mit explizitem Korrektiv</p>
+<pre><code class="language-bash">opencode run &quot;
+Vorher wurde index.html als Landing Page gebaut — das war falsch.
+Jetzt: Admin-Dashboard fuer Monitoring. Keine Hero-Section, kein Marketing.
+Nur: Navbar, Sidebar mit 3 Links, Main-Content-Area mit Platzhalter-Cards.
+&quot;
+</code></pre>
+<p><strong>Kein Gedaechtnis zwischen Sessions:</strong> Jeder <code>opencode run</code> startet frisch.
+Kontext muss immer mitgegeben werden.</p>
+<hr />
+<h2>5. Handoff-Muster</h2>
+<p><strong>Von Claude Code zu OpenCode:</strong></p>
+<pre><code class="language-bash"># Claude Code schreibt ARCHITECTURE.md
+# Dann:
+opencode run &quot;Lies ARCHITECTURE.md und erstelle einen Reality-Check: Was koennte schiefgehen?&quot;
+</code></pre>
+<p><strong>Von OpenCode zu Hermes (Implementierung):</strong></p>
+<pre><code class="language-bash"># OpenCode hat Dateistruktur angelegt und Plan validiert
+# Jetzt Hermes mit dem Ergebnis briefen:
+hermes chat
+&gt; Lies src/main.py und src/templates/index.html.
+  OpenCode hat das Geruest gebaut. Deine Aufgabe: Implementiere Endpunkt /api/status
+  der JSON zurueckgibt: {&quot;status&quot;: &quot;ok&quot;, &quot;agents&quot;: []}.
+  Nur diese eine Funktion.
+</code></pre>
+<p><strong>Was OpenCode an Hermes uebergibt:</strong>
+- Dateistruktur (angelegt, nicht implementiert)
+- Plan-Validierung als Kommentar in DECISIONS.md
+- Liste der bewusst weggelassenen Features</p>
+<hr />
+<h2>6. Kosten-Tipps</h2>
+<p><strong>MiniMax nutzen:</strong> OpenCode unterstuetzt Modellwechsel. MiniMax ist
+~150x guenstiger als Opus. Fuer Drafts und Reality-Checks vollig ausreichend.</p>
+<pre><code>/model minimax/minimax-text-01
+</code></pre>
+<p><strong>Kurzes aber vollstaendiges Briefing:</strong> Ein schlechtes Briefing fuehrt
+zu einem falschen Output — das kostet einen Re-Run. Re-Run = doppelte Tokens.
+Lieber 2 Minuten laenger briefen als zweimal zahlen.</p>
+<p><strong>One-shot statt TUI fuer einfache Tasks:</strong></p>
+<pre><code class="language-bash"># Guenestiger als TUI-Session:
+opencode run &quot;Erstelle requirements.txt fuer src/*.py&quot;
+</code></pre>
+<p><strong>Scope eingrenzen spart Tokens:</strong> Je groesser der Scope, desto mehr
+generiert OpenCode. 3 Dateien zu erzeugen kostet weniger als 10.</p>
+<p><strong>Falscher Scope = verschwendete Tokens:</strong> Wenn OpenCode eine Website
+statt ein Dashboard baut, sind alle generierten Tokens umsonst.
+Briefing-Zeit ist billiger als Re-Run-Kosten.</p>
+<p><strong>Faustregeln:</strong>
+- Reality-Check (ARCHITECTURE.md lesen + Feedback): ~$0.01-0.02
+- HTML-Skeleton generieren: ~$0.02-0.05
+- Vollstaendiges Dateigeruest (5-10 Dateien): ~$0.05-0.15
+- Re-Run wegen schlechtem Briefing: gleiche Kosten nochmal</p>
+    <aside class="cta">
+      <strong>Dein Setup hakt trotzdem?</strong>
+      Setup-Rettung: 90 Minuten remote an deinem Rechner, 190 € Festpreis.
+      <a href="/agentfaehig/">Angebote ansehen</a> oder
+      <a href="https://cal.com/human-agent-interface/agent-check" target="_blank" rel="noopener">kostenlosen 20-Min-Termin buchen</a>.
+    </aside>
+  </main>
+  <footer><div class="wrap"><a href="/">Human Agent Interface</a> · <a href="/tutorials/">Tutorials</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></div></footer>
+</body>
+</html>

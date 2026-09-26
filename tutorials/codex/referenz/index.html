@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Codex Referenz: Architektur, Konfiguration und Tuning — Human Agent Interface</title>
+  <meta name="description" content="Referenz für Codex: Architektur, Konfigurationsdateien, Tuning, Vor- und Nachteile und wichtige Befehle — aus der täglichen Praxis.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/tutorials/codex/referenz/">
+  <link rel="icon" href="/favicon.png">
+  <style>
+    :root { color-scheme: dark; --ink:#f7f1df; --muted:#b7ad97; --void:#090a08; --panel:rgba(247,241,223,.06); --line:rgba(247,241,223,.18); --signal:#a7ff4f; --mono:ui-monospace,SFMono-Regular,Menlo,monospace; }
+    @media (prefers-color-scheme: light) { :root { color-scheme: light; --ink:#16180f; --muted:#5c5647; --void:#f6f1e4; --panel:rgba(22,24,15,.05); --line:rgba(22,24,15,.16); --signal:#3d7a00; } }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--void); color:var(--ink); font:17px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    .wrap { width:min(100% - 32px, 780px); margin:0 auto; }
+    header, footer { border-bottom:1px solid var(--line); padding:14px 0; font-size:.9rem; }
+    footer { border-top:1px solid var(--line); border-bottom:0; margin-top:56px; color:var(--muted); }
+    a { color:var(--signal); }
+    .crumbs a { color:var(--muted); text-decoration:none; }
+    .stand { border-left:3px solid var(--signal); background:var(--panel); padding:10px 14px; color:var(--muted); font-size:.92rem; margin:22px 0; }
+    h1 { font-size:clamp(1.7rem,4vw,2.4rem); line-height:1.15; margin:28px 0 8px; }
+    h2 { margin-top:40px; border-top:1px solid var(--line); padding-top:20px; }
+    pre { background:var(--panel); border:1px solid var(--line); padding:14px; overflow-x:auto; font:14px/1.5 var(--mono); }
+    code { font-family:var(--mono); font-size:.92em; }
+    table { border-collapse:collapse; width:100%; display:block; overflow-x:auto; font-size:.92rem; }
+    th, td { border:1px solid var(--line); padding:6px 10px; text-align:left; vertical-align:top; }
+    blockquote { margin:0; padding:4px 16px; border-left:3px solid var(--line); color:var(--muted); }
+    .cta { margin:48px 0 0; padding:20px; border:1px solid var(--signal); }
+    .cta strong { display:block; font-size:1.1rem; margin-bottom:6px; }
+  </style>
+</head>
+<body>
+  <header><div class="wrap crumbs"><a href="/">Human Agent Interface</a> / <a href="/tutorials/">Tutorials</a> / Codex Referenz</div></header>
+  <main class="wrap">
+    <h1>Codex CLI Harness — Referenz-Guide</h1>
+    <p class="stand">Stand: März 2026. Aus der täglichen Praxis mit Codex; Flags, Preise und Bugs können sich seitdem geändert haben. Siehe auch: <a href="https://www.human-agent-interface.com/tutorials/codex/">Codex Tutorial</a>.</p>
+
+<blockquote>
+<p>Für alle, die Claude Code gut kennen: Dieser Guide erklärt Codex im direkten Vergleich.</p>
+</blockquote>
+<hr />
+<h2>1. Architektur</h2>
+<p>Codex ist OpenAIs autonomer Coding-Agent mit TUI und Non-interactive-Mode. Konfiguration läuft über TOML statt JSON.</p>
+<pre><code>codex (CLI)
+├── interaktive TUI         — Standard bei `codex` ohne Argumente
+├── codex exec &quot;prompt&quot;     — Non-interactive One-Shot Execution
+├── codex review            — Eingebauter Code-Review-Modus
+├── codex resume/fork       — Session-Management
+└── codex features          — Feature-Flag-Verwaltung
+</code></pre>
+<p><strong>Schichten-Überblick:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Schicht</th>
+<th>Pfad</th>
+<th>Funktion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Haupt-Config</td>
+<td><code>~/.codex/config.toml</code></td>
+<td>Modell, Trust-Level, Migrationen</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td><code>~/.codex/auth.json</code></td>
+<td>ChatGPT OAuth Tokens (Google Account)</td>
+</tr>
+<tr>
+<td>Runbooks</td>
+<td><code>~/.codex/runbooks/</code></td>
+<td>Session-Typ-Instruktionen (4 Typen)</td>
+</tr>
+<tr>
+<td>Approval-Rules</td>
+<td><code>~/.codex/rules/default.rules</code></td>
+<td>Command-Approval via <code>prefix_rule</code></td>
+</tr>
+<tr>
+<td>Skills</td>
+<td><code>~/.codex/skills/</code></td>
+<td>33 Skill-Verzeichnisse</td>
+</tr>
+<tr>
+<td>Logs</td>
+<td><code>~/.codex/log/</code></td>
+<td>Session-Logs</td>
+</tr>
+<tr>
+<td>History</td>
+<td><code>~/.codex/history.jsonl</code></td>
+<td>Session-History</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Kernunterschied zu Claude Code:</strong> Codex verwendet <em>Runbooks</em> statt Hooks. Wo Claude Code mit PreToolUse/PostToolUse-Hooks in Shell oder Python Verhalten steuert, definiert Codex pro Session-Typ eine Markdown-Instruktionsdatei. Kein programmatisches Hook-System.</p>
+<p><strong>Auth-Modell:</strong> Nicht API-Key-basiert wie Claude Code — Codex nutzt ChatGPT OAuth (Google Account, auto-refresh). Token liegt in <code>~/.codex/auth.json</code>. Kein manuelles Key-Rotieren nötig.</p>
+<hr />
+<h2>2. Konfiguration</h2>
+<h3>config.toml</h3>
+<pre><code class="language-toml">model = &quot;gpt-5.4&quot;
+model_reasoning_effort = &quot;medium&quot;  # low | medium | high | xhigh
+
+[projects.&quot;~/Projekte&quot;]
+trust_level = &quot;trusted&quot;
+
+[projects.&quot;~/Projekte/untrusted-experiment&quot;]
+trust_level = &quot;untrusted&quot;
+
+[notice.model_migrations]
+&quot;gpt-5.1-codex-max&quot; = &quot;gpt-5.4&quot;   # Auto-Redirect veralteter Modell-Namen
+</code></pre>
+<p><strong>Trust-Level</strong> ist das Äquivalent zu Claude Codes Permissions-System — aber granularer, weil per-Project und nicht global. Aktuell: 17 trusted, 2 untrusted Projekte.</p>
+<h3>Runbooks (~/.codex/runbooks/)</h3>
+<p>Jeder Session-Typ hat eine eigene Instruktionsdatei:</p>
+<table>
+<thead>
+<tr>
+<th>Runbook</th>
+<th>Zweck</th>
+<th>Wann verwenden</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>build.md</code></td>
+<td>"Implement one stable outcome"</td>
+<td>Feature bauen, Bug fixen</td>
+</tr>
+<tr>
+<td><code>planning.md</code></td>
+<td>"Fuzzy goals → buildable artifacts"</td>
+<td>Ideen strukturieren, Architektur</td>
+</tr>
+<tr>
+<td><code>review.md</code></td>
+<td>"Quality + regression checks"</td>
+<td>Code reviewen, vor Commit</td>
+</tr>
+<tr>
+<td><code>inspect.md</code></td>
+<td>"Read-only exploration"</td>
+<td>Codebase verstehen, Analyse</td>
+</tr>
+</tbody>
+</table>
+<p>Runbooks direkt editieren für projekt-spezifische Instruktionen — das ist Codex' Äquivalent zu CLAUDE.md (AGENTS.md ist geplant, aber noch nicht implementiert).</p>
+<h3>Approval-Policies</h3>
+<p>Codex hat zwei orthogonale Kontrollebenen — Sandbox-Mode (was darf die Umgebung?) und Approval-Policy (wann fragt der Agent nach?):</p>
+<table>
+<thead>
+<tr>
+<th>Sandbox-Mode</th>
+<th>Bedeutung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>read-only</code></td>
+<td>Nur lesen, keine Schreiboperationen</td>
+</tr>
+<tr>
+<td><code>workspace-write</code></td>
+<td>Schreiben im Projektverzeichnis erlaubt</td>
+</tr>
+<tr>
+<td><code>danger-full-access</code></td>
+<td>Unbeschränkter Zugriff</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Approval-Policy</th>
+<th>Bedeutung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>untrusted</code></td>
+<td>Fragt bei allem nach</td>
+</tr>
+<tr>
+<td><code>on-request</code></td>
+<td>Fragt nur wenn unsicher</td>
+</tr>
+<tr>
+<td><code>on-failure</code></td>
+<td>Fragt nur bei Fehler</td>
+</tr>
+<tr>
+<td><code>never</code></td>
+<td>Fragt nie (volle Autonomie)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Vergleich zu Claude Code:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Claude Code</th>
+<th>Codex</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Config-Format</td>
+<td>JSON</td>
+<td>TOML</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>API Key (Anthropic)</td>
+<td>ChatGPT OAuth (Google)</td>
+</tr>
+<tr>
+<td>Modell</td>
+<td>Claude Opus/Sonnet/Haiku</td>
+<td>GPT-5.4 (OpenAI)</td>
+</tr>
+<tr>
+<td>Hooks</td>
+<td>5 Lifecycle-Points (Shell/Python)</td>
+<td>Keine — Runbooks statt Hooks</td>
+</tr>
+<tr>
+<td>Session-Typen</td>
+<td>Frei (Plan Mode optional)</td>
+<td>4 definierte Typen</td>
+</tr>
+<tr>
+<td>Sandbox</td>
+<td>Permissions allow/deny</td>
+<td>3 Sandbox-Modes + 4 Approval-Policies</td>
+</tr>
+<tr>
+<td>Trust</td>
+<td>Global</td>
+<td>Per-Project Trust-Level</td>
+</tr>
+<tr>
+<td>Skills</td>
+<td>SKILL.md in ~/.claude/skills/</td>
+<td>33 Skill-Verzeichnisse</td>
+</tr>
+<tr>
+<td>Feature Flags</td>
+<td>Nicht vorhanden</td>
+<td>Togglebar</td>
+</tr>
+<tr>
+<td>Regel-Datei</td>
+<td>CLAUDE.md</td>
+<td>AGENTS.md (geplant, noch nicht aktiv)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>3. Tuning</h2>
+<h3>Modell und Reasoning-Tiefe</h3>
+<pre><code class="language-bash">codex -m gpt-5.4 &quot;prompt&quot;                          # Modell wählen
+codex -c model_reasoning_effort=&quot;high&quot; exec &quot;...&quot;   # Mehr Reasoning
+codex -c model_reasoning_effort=&quot;xhigh&quot; exec &quot;...&quot;  # Maximum — langsamer, gründlicher
+</code></pre>
+<p><code>xhigh</code> entspricht ungefähr Claude Codes extended thinking — für komplexe Architektur- oder Debug-Tasks sinnvoll, für einfache Edits Overhead.</p>
+<h3>Sandbox + Approval kombinieren</h3>
+<pre><code class="language-bash"># Standard für den meisten Alltag: Schreiben erlaubt, fragt bei Unsicherheit
+codex exec -s workspace-write -a on-request &quot;...&quot;
+
+# Shorthand (identisch mit oben)
+codex exec --full-auto &quot;...&quot;
+
+# Nur lesen — für Analyse und Review
+codex exec -s read-only &quot;...&quot;
+
+# Volle Autonomie — nur für bekannte, stabile Aufgaben
+codex exec -s workspace-write -a never &quot;...&quot;
+</code></pre>
+<h3>Trust-Level per Projekt setzen</h3>
+<pre><code class="language-toml"># In ~/.codex/config.toml ergänzen:
+[projects.&quot;~/Projekte/MeinNeuesProjekt&quot;]
+trust_level = &quot;trusted&quot;
+</code></pre>
+<p>Nach dem Editieren kein Reload nötig — wird beim nächsten <code>codex</code>-Aufruf im Verzeichnis gelesen.</p>
+<h3>Feature Flags</h3>
+<pre><code class="language-bash">codex features list                     # Alle Features und Status anzeigen
+codex features enable multi_agent       # Feature global aktivieren
+codex features disable js_repl          # Feature deaktivieren
+codex --enable multi_agent exec &quot;...&quot;   # Nur für diese Session aktivieren
+</code></pre>
+<p><strong>Stabile Features</strong> (produktionstauglich): <code>multi_agent</code>, <code>personality</code>, <code>shell_snapshot</code>, <code>shell_tool</code>, <code>enable_request_compression</code>, <code>fast_mode</code></p>
+<p><strong>Experimentell</strong> (mit Vorsicht): <code>guardian_approval</code>, <code>js_repl</code>, <code>prevent_idle_sleep</code></p>
+<p><strong>In Entwicklung</strong> (nicht für Produktion): <code>code_mode</code>, <code>memories</code>, <code>plugins</code>, <code>realtime_conversation</code>, <code>child_agents_md</code></p>
+<h3>Session Management</h3>
+<pre><code class="language-bash">codex resume              # Interaktiver Session-Picker
+codex resume --last       # Direkt letzte Session fortsetzen
+codex fork                # Session branchen (Picker)
+codex fork --last         # Letzte Session forken — für Experimente ohne Hauptsession zu verlieren
+</code></pre>
+<p><code>fork</code> ist praktisch wenn eine Session gut läuft, aber ein riskanter nächster Schritt ansteht — Branch erstellen, ausprobieren, bei Bedarf zur Hauptsession zurück.</p>
+<h3>Code Review</h3>
+<pre><code class="language-bash">codex review                                      # Alle uncommitted Changes
+codex review --base main                          # Diff gegen Branch
+codex review --commit abc123                      # Einzelnen Commit reviewen
+codex review --uncommitted &quot;Focus on security&quot;    # Mit Custom-Focus
+</code></pre>
+<p>Kein Equivalent in Claude Code nativ — dort müsste man den Review manuell als Prompt formulieren.</p>
+<h3>Runbooks anpassen</h3>
+<pre><code class="language-bash"># Build-Runbook für eigene Konventionen ergänzen:
+nano ~/.codex/runbooks/build.md
+# → Projekt-Konventionen, Testbefehle, Style-Regeln eintragen
+
+# Eigenes Runbook für speziellen Workflow:
+cp ~/.codex/runbooks/build.md ~/.codex/runbooks/debug.md
+# → Dann mit `codex --runbook debug exec &quot;...&quot;` aufrufen
+</code></pre>
+<hr />
+<h2>4. Vor- und Nachteile</h2>
+<h3>Vorteile</h3>
+<ul>
+<li><strong>Bestes Endprodukt in Evals:</strong> Liefert konsistent hübsche, fertige Outputs — Dashboard-Eval: "dicke geliefert"</li>
+<li><strong>Gründliche Rückfragen:</strong> Stellt ~10x Rückfragen vor dem Bauen — verhindert Fehlannahmen, weniger Re-Work</li>
+<li><strong>Höchste Scope-Treue:</strong> Bleibt nah am Referenz-Material, baut was im Auftrag steht — kein feature creep</li>
+<li><strong>4 Session-Typen:</strong> Build/Planning/Review/Inspect erzwingen Fokus — kein "Alles in einem"-Prompt</li>
+<li><strong>Echtes Sandbox-System:</strong> Read-only bis full-access — granularer als Claude Codes Allow/Deny-Listen</li>
+<li><strong>Per-Project Trust:</strong> Feiner als Claude Codes globales Permission-System</li>
+<li><strong>Feature Flags:</strong> Experimentelle Features togglebar — bei Claude Code alles-oder-nichts</li>
+<li><strong><code>codex review</code>:</strong> Eingebauter Code-Review mit Branch/Commit-Scope</li>
+<li><strong>Session fork/resume:</strong> Strukturiertes Session-Management — Claude Code hat keinen nativen Fork</li>
+<li><strong>Reasoning-Stufen:</strong> low/medium/high/xhigh — feinere Kontrolle als Modell-Auswahl</li>
+</ul>
+<h3>Nachteile</h3>
+<ul>
+<li><strong>Langsamer Start:</strong> Braucht Zeit zum Einlesen des Projekts — nicht nach 30 Sekunden abbrechen</li>
+<li><strong>Dashboard-Stabilität:</strong> 2x abgestürzt bei großen Outputs in Evals</li>
+<li><strong>Wenig Selbstkritik:</strong> Selbstbewusst bis erhaben — gibt selten Fehler oder Unsicherheit zu</li>
+<li><strong>Mittelpreisig:</strong> GPT-5.4 teurer als MiniMax-basierte Harnesses (Hermes/OpenCode)</li>
+<li><strong>Kein Hook-System:</strong> Kein PreToolUse/PostToolUse — Verhalten nicht per Script steuerbar</li>
+<li><strong>Kein AGENTS.md:</strong> CLAUDE.md-Äquivalent geplant, aber noch nicht implementiert</li>
+<li><strong>Kein echtes Subagent-System:</strong> <code>multi_agent</code>-Flag existiert, aber nicht vergleichbar mit Claude Codes Agent-Tool</li>
+<li><strong>OpenAI-locked:</strong> Nur GPT-Modelle — kein Multi-Provider wie Hermes oder OpenCode</li>
+<li><strong>Keine Sidecar-Integration:</strong> Kein UserPromptSubmit-Hook → kein Context-Injection möglich</li>
+<li><strong>MCP noch leer:</strong> Infrastruktur vorhanden, aber keine Server konfiguriert</li>
+</ul>
+<hr />
+<h2>5. Referenz</h2>
+<h3>Wichtige Dateipfade</h3>
+<table>
+<thead>
+<tr>
+<th>Pfad</th>
+<th>Inhalt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>~/.codex/config.toml</code></td>
+<td>Haupt-Config (Modell, Trust-Level, Migrationen)</td>
+</tr>
+<tr>
+<td><code>~/.codex/auth.json</code></td>
+<td>ChatGPT OAuth Tokens</td>
+</tr>
+<tr>
+<td><code>~/.codex/runbooks/build.md</code></td>
+<td>Build-Session-Instruktionen</td>
+</tr>
+<tr>
+<td><code>~/.codex/runbooks/planning.md</code></td>
+<td>Planning-Session-Instruktionen</td>
+</tr>
+<tr>
+<td><code>~/.codex/runbooks/review.md</code></td>
+<td>Review-Session-Instruktionen</td>
+</tr>
+<tr>
+<td><code>~/.codex/runbooks/inspect.md</code></td>
+<td>Inspect-Session-Instruktionen</td>
+</tr>
+<tr>
+<td><code>~/.codex/rules/default.rules</code></td>
+<td>Command-Approval-Rules</td>
+</tr>
+<tr>
+<td><code>~/.codex/skills/</code></td>
+<td>33 Skill-Verzeichnisse</td>
+</tr>
+<tr>
+<td><code>~/.codex/history.jsonl</code></td>
+<td>Session-History (52KB+)</td>
+</tr>
+<tr>
+<td><code>~/.codex/log/</code></td>
+<td>Session-Logs</td>
+</tr>
+<tr>
+<td><code>~/.codex/models_cache.json</code></td>
+<td>Cached Modell-Liste (63KB)</td>
+</tr>
+<tr>
+<td><code>~/.local/bin/codex-wrapper</code></td>
+<td>Usage-Tracking Wrapper → <code>~/.claude/usage/codex-cli.jsonl</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Wichtige Befehle</h3>
+<pre><code class="language-bash"># Sessions
+codex                                    # Interaktive Session starten
+codex exec &quot;prompt&quot;                      # Non-interactive
+codex exec --full-auto &quot;prompt&quot;          # Auto (workspace-write + on-request)
+codex exec -s read-only &quot;prompt&quot;         # Nur lesen
+codex resume --last                      # Letzte Session fortsetzen
+codex fork --last                        # Letzte Session branchen
+
+# Review
+codex review                             # Uncommitted Changes
+codex review --base main                 # Diff gegen Branch
+codex review --commit abc123             # Spezifischen Commit
+
+# Modell und Reasoning
+codex -m gpt-5.4 &quot;prompt&quot;               # Modell wählen
+codex -c model_reasoning_effort=&quot;xhigh&quot; exec &quot;...&quot;   # Maximum Reasoning
+
+# Features
+codex features list                      # Alle Feature Flags anzeigen
+codex features enable multi_agent        # Feature aktivieren
+codex features disable js_repl           # Feature deaktivieren
+codex --enable multi_agent exec &quot;...&quot;    # Per-Session
+
+# MCP
+codex mcp list                           # Konfigurierte Server
+codex mcp add my-tool -- my-command      # Server hinzufügen
+codex mcp remove my-tool                 # Server entfernen
+
+# Auth
+codex login status                       # Auth-Status prüfen
+</code></pre>
+    <aside class="cta">
+      <strong>Dein Setup hakt trotzdem?</strong>
+      Setup-Rettung: 90 Minuten remote an deinem Rechner, 190 € Festpreis.
+      <a href="/agentfaehig/">Angebote ansehen</a> oder
+      <a href="https://cal.com/human-agent-interface/agent-check" target="_blank" rel="noopener">kostenlosen 20-Min-Termin buchen</a>.
+    </aside>
+  </main>
+  <footer><div class="wrap"><a href="/">Human Agent Interface</a> · <a href="/tutorials/">Tutorials</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></div></footer>
+</body>
+</html>

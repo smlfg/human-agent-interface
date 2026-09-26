@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OpenCode Referenz: Architektur, Konfiguration und Tuning — Human Agent Interface</title>
+  <meta name="description" content="Referenz für OpenCode: Architektur, Konfigurationsdateien, Tuning, Vor- und Nachteile und wichtige Befehle — aus der täglichen Praxis.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/tutorials/opencode/referenz/">
+  <link rel="icon" href="/favicon.png">
+  <style>
+    :root { color-scheme: dark; --ink:#f7f1df; --muted:#b7ad97; --void:#090a08; --panel:rgba(247,241,223,.06); --line:rgba(247,241,223,.18); --signal:#a7ff4f; --mono:ui-monospace,SFMono-Regular,Menlo,monospace; }
+    @media (prefers-color-scheme: light) { :root { color-scheme: light; --ink:#16180f; --muted:#5c5647; --void:#f6f1e4; --panel:rgba(22,24,15,.05); --line:rgba(22,24,15,.16); --signal:#3d7a00; } }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--void); color:var(--ink); font:17px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    .wrap { width:min(100% - 32px, 780px); margin:0 auto; }
+    header, footer { border-bottom:1px solid var(--line); padding:14px 0; font-size:.9rem; }
+    footer { border-top:1px solid var(--line); border-bottom:0; margin-top:56px; color:var(--muted); }
+    a { color:var(--signal); }
+    .crumbs a { color:var(--muted); text-decoration:none; }
+    .stand { border-left:3px solid var(--signal); background:var(--panel); padding:10px 14px; color:var(--muted); font-size:.92rem; margin:22px 0; }
+    h1 { font-size:clamp(1.7rem,4vw,2.4rem); line-height:1.15; margin:28px 0 8px; }
+    h2 { margin-top:40px; border-top:1px solid var(--line); padding-top:20px; }
+    pre { background:var(--panel); border:1px solid var(--line); padding:14px; overflow-x:auto; font:14px/1.5 var(--mono); }
+    code { font-family:var(--mono); font-size:.92em; }
+    table { border-collapse:collapse; width:100%; display:block; overflow-x:auto; font-size:.92rem; }
+    th, td { border:1px solid var(--line); padding:6px 10px; text-align:left; vertical-align:top; }
+    blockquote { margin:0; padding:4px 16px; border-left:3px solid var(--line); color:var(--muted); }
+    .cta { margin:48px 0 0; padding:20px; border:1px solid var(--signal); }
+    .cta strong { display:block; font-size:1.1rem; margin-bottom:6px; }
+  </style>
+</head>
+<body>
+  <header><div class="wrap crumbs"><a href="/">Human Agent Interface</a> / <a href="/tutorials/">Tutorials</a> / OpenCode Referenz</div></header>
+  <main class="wrap">
+    <h1>OpenCode Harness — Referenz-Guide</h1>
+    <p class="stand">Stand: März 2026. Aus der täglichen Praxis mit OpenCode; Flags, Preise und Bugs können sich seitdem geändert haben. Siehe auch: <a href="https://www.human-agent-interface.com/tutorials/opencode/">OpenCode Tutorial</a>.</p>
+
+<blockquote>
+<p>Für alle, die Claude Code gut kennen: Dieser Guide erklärt OpenCode im direkten Vergleich.</p>
+</blockquote>
+<hr />
+<h2>1. Architektur</h2>
+<p>OpenCode ist ein autonomer Coding-Agent mit TUI-Frontend und headless-fähigem Backend.</p>
+<pre><code>opencode (CLI)
+├── TUI              — interaktive Terminal-UI (Standard bei `opencode`)
+├── opencode run     — one-shot Execution (kein TUI)
+├── opencode serve   — headless HTTP-Server
+├── opencode web     — Web-UI
+└── opencode acp     — ACP-Protocol für Editor-Integration
+</code></pre>
+<p><strong>Config-Schichten</strong> (von global nach lokal):</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Pfad</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Credentials</td>
+<td><code>~/.local/share/opencode/auth.json</code></td>
+<td>Provider-Auth</td>
+</tr>
+<tr>
+<td>Globale Config</td>
+<td><code>~/.config/opencode/</code></td>
+<td>User-weit</td>
+</tr>
+<tr>
+<td>Projekt-Config</td>
+<td><code>./opencode.json</code></td>
+<td>Per-Project (override)</td>
+</tr>
+<tr>
+<td>Plugins</td>
+<td><code>./plugins/*.ts</code></td>
+<td>Per-Project TypeScript Hooks</td>
+</tr>
+<tr>
+<td>Commands</td>
+<td><code>./commands/</code></td>
+<td>Custom Slash-Commands</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Agent-System:</strong> 5 Built-in Agents (<code>build</code>, <code>plan</code>, <code>summary</code>, <code>title</code>, <code>compaction</code>) + Subagents (<code>explore</code>, <code>general</code>). Kein Equivalent zu Claude Codes 21 Markdown-Agenten — OpenCode-Agents sind codebasiert, nicht deklarativ konfigurierbar (außer via <code>opencode agent create</code>).</p>
+<p><strong>Storage:</strong> SQLite DB unter <code>~/.local/share/opencode/opencode.db</code> + JSON-Snapshots. Sessions persistieren lokal, aber <strong>kein Gedächtnis zwischen <code>opencode run</code>-Aufrufen</strong>.</p>
+<hr />
+<h2>2. Konfiguration</h2>
+<p><strong>Minimale <code>opencode.json</code>:</strong></p>
+<pre><code class="language-json">{
+  &quot;$schema&quot;: &quot;https://opencode.ai/schema/config.json&quot;,
+  &quot;provider&quot;: {
+    &quot;anthropic&quot;: { &quot;apiKey&quot;: &quot;${ANTHROPIC_API_KEY}&quot; }
+  },
+  &quot;model&quot;: {
+    &quot;default&quot;: { &quot;provider&quot;: &quot;anthropic&quot;, &quot;model&quot;: &quot;claude-sonnet-4-5&quot; },
+    &quot;fast&quot;:    { &quot;provider&quot;: &quot;anthropic&quot;, &quot;model&quot;: &quot;claude-haiku-4-5-20251001&quot; }
+  },
+  &quot;permission&quot;: &quot;allow&quot;
+}
+</code></pre>
+<p><strong>Permission-Modi</strong> (<code>"permission"</code> Key):</p>
+<table>
+<thead>
+<tr>
+<th>Modus</th>
+<th>Verhalten</th>
+<th>Empfohlen für</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ask</code></td>
+<td>Fragt bei unbekannten Ops (Default)</td>
+<td>Interaktiv/TUI</td>
+</tr>
+<tr>
+<td><code>auto-edit</code></td>
+<td>Edits erlaubt, Shell-Ops werden gefragt</td>
+<td>Semi-automatisch</td>
+</tr>
+<tr>
+<td><code>allow</code></td>
+<td>Alles erlaubt ohne Rückfrage</td>
+<td>Headless/CI</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Wichtig: Ohne <code>"permission": "allow"</code> in headless-Szenarien können Sessions blockieren — OpenCode wartet auf manuelle Bestätigung.</p>
+</blockquote>
+<p><strong>MCP-Server einbinden:</strong></p>
+<pre><code class="language-json">{
+  &quot;mcp&quot;: {
+    &quot;filesystem&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;@modelcontextprotocol/server-filesystem&quot;, &quot;~/Projekte&quot;]
+    }
+  }
+}
+</code></pre>
+<p><strong>Experimental Plugins</strong> (TypeScript Hooks):</p>
+<pre><code class="language-json">{
+  &quot;experimental&quot;: {
+    &quot;chat&quot;: {
+      &quot;system&quot;: { &quot;transform&quot;: &quot;plugins/context-injection.ts&quot; }
+    }
+  }
+}
+</code></pre>
+<hr />
+<h2>3. Tuning</h2>
+<h3>Modell wählen</h3>
+<pre><code class="language-bash"># CLI-Flag (override für einzelnen Lauf)
+opencode run &quot;prompt&quot; -m anthropic/claude-opus-4-6
+
+# Reasoning-Varianten (für Modelle mit Extended Thinking)
+opencode run --variant high    &quot;...&quot;   # 16K Reasoning Tokens
+opencode run --variant max     &quot;...&quot;   # 31.9K Reasoning Tokens
+opencode run --variant minimal &quot;...&quot;   # kein Reasoning
+</code></pre>
+<h3>Multi-Provider — der echte Vorteil gegenüber Claude Code</h3>
+<pre><code class="language-json">{
+  &quot;provider&quot;: {
+    &quot;anthropic&quot;: { &quot;apiKey&quot;: &quot;${ANTHROPIC_API_KEY}&quot; },
+    &quot;openai&quot;:    { &quot;apiKey&quot;: &quot;${OPENAI_API_KEY}&quot; },
+    &quot;minimax&quot;:   { &quot;apiKey&quot;: &quot;${MINIMAX_API_KEY}&quot; }
+  }
+}
+</code></pre>
+<p>MiniMax kostet ca. $0.10/1M Tokens — ~150x günstiger als Opus. Sinnvoll für Batch-Tasks ohne Qualitätsanspruch.</p>
+<h3>Agent auswählen</h3>
+<pre><code class="language-bash">opencode run --agent explore &quot;...&quot;  # Explore-Agent (darf fragen, kein Edit)
+opencode run --agent build  &quot;...&quot;  # Build-Agent (volle Rechte)
+opencode agent create               # Custom Agent anlegen
+opencode agent list                 # Verfügbare Agents zeigen
+</code></pre>
+<p><strong>Agent-Permissions im Überblick:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Permission</th>
+<th>build</th>
+<th>plan</th>
+<th>explore</th>
+<th>general</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bash</td>
+<td>allow</td>
+<td>allow</td>
+<td>allow</td>
+<td>allow</td>
+</tr>
+<tr>
+<td>edit</td>
+<td>context</td>
+<td>context</td>
+<td>deny</td>
+<td>deny</td>
+</tr>
+<tr>
+<td>external_dir</td>
+<td>ask</td>
+<td>ask</td>
+<td>ask</td>
+<td>ask</td>
+</tr>
+<tr>
+<td>question</td>
+<td>deny</td>
+<td>deny</td>
+<td>allow</td>
+<td>allow</td>
+</tr>
+</tbody>
+</table>
+<h3>Context-Injection via Plugin</h3>
+<p>Kein CLAUDE.md-Equivalent — Kontext muss über TypeScript-Hook injiziert werden:</p>
+<pre><code class="language-typescript">// plugins/context-injection.ts
+export default function transform(system: string): string {
+  return system + &quot;\n\n# Projekt-Regeln\n- Kein apt ohne Rückfrage\n- Tests vor Commit&quot;;
+}
+</code></pre>
+<h3>Parallele Runs</h3>
+<pre><code class="language-bash"># Mehrere one-shot Tasks gleichzeitig — OpenCode unterstützt parallele Instanzen
+opencode run &quot;Task A&quot; &amp;
+opencode run &quot;Task B&quot; &amp;
+wait
+</code></pre>
+<h3>Debug</h3>
+<pre><code class="language-bash">opencode debug config           # Resolved Config anzeigen (inkl. Env-Var-Expansion)
+opencode debug paths            # Alle relevanten Dateipfade
+opencode debug agent build      # Agent-Details: System-Prompt, Permissions
+opencode debug lsp              # LSP-Status
+</code></pre>
+<hr />
+<h2>4. Vor- und Nachteile</h2>
+<h3>Vorteile</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Bewertung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multi-Provider</td>
+<td>Nicht auf Anthropic locked — OpenAI, MiniMax, Custom-Endpoints möglich</td>
+</tr>
+<tr>
+<td>Kosten</td>
+<td>MiniMax ~$0.10/1M Tokens für Batch-Tasks</td>
+</tr>
+<tr>
+<td>One-shot</td>
+<td><code>opencode run</code> ideal für skriptbare Pipelines</td>
+</tr>
+<tr>
+<td>Parallele Instanzen</td>
+<td>Mehrere Runs gleichzeitig ohne Konflikte</td>
+</tr>
+<tr>
+<td>Server-Mode</td>
+<td><code>opencode serve</code> für API-basierte Integration</td>
+</tr>
+<tr>
+<td>Debug-Tools</td>
+<td><code>opencode debug</code> deckt Config, Paths, Agents ab</td>
+</tr>
+<tr>
+<td>MCP native</td>
+<td>CLI-Management von MCP Servern ohne JSON-Editierung</td>
+</tr>
+<tr>
+<td>Reasoning-Varianten</td>
+<td>high/max/minimal direkt als Flag</td>
+</tr>
+</tbody>
+</table>
+<h3>Nachteile — ehrliche Einschätzung</h3>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Konsequenz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fragt NICHT nach</td>
+<td>Unvollständiges Briefing → falsches Produkt. OpenCode baut, was es versteht — nicht was du meinst.</td>
+</tr>
+<tr>
+<td>Schwache Feedback-Annahme</td>
+<td>Korrekturen werden bestätigt, nicht wirklich integriert ("Verstanden, soll ich nochmal?")</td>
+</tr>
+<tr>
+<td>Scope-Drift</td>
+<td>Ohne explizites Scope-Statement erweitert OpenCode selbstständig den Auftrag</td>
+</tr>
+<tr>
+<td>Kein Session-Gedächtnis</td>
+<td><code>opencode run</code> startet jedes Mal blank — kein Kontext aus Vorläufen</td>
+</tr>
+<tr>
+<td>Plugins experimental</td>
+<td>Hooks weniger mächtig als Claude Codes 5-Punkt-Lifecycle (PreToolUse, PostToolUse etc.)</td>
+</tr>
+<tr>
+<td>Kein deklaratives Regelwerk</td>
+<td>Kein CLAUDE.md-Equivalent — Regeln müssen per Hook injiziert werden</td>
+</tr>
+<tr>
+<td>Keine Subagent-Orchestrierung</td>
+<td>Agents sind intern; kein paralleles Agent-Spawning wie in Claude Code möglich</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Fazit:</strong> OpenCode ist stark für gut-spezifizierte one-shot Tasks, Multi-Provider-Flexibilität und headless Pipelines. Für komplexe, iterative Arbeit mit Kontext-Aufbau bleibt Claude Code überlegen.</p>
+<hr />
+<h2>5. Referenz</h2>
+<h3>Dateipfade</h3>
+<table>
+<thead>
+<tr>
+<th>Pfad</th>
+<th>Inhalt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>./opencode.json</code></td>
+<td>Projekt-Config (per-project override)</td>
+</tr>
+<tr>
+<td><code>~/.config/opencode/</code></td>
+<td>Globale Config</td>
+</tr>
+<tr>
+<td><code>~/.local/share/opencode/</code></td>
+<td>Data-Root</td>
+</tr>
+<tr>
+<td><code>~/.local/share/opencode/auth.json</code></td>
+<td>Provider-Credentials</td>
+</tr>
+<tr>
+<td><code>~/.local/share/opencode/opencode.db</code></td>
+<td>SQLite Session-DB</td>
+</tr>
+<tr>
+<td><code>./plugins/</code></td>
+<td>TypeScript Hooks (per-project)</td>
+</tr>
+<tr>
+<td><code>./commands/</code></td>
+<td>Custom Slash-Commands (per-project)</td>
+</tr>
+</tbody>
+</table>
+<h3>Wichtige Befehle</h3>
+<pre><code class="language-bash"># Starten
+opencode                                  # TUI
+opencode run &quot;prompt&quot;                     # One-shot
+opencode run &quot;prompt&quot; -m provider/model   # Mit Modell-Auswahl
+opencode run --variant max &quot;prompt&quot;       # Max Reasoning
+opencode serve --port 4096                # Headless Server
+
+# Provider &amp; Modelle
+opencode providers list                   # Konfigurierte Provider
+opencode providers login anthropic        # Auth-Flow
+opencode models anthropic                 # Verfügbare Modelle für Provider
+
+# MCP
+opencode mcp list                         # Konfigurierte MCP Server
+opencode mcp add name -- command          # MCP Server hinzufügen
+opencode mcp remove name                  # MCP Server entfernen
+
+# Agents
+opencode agent list                       # Verfügbare Agents
+opencode agent create                     # Custom Agent anlegen
+
+# Debug
+opencode debug config                     # Resolved Config
+opencode debug paths                      # Alle Pfade
+opencode debug agent &lt;name&gt;               # Agent-Details
+opencode debug lsp                        # LSP-Status
+opencode debug skill                      # Skill-Status
+</code></pre>
+<hr />
+<p><em>Stand: 2026-03 — Getestet gegen OpenCode MCP-Server und Harness-Evals im harness-tutorials Projekt.</em></p>
+    <aside class="cta">
+      <strong>Dein Setup hakt trotzdem?</strong>
+      Setup-Rettung: 90 Minuten remote an deinem Rechner, 190 € Festpreis.
+      <a href="/agentfaehig/">Angebote ansehen</a> oder
+      <a href="https://cal.com/human-agent-interface/agent-check" target="_blank" rel="noopener">kostenlosen 20-Min-Termin buchen</a>.
+    </aside>
+  </main>
+  <footer><div class="wrap"><a href="/">Human Agent Interface</a> · <a href="/tutorials/">Tutorials</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></div></footer>
+</body>
+</html>

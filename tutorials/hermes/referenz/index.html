@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hermes Referenz: Architektur, Konfiguration und Tuning — Human Agent Interface</title>
+  <meta name="description" content="Referenz für Hermes: Architektur, Konfigurationsdateien, Tuning, Vor- und Nachteile und wichtige Befehle — aus der täglichen Praxis.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/tutorials/hermes/referenz/">
+  <link rel="icon" href="/favicon.png">
+  <style>
+    :root { color-scheme: dark; --ink:#f7f1df; --muted:#b7ad97; --void:#090a08; --panel:rgba(247,241,223,.06); --line:rgba(247,241,223,.18); --signal:#a7ff4f; --mono:ui-monospace,SFMono-Regular,Menlo,monospace; }
+    @media (prefers-color-scheme: light) { :root { color-scheme: light; --ink:#16180f; --muted:#5c5647; --void:#f6f1e4; --panel:rgba(22,24,15,.05); --line:rgba(22,24,15,.16); --signal:#3d7a00; } }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--void); color:var(--ink); font:17px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    .wrap { width:min(100% - 32px, 780px); margin:0 auto; }
+    header, footer { border-bottom:1px solid var(--line); padding:14px 0; font-size:.9rem; }
+    footer { border-top:1px solid var(--line); border-bottom:0; margin-top:56px; color:var(--muted); }
+    a { color:var(--signal); }
+    .crumbs a { color:var(--muted); text-decoration:none; }
+    .stand { border-left:3px solid var(--signal); background:var(--panel); padding:10px 14px; color:var(--muted); font-size:.92rem; margin:22px 0; }
+    h1 { font-size:clamp(1.7rem,4vw,2.4rem); line-height:1.15; margin:28px 0 8px; }
+    h2 { margin-top:40px; border-top:1px solid var(--line); padding-top:20px; }
+    pre { background:var(--panel); border:1px solid var(--line); padding:14px; overflow-x:auto; font:14px/1.5 var(--mono); }
+    code { font-family:var(--mono); font-size:.92em; }
+    table { border-collapse:collapse; width:100%; display:block; overflow-x:auto; font-size:.92rem; }
+    th, td { border:1px solid var(--line); padding:6px 10px; text-align:left; vertical-align:top; }
+    blockquote { margin:0; padding:4px 16px; border-left:3px solid var(--line); color:var(--muted); }
+    .cta { margin:48px 0 0; padding:20px; border:1px solid var(--signal); }
+    .cta strong { display:block; font-size:1.1rem; margin-bottom:6px; }
+  </style>
+</head>
+<body>
+  <header><div class="wrap crumbs"><a href="/">Human Agent Interface</a> / <a href="/tutorials/">Tutorials</a> / Hermes Referenz</div></header>
+  <main class="wrap">
+    <h1>Hermes Harness — Referenz für AI Engineers</h1>
+    <p class="stand">Stand: März 2026. Aus der täglichen Praxis mit Hermes; Flags, Preise und Bugs können sich seitdem geändert haben. Siehe auch: <a href="https://www.human-agent-interface.com/tutorials/hermes/">Hermes Tutorial</a>.</p>
+
+<blockquote>
+<p>Zielgruppe: Leute, die Claude Code gut kennen, Hermes aber noch nicht. Fokus: Architektur-Unterschiede, Konfiguration, Tuning, ehrliche Bewertung.</p>
+</blockquote>
+<hr />
+<h2>1. Architektur (fundamental anders als Claude Code)</h2>
+<p>Hermes ist kein natives API-Harness wie Claude Code, sondern ein <strong>Multi-Platform Agent-Gateway</strong> mit eigenem REPL, Session-DB, Memory-System und Skills-Hub. Der zentrale Unterschied: Claude Code ist eine CLI mit Hook-System; Hermes ist ein verteiltes System, das über mehrere Kanäle (CLI, Telegram, Discord, Slack, WhatsApp, Signal, HomeAssistant) auf demselben Backend läuft.</p>
+<pre><code>config.yaml (284 Zeilen)         ← Haupt-Config (YAML, nicht JSON)
+       ↓
+SOUL.md                          ← Agent-Personality (freier Text)
+       ↓
+Multi-Platform Gateway           ← CLI + 6 Messaging-Plattformen
+       ↓
+Model Router (10 Provider)       ← agnostisch, OpenRouter = 200+ Modelle
+       ↓
+48 eingebaute Tools              ← Web, Terminal, Vision, Browser, SmartHome
+       ↓
+SQLite (state.db) + Honcho AI   ← persistente Sessions + Cross-Session Memory
+</code></pre>
+<p><strong>Direktvergleich Claude Code vs. Hermes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Aspekt</th>
+<th>Claude Code</th>
+<th>Hermes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Interaktion</td>
+<td>CLI REPL</td>
+<td>CLI REPL + 6 Messaging-Plattformen</td>
+</tr>
+<tr>
+<td>Model-Lock</td>
+<td>Anthropic only</td>
+<td>200+ Modelle, 10 Provider, Custom Endpoints</td>
+</tr>
+<tr>
+<td>Config-Format</td>
+<td>JSON (settings.json)</td>
+<td>YAML (config.yaml, 284 Zeilen)</td>
+</tr>
+<tr>
+<td>Verhaltenssteuerung</td>
+<td>CLAUDE.md (deklarativ)</td>
+<td>SOUL.md (freier Text, aktuell leer)</td>
+</tr>
+<tr>
+<td>Hook-System</td>
+<td>5 Lifecycle-Points, PreToolUse blockierend</td>
+<td>Keins — kein Blocking-Gate</td>
+</tr>
+<tr>
+<td>Tools</td>
+<td>MCP-basiert (extern)</td>
+<td>48 eingebaut (Web, Terminal, Vision, Browser, SmartHome)</td>
+</tr>
+<tr>
+<td>Terminal-Execution</td>
+<td>Lokal only</td>
+<td>6 Backends: local, docker, ssh, modal, singularity, daytona</td>
+</tr>
+<tr>
+<td>Parallelism</td>
+<td>Subagents (separate Prozesse)</td>
+<td>Git Worktrees (isolierte Branches, gleiches Repo)</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>Kein Cross-Session Memory</td>
+<td>Honcho AI + auto-save (cross-session persistent)</td>
+</tr>
+<tr>
+<td>Skills</td>
+<td>Statisch (SKILL.md Injection)</td>
+<td>Dynamisch, selbst-lernend, Skills Hub (26 Kategorien)</td>
+</tr>
+<tr>
+<td>Session-Storage</td>
+<td>JSON-Dateien</td>
+<td>SQLite + FTS5 Full-Text Search (21 Sessions)</td>
+</tr>
+<tr>
+<td>Personality</td>
+<td>CLAUDE.md Regeln</td>
+<td>SOUL.md + 14 Personality-Varianten</td>
+</tr>
+<tr>
+<td>Cron/Scheduling</td>
+<td>Kein Scheduler</td>
+<td>Eingebaut</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Was das in der Praxis bedeutet:</strong></p>
+<p>Claude Code ist eng mit Anthropic verzahnt — Anthropic-Modelle, MCP für externe Tools, JSON-Config. Hermes ist bewusst model-agnostisch und plattform-agnostisch gebaut. Wer Hermes kennt, kann mit einem Flag auf Opus wechseln oder den gleichen Agent über Telegram ansprechen. Wer Claude Code kennt, muss sich vor allem an drei Dinge gewöhnen: kein PreToolUse-Blocking, kein CLAUDE.md-Äquivalent und ein träger Start (10-15 Sekunden Stille vor der ersten Response — das ist normal, nicht abbrechen).</p>
+<hr />
+<h2>2. Konfiguration</h2>
+<h3>Haupt-Config: <code>~/.hermes/config.yaml</code></h3>
+<pre><code class="language-yaml"># Modell-Defaults
+default_model: MiniMax-M2.5
+default_provider: minimax
+
+# Agent-Verhalten
+agent:
+  max_turns: 100
+  reasoning_effort: medium    # low | medium | high
+  personalities: [helpful, concise, technical]
+
+# Terminal-Backend
+terminal:
+  backend: local              # local | docker | ssh | modal | singularity | daytona
+  cwd: .
+  timeout: 180
+  persistent_shell: true
+
+# Cross-Session Memory
+memory:
+  enabled: true
+  user_char_limit: 2200
+  profile_char_limit: 1375
+
+# Kontext-Kompression
+compression:
+  enabled: true
+  summary_model: google/gemini-3-flash-preview
+
+# Sicherheit
+security:
+  redact_secrets: true
+  tirith_enabled: true
+</code></pre>
+<p><strong>Wichtig:</strong> <code>terminal.cwd: .</code> bedeutet Hermes arbeitet im Verzeichnis, von dem aus es gestartet wird. Wird Hermes ohne explizites cwd gestartet, baut es in <code>~/.hermes/</code> — das ist der häufigste Scope-Drift-Fehler. Immer aus dem Projektordner starten oder cwd explizit setzen.</p>
+<h3>Weitere Config-Dateien</h3>
+<table>
+<thead>
+<tr>
+<th>Datei</th>
+<th>Inhalt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>~/.hermes/.env</code></td>
+<td>API Keys (OPENROUTER_API_KEY, MINIMAX_API_KEY, FIRECRAWL_API_KEY, FAL_KEY, HONCHO_API_KEY, SSH-Credentials)</td>
+</tr>
+<tr>
+<td><code>~/.hermes/auth.json</code></td>
+<td>OAuth Tokens (Nous, OpenAI-Codex)</td>
+</tr>
+<tr>
+<td><code>~/.hermes/SOUL.md</code></td>
+<td>Agent-Personality, freier Text — aktuell leer</td>
+</tr>
+<tr>
+<td><code>~/.hermes/state.db</code></td>
+<td>SQLite Session-DB</td>
+</tr>
+<tr>
+<td><code>~/.hermes/memories/</code></td>
+<td>Cross-Session Memory-Dateien</td>
+</tr>
+<tr>
+<td><code>~/.hermes/skills/</code></td>
+<td>26 Skill-Kategorien</td>
+</tr>
+<tr>
+<td><code>~/.hermes/sessions/</code></td>
+<td>Session JSON-Archive</td>
+</tr>
+<tr>
+<td><code>~/.hermes/hermes-agent/</code></td>
+<td>Vollständiger Source-Code</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>3. Tuning</h2>
+<h3>Modell wechseln</h3>
+<pre><code class="language-bash">hermes model                                     # Interaktive Auswahl
+hermes chat --model anthropic/claude-opus-4.6    # Inline spezifizieren
+hermes chat -m google/gemini-2.5-pro             # Kurzform
+hermes chat --provider openrouter                # Provider forcen
+</code></pre>
+<p><strong>Verfügbare Provider (10):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Besonderheit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MiniMax</td>
+<td>Default, günstigst (~$0.01-0.20/Task)</td>
+</tr>
+<tr>
+<td>OpenRouter</td>
+<td>Gateway zu 200+ Modellen</td>
+</tr>
+<tr>
+<td>Anthropic</td>
+<td>Direktzugriff (Claude-Familie)</td>
+</tr>
+<tr>
+<td>Nous Portal</td>
+<td>OAuth-basiert</td>
+</tr>
+<tr>
+<td>OpenAI Codex</td>
+<td>OAuth (Token aktuell abgelaufen — 401)</td>
+</tr>
+<tr>
+<td>z.ai / GLM</td>
+<td>Chinesischer Provider</td>
+</tr>
+<tr>
+<td>Kimi / Moonshot</td>
+<td>Chinesischer Provider</td>
+</tr>
+<tr>
+<td>MiniMax China</td>
+<td>Mainland-Endpoint</td>
+</tr>
+<tr>
+<td>Google Gemini</td>
+<td>Via OpenRouter</td>
+</tr>
+<tr>
+<td>Custom Endpoints</td>
+<td>Beliebige OpenAI-kompatible APIs</td>
+</tr>
+</tbody>
+</table>
+<h3>Terminal-Backend wechseln</h3>
+<pre><code class="language-bash">hermes config set terminal.backend docker       # Container-Isolierung
+hermes config set terminal.backend ssh          # Remote Execution
+hermes config set terminal.backend modal        # Serverless, pay-per-use
+hermes config set terminal.backend local        # Zurück zu lokal
+</code></pre>
+<p>Docker und SSH sind nützlich wenn Hermes Code in einer sauberen Umgebung ausführen soll, ohne das Host-System zu beeinflussen. Modal rechnet serverless ab — sinnvoll für sporadische schwere Tasks.</p>
+<h3>Parallele Tasks mit Git Worktrees</h3>
+<pre><code class="language-bash">hermes chat --worktree                          # Auto-generierter Worktree-Name
+hermes chat --worktree feature-auth             # Benannter Worktree
+hermes chat -w                                  # Kurzform
+</code></pre>
+<p>Das ist Hermes' Äquivalent zu Claude Code's Subagents — aber anders: statt separater Prozesse arbeitet Hermes in isolierten Git-Branches auf demselben Repo. Merge muss danach manuell passieren.</p>
+<h3>Skills verwalten</h3>
+<pre><code class="language-bash">hermes skills browse                            # Alle verfügbaren Skills
+hermes skills search &quot;web&quot;                      # Suchen
+hermes skills install &lt;name&gt;                    # Installieren
+hermes skills list                              # Installierte anzeigen
+hermes skills update                            # Updates einspielen
+hermes skills audit                             # Security-Audit
+</code></pre>
+<p>Hermes-Skills sind nicht dasselbe wie Sidecar-NG Skills. Sie werden dynamisch aus Nutzungsmustern erstellt und verbessern sich selbst — ein anderes Konzept als statische SKILL.md Injection.</p>
+<h3>Sessions verwalten</h3>
+<pre><code class="language-bash">hermes sessions list                            # Alle Sessions
+hermes sessions stats                           # Nutzungsstatistiken
+hermes sessions export &lt;id&gt;                     # Session exportieren
+hermes sessions prune                           # Alte Sessions aufräumen
+hermes chat --continue                          # Letzte Session fortsetzen
+hermes chat --resume &lt;id&gt;                       # Spezifische Session laden
+</code></pre>
+<p>Da Sessions in SQLite mit FTS5 gespeichert sind, ist die Suche über alte Sessions schneller und robuster als bei JSON-basierten Ansätzen.</p>
+<h3>Personality konfigurieren</h3>
+<pre><code class="language-bash"># Variante 1: config.yaml
+agent:
+  personalities: [concise, technical]
+
+# Variante 2: SOUL.md editieren
+# ~/.hermes/SOUL.md — freier Text, wird als Systemprompt eingebettet
+</code></pre>
+<p>Aktuell ist SOUL.md leer — das Potenzial ist ungenutzt. Die 14 verfügbaren Personality-Varianten sind: helpful, concise, technical, kawaii, pirate (und weitere). Das ist näher an einem Charakter-System als an CLAUDE.md-Regeln.</p>
+<h3>Reasoning-Tiefe einstellen</h3>
+<pre><code class="language-bash">hermes config set agent.reasoning_effort high   # Mehr Tokens, langsamer, besser bei Analyse
+hermes config set agent.reasoning_effort low    # Schnell, für einfache Tasks
+</code></pre>
+<h3>Diagnose und Monitoring</h3>
+<pre><code class="language-bash">hermes doctor                                   # System-Check (Config, Auth, Dependencies)
+hermes insights                                 # Usage Analytics
+hermes config show                              # Aktuelle Config ausgeben
+hermes config set &lt;key&gt; &lt;value&gt;                 # Einzelnen Wert setzen
+</code></pre>
+<h3>Multi-Platform Gateway starten</h3>
+<pre><code class="language-bash">hermes gateway                                  # Telegram, Discord, Slack, WhatsApp, Signal, HomeAssistant
+</code></pre>
+<p>Derselbe Agent, der lokal im Terminal läuft, ist dann über alle konfigurierten Messaging-Plattformen erreichbar. Config dafür liegt ebenfalls in config.yaml.</p>
+<hr />
+<h2>4. Vor- und Nachteile</h2>
+<h3>Vorteile</h3>
+<ul>
+<li><strong>Günstigster Harness</strong>: MiniMax als Default kostet ~$0.01-0.20 pro Task — ca. 150x günstiger als Opus direkt. Für explorative Tasks oder Drafts sinnvoll.</li>
+<li><strong>Model-Agnostisch</strong>: 10 Provider, 200+ Modelle via OpenRouter, Custom Endpoints. Modell-Wechsel ist ein Flag, keine Architektur-Entscheidung.</li>
+<li><strong>Beste Feedback-Annahme</strong>: Eval-Befund: "Fehler präzise akzeptiert, sofort weitergebaut" — kein anderes getestetes Harness nimmt Korrekturen so direkt an.</li>
+<li><strong>6 Terminal-Backends</strong>: Docker, SSH, Modal, Singularity, Daytona — nicht auf lokale Execution beschränkt. Remote-Execution ohne zusätzliches Tooling.</li>
+<li><strong>Git Worktrees first-class</strong>: Parallele isolierte Agents auf demselben Repo per Flag.</li>
+<li><strong>Cross-Session Memory</strong>: Honcho AI merkt sich Kontext über Sessions. Claude Code vergisst nach Sessionende alles.</li>
+<li><strong>Multi-Platform out of the box</strong>: Dieselbe Konfiguration, dieselben Skills, über CLI und 6 Messaging-Plattformen.</li>
+<li><strong>48 eingebaute Tools</strong>: Web-Suche, Browser-Automation, Vision, Image Gen, Smart Home — ohne MCP-Server aufsetzen zu müssen.</li>
+<li><strong>Selbst-lernende Skills</strong>: Werden aus Erfahrung erstellt und verbessert, nicht manuell gepflegt.</li>
+<li><strong>SQLite + FTS5</strong>: Sessions sind durchsuchbar.</li>
+<li><strong>Eingebauter Scheduler</strong>: Cron-Jobs ohne externe Tools.</li>
+</ul>
+<h3>Nachteile</h3>
+<ul>
+<li><strong>Scope-Drift Hauptproblem</strong>: Baut standardmäßig in <code>~/.hermes/</code> wenn cwd nicht gesetzt ist. Immer aus dem Projektordner starten.</li>
+<li><strong>Langsamer Start</strong>: 10-15 Sekunden Stille vor der ersten Response — das ist kein Hänger, sondern normales Verhalten. Nicht abbrechen.</li>
+<li><strong>Output-Qualität mittel</strong>: Funktionierender aber nicht eleganter Code. Polishing durch einen Codex-Pass sinnvoll.</li>
+<li><strong>Intransparenter Prozess</strong>: Hermes denkt intern, Output kommt plötzlich als Block. Was intern passiert ist kaum sichtbar — kein Streaming wie Claude Code.</li>
+<li><strong>Kein Hook-System</strong>: Kein PreToolUse-Blocking, kein 5-Punkt-Lifecycle. Verhaltenssteuerung nur über SOUL.md und Prompting — nicht programmatisch erzwingbar.</li>
+<li><strong>Kein CLAUDE.md-Äquivalent</strong>: Keine deklarative, dateibasierte Verhaltenssteuerung. SOUL.md ist freier Text, keine strukturierten Regeln.</li>
+<li><strong>SOUL.md aktuell leer</strong>: Die Personality-Konfiguration ist ungenutzt — das ist verpasstes Potenzial.</li>
+<li><strong>OpenAI Codex Token expired</strong>: OAuth-Token abgelaufen (401 Error). Muss über <code>hermes auth</code> erneuert werden bevor Codex-Provider nutzbar ist.</li>
+<li><strong>ripgrep nicht installiert</strong>: Hermes fällt auf grep-Fallback zurück — langsamer bei Code-Suche in großen Repos.</li>
+<li><strong>Kein Sidecar-Equivalent</strong>: Keine Context-Injection vor dem LLM-Call, kein Classifier-Layer.</li>
+</ul>
+<hr />
+<h2>5. Referenz</h2>
+<h3>Wichtige Dateipfade</h3>
+<pre><code>~/.hermes/config.yaml       Haupt-Config (284 Zeilen, alle Einstellungen)
+~/.hermes/.env              API Keys und Secrets
+~/.hermes/auth.json         OAuth Tokens (Nous, OpenAI-Codex)
+~/.hermes/SOUL.md           Agent-Personality (freier Text, aktuell leer)
+~/.hermes/state.db          SQLite Session-DB (21 Sessions)
+~/.hermes/sessions/         Session JSON-Archive
+~/.hermes/skills/           26 Skill-Kategorien
+~/.hermes/memories/         Cross-Session Memory
+~/.hermes/hermes-agent/     Vollständiger Source-Code
+</code></pre>
+<h3>Wichtige Befehle</h3>
+<pre><code class="language-bash"># Sessions
+hermes chat                         Interaktive Session starten
+hermes chat -q &quot;prompt&quot;             Single Query (non-interactive)
+hermes chat -w                      In Worktree (parallel, isoliert)
+hermes chat -m provider/model       Modell überschreiben
+hermes chat --checkpoints           Mit Filesystem-Snapshots
+hermes chat --continue              Letzte Session fortsetzen
+hermes chat --resume &lt;id&gt;           Spezifische Session laden
+
+# Config &amp; Modell
+hermes model                        Modell interaktiv wählen
+hermes config show                  Aktuelle Config anzeigen
+hermes config set &lt;key&gt; &lt;value&gt;     Einzelnen Wert setzen
+
+# Skills
+hermes skills browse                Alle verfügbaren Skills
+hermes skills search &quot;query&quot;        Skills suchen
+hermes skills install &lt;name&gt;        Skill installieren
+hermes skills list                  Installierte Skills anzeigen
+hermes skills update                Skills aktualisieren
+hermes skills audit                 Security-Audit
+
+# Sessions
+hermes sessions list                Alle Sessions auflisten
+hermes sessions stats               Nutzungsstatistiken
+hermes sessions export &lt;id&gt;         Session exportieren
+hermes sessions prune               Alte Sessions aufräumen
+
+# System
+hermes gateway                      Multi-Platform Gateway starten
+hermes doctor                       System-Diagnose
+hermes insights                     Usage Analytics
+hermes update                       Self-Update
+</code></pre>
+<h3>Quickstart für einen neuen Task</h3>
+<pre><code class="language-bash"># 1. Aus dem Projektordner starten (verhindert Scope-Drift)
+cd ~/Projekte/mein-projekt
+
+# 2. Hermes starten (15s Stille am Anfang ist normal)
+hermes chat
+
+# 3. Oder direkt mit Modell-Override für komplexe Tasks
+hermes chat -m anthropic/claude-opus-4.6
+
+# 4. Parallelen Task in Worktree
+hermes chat -w feature-xyz
+</code></pre>
+    <aside class="cta">
+      <strong>Dein Setup hakt trotzdem?</strong>
+      Setup-Rettung: 90 Minuten remote an deinem Rechner, 190 € Festpreis.
+      <a href="/agentfaehig/">Angebote ansehen</a> oder
+      <a href="https://cal.com/human-agent-interface/agent-check" target="_blank" rel="noopener">kostenlosen 20-Min-Termin buchen</a>.
+    </aside>
+  </main>
+  <footer><div class="wrap"><a href="/">Human Agent Interface</a> · <a href="/tutorials/">Tutorials</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></div></footer>
+</body>
+</html>
