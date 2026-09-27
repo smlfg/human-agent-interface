@@ -131,6 +131,30 @@
       font-variant-numeric: tabular-nums;
     }
 
+    .tokscale-proof {
+      margin: 0 0 18px;
+    }
+
+    .tokscale-proof h2 {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .tokscale-proof a {
+      display: block;
+      max-width: 640px;
+    }
+
+    .tokscale-proof img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
     .toolbar {
       display: flex;
       flex-wrap: wrap;
@@ -688,6 +712,18 @@
       <div class="metric"><label>Claude sessions</label><b id="metricClaude">0</b></div>
       <div class="metric"><label>OpenCode sessions</label><b id="metricOpenCode">0</b></div>
       <div class="metric"><label>Current terminals</label><b id="metricTerminals">0</b></div>
+    </section>
+
+    <section class="tokscale-proof" aria-labelledby="tokscaleTitle">
+      <h2 id="tokscaleTitle">Public token usage · Tokscale</h2>
+      <a href="https://tokscale.ai/u/smlfg" target="_blank" rel="noopener noreferrer">
+        <img
+          src="https://tokscale.ai/api/embed/smlfg/svg?template=minimal&amp;graph=1&amp;theme=light"
+          alt="Samuel Fleigs öffentliche Agentennutzung auf Tokscale"
+          loading="lazy"
+          decoding="async"
+        >
+      </a>
     </section>
 
     <section class="toolbar" aria-label="Display controls">
