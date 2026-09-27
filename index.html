@@ -1067,15 +1067,18 @@
         font-size: 1.05rem;
       }
 
+      .tokscale-proof {
+        margin-top: clamp(40px, 6vw, 72px);
+      }
+
       .tokscale-embed {
         display: block;
-        margin: 0 0 22px;
+        max-width: 640px;
       }
 
       .tokscale-embed img {
         display: block;
         width: 100%;
-        max-width: 495px;
         height: auto;
       }
 
@@ -2619,14 +2622,6 @@
                 Control-Tower-Versuche wurden zu strengeren Workflow-Regeln.
               </span>
             </p>
-            <a class="tokscale-embed" href="https://tokscale.ai/u/smlfg" target="_blank" rel="noopener">
-              <img
-                src="https://tokscale.ai/api/embed/smlfg/svg?graph=1&amp;rank=percent"
-                alt="Tokscale stats for smlfg: AI agent token usage and leaderboard rank"
-                loading="lazy"
-                decoding="async"
-              />
-            </a>
             <a class="button" href="./sidecar/">
               <span class="lang-copy" data-lang-copy="en">See the Sidecar control layer</span>
               <span class="lang-copy" data-lang-copy="de">Sidecar-Kontrollschicht ansehen</span>
@@ -2636,6 +2631,20 @@
               <span class="lang-copy" data-lang-copy="de">Nachweis ansehen</span>
             </a>
           </aside>
+        </div>
+        <div class="section-inner tokscale-proof reveal">
+          <p class="kicker">
+            <span class="lang-copy" data-lang-copy="en">Proof of work · public agent usage</span>
+            <span class="lang-copy" data-lang-copy="de">Arbeitsnachweis · öffentliche Agentennutzung</span>
+          </p>
+          <a class="tokscale-embed" href="https://tokscale.ai/u/smlfg" target="_blank" rel="noopener noreferrer">
+            <img
+              src="https://tokscale.ai/api/embed/smlfg/svg?template=minimal&amp;graph=1"
+              alt="Samuel Fleigs öffentliche Agentennutzung auf Tokscale"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
         </div>
       </section>
 
