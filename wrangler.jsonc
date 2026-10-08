@@ -24,6 +24,13 @@
       "preview_bucket_name": "hai-client-handoffs-preview"
     }
   ],
+  "services": [
+    {
+      "binding": "EXPLAIN",
+      "service": "cwh-11-explain-20261008",
+      "remote": true
+    }
+  ],
   "analytics_engine_datasets": [
     {
       "binding": "HAI_SITE_EVENTS",

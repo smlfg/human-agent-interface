@@ -114,6 +114,13 @@ const HARNESS_PROFILES = {
   },
 };
 
+const EXPLAIN_PATHS = new Set([
+  "/api/explain/health",
+  "/api/explain/checkout",
+  "/api/explain/session/start",
+  "/api/explain/session/advisory",
+]);
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -124,6 +131,13 @@ export default {
 
     if (url.pathname === "/api/harness-check/chat") {
       return handleHarnessCheckChat(request, env);
+    }
+
+    // Erklär-Agent: Worker cwh-11-explain (smlfg/claudeflareworkerhaus) per Service Binding.
+    if (EXPLAIN_PATHS.has(url.pathname)) {
+      if (!env.EXPLAIN) return json({ error: "explain_unavailable" }, 503);
+      url.pathname = url.pathname.replace("/api/explain/", "/api/");
+      return env.EXPLAIN.fetch(new Request(url, request));
     }
 
     if (url.pathname === "/api/site-event") {
