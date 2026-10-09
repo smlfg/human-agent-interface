@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A learning day as a human-agent interface</title>
+<meta name="description" content="Case study: one day of learning to program with a spoken game tutor, agents and a human who steered them, with every system claim marked as implemented, tested or observed.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <section class="scene" id="intro">
+    <p class="kicker">9 October 2026 · Heilbronn · case study</p>
+    <h1>A learning day as a human-agent interface</h1>
+    <p class="lede">One human intention, several agents, and a tutor that had to be steered back to the learner's level. This is what happened, marked by what was built, what was tested, and what was actually observed.</p>
+    <p>
+      <span class="status implemented">implemented</span>
+      <span class="status tested">tested</span>
+      <span class="status observed">observed in real use</span>
+      <span class="status not-observed">not yet observed</span>
+    </p>
+  </section>
+
+  <section class="scene" id="day">
+    <p class="kicker">The day in commits · 11:00–21:00</p>
+    <h2>44 commits, and a long gap</h2>
+    <p class="lede">Each dot is a commit to the tutor repository. The marked span is when the tutor was mute because of a bug.</p>
+    <div class="timeline" role="img" aria-label="Timeline of 44 commits between 11:26 and 21:04, with no commits between 14:22 and 20:40 and the tutor mute from 14:58 to 19:56">
+      <span class="silence" style="left:39.67%;width:49.66%" title="14:58–19:56 tutor mute"></span>
+      <span class="commit" style="left:4.33%" title="11:26 Initialize repository with learning companion concept"></span>
+      <span class="commit" style="left:4.33%" title="11:26 Add Claude Code implementation brief for local game tutor"></span>
+      <span class="commit" style="left:5.5%" title="11:33 TFWR-Tutor: Wächter + Pi-RPC + Thorsten-TTS + LaunchAgent"></span>
+      <span class="commit" style="left:5.67%" title="11:34 Prompt: 30–80 Wörter pro Einheit laut Brief"></span>
+      <span class="commit" style="left:6.17%" title="11:37 TTS: Piper Thorsten direkt (kein flock auf macOS), Sprachende korrekt "></span>
+      <span class="commit" style="left:7.5%" title="11:45 Robustheit: fehlende/kaputte Spieldaten stuerzen den Tutor nicht ab"></span>
+      <span class="commit" style="left:7.5%" title="11:45 test: Kernlogik-Tests für parse, save_progress, docs_for, observation,"></span>
+      <span class="commit" style="left:8.17%" title="11:49 Lernenden-Rückkopplung: antwort/unlocked, Lernstand-Dedupe, Prüffrage "></span>
+      <span class="commit" style="left:8.33%" title="11:50 smoke: Sprache-Abbruch und Pi-RPC praktisch verifizieren"></span>
+      <span class="commit" style="left:8.5%" title="11:51 Merge branch &#x27;agent/robust&#x27;"></span>
+      <span class="commit" style="left:8.5%" title="11:51 Merge branch &#x27;agent/smoke&#x27;"></span>
+      <span class="commit" style="left:8.5%" title="11:51 Merge branch &#x27;agent/feedback&#x27;"></span>
+      <span class="commit" style="left:8.5%" title="11:51 Kein altes Bild als aktuell; Prompt: keine verschachtelten Schleifen v"></span>
+      <span class="commit" style="left:8.83%" title="11:53 Lernstand aktualisiert"></span>
+      <span class="commit" style="left:9.83%" title="11:59 Starter-App für Bildschirmaufnahme-Freigabe, Bootstrap-Retry, Wortgren"></span>
+      <span class="commit" style="left:10.67%" title="12:04 Tutor verstummt nicht mehr bei ständigem Tippen: veraltete Antwort nur"></span>
+      <span class="commit" style="left:10.83%" title="12:05 Lernstand aktualisiert"></span>
+      <span class="commit" style="left:11.0%" title="12:06 Takt: etwa eine Coach-Aussage pro Minute, bei &#x27;weiter&#x27; kein SKIP"></span>
+      <span class="commit" style="left:14.83%" title="12:29 Lernstand aktualisiert"></span>
+      <span class="commit" style="left:16.33%" title="12:38 Sprechtaste (Push-to-Talk, lokal whisper), drei Ebenen pro Snapshot, M"></span>
+      <span class="commit" style="left:17.83%" title="12:47 Sprechtaste: kein Doppelstart (Mikrofon blieb offen), Ergebnis wird im"></span>
+      <span class="commit" style="left:17.83%" title="12:47 Teach problem decomposition and algorithm design with adaptive diagnos"></span>
+      <span class="commit" style="left:18.33%" title="12:50 Didaktik: Diagnose-Ebenen, Weg Problem-&gt;Programm, Hilfestufen 1-4, Ler"></span>
+      <span class="commit" style="left:18.5%" title="12:51 Merge: Didaktik aus paralleler Sitzung in die verdrahtete Fassung über"></span>
+      <span class="commit" style="left:19.83%" title="12:59 Takt: nach 60 s Stille wird eine fertige Antwort nie verworfen"></span>
+      <span class="commit" style="left:21.5%" title="13:09 Takt: Pi gilt bis zum Antworttext als beschäftigt, Teile sprechen währ"></span>
+      <span class="commit" style="left:21.67%" title="13:10 Lehransätze: 9 Prompt-Bausteine, adaptive Wahl statt Rotation, Tutor-N"></span>
+      <span class="commit" style="left:22.5%" title="13:15 Doku: Bedienung, Sprechtaste, Berechtigungen, Startverhalten, Architek"></span>
+      <span class="commit" style="left:24.0%" title="13:24 Takt: Vorausrechnen startet schon während der Sprachausgabe, Abstand 5"></span>
+      <span class="commit" style="left:24.17%" title="13:25 Mehr Begleitung: sofortige Quittung bei Sprachfrage, Begrüßung beim St"></span>
+      <span class="commit" style="left:25.33%" title="13:32 Takt: Vorausrechnen schon beim letzten Teil, vorausgerechnete Teile we"></span>
+      <span class="commit" style="left:25.5%" title="13:33 Schneller: Doku auf 8000 Zeichen (Code-relevante zuerst), Bild bei jed"></span>
+      <span class="commit" style="left:26.5%" title="13:39 Coach-Qualität: du-Form, ganze gesprochene Sätze, coachen statt vortra"></span>
+      <span class="commit" style="left:27.0%" title="13:42 Coach: Ziel des Lernenden hat Vorrang; Hilfestufe 3 = Ablauf mit Lücke"></span>
+      <span class="commit" style="left:27.5%" title="13:45 Platzhalter wie &#x27;(nicht nötig)&#x27; werden nie vorgelesen"></span>
+      <span class="commit" style="left:28.67%" title="13:52 Nie hilflos warten: Quittung geloggt, Zwischenmeldung nach 20 s, Modus"></span>
+      <span class="commit" style="left:33.17%" title="14:19 Kein Code-Diktat mehr: Prompt verbietet Vorlesen/Diktieren, Diktate we"></span>
+      <span class="commit" style="left:33.67%" title="14:22 Nur Lehrreiches sprechen: keine Begrüßung, Quittung oder Zwischenmeldu"></span>
+      <span class="commit" style="left:96.67%" title="20:40 Zuverlässigkeit + Syntax-Drossel: Aufnahme max 30 s, Mikrofon-Wächter "></span>
+      <span class="commit" style="left:97.5%" title="20:45 Rückblick: Landkarte des Lerntags 9. Oktober (Code, Denken, Coach-Wirk"></span>
+      <span class="commit" style="left:97.83%" title="20:47 Coach spricht nur auf Frage oder bei Fehler beim Ausführen (output.txt"></span>
+      <span class="commit" style="left:98.5%" title="20:54 Add resilient local offline coding tutor fallback"></span>
+      <span class="commit" style="left:98.5%" title="20:54 Konzeptkarte (24 Konzepte, offen/mit Hilfe/kann ich, editierbar) und t"></span>
+      <span class="commit" style="left:98.5%" title="21:04 Lehrplan 10.–23.10.: ein Konzept pro Termin, Coach nennt Tageskonzept "></span>
+    </div>
+    <p>No commits between 14:22 and 20:40. Commit count verified in the repository.</p>
+  </section>
+<section class="scene" id="scene-1">
+  <p class="kicker">Morning <time>11:26</time></p>
+  <h2>The Wish at 11:26</h2>
+  <p class="lede">Samuel wants a spoken tutor that explains concepts but leaves the thinking to him.</p>
+  <p>Applied AI student in Heilbronn, learning to program on his own. Second playthrough of a farming game driven by a Python-like drone, to understand concepts.</p>
+  <p>Morning wish: a spoken tutor that explains — but does not take the thinking away.</p>
+  <p>The repository was created at 11:26. <span class="status implemented">repository created 11:26 · implemented</span> The tutor itself is not yet present.</p>
+</section>
+
+<section class="scene" id="scene-2">
+  <p class="kicker">Morning <time>11:33–11:36</time></p>
+  <h2>First Tutor, and a Human Voice</h2>
+  <p class="lede">A working tutor exists within minutes, but the voice is a human decision.</p>
+  <p>11:33 the first working tutor is implemented and heard in real use. <span class="status implemented">implemented</span> <span class="status observed">observed in real use</span></p>
+  <p>11:36 the system voice is replaced; the local Piper voice “Thorsten” is observed in real use as a good voice. <span class="status observed">observed in real use</span></p>
+</section>
+
+<section class="scene" id="scene-3">
+  <p class="kicker">Midday <time>11:45–13:52</time></p>
+  <h2>Midday: More Mechanics</h2>
+  <p class="lede">The machine grows — screenshots, push-to-talk, cadence, didactic rules — and the coach talks a lot.</p>
+  <p>11:45–11:51 five sub-agents in parallel; four delivered with tests. <span class="status implemented">implemented</span> <span class="status tested">tests on four</span></p>
+  <p>Screenshots needed a small starter app (macOS permissions), observed from about 12:00. <span class="status observed">observed from ~12:00</span> 12:38 push-to-talk with local speech recognition; questions recognized in real use at 12:55, 13:00, 14:02, 14:53 — one early question lost to a bug, then fixed. <span class="status implemented">implemented</span> <span class="status observed">observed in real use</span></p>
+  <p>Measured cadence: first ~62 s, later 32–42 s between statements. <span class="status observed">observed in real use</span></p>
+</section>
+
+<section class="scene" id="scene-4">
+  <p class="kicker">Afternoon <time>14:19–14:22</time></p>
+  <h2>Afternoon: “Too Much”</h2>
+  <p class="lede">The human corrects the coach: too much talk, reads code aloud, syntax annoys.</p>
+  <p>“Not on my level”: he often did not understand what Samuel intended; large variance; too many mechanisms — overengineered. (Human verdict.)</p>
+  <p>Reading code aloud and dictating a whole program were forbidden in the prompt and blocked in code. <span class="status implemented">implemented</span> <span class="status tested">tested</span> Syntax hints capped at max 2 per hour. <span class="status implemented">implemented</span> <span class="status tested">tested</span></p>
+</section>
+
+<section class="scene" id="scene-5">
+  <p class="kicker">Afternoon into evening <time>14:58–19:56</time></p>
+  <h2>Five Hours of Silence</h2>
+  <p class="lede">The tutor goes mute through a bug, independent of whether the human is at the machine.</p>
+  <p>From 14:58 to 19:56 the tutor was mute through a hanging recording — independent of whether Samuel was at the machine. <span class="status observed">found afterwards in the logs</span></p>
+  <p>From about 15:00 to 18:00 there was no learning anyway: a break. An orphaned recording process held the microphone open almost 8 hours, writing into a deleted file; nothing was transmitted.</p>
+  <p>A 30-second limit plus a watchdog: <span class="status implemented">implemented</span> <span class="status tested">tested</span> <span class="status not-observed">not yet observed again</span> Model self-pausing ban — <span class="status implemented">implemented</span>.</p>
+</section>
+<section class="scene" id="scene-6">
+  <p class="kicker">Evening · <time>19:40</time></p>
+  <h2>The Human Thinks</h2>
+  <p class="lede">The strongest moment is Samuel's own spoken reasoning about rounds and coordinates.</p>
+  <p>A nine-minute spoken thought note.</p>
+  <blockquote class="quote">
+    <p>"I don't understand what a round is."</p>
+    <p>"In a round we run a 2x2 square and sow, then run it again and check."</p>
+    <p>"If I could remember and store which coordinates had dead pumpkins, and only check there the second time — I'd be more efficient."</p>
+    <footer>Quoted from the thought note.</footer>
+  </blockquote>
+  <p>Not a system claim — human reasoning. The plan was written down by Samuel and turned into code later.</p>
+</section>
+
+<section class="scene" id="scene-7">
+  <p class="kicker">Evening · <time>19:56</time>–<time>20:34</time></p>
+  <h2>Turning the Thought into Code</h2>
+  <p class="lede">The plan becomes code — a borrowed 2x2 scaffold, then his own coordinate list, with open errors.</p>
+  <p>19:56–20:34 the plan became code. The 2x2 scaffold with a counter came from a separate chat assistant on request.</p>
+  <p>The coordinate list and targeted driving were his own implementation of the note.</p>
+  <p>
+    <span class="status implemented">2x2 scaffold · taken over from the chat assistant</span>
+    <span class="status implemented">Coordinate list · written by Samuel</span>
+  </p>
+  <div class="problem"><strong>Open errors</strong> — found by code review: a list reassigned inside a function, x and y swapped, a scope error when running.</div>
+</section>
+
+<section class="scene" id="scene-8">
+  <p class="kicker">Evening · <time>20:40</time>–<time>21:04</time></p>
+  <h2>Radical Simplification</h2>
+  <p class="lede">The review showed what actually helped — help on request, not the proactive tutor. So the coach is reduced: speak only on a question or on an execution error.</p>
+  <p>20:40–21:04 rebuild after the learner's verdict. The coach now speaks only when asked or when running a program throws an error; it reads the game's output and introduces itself once at start.</p>
+  <p>Implemented 20:47, automatically tested — never yet observed in real use (the game closed at 20:35).</p>
+  <p>
+    <span class="status not-observed">Speak only on question or error · implemented + tested · not yet observed</span>
+    <span class="status not-observed">Concept card (24 concepts, 3 stages, editable) · implemented + tested · not yet observed</span>
+    <span class="status not-observed">Practice series (active minutes, from 25 min) · implemented + tested · not yet observed</span>
+  </p>
+</section>
+
+<section class="scene" id="scene-9">
+  <p class="kicker">Evening · into the coming days</p>
+  <h2>The Loop, and Where the Rules Came From</h2>
+  <p class="lede">The day ends as a repeating, deliberately undated learning loop built from the human's corrections.</p>
+  <p>One recurring daily appointment, 19:00–19:25, and a Notion path of 20 undated concepts: take the top open one.</p>
+  <ol class="loop">
+    <li class="station"><strong>appointment</strong></li>
+    <li class="station"><strong>top open concept</strong></li>
+    <li class="station"><strong>own program</strong></li>
+    <li class="station"><strong>touchstone</strong></li>
+    <li class="station"><strong>streak</strong></li>
+    <li class="station"><strong>next concept</strong></li>
+  </ol>
+  <p>The rules "no dictation" and "only on request" emerged only from Samuel's corrections — not in the morning.</p>
+  <p>44 commits by 21:04; 79 automated tests green.</p>
+  <p>
+    <span class="status implemented">Calendar + Notion loop · implemented</span>
+    <span class="status tested">"No dictation" / "only on request" rules · implemented + tested · origin: human corrections</span>
+    <span class="status observed">Commit and test counts · verified in the repository</span>
+  </p>
+</section>
+
+<section class="scene" id="scene-10">
+  <p class="kicker">End of day · still unresolved</p>
+  <h2>The Open Problems</h2>
+  <p class="lede">The unresolved problems remain part of the case study.</p>
+  <div class="problem"><strong>Card/path mismatch</strong> — the tutor's concept card (24) and the Notion path (20) are not aligned. <span class="status not-observed">open</span></div>
+  <div class="problem"><strong>Fixed dates</strong> — the tutor has its own curriculum with fixed dates, contradicting the undated Notion path. <span class="status not-observed">open</span></div>
+  <div class="problem"><strong>No automatic feedback</strong> — "understood" in Notion reaches neither tutor nor calendar. <span class="status not-observed">not implemented</span></div>
+  <div class="problem"><strong>Only on question</strong> — the simplified mode is not yet tried in the real game. <span class="status not-observed">not yet observed</span></div>
+  <div class="problem"><strong>Silent failure</strong> — opencode sub-agents fail silently. <span class="status observed">observed in real use</span></div>
+</section>
+
+  <section class="scene" id="hai">
+    <p class="kicker">What HAI means here</p>
+    <h2>Intention, execution, evidence, decision, updated state</h2>
+    <p class="lede">The human steered through intentions and decisions; agents executed across system boundaries.</p>
+    <p>The goal was not automated productivity but infrastructure in which the learner's own ability can grow. The day's clearest finding came from the human: help on request worked, the proactive tutor did not.</p>
+    <div class="problem">Still missing: reliable feedback. When progress is confirmed in Notion, tutor and calendar should take that state into account automatically.</div>
+  </section>
+
+</main>
+<footer class="scene">
+  <p class="kicker">Method</p>
+  <p>Written with agents from verified notes. Every system claim is marked: implemented, tested, observed in real use, or not yet observed.</p>
+</footer>
+<script>
+(function () {
+  if (!("IntersectionObserver" in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("is-visible"); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll(".scene").forEach(function (el) { io.observe(el); });
+})();
+</script>
+</body>
+</html>
