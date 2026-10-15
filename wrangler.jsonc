@@ -21,6 +21,7 @@
     {
       "binding": "HAI_CLIENT_HANDOFFS",
       "bucket_name": "hai-client-handoffs",
+      "jurisdiction": "eu",
       "preview_bucket_name": "hai-client-handoffs-preview"
     }
   ],
