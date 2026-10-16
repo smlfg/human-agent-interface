@@ -1,0 +1,147 @@
+/* mail-fallback.css - Styles fuer das mailto-Fallback-Popup. Schlicht, passend zur Seite. */
+.mail-fallback-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+.mail-fallback-dialog {
+  width: min(440px, 100%);
+  max-height: min(90vh, 640px);
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 20px;
+  border: 1px solid var(--line, rgba(247, 241, 223, 0.18));
+  border-radius: 14px;
+  background: var(--void, #090a08);
+  color: var(--ink, #f7f1df);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.45;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+}
+
+.mail-fallback-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mail-fallback-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.mail-fallback-close {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  margin: -4px -4px 0 0;
+  padding: 0;
+  border: 1px solid var(--line, rgba(247, 241, 223, 0.18));
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted, #b7ad97);
+  font: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mail-fallback-close:hover,
+.mail-fallback-close:focus-visible {
+  color: var(--ink, #f7f1df);
+  border-color: var(--signal, #a7ff4f);
+}
+
+.mail-fallback-intro {
+  margin: 10px 0 14px;
+  color: var(--muted, #b7ad97);
+  font-size: 0.92rem;
+}
+
+.mail-fallback-address {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line-soft, rgba(247, 241, 223, 0.1));
+  border-radius: 10px;
+  background: var(--panel, rgba(247, 241, 223, 0.065));
+}
+
+.mail-fallback-address-text {
+  flex: 1 1 180px;
+  min-width: 0;
+  color: var(--ink, #f7f1df);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.mail-fallback-copy {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border: 1px solid var(--line, rgba(247, 241, 223, 0.18));
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink, #f7f1df);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mail-fallback-copy:hover,
+.mail-fallback-copy:focus-visible {
+  border-color: var(--signal, #a7ff4f);
+  color: var(--signal, #a7ff4f);
+}
+
+.mail-fallback-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.mail-fallback-link {
+  flex: 1 1 160px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--signal, #a7ff4f);
+  color: var(--void, #090a08);
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+.mail-fallback-link:last-child {
+  background: transparent;
+  border: 1px solid var(--line, rgba(247, 241, 223, 0.18));
+  color: var(--ink, #f7f1df);
+}
+
+.mail-fallback-link:hover,
+.mail-fallback-link:focus-visible {
+  text-decoration: underline;
+}
+
+.mail-fallback-dialog :focus-visible {
+  outline: 2px solid var(--signal, #a7ff4f);
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .mail-fallback-actions {
+    flex-direction: column;
+  }
+}
