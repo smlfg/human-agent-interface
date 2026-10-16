@@ -1,6 +1,6 @@
 const MAX_USER_MESSAGES = 10;
 const SESSION_SECONDS = 10 * 60;
-const CONTACT_EMAIL = "samuel@human-agent-interface.com";
+const CONTACT_EMAIL = "hallo@samuelfleig.com";
 const API_ENDPOINT = "/api/harness-check/chat";
 
 const profiles = {

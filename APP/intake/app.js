@@ -185,7 +185,7 @@ ${nextActionPacket(currentWork, failure, value("autonomy"))}
 ${fit}
 
 ---
-Next step: Book a 20 min HAI fit call — samuel@human-agent-interface.com
+Next step: Book a 20 min HAI fit call — hallo@samuelfleig.com
 Subject: HAI fit call + attach this packet`;
 }
 
