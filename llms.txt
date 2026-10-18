@@ -9,6 +9,7 @@ Samuel Fleig bietet unter dem Namen Human Agent Interface Einrichtung, Reparatur
 - [Setup-Rettung](https://www.human-agent-interface.com/agentfaehig/): 90 Minuten 1:1 remote, 190 €. Fehler im Agenten-Setup finden und beheben (Konfiguration, MCP-Server, Berechtigungen, Modelle), dazu eine saubere CLAUDE.md oder AGENTS.md.
 - [Rechner agentenfähig machen](https://www.human-agent-interface.com/agentfaehig/): 4 Stunden 1:1 remote, 690 €. Agent, Werkzeuge und Zugriffe werden eingerichtet; am Ende läuft ein echter Arbeitsablauf mit Agent.
 - [Agenten-Workshop fürs Team](https://www.human-agent-interface.com/agentfaehig/): 3 Stunden remote für bis zu 8 Personen, 1.200 €. Gemeinsame Regeln für Rollen, Prüfpunkte und Datengrenzen an einem echten Arbeitsablauf des Teams.
+- [Angebote für die Schweiz](https://www.human-agent-interface.com/ch/): Agenten-Setup an einem Tag, CHF 1’500, und Security-Review für KI-generierte Apps, ab CHF 1’900. Remote, auf Deutsch, Rechnung in CHF.
 - [20-Minuten-Termin buchen](https://cal.com/human-agent-interface/agent-check): kostenloses Vorgespräch, ob ein Angebot passt.
 
 ## Tutorials
