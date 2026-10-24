@@ -2,6 +2,7 @@ const MAX_USER_MESSAGES = 10;
 const SESSION_SECONDS = 10 * 60;
 const CONTACT_EMAIL = "hallo@samuelfleig.com";
 const API_ENDPOINT = "/api/harness-check/chat";
+const CHAT_DISABLED_MESSAGE = "Der Harness-Check-Chat ist vorübergehend deaktiviert.";
 
 const profiles = {
   claude: {
@@ -278,6 +279,12 @@ async function requestHarnessAgent(mode) {
     throw new Error("Backend-Antwort war kein JSON.");
   }
 
+  if (data && data.disabled) {
+    const disabledError = new Error(data.detail || CHAT_DISABLED_MESSAGE);
+    disabledError.disabled = true;
+    throw disabledError;
+  }
+
   if (!response.ok || data.error) {
     throw new Error(data.detail || data.error || "Backend-Anfrage fehlgeschlagen.");
   }
@@ -325,11 +332,18 @@ async function startSession(event) {
     setChatEnabled(true);
     elements.messageInput.focus();
   } catch (error) {
-    appendMessage("agent", [
-      "Backend-Agent nicht erreichbar.",
-      error.message,
-      "Pruefe Worker-Deploy, OPENAI_API_KEY und HAI_HARNESS_MODEL."
-    ], "warning");
+    if (error.disabled) {
+      appendMessage("agent", [
+        "Der Live-Chat des Harness-Checks ist vorübergehend deaktiviert. Deine Eingaben wurden nicht an ein KI-Modell weitergegeben.",
+        `Schreib mir gern direkt eine E-Mail an ${CONTACT_EMAIL}: welches Harness, welches Problem, welches Ziel. Ich melde mich persönlich.`
+      ], "warning");
+    } else {
+      appendMessage("agent", [
+        "Backend-Agent nicht erreichbar.",
+        error.message,
+        "Pruefe Worker-Deploy, OPENAI_API_KEY und HAI_HARNESS_MODEL."
+      ], "warning");
+    }
     state.ended = true;
     window.clearInterval(state.timerId);
   } finally {
