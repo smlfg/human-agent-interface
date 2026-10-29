@@ -365,6 +365,12 @@
       }
 
       .epoch {
+        width: 100%;
+        color: inherit;
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+        transition: border-color 160ms ease, background-color 160ms ease;
         min-height: 92px;
         padding: 14px;
         display: grid;
@@ -417,6 +423,53 @@
         font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
         font-size: 0.7rem;
         text-transform: uppercase;
+      }
+
+      .epoch:hover,
+      .epoch[aria-expanded="true"] {
+        border-color: rgba(247, 241, 223, 0.42);
+      }
+
+      .epoch:focus-visible {
+        outline: 2px solid var(--signal);
+        outline-offset: 3px;
+      }
+
+      .epoch-detail {
+        max-width: 700px;
+        margin: calc(-1 * clamp(24px, 4vw, 60px)) 0 clamp(36px, 6vw, 78px);
+        padding: 14px 16px;
+        border-left: 2px solid var(--signal);
+        background: rgba(9, 10, 8, 0.54);
+        color: var(--muted);
+        font-size: 0.98rem;
+      }
+
+      .epoch-detail p {
+        margin: 0;
+      }
+
+      .epoch-detail a {
+        display: inline-block;
+        margin-top: 8px;
+        color: var(--signal);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.76rem;
+        text-transform: uppercase;
+      }
+
+      .hai-definition {
+        max-width: 640px;
+        margin: 24px 0 0;
+        padding-left: 18px;
+        border-left: 2px solid var(--signal);
+        color: var(--muted);
+        font-size: clamp(1.02rem, 1.6vw, 1.2rem);
+      }
+
+      .hai-definition dfn {
+        color: var(--ink);
+        font-style: normal;
       }
 
       .epoch.is-current {
@@ -1244,6 +1297,12 @@
           margin-bottom: 24px;
         }
 
+        .epoch-detail {
+          width: 350px;
+          max-width: calc(100vw - 40px);
+          margin: -12px 0 24px;
+        }
+
         .epoch {
           min-height: 68px;
         }
@@ -1937,31 +1996,50 @@
 
         <div class="hero-inner" id="top">
           <div class="lineage reveal" aria-label="Interface evolution">
-            <div class="epoch" data-stage="cli">
+            <button class="epoch" type="button" data-stage="cli" aria-expanded="false" aria-controls="epoch-detail" data-site-event="cta_click" data-event-target="epoch_cli">
               <strong>CLI</strong>
               <span>
                 <span class="lang-copy" data-lang-copy="en">commands</span>
                 <span class="lang-copy" data-lang-copy="de">Befehle</span>
               </span>
-            </div>
-            <div class="epoch" data-stage="tui">
+            </button>
+            <button class="epoch" type="button" data-stage="tui" aria-expanded="false" aria-controls="epoch-detail" data-site-event="cta_click" data-event-target="epoch_tui">
               <strong>TUI</strong>
               <span>terminal</span>
-            </div>
-            <div class="epoch" data-stage="gui">
+            </button>
+            <button class="epoch" type="button" data-stage="gui" aria-expanded="false" aria-controls="epoch-detail" data-site-event="cta_click" data-event-target="epoch_gui">
               <strong>GUI</strong>
               <span>
                 <span class="lang-copy" data-lang-copy="en">screens</span>
                 <span class="lang-copy" data-lang-copy="de">Oberflächen</span>
               </span>
-            </div>
-            <div class="epoch is-current" data-stage="hai">
+            </button>
+            <button class="epoch is-current" type="button" data-stage="hai" aria-expanded="false" aria-controls="epoch-detail" data-site-event="cta_click" data-event-target="epoch_hai">
               <strong>HAI</strong>
               <span>
                 <span class="lang-copy" data-lang-copy="en">agency</span>
                 <span class="lang-copy" data-lang-copy="de">Kontrolle</span>
               </span>
-            </div>
+            </button>
+          </div>
+          <div class="epoch-detail" id="epoch-detail" aria-live="polite" hidden>
+              <p data-epoch-detail="cli" hidden>
+                <span class="copy-block" data-lang-copy="en">Type a command. The machine runs exactly that, nothing more.</span>
+                <span class="copy-block" data-lang-copy="de">Befehl tippen. Die Maschine führt genau das aus, nicht mehr.</span>
+              </p>
+              <p data-epoch-detail="tui" hidden>
+                <span class="copy-block" data-lang-copy="en">Menus inside the terminal. You pick from what the program offers.</span>
+                <span class="copy-block" data-lang-copy="de">Menüs im Terminal. Du wählst aus dem, was das Programm anbietet.</span>
+              </p>
+              <p data-epoch-detail="gui" hidden>
+                <span class="copy-block" data-lang-copy="en">Windows, buttons, mouse. You point at what the software exposes.</span>
+                <span class="copy-block" data-lang-copy="de">Fenster, Buttons, Maus. Du zeigst auf das, was die Software sichtbar macht.</span>
+              </p>
+              <p data-epoch-detail="hai" hidden>
+                <span class="copy-block" data-lang-copy="en">The agent acts on its own. The interface decides what it may do, when it asks, and how you verify it.</span>
+                <span class="copy-block" data-lang-copy="de">Der Agent handelt selbst. Das Interface regelt, was er darf, wann er fragt und wie du prüfst.</span>
+                <a href="#hai-definition"><span class="lang-copy" data-lang-copy="en">Read the definition</span><span class="lang-copy" data-lang-copy="de">Zur Definition</span> ↓</a>
+              </p>
           </div>
 
           <p class="eyebrow reveal">
@@ -2735,6 +2813,10 @@
               <span class="copy-block" data-lang-copy="en">GUI gave us control over screens. HAI gives us control over agency.</span>
               <span class="copy-block" data-lang-copy="de">GUI gab uns Kontrolle über Screens. HAI gibt Kontrolle über Handlung.</span>
             </h2>
+            <p class="hai-definition reveal" id="hai-definition">
+              <span class="copy-block" data-lang-copy="en"><dfn>Human–Agent Interface (HAI)</dfn> is an adaptive interaction layer that connects humans and AI agents across different modalities. It optimizes which information is exchanged when and how, to enable mutual understanding and effective collaboration – personalized and under human control.</span>
+              <span class="copy-block" data-lang-copy="de"><dfn>Human–Agent Interface (HAI)</dfn> ist eine adaptive Interaktionsschicht, die Menschen und KI-Agenten über unterschiedliche Modalitäten verbindet. Sie optimiert, welche Informationen wann und wie ausgetauscht werden, um gegenseitiges Verständnis und wirksame Zusammenarbeit zu ermöglichen – personalisiert und unter menschlicher Kontrolle.</span>
+            </p>
           </div>
           <div class="quote-rail">
             <div class="quote-tile reveal">
@@ -3008,6 +3090,21 @@
       document.querySelectorAll("[data-site-event]").forEach((element) => {
         element.addEventListener("click", () => {
           sendSiteEvent(element.dataset.siteEvent, element.dataset.eventTarget || "");
+        });
+      });
+
+      const epochDetail = document.getElementById("epoch-detail");
+      document.querySelectorAll(".epoch[data-stage]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const open = button.getAttribute("aria-expanded") !== "true";
+          document.querySelectorAll(".epoch[data-stage]").forEach((other) => {
+            other.setAttribute("aria-expanded", "false");
+          });
+          epochDetail.querySelectorAll("[data-epoch-detail]").forEach((item) => {
+            item.hidden = !open || item.dataset.epochDetail !== button.dataset.stage;
+          });
+          button.setAttribute("aria-expanded", String(open));
+          epochDetail.hidden = !open;
         });
       });
 
