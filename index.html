@@ -366,22 +366,49 @@
 
       .epoch {
         width: 100%;
+        min-height: 92px;
+        padding: 0;
+        display: grid;
+        border: 0;
+        background: none;
         color: inherit;
         font: inherit;
         text-align: left;
         cursor: pointer;
-        transition: border-color 160ms ease, background-color 160ms ease;
-        min-height: 92px;
+        perspective: 900px;
+      }
+
+      .epoch-card {
+        display: grid;
+        transform-style: preserve-3d;
+        transition: transform 700ms cubic-bezier(0.2, 0.75, 0.25, 1);
+      }
+
+      .epoch:hover .epoch-card {
+        transform: rotateY(10deg);
+      }
+
+      .epoch[aria-pressed="true"] .epoch-card {
+        transform: rotateY(180deg);
+      }
+
+      .epoch[aria-pressed="true"]:hover .epoch-card {
+        transform: rotateY(170deg);
+      }
+
+      .epoch-face {
+        grid-area: 1 / 1;
         padding: 14px;
         display: grid;
         grid-template-rows: auto auto 1fr;
         gap: 8px;
         border: 1px solid var(--line-soft);
-        background: rgba(9, 10, 8, 0.54);
-        backdrop-filter: blur(12px);
+        background: rgba(9, 10, 8, 0.78);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
       }
 
-      .epoch::after {
+      .epoch-front::after {
         content: "";
         min-height: 30px;
         display: grid;
@@ -393,20 +420,20 @@
         text-transform: none;
       }
 
-      .epoch[data-stage="cli"]::after {
+      .epoch[data-stage="cli"] .epoch-front::after {
         content: "$ scope --next";
       }
 
-      .epoch[data-stage="tui"]::after {
+      .epoch[data-stage="tui"] .epoch-front::after {
         content: "[1] plan\A[2] run";
         white-space: pre;
       }
 
-      .epoch[data-stage="gui"]::after {
+      .epoch[data-stage="gui"] .epoch-front::after {
         content: "[ button ]  [ view ]";
       }
 
-      .epoch[data-stage="hai"]::after {
+      .epoch[data-stage="hai"] .epoch-front::after {
         content: "human -> gate -> agent";
         color: rgba(167, 255, 79, 0.78);
       }
@@ -418,44 +445,26 @@
         font-weight: 500;
       }
 
-      .epoch span {
+      .epoch-front span {
         color: var(--dim);
         font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
         font-size: 0.7rem;
         text-transform: uppercase;
       }
 
-      .epoch:hover,
-      .epoch[aria-expanded="true"] {
+      .epoch-back {
+        grid-template-rows: 1fr;
+        align-items: center;
+        transform: rotateY(180deg);
         border-color: rgba(247, 241, 223, 0.42);
+        color: var(--ink);
+        font-size: 0.8rem;
+        line-height: 1.35;
       }
 
       .epoch:focus-visible {
         outline: 2px solid var(--signal);
         outline-offset: 3px;
-      }
-
-      .epoch-detail {
-        max-width: 700px;
-        margin: calc(-1 * clamp(24px, 4vw, 60px)) 0 clamp(36px, 6vw, 78px);
-        padding: 14px 16px;
-        border-left: 2px solid var(--signal);
-        background: rgba(9, 10, 8, 0.54);
-        color: var(--muted);
-        font-size: 0.98rem;
-      }
-
-      .epoch-detail p {
-        margin: 0;
-      }
-
-      .epoch-detail a {
-        display: inline-block;
-        margin-top: 8px;
-        color: var(--signal);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.76rem;
-        text-transform: uppercase;
       }
 
       .hai-definition {
@@ -472,7 +481,7 @@
         font-style: normal;
       }
 
-      .epoch.is-current {
+      .epoch.is-current .epoch-face {
         border-color: rgba(167, 255, 79, 0.72);
         background:
           linear-gradient(135deg, rgba(167, 255, 79, 0.18), rgba(125, 216, 255, 0.06)),
@@ -1297,12 +1306,6 @@
           margin-bottom: 24px;
         }
 
-        .epoch-detail {
-          width: 350px;
-          max-width: calc(100vw - 40px);
-          margin: -12px 0 24px;
-        }
-
         .epoch {
           min-height: 68px;
         }
@@ -1347,6 +1350,18 @@
       }
 
       @media (prefers-reduced-motion: reduce) {
+        .epoch-card {
+          transition: none;
+        }
+
+        .epoch:hover .epoch-card {
+          transform: none;
+        }
+
+        .epoch[aria-pressed="true"] .epoch-card {
+          transform: rotateY(180deg);
+        }
+
         *,
         *::before,
         *::after {
@@ -1996,50 +2011,63 @@
 
         <div class="hero-inner" id="top">
           <div class="lineage reveal" aria-label="Interface evolution">
-            <button class="epoch" type="button" data-stage="cli" aria-expanded="false" aria-controls="epoch-detail" data-site-event="cta_click" data-event-target="epoch_cli">
-              <strong>CLI</strong>
-              <span>
-                <span class="lang-copy" data-lang-copy="en">commands</span>
-                <span class="lang-copy" data-lang-copy="de">Befehle</span>
+            <button class="epoch" type="button" data-stage="cli" aria-pressed="false" data-site-event="cta_click" data-event-target="epoch_cli">
+              <span class="epoch-card">
+                <span class="epoch-face epoch-front">
+                  <strong>CLI</strong>
+                  <span>
+                    <span class="lang-copy" data-lang-copy="en">commands</span>
+                    <span class="lang-copy" data-lang-copy="de">Befehle</span>
+                  </span>
+                </span>
+                <span class="epoch-face epoch-back">
+                  <span class="copy-block" data-lang-copy="en">Type a command. The machine does exactly that.</span>
+                  <span class="copy-block" data-lang-copy="de">Befehl tippen. Die Maschine tut genau das.</span>
+                </span>
               </span>
             </button>
-            <button class="epoch" type="button" data-stage="tui" aria-expanded="false" aria-controls="epoch-detail" data-site-event="cta_click" data-event-target="epoch_tui">
-              <strong>TUI</strong>
-              <span>terminal</span>
-            </button>
-            <button class="epoch" type="button" data-stage="gui" aria-expanded="false" aria-controls="epoch-detail" data-site-event="cta_click" data-event-target="epoch_gui">
-              <strong>GUI</strong>
-              <span>
-                <span class="lang-copy" data-lang-copy="en">screens</span>
-                <span class="lang-copy" data-lang-copy="de">Oberflächen</span>
+            <button class="epoch" type="button" data-stage="tui" aria-pressed="false" data-site-event="cta_click" data-event-target="epoch_tui">
+              <span class="epoch-card">
+                <span class="epoch-face epoch-front">
+                  <strong>TUI</strong>
+                  <span>terminal</span>
+                </span>
+                <span class="epoch-face epoch-back">
+                  <span class="copy-block" data-lang-copy="en">Menus in the terminal. You pick what the program offers.</span>
+                  <span class="copy-block" data-lang-copy="de">Menüs im Terminal. Du wählst, was das Programm anbietet.</span>
+                </span>
               </span>
             </button>
-            <button class="epoch is-current" type="button" data-stage="hai" aria-expanded="false" aria-controls="epoch-detail" data-site-event="cta_click" data-event-target="epoch_hai">
-              <strong>HAI</strong>
-              <span>
-                <span class="lang-copy" data-lang-copy="en">agency</span>
-                <span class="lang-copy" data-lang-copy="de">Kontrolle</span>
+            <button class="epoch" type="button" data-stage="gui" aria-pressed="false" data-site-event="cta_click" data-event-target="epoch_gui">
+              <span class="epoch-card">
+                <span class="epoch-face epoch-front">
+                  <strong>GUI</strong>
+                  <span>
+                    <span class="lang-copy" data-lang-copy="en">screens</span>
+                    <span class="lang-copy" data-lang-copy="de">Oberflächen</span>
+                  </span>
+                </span>
+                <span class="epoch-face epoch-back">
+                  <span class="copy-block" data-lang-copy="en">Windows and a mouse. You point at what is shown.</span>
+                  <span class="copy-block" data-lang-copy="de">Fenster und Maus. Du zeigst auf das, was sichtbar ist.</span>
+                </span>
               </span>
             </button>
-          </div>
-          <div class="epoch-detail" id="epoch-detail" aria-live="polite" hidden>
-              <p data-epoch-detail="cli" hidden>
-                <span class="copy-block" data-lang-copy="en">Type a command. The machine runs exactly that, nothing more.</span>
-                <span class="copy-block" data-lang-copy="de">Befehl tippen. Die Maschine führt genau das aus, nicht mehr.</span>
-              </p>
-              <p data-epoch-detail="tui" hidden>
-                <span class="copy-block" data-lang-copy="en">Menus inside the terminal. You pick from what the program offers.</span>
-                <span class="copy-block" data-lang-copy="de">Menüs im Terminal. Du wählst aus dem, was das Programm anbietet.</span>
-              </p>
-              <p data-epoch-detail="gui" hidden>
-                <span class="copy-block" data-lang-copy="en">Windows, buttons, mouse. You point at what the software exposes.</span>
-                <span class="copy-block" data-lang-copy="de">Fenster, Buttons, Maus. Du zeigst auf das, was die Software sichtbar macht.</span>
-              </p>
-              <p data-epoch-detail="hai" hidden>
-                <span class="copy-block" data-lang-copy="en">The agent acts on its own. The interface decides what it may do, when it asks, and how you verify it.</span>
-                <span class="copy-block" data-lang-copy="de">Der Agent handelt selbst. Das Interface regelt, was er darf, wann er fragt und wie du prüfst.</span>
-                <a href="#hai-definition"><span class="lang-copy" data-lang-copy="en">Read the definition</span><span class="lang-copy" data-lang-copy="de">Zur Definition</span> ↓</a>
-              </p>
+            <button class="epoch is-current" type="button" data-stage="hai" aria-pressed="false" data-site-event="cta_click" data-event-target="epoch_hai">
+              <span class="epoch-card">
+                <span class="epoch-face epoch-front">
+                  <strong>HAI</strong>
+                  <span>
+                    <span class="lang-copy" data-lang-copy="en">agency</span>
+                    <span class="lang-copy" data-lang-copy="de">Kontrolle</span>
+                  </span>
+                </span>
+                <span class="epoch-face epoch-back">
+                  <span class="copy-block" data-lang-copy="en">The agent acts. You decide what it may do, when it asks and how you verify.</span>
+                  <span class="copy-block" data-lang-copy="de">Der Agent handelt. Du bestimmst, was er darf, wann er fragt und wie du prüfst.</span>
+                </span>
+              </span>
+            </button>
           </div>
 
           <p class="eyebrow reveal">
@@ -3077,18 +3105,9 @@
         });
       });
 
-      const epochDetail = document.getElementById("epoch-detail");
       document.querySelectorAll(".epoch[data-stage]").forEach((button) => {
         button.addEventListener("click", () => {
-          const open = button.getAttribute("aria-expanded") !== "true";
-          document.querySelectorAll(".epoch[data-stage]").forEach((other) => {
-            other.setAttribute("aria-expanded", "false");
-          });
-          epochDetail.querySelectorAll("[data-epoch-detail]").forEach((item) => {
-            item.hidden = !open || item.dataset.epochDetail !== button.dataset.stage;
-          });
-          button.setAttribute("aria-expanded", String(open));
-          epochDetail.hidden = !open;
+          button.setAttribute("aria-pressed", String(button.getAttribute("aria-pressed") !== "true"));
         });
       });
 
