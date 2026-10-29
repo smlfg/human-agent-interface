@@ -2981,19 +2981,6 @@
         return HERO_VARIANTS.includes(value);
       }
 
-      function readCookie(name) {
-        const prefix = `${name}=`;
-        return document.cookie
-          .split(";")
-          .map((part) => part.trim())
-          .find((part) => part.startsWith(prefix))
-          ?.slice(prefix.length) || "";
-      }
-
-      function writeHeroVariantCookie(variant) {
-        document.cookie = `haiHeroVariant=${variant}; Max-Age=2592000; Path=/; SameSite=Lax`;
-      }
-
       function chooseHeroVariant() {
         const params = new URLSearchParams(window.location.search);
         const previewVariant = params.get("hero_variant");
@@ -3003,13 +2990,10 @@
           return { variant: previewVariant, preview: true };
         }
 
+        // Keine Cookies/kein Speicher: Variante kommt vom Server oder wird pro Aufruf zufaellig gewaehlt.
         let variant = document.documentElement.dataset.heroVariant;
         if (!isHeroVariant(variant)) {
-          const cookieVariant = readCookie("haiHeroVariant");
-          variant = isHeroVariant(cookieVariant)
-            ? cookieVariant
-            : HERO_VARIANTS[Math.floor(Math.random() * HERO_VARIANTS.length)];
-          writeHeroVariantCookie(variant);
+          variant = HERO_VARIANTS[Math.floor(Math.random() * HERO_VARIANTS.length)];
         }
 
         document.documentElement.dataset.heroVariant = variant;

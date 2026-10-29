@@ -4,6 +4,10 @@ const MAX_HARNESS_REQUEST_BYTES = 24 * 1024;
 const MAX_SITE_EVENT_BYTES = 2048;
 const CONSENT_VERSION = "client-handoff-md-v0-2026-05-14";
 const DEFAULT_HARNESS_MODEL = "gpt-5.5";
+// Feature-Flag: Der Harness-Check-Chat leitet Eingaben an die OpenAI-API weiter.
+// Bleibt aus, bis der Auftragsverarbeitungsvertrag (AVV) mit OpenAI abgeschlossen
+// und die Datenschutzerklärung (Abschnitt 8) entsprechend angepasst ist.
+const HARNESS_CHAT_ENABLED = false;
 const HERO_EXPERIMENT_ID = "homepage-hero-2026-05-23";
 const HERO_VARIANTS = ["A_control", "B_offer_first", "C_proof_first"];
 const SITE_EVENTS = ["hero_impression", "hero_cta_click", "cta_click"];
@@ -168,20 +172,14 @@ export default {
 async function handleHomepage(request, env) {
   const url = new URL(request.url);
   const previewVariant = url.searchParams.get("hero_variant");
-  const existingVariant = parseCookies(request.headers.get("cookie") || "").haiHeroVariant;
+  // Keine Cookies und kein sonstiger Speicher: Die Hero-Variante wird pro Aufruf
+  // zufaellig gewaehlt (oder per ?hero_variant= fuer die Vorschau erzwungen).
   const variant = HERO_VARIANTS.includes(previewVariant)
     ? previewVariant
-    : HERO_VARIANTS.includes(existingVariant)
-      ? existingVariant
-      : HERO_VARIANTS[cryptoRandomIndex(HERO_VARIANTS.length)];
+    : HERO_VARIANTS[cryptoRandomIndex(HERO_VARIANTS.length)];
 
   const response = await env.ASSETS.fetch(request);
   const headers = new Headers(response.headers);
-  headers.append("Vary", "Cookie");
-
-  if (!HERO_VARIANTS.includes(previewVariant)) {
-    headers.append("Set-Cookie", `haiHeroVariant=${variant}; Max-Age=2592000; Path=/; SameSite=Lax; Secure`);
-  }
 
   const contentType = headers.get("content-type") || "";
   if (!contentType.toLowerCase().includes("text/html")) {
@@ -282,6 +280,14 @@ async function handleHarnessCheckChat(request, env) {
       Allow: "POST, OPTIONS",
       ...corsHeaders(),
     });
+  }
+
+  if (!HARNESS_CHAT_ENABLED) {
+    return json({
+      error: "harness_chat_disabled",
+      disabled: true,
+      detail: "Der Harness-Check-Chat ist vorübergehend deaktiviert. Bitte schreib mir stattdessen eine E-Mail an hallo@samuelfleig.com.",
+    }, 503, { "Retry-After": "86400", ...corsHeaders() });
   }
 
   const contentLength = Number(request.headers.get("content-length") || 0);
@@ -694,20 +700,6 @@ function corsHeaders() {
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
   };
-}
-
-function parseCookies(cookieHeader) {
-  return Object.fromEntries(
-    String(cookieHeader || "")
-      .split(";")
-      .map((part) => part.trim())
-      .filter(Boolean)
-      .map((part) => {
-        const index = part.indexOf("=");
-        if (index === -1) return [part, ""];
-        return [part.slice(0, index), decodeURIComponent(part.slice(index + 1))];
-      }),
-  );
 }
 
 function cryptoRandomIndex(length) {

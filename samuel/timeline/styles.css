@@ -42,7 +42,7 @@ body {
   margin: 0;
   min-height: 100vh;
   color: var(--text);
-  font-family: "Instrument Sans", "Segoe UI", sans-serif;
+  font-family: "Instrument Sans", "Segoe UI", "Helvetica Neue", sans-serif;
   background:
     radial-gradient(circle at top left, color-mix(in srgb, #d58f43 16%, transparent), transparent 28%),
     radial-gradient(circle at 82% 12%, color-mix(in srgb, #5d847f 18%, transparent), transparent 26%),
@@ -78,7 +78,7 @@ a {
   color: var(--text-soft);
   background: #0b0b0a;
   border-bottom: 1px solid color-mix(in srgb, #a29271 20%, transparent);
-  font-family: "JetBrains Mono", monospace;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
   font-size: 0.76rem;
   letter-spacing: 0;
   line-height: 1.45;
@@ -131,7 +131,7 @@ select {
 }
 
 .stat-num {
-  font-family: "JetBrains Mono", monospace;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
   color: #88d2ce;
   font-weight: 700;
 }
@@ -213,7 +213,7 @@ select {
   max-width: 12ch;
   margin-block: 18px;
   color: var(--hero);
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Space Grotesk", "Segoe UI", "Helvetica Neue", sans-serif;
   font-size: clamp(2.8rem, 5vw, 5rem);
   line-height: 0.95;
   letter-spacing: 0;
@@ -265,7 +265,7 @@ select {
 
 .hero-section-head h2 {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Space Grotesk", "Segoe UI", "Helvetica Neue", sans-serif;
   font-size: 1.2rem;
   letter-spacing: 0;
   color: var(--text);
@@ -289,7 +289,7 @@ select {
 
   h3 {
     margin: 0;
-    font-family: "Space Grotesk", sans-serif;
+    font-family: "Space Grotesk", "Segoe UI", "Helvetica Neue", sans-serif;
     font-size: 1.08rem;
     letter-spacing: 0;
   }
@@ -334,7 +334,7 @@ select {
 }
 
 .hero-feature-kicker {
-  font-family: "JetBrains Mono", monospace;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -345,7 +345,7 @@ select {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  font-family: "JetBrains Mono", monospace;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
   font-size: 0.76rem;
   color: var(--text-muted);
 }
@@ -367,7 +367,7 @@ select {
   strong {
     display: block;
     margin-block-end: 8px;
-    font-family: "Space Grotesk", sans-serif;
+    font-family: "Space Grotesk", "Segoe UI", "Helvetica Neue", sans-serif;
     font-size: 1rem;
     color: var(--hero);
   }
@@ -432,7 +432,7 @@ select {
 .hero-meta h2,
 .detail-panel h2 {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Space Grotesk", "Segoe UI", "Helvetica Neue", sans-serif;
   font-size: 1.25rem;
   letter-spacing: 0;
 }
@@ -454,7 +454,7 @@ select {
 .meta-card strong,
 .detail-stat strong {
   display: block;
-  font-family: "JetBrains Mono", monospace;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
   font-size: 1.4rem;
   color: #88d2ce;
 }
@@ -519,7 +519,7 @@ select {
 }
 
 .filter-result {
-  font-family: "JetBrains Mono", monospace;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
   color: #88d2ce;
   font-size: 0.9rem;
 }
@@ -648,7 +648,7 @@ select {
   border: 1px solid color-mix(in srgb, #a99467 18%, transparent);
 
   strong {
-    font-family: "Space Grotesk", sans-serif;
+    font-family: "Space Grotesk", "Segoe UI", "Helvetica Neue", sans-serif;
     color: var(--hero);
     letter-spacing: 0;
   }
@@ -666,7 +666,7 @@ select {
   width: fit-content;
   padding: 6px 12px;
   border-radius: 999px;
-  font-family: "JetBrains Mono", monospace;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -699,7 +699,7 @@ select {
 
 .phase-title {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Space Grotesk", "Segoe UI", "Helvetica Neue", sans-serif;
   font-size: 1.25rem;
   letter-spacing: 0;
 }
@@ -818,7 +818,7 @@ select {
   min-height: 24px;
   padding-inline: 9px;
   border-radius: 999px;
-  font-family: "JetBrains Mono", monospace;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
   font-size: 0.72rem;
   letter-spacing: 0.04em;
 }
@@ -852,7 +852,7 @@ select {
 .timeline-card h3 {
   margin-block: 14px 10px;
   font-size: 1.15rem;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Space Grotesk", "Segoe UI", "Helvetica Neue", sans-serif;
   letter-spacing: 0;
 }
 
@@ -933,7 +933,7 @@ select {
     margin-block-start: 14px;
     margin-block-end: 10px;
     font-size: 2rem;
-    font-family: "Space Grotesk", sans-serif;
+    font-family: "Space Grotesk", "Segoe UI", "Helvetica Neue", sans-serif;
     letter-spacing: 0;
     color: var(--hero);
   }

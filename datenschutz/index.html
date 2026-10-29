@@ -299,7 +299,7 @@
       <p>
         Nur auf www.human-agent-interface.com: Die Seite sendet bei bestimmten Interaktionen (Seitenaufruf, Klick auf einen Handlungsaufruf) ein Ereignis an den eigenen
         Endpunkt <code>/api/site-event</code>. Der Worker schreibt dabei einen Datensatz in das Cloudflare-Analytics-Engine-Dataset
-        <code>hai_site_events</code> (<code>src/worker.js</code>, <code>writeDataPoint</code>, Zeilen 214–225). Gespeichert werden
+        <code>hai_site_events</code> (Funktion <code>handleSiteEvent</code> in <code>src/worker.js</code>, Aufruf <code>writeDataPoint</code>). Gespeichert werden
         ausschließlich:
       </p>
       <ul>
@@ -316,9 +316,9 @@
         geschrieben.</strong> Die Daten lassen keinen unmittelbaren Rückschluss auf eine Person zu.
       </p>
       <p>
-        Zur konstanten Zuordnung der Hero-Variante setzt der Server außerdem ein funktionales Erstanbieter-Cookie
-        <code>haiHeroVariant</code> (<code>src/worker.js</code>, Zeile 142). Es enthält nur die Variantenbezeichnung, keine
-        Kennung. Zusätzlich speichert die Seite die gewählte Sprache lokal im Browser (<code>localStorage</code>-Schlüssel
+        Für die Hero-Variante werden <strong>keine Cookies und keine sonstige Speicherung im Browser</strong> verwendet: Die
+        Variante wird ohne Wiedererkennung des Browsers festgelegt (Funktion <code>handleHomepage</code> in
+        <code>src/worker.js</code>). Unabhängig davon speichert die Seite die gewählte Sprache lokal im Browser (<code>localStorage</code>-Schlüssel
         <code>haiLang</code>); dieser Wert wird nicht an den Server übertragen.
       </p>
       <p class="meta">
@@ -371,7 +371,7 @@
       <p>
         Im Rahmen der Vorbereitung eines angenommenen Falls können Sie über <code>/api/client-handoff-upload</code> eine
         Markdown-Datei mit Kontext hochladen. Die Datei und die Formularangaben werden im Cloudflare-R2-Bucket
-        <code>hai-client-handoffs</code> gespeichert (<code>src/worker.js</code>, Zeilen 505–637). Gespeichert werden:
+        <code>hai-client-handoffs</code> gespeichert (Funktion <code>handleClientHandoffUpload</code> in <code>src/worker.js</code>). Gespeichert werden:
       </p>
       <ul>
         <li>Fall-ID (<code>caseId</code>),</li>
@@ -403,8 +403,15 @@
 
       <h2>8. Harness-Check-Chat über die OpenAI-API (/api/harness-check/chat)</h2>
       <p>
-        Beim Harness-Check-Chat sendet der Worker Ihre Eingaben an die OpenAI-API (<code>https://api.openai.com/v1/responses</code>,
-        <code>src/worker.js</code>, Zeilen 234–344). Übermittelt werden:
+        <strong>Derzeit deaktiviert:</strong> Der Harness-Check-Chat ist vorübergehend abgeschaltet. Der Endpunkt
+        <code>/api/harness-check/chat</code> antwortet nur mit einem Hinweis; Ihre Eingaben werden <strong>nicht</strong> an
+        OpenAI übermittelt. Es findet lediglich die in Abschnitt 2 beschriebene Verarbeitung von Verbindungsdaten durch
+        Cloudflare statt.
+      </p>
+      <p>
+        Die folgenden Angaben gelten erst, wenn der Chat nach Abschluss eines Auftragsverarbeitungsvertrags wieder aktiviert
+        wird: Dann sendet der Worker Ihre Eingaben an die OpenAI-API (<code>https://api.openai.com/v1/responses</code>,
+        Funktion <code>handleHarnessCheckChat</code> in <code>src/worker.js</code>). Übermittelt werden:
       </p>
       <ul>
         <li>gewählter Harness, Level, Problembeschreibung, Ziel und Grenzen,</li>
@@ -414,14 +421,14 @@
       </ul>
       <p>
         Eingaben, die wie ein Secret, Token, Passwort oder API-Key aussehen, werden bereits im Worker erkannt und
-        <strong>nicht</strong> an OpenAI weitergegeben (<code>src/worker.js</code>, Zeilen 266–273). Die Anfrage wird mit
+        <strong>nicht</strong> an OpenAI weitergegeben (Funktion <code>hasSecretLikeText</code> in <code>src/worker.js</code>). Die Anfrage wird mit
         <code>store: false</code> gesendet, sodass die Antwort nicht im Antwortverlauf gespeichert wird.
       </p>
       <p class="meta">
         <strong>Zweck:</strong> Durchführung des freiwilligen Harness-Checks als vorvertragliche Beratung.<br>
         <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen).<br>
         <strong>Empfänger:</strong> OpenAI (USA).<br>
-        <strong>Drittland:</strong> Übermittlung in die USA. Es ist ein Auftragsverarbeitungsvertrag mit OpenAI erforderlich: ein solcher AVV wird vor produktiver Nutzung des Harness-Check-Chats abgeschlossen (Stand: in Vorbereitung). Bis dahin findet über diesen Endpunkt keine produktive Verarbeitung statt. Grundlage des Drittlandtransfers ist das EU-U.S. Data Privacy Framework bzw. die Standardvertragsklauseln.<br>
+        <strong>Drittland:</strong> Übermittlung in die USA. Es ist ein Auftragsverarbeitungsvertrag mit OpenAI erforderlich: ein solcher AVV wird vor produktiver Nutzung des Harness-Check-Chats abgeschlossen (Stand: in Vorbereitung). Bis dahin ist der Chat deaktiviert und es werden über diesen Endpunkt keine Daten an OpenAI übermittelt. Grundlage des Drittlandtransfers ist das EU-U.S. Data Privacy Framework bzw. die Standardvertragsklauseln.<br>
         <strong>Speicherdauer:</strong> Anfragen werden mit <code>store: false</code> gesendet, sodass Inhalte nicht im OpenAI-Antwortverlauf gespeichert werden. Nach Angaben von OpenAI werden Anfragen und Antworten jedoch zur Erkennung von Missbrauch bis zu 30 Tage aufbewahrt und danach gelöscht, sofern nicht eine längere Speicherung gesetzlich vorgeschrieben ist.
       </p>
 
@@ -542,21 +549,18 @@
 
       <h2>10. Cookies, lokale Speicherung und externe Ressourcen</h2>
       <p>
-        Es werden <strong>keine Cookies zu Werbe- oder websiteübergreifenden Tracking-Zwecken</strong> gesetzt. Es gibt nur zwei
-        technisch notwendige Erstanbieter-Cookies:
+        Es werden <strong>keine Cookies zu Werbe- oder websiteübergreifenden Tracking-Zwecken</strong> gesetzt. Es gibt nur ein
+        technisch notwendiges Erstanbieter-Cookie:
       </p>
       <ul>
-        <li>
-          <code>haiHeroVariant</code> (nur www.human-agent-interface.com): merkt sich die angezeigte Seitenvariante. Es enthält
-          keine personenbezogene Kennung (siehe Abschnitt 4).
-        </li>
         <li>
           <code>explain_session</code> (alle oben genannten Websites): wird nur gesetzt, wenn Sie den KI-Chat starten. Laufzeit
           15 Minuten, nur für die Chat-Adresse <code>/api/explain/</code> (siehe Abschnitt 9).
         </li>
       </ul>
       <p>
-        Die Sprachwahl auf www.human-agent-interface.com wird lokal im Browser gespeichert (<code>localStorage</code>-Schlüssel
+        Die Startseiten-Variante (Abschnitt 4) wird ohne Cookie und ohne lokale Speicherung gewählt. Die Sprachwahl auf
+        www.human-agent-interface.com wird lokal im Browser gespeichert (<code>localStorage</code>-Schlüssel
         <code>haiLang</code>) und nicht an den Server übertragen.
       </p>
       <p>
@@ -616,7 +620,7 @@
         </li>
         <li>
           <strong>USA:</strong> Cloudflare (Abschnitte 2 bis 5, 7 und 9), Cal.com und Google (Abschnitt 6) sowie OpenAI
-          (Abschnitt 8) haben ihren Sitz in den USA oder können Daten dort bearbeiten. Die Bekanntgabe stützt sich auf das Swiss-U.S. Data
+          (Abschnitt 8, derzeit deaktiviert) haben ihren Sitz in den USA oder können Daten dort bearbeiten. Die Bekanntgabe stützt sich auf das Swiss-U.S. Data
           Privacy Framework, soweit der Empfänger danach zertifiziert ist (Anhang 1 DSV), und im Übrigen auf
           Standardvertragsklauseln, die der Eidgenössische Datenschutz- und Öffentlichkeitsbeauftragte (EDÖB) anerkannt hat.
         </li>
