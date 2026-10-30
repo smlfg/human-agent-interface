@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Was ist HAI? — Definition, Problem und Abgrenzung</title>
+  <meta name="description" content="HAI (Human Agent Interface) ist die Kontrollschicht zwischen Menschen und autonomen KI-Agenten: beobachtbar, begrenzt, prüfbar, menschlich verantwortet.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/was-ist-hai/">
+  <link rel="alternate" hreflang="de" href="https://www.human-agent-interface.com/was-ist-hai/">
+  <link rel="alternate" hreflang="en" href="https://www.human-agent-interface.com/en/what-is-hai/">
+  <link rel="alternate" hreflang="x-default" href="https://www.human-agent-interface.com/was-ist-hai/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Human Agent Interface (HAI)">
+  <meta property="og:title" content="Was ist HAI? — Definition, Problem und Abgrenzung">
+  <meta property="og:description" content="Die Kontrollschicht zwischen Menschen und autonomen KI-Agenten: beobachtbar, begrenzt, prüfbar, menschlich verantwortet.">
+  <meta property="og:image" content="https://www.human-agent-interface.com/assets/og/hai-og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HAI — Agenten arbeiten. Du entscheidest.">
+  
+  <meta property="og:url" content="https://www.human-agent-interface.com/was-ist-hai/">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#f4f0e6">
+  <link rel="icon" href="/assets/favicon-64.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/newsreader-300_700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-300_700-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/hai.css">
+  <style>
+    /* Page-scoped reading polish. Global CSS, classes and tokens stay untouched. */
+    .section-head h2,
+    .entry h3 { text-wrap: balance; }
+    .main > p,
+    .entry p,
+    .footnotes li { text-wrap: pretty; }
+    .main > p + p { margin-top: 1.15em; }
+    .components li > div > span { max-width: 62ch; }
+    .aside .note { font-size: var(--step--1); }
+    sup { line-height: 0; }
+    .footnotes { font-size: var(--step--1); line-height: 1.65; }
+    .footnotes li { max-width: 54ch; }
+    .footnotes a[href^="#ref"] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.75rem;
+      min-height: 1.75rem;
+      margin-left: 0.15rem;
+      vertical-align: middle;
+    }
+    [id^="fn"], [id^="ref"] { scroll-margin-top: 3.5rem; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.human-agent-interface.com/#website",
+        "url": "https://www.human-agent-interface.com/",
+        "name": "Human Agent Interface (HAI)",
+        "inLanguage": ["de", "en"]
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.human-agent-interface.com/was-ist-hai/#webpage",
+        "url": "https://www.human-agent-interface.com/was-ist-hai/",
+        "name": "Was ist HAI?",
+        "description": "HAI ist die Kontrollschicht zwischen Menschen und autonomen KI-Agenten: beobachtbar, begrenzt, prüfbar, menschlich verantwortet.",
+        "inLanguage": "de",
+        "isPartOf": { "@id": "https://www.human-agent-interface.com/#website" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.human-agent-interface.com/was-ist-hai/#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Start", "item": "https://www.human-agent-interface.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Was ist HAI", "item": "https://www.human-agent-interface.com/was-ist-hai/" }
+        ]
+      },
+      {
+        "@type": "DefinedTerm",
+        "@id": "https://www.human-agent-interface.com/#hai",
+        "name": "Human Agent Interface (HAI)",
+        "description": "HAI ist die Open-Source-Kontrollschicht zwischen Menschen und autonomen KI-Agenten: HAI macht agentische Arbeit beobachtbar, begrenzt, prüfbar und menschlich verantwortet.",
+        "url": "https://www.human-agent-interface.com/was-ist-hai/"
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.human-agent-interface.com/#samuel-fleig",
+        "name": "Samuel Fleig",
+        "url": "https://samuelfleig.com/",
+        "sameAs": ["https://github.com/smlfg"]
+      }
+    ]
+  }
+  </script>
+</head>
+<body data-page="what-is-hai">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+  <div class="statusline" aria-hidden="true">
+    <div class="wrap">
+      <span>HAI · Protokoll 001</span>
+      <span>Abschnitt: <strong data-status-section>01</strong></span>
+      <span data-variant-label>Variante A · Protokoll</span>
+    </div>
+  </div>
+
+  <header class="site-head">
+    <div class="wrap">
+      <a class="brand" href="/"><strong>HAI</strong> · Human Agent Interface</a>
+      <nav class="nav" aria-label="Hauptnavigation">
+        <a href="/was-ist-hai/" data-target="what-is-hai" aria-current="page">Was ist HAI</a>
+        <a href="/beweis/" data-target="proof">Beweis</a>
+        <a href="/mesh/" data-target="mesh">Mesh</a>
+        <a href="/archiv/" data-target="archive">Archiv</a>
+        <a href="/en/what-is-hai/" lang="en" hreflang="en" data-target="lang_en">EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <section class="hero" data-section="01 · Was ist HAI">
+      <div class="wrap grid">
+        <div class="rail meta">
+          <div>Protokoll 001</div>
+          <div>Version 001</div>
+          <div>Deutsch</div>
+        </div>
+        <div class="main">
+          <h1>Was ist <em>HAI?</em></h1>
+          <p class="lede">HAI steht für Human Agent Interface, die Open-Source-Kontrollschicht zwischen Menschen und autonomen KI-Agenten. HAI macht agentische Arbeit beobachtbar, begrenzt, prüfbar und menschlich verantwortet.</p>
+          <div class="actions">
+            <a href="#definition">Die Definition</a>
+            <a href="/beweis/" data-target="proof">Den Beweis ansehen</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Ablauf">
+          <span class="stamp">Geprüft · Mensch</span>
+          <figure class="figure" style="margin-top:1.5rem;padding:.75rem">
+            <svg viewBox="0 0 180 220" role="img" aria-label="Skizze: Fünf Schritte von Intent bis Entscheidung, verbunden durch eine senkrechte Linie.">
+              <rect x="1" y="1" width="178" height="218" fill="#f4f0e6" stroke="#d9d2c3"></rect>
+              <line x1="26" y1="34" x2="26" y2="170" stroke="#d9d2c3" stroke-width="1"></line>
+              <circle cx="26" cy="34" r="3" fill="#14120f"></circle>
+              <text x="40" y="38" font-family="Georgia, serif" font-size="11" fill="#14120f">Intent</text>
+              <text x="40" y="51" font-family="monospace" font-size="7" fill="#6b6459">Zweck</text>
+              <circle cx="26" cy="68" r="3" fill="#14120f"></circle>
+              <text x="40" y="72" font-family="Georgia, serif" font-size="11" fill="#14120f">Contract</text>
+              <text x="40" y="85" font-family="monospace" font-size="7" fill="#6b6459">Grenzen</text>
+              <circle cx="26" cy="102" r="3" fill="#14120f"></circle>
+              <text x="40" y="106" font-family="Georgia, serif" font-size="11" fill="#14120f">Ausführung</text>
+              <text x="40" y="119" font-family="monospace" font-size="7" fill="#6b6459">Scope</text>
+              <circle cx="26" cy="136" r="3" fill="#14120f"></circle>
+              <text x="40" y="140" font-family="Georgia, serif" font-size="11" fill="#14120f">Beleg</text>
+              <text x="40" y="153" font-family="monospace" font-size="7" fill="#6b6459">Nachweis</text>
+              <circle cx="26" cy="170" r="3.5" fill="#b4451f"></circle>
+              <text x="40" y="174" font-family="Georgia, serif" font-size="11" fill="#b4451f">Entscheidung</text>
+              <text x="40" y="187" font-family="monospace" font-size="7" fill="#6b6459">Person</text>
+              <text x="14" y="206" font-family="monospace" font-size="8" fill="#6b6459">HAI · ABLAUF</text>
+            </svg>
+            <figcaption>Fünf Schritte. Die Entscheidung bleibt beim Menschen.</figcaption>
+          </figure>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="definition" data-section="02 · Definition">
+      <div class="wrap grid">
+        <div class="rail meta">01 / Definition</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Definition</p>
+            <h2>Eine Kontrollschicht, kein Chatfenster.</h2>
+          </div>
+          <p><strong>Human Agent Interface (HAI) ist die Open-Source-Kontrollschicht zwischen Menschen und autonomen KI-Agenten: beobachtbar, begrenzt, prüfbar und menschlich verantwortet.</strong><sup><a href="#fn1" id="ref1" aria-label="Fußnote 1">1</a></sup></p>
+          <p>HAI beantwortet nicht, wie ein Agent gebaut wird. HAI beantwortet, wer die Aufgabe besitzt, was der Agent tun darf, wann er stoppen muss und welche Belege ein Ergebnis stützen. Die vier Eigenschaften gelten zusammen.</p>
+          <ol class="components" role="list">
+            <li>
+              <span class="num" aria-hidden="true">01</span>
+              <div><strong>Beobachtbar</strong><span>Sichtbar ist, was der Agent tut, mit welchen Werkzeugen und warum.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">02</span>
+              <div><strong>Begrenzt</strong><span>Jede Aufgabe hat Scope, Rechte und Stop-Regeln. Was nicht im Contract steht, wird nicht ausgeführt.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">03</span>
+              <div><strong>Prüfbar</strong><span>Ergebnisse brauchen Belege: Quellen, Diffs, Testergebnisse. Plausibilität genügt nicht.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">04</span>
+              <div><strong>Menschlich verantwortet</strong><span>Eine benannte Person prüft und entscheidet. Verantwortung wird nicht an das System delegiert.</span></div>
+            </li>
+          </ol>
+        </div>
+        <aside class="aside" aria-label="Kanonisch">
+          <p class="note"><strong>Kanonisch.</strong> Die vier Eigenschaften sind Bedingungen, keine Produktmerkmale. Fehlt eine, ist die Arbeit nicht verantwortet.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="03 · Problem">
+      <div class="wrap grid">
+        <div class="rail meta">02 / Problem</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Warum es HAI braucht</p>
+            <h2>Das Problem ist Kontrollverlust.</h2>
+          </div>
+          <p>Sobald mehrere Agenten Aufgaben planen, ausführen, delegieren oder Ergebnisse vorbereiten, entstehen offene Fragen: Wer besitzt die Aufgabe? Was darf der Agent tun? Welche Grenzen gelten?</p>
+          <p>Welche Belege gibt es? Wann muss gestoppt werden? Wer prüft und entscheidet?</p>
+          <p>Ohne Kontrollschicht wird agentische Arbeit unsichtbar, schwer überprüfbar und organisatorisch nicht verantwortbar. Das Problem ist nicht die Geschwindigkeit der Agenten, sondern die Lücke zwischen Ausführung und Verantwortung.<sup><a href="#fn2" id="ref2" aria-label="Fußnote 2">2</a></sup></p>
+        </div>
+        <aside class="aside" aria-label="Ohne HAI">
+          <p class="note"><strong>Ohne HAI.</strong> Die Arbeit ist schnell. Die Verantwortung ist unsichtbar.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="04 · Ablauf">
+      <div class="wrap grid">
+        <div class="rail meta">03 / Ablauf</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Wie es arbeitet</p>
+            <h2>Fünf Schritte, eine Entscheidung.</h2>
+          </div>
+          <p>HAI beschreibt einen Ablauf, der vor der Ausführung beginnt und nach ihr nicht endet. Die Schritte sind geordnet; ein späterer Schritt ersetzt keinen früheren.</p>
+          <ol class="components" role="list">
+            <li>
+              <span class="num" aria-hidden="true">01</span>
+              <div><strong>Intent</strong><span>Eine Person formuliert die Aufgabe und ihren Zweck. Der Agent darf präzisieren, aber das Ziel nicht selbst setzen.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">02</span>
+              <div><strong>Contract</strong><span>Scope, Rechte, Stop-Regeln und Abbruchkriterien werden vor der Ausführung festgehalten.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">03</span>
+              <div><strong>Ausführung</strong><span>Der Agent arbeitet innerhalb des Contracts. Jeder Werkzeugaufruf bleibt einer Aufgabe und einem Owner zuordenbar.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">04</span>
+              <div><strong>Beleg</strong><span>Das Ergebnis kommt mit Nachweisen: Quellen, Änderungen, Prüfungen, offene Punkte. Eine Zusammenfassung ist kein Beleg.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">05</span>
+              <div><strong>Entscheidung</strong><span>Eine benannte Person nimmt an, verwirft oder verengt das Ergebnis. Die Entscheidung wird mit Datum und Begründung festgehalten.</span></div>
+            </li>
+          </ol>
+        </div>
+        <aside class="aside" aria-label="Reihenfolge">
+          <p class="note"><strong>Reihenfolge.</strong> Intent und Contract sind keine Formalien. Sie entscheiden, ob die Ausführung prüfbar bleibt.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="05 · Abgrenzung">
+      <div class="wrap grid">
+        <div class="rail meta">04 / Abgrenzung</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Was HAI nicht ist</p>
+            <h2>Vier Grenzen.</h2>
+          </div>
+          <p>Die Abgrenzung ist Teil der Definition. Ohne sie wird HAI ein Sammelbegriff für alles mit Agenten.</p>
+          <ol class="components" role="list">
+            <li>
+              <span class="num" aria-hidden="true">01</span>
+              <div><strong>Kein Chat-Interface</strong><span>HAI ist keine Oberfläche, in die man tippt. Die Kontrollschicht liegt über der Ausführung, nicht an ihrer Stelle.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">02</span>
+              <div><strong>Kein Prompt-Engineering</strong><span>HAI optimiert keine Formulierungen. Sie regelt Rechte, Grenzen, Belege und Entscheidungen.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">03</span>
+              <div><strong>Keine fertige Enterprise-Plattform</strong><span>HAI ist ein Ansatz. HAI-MCP ist eine Open-Source-Implementierung; diese Seite behauptet kein fertiges Produkt.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">04</span>
+              <div><strong>Keine Autonomie ohne Grenzen</strong><span>HAI ist kein Werkzeug zur Autonomiesteigerung. HAI macht sichtbar, wo Grenzen liegen und wer sie verschieben darf.</span></div>
+            </li>
+          </ol>
+        </div>
+        <aside class="aside" aria-label="Abgrenzung">
+          <p class="note"><strong>Abgrenzung.</strong> HAI ist kein Chat-Interface und keine fertige Enterprise-Plattform. HAI ist ein Ansatz und eine Kontrollschicht für menschlich verantwortete Agentenarbeit.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="06 · Begriffe">
+      <div class="wrap grid">
+        <div class="rail meta">05 / Begriffe</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Verwandte Begriffe</p>
+            <h2>Vier Begriffe, ein Zusammenhang.</h2>
+          </div>
+          <div class="entries">
+            <article class="entry">
+              <div class="num" aria-hidden="true">01</div>
+              <div>
+                <h3>HAI-MCP</h3>
+                <p>Die modellunabhängige MCP-Control-Plane von HAI. Sie stellt Missionen, Verträge, Leases, Owner-Gates und Audit bereit; der Server ruft selbst kein Modell auf. <a href="/beweis/#hai-mcp">Zur Control Plane</a></p>
+              </div>
+              <span class="status">MCP</span>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">02</div>
+              <div>
+                <h3>PenEcho</h3>
+                <p>Ein Kanal, auf dem der Agent auf die Seite zurückschreibt, an der gerade gearbeitet wird: Stift und E-Ink statt Chatfenster. <a href="/beweis/">Zum Beweis</a></p>
+              </div>
+              <span class="status">Stift · E-Ink</span>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">03</div>
+              <div>
+                <h3>Plaud</h3>
+                <p>Ein Spracheingang. Aufnahmen werden zu Transkripten; eine Sitzung entscheidet, was davon eine Aufgabe wird und was geparkt bleibt. <a href="/beweis/">Zum Beweis</a></p>
+              </div>
+              <span class="status">Sprache</span>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">04</div>
+              <div>
+                <h3>Human-owned agentic work</h3>
+                <p>Agentische Arbeit, bei der eine benannte Person die Aufgabe besitzt und die Entscheidung trägt. HAI macht diese Zuordnung explizit. <a href="/#schicht">Zur Definition</a></p>
+              </div>
+              <span class="status">Prinzip</span>
+            </article>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Verhältnis">
+          <p class="note"><strong>Verhältnis.</strong> HAI ist der Ansatz. HAI-MCP ist eine Implementierung. PenEcho und Plaud sind Kanäle. Keiner dieser Teile ist HAI allein.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="07 · FAQ">
+      <div class="wrap grid">
+        <div class="rail meta">06 / FAQ</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">FAQ</p>
+            <h2>Vier Fragen.</h2>
+          </div>
+          <div class="entries">
+            <article class="entry">
+              <div class="num" aria-hidden="true">01</div>
+              <div>
+                <h3>Ist HAI ein Produkt?</h3>
+                <p>Nein. HAI ist ein Ansatz und eine Kontrollschicht. HAI-MCP ist eine Open-Source-Implementierung, die den Ansatz über MCP zugänglich macht.</p>
+              </div>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">02</div>
+              <div>
+                <h3>Braucht man HAI-MCP?</h3>
+                <p>Nein. Die Kontrollschicht lässt sich unabhängig von einer Implementierung beschreiben. HAI-MCP ist ein Weg, sie in kompatible Agenten- und Werkzeugsysteme zu bringen.</p>
+              </div>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">03</div>
+              <div>
+                <h3>Für wen ist HAI?</h3>
+                <p>Für Personen und Teams, die agentische Arbeit einsetzen und Ownership, Grenzen, Belege und Stop-Regeln brauchen. Nicht für die Frage, wie man Agenten baut.</p>
+              </div>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">04</div>
+              <div>
+                <h3>Was ist der Unterschied zu Agent-Frameworks?</h3>
+                <p>Frameworks beantworten, wie ein Agent gebaut und ausgeführt wird. HAI beantwortet, wie diese Arbeit beobachtbar, begrenzt, prüfbar und menschlich verantwortet bleibt. HAI ersetzt kein Framework; es liegt darüber oder daneben.<sup><a href="#fn3" id="ref3" aria-label="Fußnote 3">3</a></sup></p>
+              </div>
+            </article>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Prüffrage">
+          <p class="note"><strong>Prüffrage.</strong> Wenn die Antwort „mehr Autonomie“ lautet, ist es nicht HAI.</p>
+        </aside>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <div class="footnotes" role="group" aria-label="Fußnoten">
+        <ol>
+          <li id="fn1">Kanonische Definition: „HAI steht für Human Agent Interface. HAI ist die Open-Source-Kontrollschicht zwischen Menschen und autonomen KI-Agenten: HAI macht agentische Arbeit beobachtbar, begrenzt, überprüfbar und ausdrücklich menschlich verantwortet.“ Quelle: kanonische Beschreibung „Was ist HAI?“, Stand 30.10.2026. <a href="#ref1" aria-label="Fußnote 1: zurück zur Textstelle">↩</a></li>
+          <li id="fn2">Kontrollverlust bei agentischer Arbeit: Wenn mehrere Agenten planen, ausführen und delegieren, fehlen Ownership, Grenzen, Belege und Stop-Regeln. HAI macht diese Ebene explizit. <a href="#ref2" aria-label="Fußnote 2: zurück zur Textstelle">↩</a></li>
+          <li id="fn3">Abgrenzung zu Agent-Frameworks: Frameworks beantworten, wie Agenten gebaut und ausgeführt werden. HAI beantwortet, wie agentische Arbeit kontrollierbar bleibt. HAI ersetzt kein Framework. <a href="#ref3" aria-label="Fußnote 3: zurück zur Textstelle">↩</a></li>
+          <li>Quellenhinweis: Die Definitionen auf dieser Seite folgen den kanonischen Beschreibungen des Projekts (Stand 30.10.2026). Diese Seite nennt keine Messungen, Kunden oder Ergebnisse.</li>
+        </ol>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <div class="foot-links">
+        <a href="/archiv/">Archiv</a>
+        <a href="https://cal.com/human-agent-interface/agent-check" rel="external">Termin buchen</a>
+        <a href="/impressum/">Impressum</a>
+        <a href="/datenschutz/">Datenschutz</a>
+        <a href="https://github.com/smlfg" rel="me">GitHub</a>
+        <a href="/en/what-is-hai/" lang="en" hreflang="en">English</a>
+      </div>
+      <div class="variants" role="group" aria-label="Testvarianten">
+        <span>Variante</span>
+        <a href="?v=A" data-variant-link="A" aria-label="Variante A">A</a>
+        <a href="?v=B" data-variant-link="B" aria-label="Variante B">B</a>
+        <a href="?v=C" data-variant-link="C" aria-label="Variante C">C</a>
+      </div>
+      <div>Protokoll 001</div>
+    </div>
+  </footer>
+
+  <script src="/assets/hai.js" defer></script>
+</body>
+</html>

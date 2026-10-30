@@ -1,3392 +1,460 @@
 <!doctype html>
-<!-- Klarheits-Pass (lokal): EIN Hero statt A/B/C. B_offer_first gewaehlt, weil es
-     "was bekomme ich konkret" beantwortet. Live laeuft das Experiment weiter. -->
-<html lang="en" data-hero-variant="B_offer_first">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#090a08">
-    <title>Human Agent Interface (HAI) by Samuel Fleig — Agent Control & Human Ownership</title>
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <link rel="canonical" href="https://www.human-agent-interface.com/">
-    <meta
-      name="description"
-      content="Human Agent Interface (HAI), created by Samuel Fleig, keeps agentic AI work observable, bounded, verifiable, and human-owned."
-    >
-    <meta property="og:title" content="Human Agent Interface (HAI) by Samuel Fleig">
-    <meta
-      property="og:description"
-      content="An open-source approach for keeping agentic AI work observable, bounded, verifiable, and human-owned."
-    >
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.human-agent-interface.com/">
-    <meta name="twitter:card" content="summary_large_image">
-    <script type="application/ld+json">
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HAI — Agenten arbeiten. Du entscheidest.</title>
+  <meta name="description" content="Wie Menschen autonome KI-Agenten kontrollieren: Beobachtung, Grenzen und Belege plus eine benannte Entscheidung — gezeigt an PenEcho, HAI-MCP und Plaud.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/">
+  <link rel="alternate" hreflang="de" href="https://www.human-agent-interface.com/">
+  <link rel="alternate" hreflang="en" href="https://www.human-agent-interface.com/en/">
+  <link rel="alternate" hreflang="x-default" href="https://www.human-agent-interface.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Human Agent Interface (HAI)">
+  <meta property="og:title" content="HAI — Agenten arbeiten. Du entscheidest.">
+  <meta property="og:description" content="Wie Menschen autonome KI-Agenten kontrollieren: Beobachtung, Grenzen und Belege plus eine benannte Entscheidung — gezeigt an PenEcho, HAI-MCP und Plaud.">
+  <meta property="og:image" content="https://www.human-agent-interface.com/assets/og/hai-og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HAI — Agenten arbeiten. Du entscheidest.">
+  
+  <meta property="og:url" content="https://www.human-agent-interface.com/">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#f4f0e6">
+  <link rel="icon" href="/assets/favicon-64.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/newsreader-300_700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-300_700-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/hai.css">
+  <style>
+    /* Page-scoped polish. The design system stays in /assets/hai.css. */
+
+    /* Text links: 24px minimum target size (WCAG 2.2 AA). */
+    .brand,
+    .nav a,
+    .actions a,
+    .foot-links a,
+    .footnotes a,
+    .variants a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+    }
+
+    /* Gate controls: comfortable on desktop, 44x44 on touch. */
+    .gate .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.7rem;
+    }
+
+    .gate-actions {
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    @media (pointer: coarse), (max-width: 620px) {
+      .brand,
+      .nav a,
+      .foot-links a,
+      .variants a { min-height: 44px; }
+      .nav a,
+      .variants a { min-width: 44px; justify-content: center; }
+      .gate .btn { min-height: 44px; min-width: 44px; }
+    }
+
+    /* Variant C's sticky line must not cover anchors or focused controls. */
+    html[data-variant="c"] { scroll-padding-top: 5rem; }
+    @media (min-width: 620px) {
+      html[data-variant="c"] { scroll-padding-top: 3.5rem; }
+    }
+
+    h1, h2, h3,
+    .gate-item .what strong { text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .gate-item .what strong,
+    .entry h3,
+    .mesh-table td { overflow-wrap: break-word; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
       {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "Person",
-            "@id": "https://www.human-agent-interface.com/samuel/#samuel-fleig",
-            "name": "Samuel Fleig",
-            "url": "https://www.human-agent-interface.com/samuel/",
-            "jobTitle": "AI Engineer",
-            "knowsAbout": [
-              "AI agents",
-              "agentic systems",
-              "AI harnesses",
-              "Model Context Protocol",
-              "human-agent interaction"
-            ],
-            "sameAs": [
-              "https://github.com/smlfg",
-              "https://x.com/Samuelflg1",
-              "https://www.linkedin.com/in/samuel-fleig-52610914b",
-              "https://medium.com/@smlflg"
-            ]
-          },
-          {
-            "@type": "CreativeWork",
-            "@id": "https://www.human-agent-interface.com/#human-agent-interface",
-            "name": "Human Agent Interface",
-            "alternateName": "HAI",
-            "url": "https://www.human-agent-interface.com/",
-            "creator": { "@id": "https://www.human-agent-interface.com/samuel/#samuel-fleig" },
-            "description": "Human Agent Interface (HAI) is an approach for keeping agentic AI work observable, bounded, verifiable, and human-owned.",
-            "subjectOf": [
-              { "@id": "https://www.human-agent-interface.com/hai-mcp/#hai-mcp" },
-              { "@id": "https://www.human-agent-interface.com/proof/#proof" }
-            ]
-          },
-          {
-            "@type": "SoftwareSourceCode",
-            "@id": "https://www.human-agent-interface.com/hai-mcp/#hai-mcp",
-            "name": "HAI-MCP",
-            "codeRepository": "https://github.com/smlfg/hai-mcp",
-            "url": "https://www.human-agent-interface.com/hai-mcp/",
-            "sameAs": [
-              "https://github.com/smlfg/hai-mcp",
-              "https://glama.ai/mcp/servers/@smlfg/hai-mcp"
-            ],
-            "programmingLanguage": "Python",
-            "creator": { "@id": "https://www.human-agent-interface.com/samuel/#samuel-fleig" },
-            "isPartOf": { "@id": "https://www.human-agent-interface.com/#human-agent-interface" },
-            "description": "HAI-MCP is the model-agnostic MCP control-plane implementation of Human Agent Interface."
-          }
-        ]
-      }
-    </script>
-    <style>
-      :root {
-        color-scheme: dark;
-        --ink: #f7f1df;
-        --muted: #b7ad97;
-        --dim: #756d5e;
-        --void: #090a08;
-        --panel: rgba(247, 241, 223, 0.065);
-        --panel-strong: rgba(247, 241, 223, 0.13);
-        --line: rgba(247, 241, 223, 0.18);
-        --line-soft: rgba(247, 241, 223, 0.1);
-        --signal: #a7ff4f;
-        --copper: #ff9f5f;
-        --red: #ff4d4d;
-        --cyan: #7dd8ff;
-        --max: 1160px;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        margin: 0;
-        min-width: 320px;
-        color: var(--ink);
-        background:
-          radial-gradient(circle at 20% 10%, rgba(167, 255, 79, 0.12), transparent 26rem),
-          radial-gradient(circle at 80% 18%, rgba(255, 159, 95, 0.1), transparent 22rem),
-          linear-gradient(180deg, #090a08 0%, #11100d 48%, #070806 100%);
-        font-family: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
-        line-height: 1.5;
-        overflow-x: hidden;
-      }
-
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 5;
-        opacity: 0.32;
-        background-image:
-          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-        background-size: 72px 72px;
-        mask-image: linear-gradient(180deg, black, transparent 72%);
-      }
-
-      a {
-        color: inherit;
-      }
-
-      .site-shell {
-        position: relative;
-        z-index: 1;
-      }
-
-      .hero {
-        position: relative;
-        min-height: 100svh;
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        align-items: center;
-        overflow: hidden;
-        padding: 32px clamp(18px, 4vw, 56px) 48px;
-      }
-
-      .hero-image,
-      .hero-canvas {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-      }
-
-      .hero-image {
-        object-fit: cover;
-        object-position: center center;
-        opacity: 0.86;
-      }
-
-      .hero-canvas {
-        opacity: 0.18;
-        mix-blend-mode: screen;
-      }
-
-      .hero::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-          linear-gradient(90deg, rgba(9, 10, 8, 0.96) 0%, rgba(9, 10, 8, 0.86) 34%, rgba(9, 10, 8, 0.42) 68%, rgba(9, 10, 8, 0.2) 100%),
-          linear-gradient(180deg, rgba(9, 10, 8, 0.46) 0%, rgba(9, 10, 8, 0.2) 48%, rgba(9, 10, 8, 0.94) 100%);
-        pointer-events: none;
-      }
-
-      .nav {
-        position: fixed;
-        inset: 0 0 auto;
-        z-index: 60;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 18px;
-        padding: 24px clamp(18px, 4vw, 56px);
-        background: transparent;
-        border-bottom: 1px solid transparent;
-        transition: background 200ms ease, border-color 200ms ease, padding 200ms ease;
-      }
-
-      .nav.is-scrolled {
-        padding-top: 13px;
-        padding-bottom: 13px;
-        background: rgba(9, 10, 8, 0.84);
-        border-bottom-color: var(--line-soft);
-        backdrop-filter: saturate(150%) blur(14px);
-        -webkit-backdrop-filter: saturate(150%) blur(14px);
-      }
-
-      .nav-actions {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: nowrap;
-        justify-content: flex-end;
-      }
-
-      .lang-copy {
-        display: none;
-      }
-
-      .lang-copy[data-lang-copy="en"] {
-        display: inline;
-      }
-
-      html.lang-de .lang-copy[data-lang-copy="en"] {
-        display: none;
-      }
-
-      html.lang-en .lang-copy[data-lang-copy="en"],
-      html.lang-de .lang-copy[data-lang-copy="de"] {
-        display: inline;
-      }
-
-      .copy-block {
-        display: none;
-      }
-
-      .copy-block[data-lang-copy="en"] {
-        display: block;
-      }
-
-      html.lang-de .copy-block[data-lang-copy="en"] {
-        display: none;
-      }
-
-      html.lang-en .copy-block[data-lang-copy="en"],
-      html.lang-de .copy-block[data-lang-copy="de"] {
-        display: block;
-      }
-
-      .language-switch {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 3px;
-        border: 1px solid var(--line-soft);
-        background: rgba(9, 10, 8, 0.48);
-      }
-
-      .lang-button {
-        min-height: 32px;
-        min-width: 38px;
-        padding: 0 9px;
-        border: 0;
-        background: transparent;
-        color: var(--muted);
-        cursor: pointer;
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.68rem;
-        font-weight: 700;
-        text-transform: uppercase;
-      }
-
-      .lang-button[aria-pressed="true"] {
-        background: rgba(167, 255, 79, 0.14);
-        color: var(--ink);
-      }
-
-      .lang-button:hover,
-      .lang-button:focus-visible {
-        color: var(--ink);
-        outline: 1px solid rgba(167, 255, 79, 0.36);
-        outline-offset: -1px;
-      }
-
-      .nav-link {
-        min-height: 42px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 14px;
-        color: var(--muted);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.72rem;
-        text-decoration: none;
-        text-transform: uppercase;
-        border: 1px solid transparent;
-        transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
-      }
-
-      .nav-link:hover,
-      .nav-link:focus-visible {
-        color: var(--ink);
-        border-color: var(--line-soft);
-        background: rgba(247, 241, 223, 0.045);
-      }
-
-      .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.82rem;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
-
-      .brand-mark {
-        width: 38px;
-        height: 38px;
-        display: grid;
-        place-items: center;
-        border: 1px solid var(--line);
-        background: rgba(247, 241, 223, 0.04);
-        color: var(--signal);
-      }
-
-      .nav-cta {
-        min-height: 42px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 18px;
-        border: 1px solid rgba(167, 255, 79, 0.44);
-        background: rgba(167, 255, 79, 0.09);
-        color: var(--ink);
-        text-decoration: none;
-        font-size: 0.86rem;
-        font-weight: 700;
-        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
-      }
-
-      .nav-cta:hover,
-      .nav-cta:focus-visible {
-        transform: translateY(-2px);
-        background: rgba(167, 255, 79, 0.16);
-        border-color: rgba(167, 255, 79, 0.8);
-      }
-
-      .mobile-samuel-link {
-        display: none;
-      }
-
-      .hero-inner {
-        position: relative;
-        z-index: 1;
-        width: 100%;
-        max-width: var(--max);
-        min-width: 0;
-        margin: 0 auto;
-        padding-top: 72px;
-      }
-
-      .lineage {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 8px;
-        width: 100%;
-        max-width: 700px;
-        margin-bottom: clamp(36px, 6vw, 78px);
-      }
-
-      .epoch {
-        width: 100%;
-        min-height: 92px;
-        padding: 0;
-        display: grid;
-        border: 0;
-        background: none;
-        color: inherit;
-        font: inherit;
-        text-align: left;
-        cursor: pointer;
-        perspective: 900px;
-      }
-
-      .epoch-card {
-        display: grid;
-        transform-style: preserve-3d;
-        transition: transform 700ms cubic-bezier(0.2, 0.75, 0.25, 1);
-      }
-
-      .epoch:hover .epoch-card {
-        transform: rotateY(10deg);
-      }
-
-      .epoch[aria-pressed="true"] .epoch-card {
-        transform: rotateY(180deg);
-      }
-
-      .epoch[aria-pressed="true"]:hover .epoch-card {
-        transform: rotateY(170deg);
-      }
-
-      .epoch-face {
-        grid-area: 1 / 1;
-        padding: 14px;
-        display: grid;
-        grid-template-rows: auto auto 1fr;
-        gap: 8px;
-        border: 1px solid var(--line-soft);
-        background: rgba(9, 10, 8, 0.78);
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
-      }
-
-      .epoch-front::after {
-        content: "";
-        min-height: 30px;
-        display: grid;
-        align-items: end;
-        color: rgba(247, 241, 223, 0.58);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.62rem;
-        line-height: 1.2;
-        text-transform: none;
-      }
-
-      .epoch[data-stage="cli"] .epoch-front::after {
-        content: "$ scope --next";
-      }
-
-      .epoch[data-stage="tui"] .epoch-front::after {
-        content: "[1] plan\A[2] run";
-        white-space: pre;
-      }
-
-      .epoch[data-stage="gui"] .epoch-front::after {
-        content: "[ button ]  [ view ]";
-      }
-
-      .epoch[data-stage="hai"] .epoch-front::after {
-        content: "human -> gate -> agent";
-        color: rgba(167, 255, 79, 0.78);
-      }
-
-      .epoch strong {
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(1.6rem, 4vw, 3.1rem);
-        line-height: 0.86;
-        font-weight: 500;
-      }
-
-      .epoch-front span {
-        color: var(--dim);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.7rem;
-        text-transform: uppercase;
-      }
-
-      .epoch-back {
-        grid-template-rows: 1fr;
-        align-items: center;
-        transform: rotateY(180deg);
-        border-color: rgba(247, 241, 223, 0.42);
-        color: var(--ink);
-        font-size: 0.8rem;
-        line-height: 1.35;
-      }
-
-      .epoch:focus-visible {
-        outline: 2px solid var(--signal);
-        outline-offset: 3px;
-      }
-
-      .hai-definition {
-        max-width: 640px;
-        margin: 24px 0 0;
-        padding-left: 18px;
-        border-left: 2px solid var(--signal);
-        color: var(--muted);
-        font-size: clamp(1.02rem, 1.6vw, 1.2rem);
-      }
-
-      .hai-definition dfn {
-        color: var(--ink);
-        font-style: normal;
-      }
-
-      .epoch.is-current .epoch-face {
-        border-color: rgba(167, 255, 79, 0.72);
-        background:
-          linear-gradient(135deg, rgba(167, 255, 79, 0.18), rgba(125, 216, 255, 0.06)),
-          rgba(9, 10, 8, 0.7);
-        box-shadow: 0 0 46px rgba(167, 255, 79, 0.14);
-      }
-
-      .eyebrow {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 18px;
-        color: var(--signal);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.76rem;
-        text-transform: uppercase;
-      }
-
-      .eyebrow::before {
-        content: "";
-        width: 44px;
-        height: 1px;
-        background: var(--signal);
-      }
-
-      h1 {
-        width: 100%;
-        max-width: 1040px;
-        margin: 0;
-        font-family: Georgia, "Times New Roman", serif;
-        font-weight: 500;
-        font-size: clamp(3rem, 7.6vw, 7.2rem);
-        line-height: 0.94;
-        letter-spacing: 0;
-        overflow-wrap: break-word;
-      }
-
-      .hero-copy {
-        display: grid;
-        grid-template-columns: minmax(0, 760px);
-        gap: 18px;
-        align-items: start;
-        margin-top: clamp(28px, 5vw, 56px);
-      }
-
-      .hero-copy.hero-variant,
-      .hero-text-variant {
-        display: none;
-      }
-
-      html:not([data-hero-variant]) .hero-copy.hero-variant[data-hero-variant="A_control"],
-      html[data-hero-variant="A_control"] .hero-copy.hero-variant[data-hero-variant="A_control"],
-      html[data-hero-variant="B_offer_first"] .hero-copy.hero-variant[data-hero-variant="B_offer_first"],
-      html[data-hero-variant="C_proof_first"] .hero-copy.hero-variant[data-hero-variant="C_proof_first"] {
-        display: grid;
-      }
-
-      html:not([data-hero-variant]) .hero-text-variant[data-hero-variant="A_control"],
-      html[data-hero-variant="A_control"] .hero-text-variant[data-hero-variant="A_control"],
-      html[data-hero-variant="B_offer_first"] .hero-text-variant[data-hero-variant="B_offer_first"],
-      html[data-hero-variant="C_proof_first"] .hero-text-variant[data-hero-variant="C_proof_first"] {
-        display: contents;
-      }
-
-      .lead {
-        max-width: 720px;
-        margin: 0;
-        color: var(--muted);
-        font-size: clamp(1.12rem, 2vw, 1.62rem);
-        min-width: 0;
-      }
-
-      .mobile-break {
-        display: none;
-      }
-
-      .desktop-break {
-        display: block;
-      }
-
-      .lead strong {
-        color: var(--ink);
-        font-weight: 700;
-      }
-
-      .hero-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        justify-content: flex-start;
-        max-width: 760px;
-      }
-
-      .access-router {
-        width: 100%;
-        max-width: 1120px;
-        margin: 0 auto;
-        padding: clamp(18px, 3vw, 28px);
-        border: 1px solid rgba(247, 241, 223, 0.2);
-        background: rgba(13, 14, 11, 0.82);
-        backdrop-filter: blur(16px);
-        box-shadow: 0 24px 82px rgba(0, 0, 0, 0.22);
-      }
-
-      .router-section {
-        padding-top: clamp(36px, 6vw, 82px);
-        background:
-          linear-gradient(180deg, #090a08 0%, #141511 52%, #191b15 100%);
-      }
-
-      .router-panel {
-        display: grid;
-        gap: 18px;
-      }
-
-      .js .router-panel {
-        display: none;
-      }
-
-      .js.lang-en .router-panel[data-lang="en"],
-      .js.lang-de .router-panel[data-lang="de"] {
-        display: grid;
-      }
-
-      .router-head {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 18px;
-        align-items: start;
-      }
-
-      .router-head h2 {
-        max-width: 760px;
-        margin: 0;
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(1.72rem, 3.4vw, 3.25rem);
-        font-weight: 500;
-        line-height: 1;
-        letter-spacing: 0;
-        text-wrap: balance;
-      }
-
-      .router-head p:not(.eyebrow) {
-        max-width: 620px;
-        margin: 10px 0 0;
-        color: var(--muted);
-        font-size: 1rem;
-      }
-
-      .router-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.9fr);
-        gap: 12px;
-      }
-
-      .audience-card {
-        min-height: 270px;
-        display: grid;
-        grid-template-rows: auto auto 1fr auto auto;
-        gap: 12px;
-        padding: 20px;
-        border: 1px solid var(--line-soft);
-        background: rgba(247, 241, 223, 0.045);
-      }
-
-      .audience-card.is-primary {
-        border-color: rgba(167, 255, 79, 0.5);
-        background:
-          linear-gradient(135deg, rgba(167, 255, 79, 0.13), rgba(125, 216, 255, 0.055)),
-          rgba(247, 241, 223, 0.05);
-      }
-
-      .route-label {
-        color: var(--copper);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.72rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .audience-card h3 {
-        margin: 0;
-        color: var(--ink);
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(1.55rem, 2.7vw, 2.45rem);
-        font-weight: 500;
-        line-height: 1.02;
-        letter-spacing: 0;
-      }
-
-      .audience-card p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 0.98rem;
-      }
-
-      .route-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 7px;
-      }
-
-      .route-tags span {
-        min-height: 26px;
-        display: inline-flex;
-        align-items: center;
-        padding: 0 9px;
-        border: 1px solid rgba(247, 241, 223, 0.16);
-        color: var(--muted);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.65rem;
-        text-transform: uppercase;
-      }
-
-      .route-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .button {
-        min-height: 52px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        padding: 0 22px;
-        border: 1px solid var(--line);
-        background: var(--panel);
-        color: var(--ink);
-        text-decoration: none;
-        font-weight: 800;
-        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
-      }
-
-      .button.primary {
-        border-color: rgba(167, 255, 79, 0.68);
-        background: var(--signal);
-        color: #11150d;
-      }
-
-      .button:hover,
-      .button:focus-visible {
-        transform: translateY(-2px);
-        border-color: rgba(247, 241, 223, 0.42);
-        background: var(--panel-strong);
-      }
-
-      .button.primary:hover,
-      .button.primary:focus-visible {
-        border-color: var(--signal);
-        background: #c4ff86;
-      }
-
-      .section {
-        padding: clamp(70px, 10vw, 150px) clamp(18px, 4vw, 56px);
-      }
-
-      .section-smoke {
-        background:
-          linear-gradient(180deg, rgba(247, 241, 223, 0.055), rgba(247, 241, 223, 0.018)),
-          #141511;
-      }
-
-      .section-inner {
-        width: 100%;
-        max-width: var(--max);
-        margin: 0 auto;
-      }
-
-      .split {
-        display: grid;
-        grid-template-columns: minmax(0, 0.82fr) minmax(280px, 0.58fr);
-        gap: clamp(28px, 6vw, 90px);
-        align-items: start;
-      }
-
-      h2 {
-        margin: 0;
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(2.4rem, 6vw, 5.8rem);
-        line-height: 0.98;
-        font-weight: 500;
-        letter-spacing: 0;
-      }
-
-      .kicker {
-        margin: 0 0 16px;
-        color: var(--copper);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.78rem;
-        text-transform: uppercase;
-      }
-
-      .body-copy {
-        margin: 0;
-        color: var(--muted);
-        font-size: clamp(1.02rem, 1.7vw, 1.28rem);
-      }
-
-      .body-copy + .body-copy {
-        margin-top: 20px;
-      }
-
-      .fit-call {
-        border-block: 1px solid var(--line-soft);
-        background:
-          linear-gradient(180deg, rgba(167, 255, 79, 0.055), rgba(247, 241, 223, 0.015)),
-          #0b0c09;
-      }
-
-      .fit-call-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 0.86fr) minmax(300px, 0.52fr);
-        gap: clamp(28px, 6vw, 90px);
-        align-items: start;
-      }
-
-      .fit-hook {
-        max-width: 680px;
-      }
-
-      .intake-list {
-        display: grid;
-        gap: 10px;
-        margin-top: 30px;
-        counter-reset: intake;
-      }
-
-      .intake-question {
-        min-height: 92px;
-        display: grid;
-        grid-template-columns: 44px 1fr;
-        gap: 14px;
-        padding: 16px;
-        border: 1px solid var(--line-soft);
-        background: rgba(247, 241, 223, 0.045);
-        counter-increment: intake;
-      }
-
-      .intake-question::before {
-        content: "0" counter(intake);
-        color: var(--signal);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.78rem;
-      }
-
-      .intake-question strong {
-        display: block;
-        color: var(--ink);
-        font-size: 1.02rem;
-      }
-
-      .intake-question span {
-        display: block;
-        margin-top: 6px;
-        color: var(--muted);
-        font-size: 0.95rem;
-      }
-
-      .pilot-note {
-        margin-top: 22px;
-        padding: 16px 0 0 16px;
-        border-left: 2px solid rgba(167, 255, 79, 0.62);
-        color: var(--muted);
-        font-size: 1rem;
-      }
-
-      .output-panel {
-        padding: clamp(22px, 4vw, 30px);
-        border: 1px solid var(--line);
-        background:
-          linear-gradient(135deg, rgba(247, 241, 223, 0.08), rgba(247, 241, 223, 0.025)),
-          rgba(9, 10, 8, 0.58);
-      }
-
-      .output-panel h3 {
-        margin: 18px 0 14px;
-        color: var(--ink);
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(2rem, 4vw, 3.45rem);
-        line-height: 0.98;
-        font-weight: 500;
-      }
-
-      .output-panel p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 1rem;
-      }
-
-      .output-list {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
-        margin: 24px 0 0;
-        padding: 0;
-        list-style: none;
-      }
-
-      .output-list li {
-        min-height: 46px;
-        display: flex;
-        align-items: center;
-        padding: 10px 12px;
-        border: 1px solid var(--line-soft);
-        color: var(--ink);
-        background: rgba(247, 241, 223, 0.04);
-        font-size: 0.94rem;
-      }
-
-      .trust-bridge {
-        margin-top: 22px;
-        padding-top: 18px;
-        border-top: 1px solid var(--line);
-      }
-
-      .fit-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 24px;
-      }
-
-      .quote-rail {
-        display: grid;
-        gap: 12px;
-      }
-
-      .quote-tile {
-        min-height: 112px;
-        padding: 20px;
-        display: grid;
-        align-content: space-between;
-        gap: 18px;
-        border-left: 2px solid var(--line);
-        background: linear-gradient(90deg, rgba(247, 241, 223, 0.08), rgba(247, 241, 223, 0.025));
-      }
-
-      .quote-tile strong {
-        display: block;
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(1.3rem, 2.7vw, 2.25rem);
-        line-height: 1;
-        font-weight: 500;
-      }
-
-      .quote-tile span {
-        color: var(--dim);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.72rem;
-        text-transform: uppercase;
-      }
-
-      .quote-tile:nth-child(2) {
-        border-left-color: var(--red);
-      }
-
-      .quote-tile:nth-child(3) {
-        border-left-color: var(--signal);
-      }
-
-      .conversion {
-        background:
-          linear-gradient(180deg, rgba(247, 241, 223, 0.04), rgba(247, 241, 223, 0.01)),
-          #0c0d0a;
-        border-block: 1px solid var(--line-soft);
-      }
-
-      .conversion-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-        margin-top: 36px;
-      }
-
-      .state {
-        min-height: 360px;
-        padding: clamp(20px, 4vw, 34px);
-        border: 1px solid var(--line-soft);
-        background: rgba(247, 241, 223, 0.045);
-        position: relative;
-        overflow: hidden;
-      }
-
-      .state::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        opacity: 0.26;
-        background-image: linear-gradient(135deg, transparent 0 46%, currentColor 47% 48%, transparent 49% 100%);
-        background-size: 34px 34px;
-      }
-
-      .state.before {
-        color: rgba(255, 77, 77, 0.8);
-      }
-
-      .state.after {
-        color: rgba(167, 255, 79, 0.74);
-      }
-
-      .state-content {
-        position: relative;
-        z-index: 1;
-      }
-
-      .state-label {
-        color: var(--dim);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.78rem;
-        text-transform: uppercase;
-      }
-
-      .state h3 {
-        margin: 18px 0 26px;
-        color: var(--ink);
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(2rem, 4.2vw, 4.2rem);
-        line-height: 0.98;
-        font-weight: 500;
-      }
-
-      .state ul {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        display: grid;
-        gap: 12px;
-        color: var(--muted);
-        font-size: 1rem;
-      }
-
-      .state li {
-        display: grid;
-        grid-template-columns: 18px 1fr;
-        gap: 10px;
-        align-items: start;
-      }
-
-      .state li::before {
-        content: "";
-        width: 9px;
-        height: 9px;
-        margin-top: 8px;
-        background: currentColor;
-      }
-
-      .method-grid {
-        display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 10px;
-        margin-top: 46px;
-      }
-
-      .step {
-        min-height: 210px;
-        padding: 18px;
-        border: 1px solid var(--line-soft);
-        background: rgba(247, 241, 223, 0.04);
-      }
-
-      .step span {
-        color: var(--signal);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.75rem;
-      }
-
-      .step h3 {
-        margin: 54px 0 12px;
-        color: var(--ink);
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: 1.55rem;
-        line-height: 1.05;
-        font-weight: 500;
-      }
-
-      .step p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 0.95rem;
-      }
-
-      .wide-statement {
-        padding: clamp(70px, 10vw, 140px) clamp(18px, 4vw, 56px);
-        background:
-          linear-gradient(180deg, #d7d0bc 0%, #f7f1df 100%);
-        color: #10110d;
-      }
-
-      .wide-statement .section-inner {
-        display: grid;
-        grid-template-columns: minmax(0, 0.78fr) minmax(280px, 0.42fr);
-        gap: clamp(26px, 5vw, 72px);
-        align-items: end;
-      }
-
-      .wide-statement p {
-        margin: 0;
-        color: rgba(16, 17, 13, 0.72);
-        font-size: clamp(1rem, 1.7vw, 1.32rem);
-      }
-
-      .tool-line {
-        margin: 0;
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(2.5rem, 7vw, 6.8rem);
-        line-height: 0.96;
-        font-weight: 500;
-        letter-spacing: 0;
-      }
-
-      .authority-teaser {
-        border-block: 1px solid var(--line-soft);
-        background:
-          linear-gradient(180deg, rgba(247, 241, 223, 0.035), rgba(247, 241, 223, 0.01)),
-          #0d0e0b;
-      }
-
-      .authority-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 0.82fr) minmax(280px, 0.58fr);
-        gap: clamp(28px, 6vw, 90px);
-        align-items: end;
-      }
-
-      .authority-panel {
-        padding: 24px;
-        border-left: 1px solid var(--line);
-        background: linear-gradient(90deg, rgba(247, 241, 223, 0.07), transparent);
-      }
-
-      .authority-panel span {
-        display: block;
-        margin-bottom: 14px;
-        color: var(--signal);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.72rem;
-        text-transform: uppercase;
-      }
-
-      .authority-panel p {
-        margin: 0 0 22px;
-        color: var(--muted);
-        font-size: 1.05rem;
-      }
-
-      .tokscale-proof {
-        margin-top: clamp(40px, 6vw, 72px);
-      }
-
-      .tokscale-embed {
-        display: block;
-        max-width: 640px;
-      }
-
-      .tokscale-embed img {
-        display: block;
-        width: 100%;
-        height: auto;
-      }
-
-      .contact {
-        min-height: 72svh;
-        display: grid;
-        align-items: center;
-      }
-
-      .contact-panel {
-        display: grid;
-        grid-template-columns: minmax(0, 0.8fr) minmax(280px, 0.52fr);
-        gap: clamp(24px, 6vw, 88px);
-        align-items: center;
-      }
-
-      .contact-note {
-        border-top: 1px solid var(--line);
-        padding-top: 22px;
-      }
-
-      .contact-note p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 1.05rem;
-      }
-
-      footer {
-        padding: 28px clamp(18px, 4vw, 56px);
-        color: var(--dim);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        border-top: 1px solid var(--line-soft);
-      }
-
-      footer .section-inner {
-        display: flex;
-        justify-content: space-between;
-        gap: 14px;
-        flex-wrap: wrap;
-      }
-
-      /* Bewusst OHNE Scroll-Effekt: Inhalt ist sofort sichtbar — maximale "snappy".
-         Hier lag vorher ein 700ms-Reveal, der nie feuerte, weil opacity nie 0 war
-         (der Observer setzte is-visible, das CSS war aber schon voll sichtbar).
-         Effekt zurückholen: .reveal { opacity: 0; transform: translateY(12px); }
-         + html.js-Gate + .js .reveal.is-visible { opacity: 1; transform: none; } */
-      .reveal {
-        opacity: 1;
-      }
-
-      @media (max-width: 900px) {
-        .hero {
-          min-height: auto;
-          padding-top: 116px;
-        }
-
-        .hero-image {
-          object-position: 58% center;
-          opacity: 0.72;
-        }
-
-        .hero::after {
-          background:
-            linear-gradient(90deg, rgba(9, 10, 8, 0.95) 0%, rgba(9, 10, 8, 0.76) 72%, rgba(9, 10, 8, 0.52) 100%),
-            linear-gradient(180deg, rgba(9, 10, 8, 0.56) 0%, rgba(9, 10, 8, 0.36) 38%, rgba(9, 10, 8, 0.96) 100%);
-        }
-
-        .hero-copy,
-        .router-head,
-        .router-grid,
-        .split,
-        .fit-call-grid,
-        .authority-grid,
-        .wide-statement .section-inner,
-        .contact-panel {
-          grid-template-columns: 1fr;
-        }
-
-        .conversion-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .method-grid {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
+        "@type": "WebSite",
+        "@id": "https://www.human-agent-interface.com/#website",
+        "url": "https://www.human-agent-interface.com/",
+        "name": "Human Agent Interface (HAI)",
+        "inLanguage": ["de", "en"]
+      },
+      {
+        "@type": "DefinedTerm",
+        "@id": "https://www.human-agent-interface.com/#hai",
+        "name": "Human Agent Interface (HAI)",
+        "description": "HAI ist die Open-Source-Kontrollschicht zwischen Menschen und autonomen KI-Agenten: HAI macht agentische Arbeit beobachtbar, begrenzt, prüfbar und menschlich verantwortet.",
+        "url": "https://www.human-agent-interface.com/was-ist-hai/"
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.human-agent-interface.com/#samuel-fleig",
+        "name": "Samuel Fleig",
+        "url": "https://samuelfleig.com/",
+        "sameAs": ["https://github.com/smlfg"]
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.human-agent-interface.com/#organization",
+        "name": "Human Agent Interface (HAI)",
+        "url": "https://www.human-agent-interface.com/",
+        "founder": { "@id": "https://www.human-agent-interface.com/#samuel-fleig" },
+        "sameAs": ["https://github.com/smlfg"]
+      },
+      {
+        "@type": "Service",
+        "@id": "https://www.human-agent-interface.com/#service",
+        "name": "4h HAI Setup",
+        "serviceType": "Human-Agent-Interface Setup",
+        "provider": { "@id": "https://www.human-agent-interface.com/#organization" },
+        "description": "Ein Agenten-Workflow wird in vier Stunden zu einem begrenzten, prüfbaren Setup mit Human Gates, Verifikation und Next-Action-Packet.",
+        "offers": {
+          "@type": "Offer",
+          "price": "500",
+          "priceCurrency": "EUR",
+          "url": "https://cal.com/human-agent-interface/agent-check",
+          "availability": "https://schema.org/InStock"
         }
       }
-
-      @media (max-width: 620px) {
-        .hero {
-          width: 100vw;
-          padding-left: 20px;
-          padding-right: 20px;
-        }
-
-        .nav {
-          padding-top: 18px;
-          width: 100vw;
-          left: 0;
-          right: auto;
-          padding-left: 20px;
-          padding-right: 20px;
-        }
-
-        .brand span:not(.brand-mark) {
-          display: none;
-        }
-
-        .nav-cta {
-          display: none;
-        }
-
-        .nav-actions {
-          display: inline-flex;
-          gap: 8px;
-          max-width: calc(100vw - 92px);
-        }
-
-        .desktop-nav-link {
-          display: none;
-        }
-
-        .nav-link {
-          min-height: 36px;
-          padding: 0 10px;
-          font-size: 0.62rem;
-        }
-
-        .mobile-samuel-link {
-          min-height: 36px;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          margin-left: auto;
-          padding: 0 10px;
-          border: 1px solid var(--line-soft);
-          color: var(--muted);
-          font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-          font-size: 0.62rem;
-          text-decoration: none;
-          text-transform: uppercase;
-        }
-
-        .hero-inner,
-        .lineage,
-        h1,
-        .access-router,
-        .hero-copy,
-        .lead {
-          width: 350px;
-          max-width: calc(100vw - 40px);
-        }
-
-        .hero-inner {
-          margin-left: 0;
-          margin-right: 0;
-          padding-top: 0;
-        }
-
-        .lineage {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          margin-bottom: 24px;
-        }
-
-        .epoch {
-          min-height: 68px;
-        }
-
-        h1 {
-          font-size: clamp(2.35rem, 11.5vw, 3.1rem);
-          line-height: 0.98;
-        }
-
-        .lead {
-          font-size: 1rem;
-        }
-
-        .mobile-break {
-          display: block;
-        }
-
-        .desktop-break {
-          display: inline;
-        }
-
-        .method-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .step {
-          min-height: 170px;
-        }
-
-        .step h3 {
-          margin-top: 30px;
-        }
-
-        .button {
-          width: 100%;
-        }
-
-        .intake-question,
-        .output-list {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .epoch-card {
-          transition: none;
-        }
-
-        .epoch:hover .epoch-card {
-          transform: none;
-        }
-
-        .epoch[aria-pressed="true"] .epoch-card {
-          transform: rotateY(180deg);
-        }
-
-        *,
-        *::before,
-        *::after {
-          animation-duration: 0.001ms !important;
-          animation-iteration-count: 1 !important;
-          scroll-behavior: auto !important;
-          transition-duration: 0.001ms !important;
-        }
-      }
-      /* ---------- Klarheits-Pass: Türen + Sekundär-CTA ---------- */
-      .doors {
-        display: grid;
-        gap: 12px;
-        grid-template-columns: repeat(auto-fit, minmax(186px, 1fr));
-        margin-top: 26px;
-      }
-
-      .door {
-        display: grid;
-        gap: 7px;
-        align-content: start;
-        padding: 18px;
-        border: 1px solid var(--line-soft);
-        background: var(--panel);
-        text-decoration: none;
-        transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
-      }
-
-      .door:hover,
-      .door:focus-visible {
-        border-color: var(--signal);
-        background: var(--panel-strong);
-        transform: translateY(-2px);
-      }
-
-      .door-q {
-        font-size: 1.02rem;
-        font-weight: 600;
-        line-height: 1.25;
-        color: var(--ink);
-      }
-
-      .door-a {
-        font-size: 0.86rem;
-        color: var(--muted);
-      }
-
-      .door-go {
-        margin-top: 2px;
-        color: var(--signal);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.72rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .door-go::after {
-        content: " →";
-      }
-
-      .hero-secondary {
-        margin: 12px 0 0;
-        font-size: 0.9rem;
-        color: var(--muted);
-      }
-
-      .hero-secondary a {
-        color: var(--signal);
-        text-decoration: underline;
-        text-underline-offset: 3px;
-      }
-
-      /* ---------- Bediengefühl Ebene 1 ---------- */
-      @view-transition {
-        navigation: auto;
-      }
-
-      [id] {
-        scroll-margin-top: 88px;
-      }
-
-      .skip-link {
-        position: absolute;
-        left: -9999px;
-        top: 0;
-        z-index: 100;
-        padding: 12px 18px;
-        background: var(--void);
-        color: var(--ink);
-        border: 1px solid var(--signal);
-        text-decoration: none;
-      }
-
-      .skip-link:focus {
-        left: 10px;
-        top: 10px;
-      }
-
-      .nav-link[aria-current="page"] {
-        color: var(--signal);
-      }
-
-      /* ---------- Mega-Menü (Cloudflare-Muster: 4 Nomen + Panel + CTA) ---------- */
-      .hainav-menu {
-        display: inline-flex;
-        align-items: center;
-        gap: 2px;
-      }
-
-      .hainav-trigger {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        min-height: 38px;
-        padding: 0 12px;
-        border: 1px solid transparent;
-        background: none;
-        color: var(--ink);
-        font: inherit;
-        font-size: 0.86rem;
-        cursor: pointer;
-        transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
-      }
-
-      .hainav-trigger:hover,
-      .hainav-item.is-open .hainav-trigger {
-        color: var(--signal);
-        border-color: var(--line-soft);
-        background: var(--panel);
-      }
-
-      .hainav-chevron {
-        width: 6px;
-        height: 6px;
-        border-right: 1px solid currentColor;
-        border-bottom: 1px solid currentColor;
-        transform: translateY(-2px) rotate(45deg);
-        transition: transform 160ms ease;
-      }
-
-      .hainav-item.is-open .hainav-chevron {
-        transform: translateY(1px) rotate(-135deg);
-      }
-
-      .hainav-panel {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        z-index: 70;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(-6px);
-        transition: opacity 160ms ease, transform 160ms ease, visibility 160ms;
-        background: rgba(9, 10, 8, 0.97);
-        border: 1px solid var(--line);
-        border-top: 0;
-        border-radius: 0 0 16px 16px;
-        box-shadow: 0 30px 60px -26px rgba(0, 0, 0, 0.78);
-        backdrop-filter: saturate(150%) blur(18px);
-        -webkit-backdrop-filter: saturate(150%) blur(18px);
-      }
-
-      .hainav-item.is-open .hainav-panel {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-      }
-
-      .hainav-panel-inner {
-        max-width: var(--max);
-        margin: 0 auto;
-        padding: 22px clamp(18px, 4vw, 56px) 26px;
-      }
-
-      .hainav-columns {
-        display: grid;
-        gap: 20px 40px;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      }
-
-      .hainav-column {
-        display: grid;
-        gap: 2px;
-        align-content: start;
-      }
-
-      .hainav-column-title {
-        margin: 0 0 8px;
-        color: var(--copper);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.68rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .hainav-link {
-        display: grid;
-        gap: 3px;
-        padding: 10px 12px;
-        border: 1px solid transparent;
-        text-decoration: none;
-        transition: background 160ms ease, border-color 160ms ease;
-      }
-
-      .hainav-link:hover,
-      .hainav-link:focus-visible {
-        background: var(--panel);
-        border-color: var(--line-soft);
-      }
-
-      .hainav-link-label {
-        color: var(--ink);
-        font-size: 0.9rem;
-        font-weight: 600;
-      }
-
-      .hainav-link:hover .hainav-link-label {
-        color: var(--signal);
-      }
-
-      .hainav-link-desc {
-        color: var(--muted);
-        font-size: 0.8rem;
-        line-height: 1.4;
-      }
-
-      .hainav-footer-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        width: 100%;
-        margin-top: 18px;
-        padding-top: 14px;
-        border-top: 1px solid var(--line-soft);
-        color: var(--signal);
-        font-size: 0.86rem;
-        font-weight: 600;
-        text-decoration: none;
-      }
-
-      .hainav-footer-link:hover,
-      .hainav-footer-link:focus-visible {
-        color: var(--ink);
-      }
-
-      .hainav-plain {
-        display: inline-flex;
-        align-items: center;
-        min-height: 38px;
-        padding: 0 12px;
-        border: 1px solid transparent;
-        color: var(--ink);
-        font-size: 0.86rem;
-        text-decoration: none;
-        transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
-      }
-
-      .hainav-plain:hover,
-      .hainav-plain:focus-visible {
-        color: var(--signal);
-        border-color: var(--line-soft);
-        background: var(--panel);
-      }
-
-      .hainav-trigger:focus-visible,
-      .hainav-link:focus-visible,
-      .hainav-plain:focus-visible,
-      .hainav-footer-link:focus-visible,
-      .nav-menu-toggle:focus-visible {
-        outline: 2px solid var(--signal);
-        outline-offset: 2px;
-      }
-
-      /* ---------- Mobile: Menü-Button + Accordion ---------- */
-      .nav-menu-toggle {
-        display: none;
-        align-items: center;
-        gap: 9px;
-        min-height: 38px;
-        padding: 0 12px;
-        border: 1px solid var(--line-soft);
-        background: rgba(9, 10, 8, 0.48);
-        color: var(--muted);
-        cursor: pointer;
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.66rem;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        transition: color 160ms ease, border-color 160ms ease;
-      }
-
-      .nav-menu-toggle:hover,
-      .nav-menu-toggle:focus-visible {
-        color: var(--ink);
-        border-color: rgba(167, 255, 79, 0.4);
-      }
-
-      .nav-menu-toggle-icon {
-        position: relative;
-        width: 14px;
-        height: 2px;
-        background: currentColor;
-      }
-
-      .nav-menu-toggle-icon::before,
-      .nav-menu-toggle-icon::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        width: 14px;
-        height: 2px;
-        background: currentColor;
-      }
-
-      .nav-menu-toggle-icon::before {
-        top: -5px;
-      }
-
-      .nav-menu-toggle-icon::after {
-        top: 5px;
-      }
-
-      @media (max-width: 760px) {
-        .nav-menu-toggle {
-          display: inline-flex;
-        }
-
-        .hainav-menu {
-          display: none;
-          position: absolute;
-          top: 100%;
-          left: 0;
-          right: 0;
-          flex-direction: column;
-          align-items: stretch;
-          gap: 0;
-          max-height: calc(100vh - 76px);
-          overflow-y: auto;
-          padding: 8px clamp(18px, 4vw, 56px) 22px;
-          background: rgba(9, 10, 8, 0.98);
-          border-bottom: 1px solid var(--line);
-          border-radius: 0 0 16px 16px;
-          box-shadow: 0 30px 60px -26px rgba(0, 0, 0, 0.78);
-          backdrop-filter: saturate(150%) blur(18px);
-          -webkit-backdrop-filter: saturate(150%) blur(18px);
-        }
-
-        .hainav-menu.is-open {
-          display: flex;
-        }
-
-        .hainav-menu .desktop-nav-link {
-          display: flex;
-        }
-
-        .hainav-trigger {
-          width: 100%;
-          justify-content: space-between;
-          padding: 13px 0;
-          border: 0;
-          border-bottom: 1px solid var(--line-soft);
-          font-size: 0.94rem;
-        }
-
-        .hainav-trigger:hover,
-        .hainav-item.is-open .hainav-trigger {
-          color: var(--ink);
-          border-color: var(--line-soft);
-          background: none;
-        }
-
-        .hainav-panel {
-          position: static;
-          display: none;
-          opacity: 1;
-          visibility: visible;
-          transform: none;
-          background: transparent;
-          border: 0;
-          border-radius: 0;
-          box-shadow: none;
-          backdrop-filter: none;
-          -webkit-backdrop-filter: none;
-          transition: none;
-        }
-
-        .hainav-item.is-open .hainav-panel {
-          display: block;
-        }
-
-        .hainav-panel-inner {
-          padding: 4px 0 14px;
-        }
-
-        .hainav-columns {
-          gap: 4px;
-          grid-template-columns: 1fr;
-        }
-
-        .hainav-column-title {
-          margin-top: 10px;
-        }
-
-        .hainav-footer-link {
-          margin-top: 12px;
-        }
-
-        .hainav-plain {
-          width: 100%;
-          min-height: 46px;
-          padding: 13px 0;
-          border: 0;
-          border-bottom: 1px solid var(--line-soft);
-          font-size: 0.94rem;
-        }
-      }
-    </style>
-    <script src="/mail-fallback.js" defer></script>
+    ]
+  }
+  </script>
 </head>
-  <body>
-    <main class="site-shell">
-      <section class="hero" aria-labelledby="hero-title">
-        <img class="hero-image" src="assets/hai-interface-background.webp" width="1672" height="941" alt="" aria-hidden="true">
-        <canvas class="hero-canvas" id="agentField" aria-hidden="true"></canvas>
-        <a class="skip-link" href="#top">
-          <span class="lang-copy" data-lang-copy="en">Skip to content</span>
-          <span class="lang-copy" data-lang-copy="de">Zum Inhalt springen</span>
-        </a>
-        <nav class="nav" aria-label="Main navigation">
-          <a class="brand" href="#top" aria-label="Human Agent Interface home" aria-current="page">
-            <span class="brand-mark">HAI</span>
-            <span>Human Agent Interface</span>
-          </a>
-          <a class="mobile-samuel-link" href="./samuel/">
-            <span class="lang-copy" data-lang-copy="en">Samuel</span>
-            <span class="lang-copy" data-lang-copy="de">Samuel</span>
-          </a>
-          <div class="nav-actions">
-            <button
-              class="nav-menu-toggle"
-              type="button"
-              aria-expanded="false"
-              aria-controls="hainav-menu"
-            >
-              <span class="lang-copy" data-lang-copy="en">Menu</span>
-              <span class="lang-copy" data-lang-copy="de">Menü</span>
-              <span class="nav-menu-toggle-icon" aria-hidden="true"></span>
-            </button>
-            <div class="hainav-menu" id="hainav-menu">
-              <div class="hainav-item">
-                <button class="hainav-trigger desktop-nav-link" type="button" aria-expanded="false" aria-controls="hainav-products">
-                  <span class="lang-copy" data-lang-copy="en">Products</span>
-                  <span class="lang-copy" data-lang-copy="de">Produkte</span>
-                  <span class="hainav-chevron" aria-hidden="true"></span>
-                </button>
-                <div class="hainav-panel" id="hainav-products">
-                  <div class="hainav-panel-inner">
-                    <div class="hainav-columns">
-                      <div class="hainav-column">
-                        <p class="hainav-column-title">
-                          <span class="lang-copy" data-lang-copy="en">Control</span>
-                          <span class="lang-copy" data-lang-copy="de">Kontrolle</span>
-                        </p>
-                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_hai_mcp" href="./hai-mcp/">
-                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">HAI-MCP</span><span class="lang-copy" data-lang-copy="de">HAI-MCP</span></span>
-                          <span class="hainav-link-desc">
-                            <span class="lang-copy" data-lang-copy="en">Open-source MCP control plane for agent sessions</span>
-                            <span class="lang-copy" data-lang-copy="de">Open-Source MCP-Control-Plane für Agenten-Sessions</span>
-                          </span>
-                        </a>
-                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_sidecar" href="./sidecar/">
-                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Sidecar</span><span class="lang-copy" data-lang-copy="de">Sidecar</span></span>
-                          <span class="hainav-link-desc">
-                            <span class="lang-copy" data-lang-copy="en">Control layer that runs next to your agent</span>
-                            <span class="lang-copy" data-lang-copy="de">Kontrollschicht, die neben deinem Agenten läuft</span>
-                          </span>
-                        </a>
-                      </div>
-                      <div class="hainav-column">
-                        <p class="hainav-column-title">
-                          <span class="lang-copy" data-lang-copy="en">Visibility</span>
-                          <span class="lang-copy" data-lang-copy="de">Sichtbarkeit</span>
-                        </p>
-                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_tripwire" href="./tripwire-map/">
-                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Tripwire Map</span><span class="lang-copy" data-lang-copy="de">Tripwire-Map</span></span>
-                          <span class="hainav-link-desc">
-                            <span class="lang-copy" data-lang-copy="en">See where agents slip before they do</span>
-                            <span class="lang-copy" data-lang-copy="de">Sieh, wo Agenten entgleisen, bevor es passiert</span>
-                          </span>
-                        </a>
-                      </div>
-                    </div>
-                    <a class="hainav-footer-link" data-site-event="cta_click" data-event-target="nav_product" href="./product/">
-                      <span class="lang-copy" data-lang-copy="en">All products →</span>
-                      <span class="lang-copy" data-lang-copy="de">Alle Produkte →</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
+<body data-page="home">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-              <div class="hainav-item">
-                <button class="hainav-trigger desktop-nav-link" type="button" aria-expanded="false" aria-controls="hainav-solutions">
-                  <span class="lang-copy" data-lang-copy="en">Solutions</span>
-                  <span class="lang-copy" data-lang-copy="de">Lösungen</span>
-                  <span class="hainav-chevron" aria-hidden="true"></span>
-                </button>
-                <div class="hainav-panel" id="hainav-solutions">
-                  <div class="hainav-panel-inner">
-                    <div class="hainav-columns">
-                      <div class="hainav-column">
-                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_workflow_audit" href="./AffeHTML/">
-                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">4h Workflow Audit</span><span class="lang-copy" data-lang-copy="de">4h Workflow-Audit</span></span>
-                          <span class="hainav-link-desc">
-                            <span class="lang-copy" data-lang-copy="en">Find where your agent setup costs you control · 500 €</span>
-                            <span class="lang-copy" data-lang-copy="de">Finde, wo dein Agenten-Setup dich Kontrolle kostet · 500 €</span>
-                          </span>
-                        </a>
-                      </div>
-                      <div class="hainav-column">
-                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_fit" href="./fit/">
-                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Human Fit</span><span class="lang-copy" data-lang-copy="de">Human Fit</span></span>
-                          <span class="hainav-link-desc">
-                            <span class="lang-copy" data-lang-copy="en">Check whether HAI fits your way of working</span>
-                            <span class="lang-copy" data-lang-copy="de">Prüfe, ob HAI zu deiner Arbeitsweise passt</span>
-                          </span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+  <div class="statusline" aria-hidden="true">
+    <div class="wrap">
+      <span>HAI · Protokoll 001</span>
+      <span>Abschnitt: <strong data-status-section>01</strong></span>
+      <span data-variant-label>Variante A · Protokoll</span>
+    </div>
+  </div>
 
-              <div class="hainav-item">
-                <button class="hainav-trigger desktop-nav-link" type="button" aria-expanded="false" aria-controls="hainav-resources">
-                  <span class="lang-copy" data-lang-copy="en">Resources</span>
-                  <span class="lang-copy" data-lang-copy="de">Ressourcen</span>
-                  <span class="hainav-chevron" aria-hidden="true"></span>
-                </button>
-                <div class="hainav-panel" id="hainav-resources">
-                  <div class="hainav-panel-inner">
-                    <div class="hainav-columns">
-                      <div class="hainav-column">
-                        <p class="hainav-column-title">
-                          <span class="lang-copy" data-lang-copy="en">Learn</span>
-                          <span class="lang-copy" data-lang-copy="de">Verstehen</span>
-                        </p>
-                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_method" href="./what_it_is/">
-                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">What is HAI</span><span class="lang-copy" data-lang-copy="de">Was ist HAI</span></span>
-                          <span class="hainav-link-desc">
-                            <span class="lang-copy" data-lang-copy="en">The method in five minutes</span>
-                            <span class="lang-copy" data-lang-copy="de">Die Methode in fünf Minuten</span>
-                          </span>
-                        </a>
-                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_deep_dive" href="./what_it_is/deep-dive/">
-                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Technical deep-dive</span><span class="lang-copy" data-lang-copy="de">Technischer Deep-Dive</span></span>
-                          <span class="hainav-link-desc">
-                            <span class="lang-copy" data-lang-copy="en">A precise technical definition</span>
-                            <span class="lang-copy" data-lang-copy="de">Eine präzise technische Definition</span>
-                          </span>
-                        </a>
-                      </div>
-                      <div class="hainav-column">
-                        <p class="hainav-column-title">
-                          <span class="lang-copy" data-lang-copy="en">Evidence</span>
-                          <span class="lang-copy" data-lang-copy="de">Nachweis</span>
-                        </p>
-                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_proof" href="./proof/">
-                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Proof case files</span><span class="lang-copy" data-lang-copy="de">Nachweis-Fallakten</span></span>
-                          <span class="hainav-link-desc">
-                            <span class="lang-copy" data-lang-copy="en">Four case files: visibility, control, method, transfer</span>
-                            <span class="lang-copy" data-lang-copy="de">Vier Fallakten: Sichtbarkeit, Kontrolle, Methode, Transfer</span>
-                          </span>
-                        </a>
-                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_tutorials" href="./tutorials/">
-                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Harness tutorial</span><span class="lang-copy" data-lang-copy="de">Harness-Tutorial</span></span>
-                          <span class="hainav-link-desc">
-                            <span class="lang-copy" data-lang-copy="en">Interactive: run Claude Code, Codex and Hermes with owner control (German)</span>
-                            <span class="lang-copy" data-lang-copy="de">Interaktiv: Claude Code, Codex und Hermes kontrolliert einsetzen</span>
-                          </span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+  <header class="site-head">
+    <div class="wrap">
+      <a class="brand" href="/" aria-current="page"><strong>HAI</strong> · Human Agent Interface</a>
+      <nav class="nav" aria-label="Hauptnavigation">
+        <a href="/was-ist-hai/" data-target="what-is-hai">Was ist HAI</a>
+        <a href="/beweis/" data-target="proof">Beweis</a>
+        <a href="/mesh/" data-target="mesh">Mesh</a>
+        <a href="/archiv/" data-target="archive">Archiv</a>
+        <a href="/en/" lang="en" hreflang="en" data-target="lang_en" aria-label="English">EN</a>
+      </nav>
+    </div>
+  </header>
 
-              <div class="hainav-item">
-                <button class="hainav-trigger desktop-nav-link" type="button" aria-expanded="false" aria-controls="hainav-samuel">
-                  <span class="lang-copy" data-lang-copy="en">Samuel</span>
-                  <span class="lang-copy" data-lang-copy="de">Samuel</span>
-                  <span class="hainav-chevron" aria-hidden="true"></span>
-                </button>
-                <div class="hainav-panel" id="hainav-samuel">
-                  <div class="hainav-panel-inner">
-                    <div class="hainav-columns">
-                      <div class="hainav-column">
-                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_samuel" href="./samuel/">
-                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">About Samuel</span><span class="lang-copy" data-lang-copy="de">Über Samuel</span></span>
-                          <span class="hainav-link-desc">
-                            <span class="lang-copy" data-lang-copy="en">Who builds HAI and why</span>
-                            <span class="lang-copy" data-lang-copy="de">Wer HAI baut und warum</span>
-                          </span>
-                        </a>
-                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_why" href="./samuel/why-hai-matters/">
-                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Why HAI matters</span><span class="lang-copy" data-lang-copy="de">Warum HAI zählt</span></span>
-                          <span class="hainav-link-desc">
-                            <span class="lang-copy" data-lang-copy="en">The problem behind the method</span>
-                            <span class="lang-copy" data-lang-copy="de">Das Problem hinter der Methode</span>
-                          </span>
-                        </a>
-                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_timeline" href="./samuel/timeline/">
-                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Timeline</span><span class="lang-copy" data-lang-copy="de">Zeitleiste</span></span>
-                          <span class="hainav-link-desc">
-                            <span class="lang-copy" data-lang-copy="en">How HAI grew, step by step</span>
-                            <span class="lang-copy" data-lang-copy="de">Wie HAI entstanden ist, Schritt für Schritt</span>
-                          </span>
-                        </a>
-                        <a class="hainav-link" data-site-event="cta_click" data-event-target="nav_audit" href="./samuel/computer-day-audit-2026/">
-                          <span class="hainav-link-label"><span class="lang-copy" data-lang-copy="en">Computer-Day-Audit 2026</span><span class="lang-copy" data-lang-copy="de">Computer-Day-Audit 2026</span></span>
-                          <span class="hainav-link-desc">
-                            <span class="lang-copy" data-lang-copy="en">A year of agent work, measured</span>
-                            <span class="lang-copy" data-lang-copy="de">Ein Jahr Agentenarbeit, gemessen</span>
-                          </span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+  <main id="main" tabindex="-1">
+
+    <section class="hero" data-section="01 · Start">
+      <div class="wrap grid">
+        <div class="rail meta">
+          <div>Protokoll 001</div>
+          <div>Version 001</div>
+          <div>Deutsch</div>
+        </div>
+        <div class="main">
+          <h1>Agenten arbeiten.<br><em>Du entscheidest.</em></h1>
+          <p class="lede">HAI ist die Schicht zwischen dir und deinen Agenten. HAI macht sichtbar, was geschieht, begrenzt, was erlaubt ist, und lässt die Entscheidung bei dir.</p>
+          <div class="actions">
+            <a href="#schicht" data-target="what-is-hai">Die Schicht ansehen</a>
+            <a href="https://cal.com/human-agent-interface/agent-check" rel="external" data-target="contact">Termin buchen</a>
+            <a href="/beweis/" data-target="proof">Den Beweis ansehen</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Skizze">
+          <span class="stamp">Geprüft · Mensch</span>
+          <figure class="figure demo" data-demo>
+            <div class="demo-head">
+              <span>PenEcho · live</span>
+              <span data-demo-status role="status" aria-live="polite">Bereit</span>
+            </div>
+            <div class="demo-page">
+              <div class="demo-line">3(x+2)=15</div>
+              <div class="demo-line demo-target">3x+2=15
+                <svg class="demo-mark" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M2 6 C 50 2, 120 10, 198 5" pathLength="1"></path>
+                </svg>
+              </div>
+              <div class="demo-hint" data-demo-hint>
+                <svg class="demo-hint-line" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M2 6 C 60 12, 130 2, 198 7" pathLength="1"></path>
+                </svg>
+                <span>Distributivgesetz</span>
               </div>
             </div>
-            <div class="language-switch" aria-label="Language">
-              <button class="lang-button" type="button" data-lang-toggle="de" aria-pressed="false">DE</button>
-              <button class="lang-button" type="button" data-lang-toggle="en" aria-pressed="false">EN</button>
+            <div class="demo-actions">
+              <button class="btn" type="button" data-demo-action="check">Agent prüfen</button>
+              <button class="btn deny" type="button" data-demo-action="stop">Anhalten</button>
             </div>
-            <a
-              class="nav-cta"
-              data-site-event="cta_click"
-              data-event-target="nav_fit"
-              href="./fit/"
-            >
-              <span class="lang-copy" data-lang-copy="en">Check fit</span>
-              <span class="lang-copy" data-lang-copy="de">Fit prüfen</span>
-            </a>
-          </div>
-        </nav>
-
-        <div class="hero-inner" id="top">
-          <div class="lineage reveal" aria-label="Interface evolution">
-            <button class="epoch" type="button" data-stage="cli" aria-pressed="false" data-site-event="cta_click" data-event-target="epoch_cli">
-              <span class="epoch-card">
-                <span class="epoch-face epoch-front">
-                  <strong>CLI</strong>
-                  <span>
-                    <span class="lang-copy" data-lang-copy="en">commands</span>
-                    <span class="lang-copy" data-lang-copy="de">Befehle</span>
-                  </span>
-                </span>
-                <span class="epoch-face epoch-back">
-                  <span class="copy-block" data-lang-copy="en">Type a command. The machine does exactly that.</span>
-                  <span class="copy-block" data-lang-copy="de">Befehl tippen. Die Maschine tut genau das.</span>
-                </span>
-              </span>
-            </button>
-            <button class="epoch" type="button" data-stage="tui" aria-pressed="false" data-site-event="cta_click" data-event-target="epoch_tui">
-              <span class="epoch-card">
-                <span class="epoch-face epoch-front">
-                  <strong>TUI</strong>
-                  <span>terminal</span>
-                </span>
-                <span class="epoch-face epoch-back">
-                  <span class="copy-block" data-lang-copy="en">Menus in the terminal. You pick what the program offers.</span>
-                  <span class="copy-block" data-lang-copy="de">Menüs im Terminal. Du wählst, was das Programm anbietet.</span>
-                </span>
-              </span>
-            </button>
-            <button class="epoch" type="button" data-stage="gui" aria-pressed="false" data-site-event="cta_click" data-event-target="epoch_gui">
-              <span class="epoch-card">
-                <span class="epoch-face epoch-front">
-                  <strong>GUI</strong>
-                  <span>
-                    <span class="lang-copy" data-lang-copy="en">screens</span>
-                    <span class="lang-copy" data-lang-copy="de">Oberflächen</span>
-                  </span>
-                </span>
-                <span class="epoch-face epoch-back">
-                  <span class="copy-block" data-lang-copy="en">Windows and a mouse. You point at what is shown.</span>
-                  <span class="copy-block" data-lang-copy="de">Fenster und Maus. Du zeigst auf das, was sichtbar ist.</span>
-                </span>
-              </span>
-            </button>
-            <button class="epoch is-current" type="button" data-stage="hai" aria-pressed="false" data-site-event="cta_click" data-event-target="epoch_hai">
-              <span class="epoch-card">
-                <span class="epoch-face epoch-front">
-                  <strong>HAI</strong>
-                  <span>
-                    <span class="lang-copy" data-lang-copy="en">agency</span>
-                    <span class="lang-copy" data-lang-copy="de">Kontrolle</span>
-                  </span>
-                </span>
-                <span class="epoch-face epoch-back">
-                  <span class="copy-block" data-lang-copy="en">The agent acts. You decide what it may do, when it asks and how you verify.</span>
-                  <span class="copy-block" data-lang-copy="de">Der Agent handelt. Du bestimmst, was er darf, wann er fragt und wie du prüfst.</span>
-                </span>
-              </span>
-            </button>
-          </div>
-
-          <p class="eyebrow reveal">
-            <span class="hero-text-variant" data-hero-variant="A_control">
-              <span class="lang-copy" data-lang-copy="en">For people stuck inside agent threads</span>
-              <span class="lang-copy" data-lang-copy="de">Für Menschen in zu vielen Agenten-Threads</span>
-            </span>
-            <span class="hero-text-variant" data-hero-variant="B_offer_first">
-              <span class="lang-copy" data-lang-copy="en">For one messy agent workflow</span>
-              <span class="lang-copy" data-lang-copy="de">Für einen chaotischen Agenten-Workflow</span>
-            </span>
-            <span class="hero-text-variant" data-hero-variant="C_proof_first">
-              <span class="lang-copy" data-lang-copy="en">Proof before more agent output</span>
-              <span class="lang-copy" data-lang-copy="de">Nachweis vor noch mehr Agenten-Output</span>
-            </span>
-          </p>
-          <h1 class="reveal" id="hero-title">
-            <span class="hero-text-variant" data-hero-variant="A_control">
-              <span class="lang-copy" data-lang-copy="en">
-                AI work should create momentum.
-                <span class="desktop-break"></span>
-                For most people, it creates confusion.
-              </span>
-              <span class="lang-copy" data-lang-copy="de">
-                KI-Arbeit sollte Schwung geben.
-                <span class="desktop-break"></span>
-                Oft macht sie erst mehr Chaos.
-              </span>
-            </span>
-            <span class="hero-text-variant" data-hero-variant="B_offer_first">
-              <span class="lang-copy" data-lang-copy="en">
-                Bring one chaotic agent workflow.
-                <span class="desktop-break"></span>
-                Leave with one concrete next action packet.
-              </span>
-              <span class="lang-copy" data-lang-copy="de">
-                Bring einen chaotischen Agenten-Workflow.
-                <span class="desktop-break"></span>
-                Geh mit einem prüfbaren nächsten Schritt.
-              </span>
-            </span>
-            <span class="hero-text-variant" data-hero-variant="C_proof_first">
-              <span class="lang-copy" data-lang-copy="en">
-                The problem is not stronger agents.
-                <span class="desktop-break"></span>
-                It is whether the human can still own the work.
-              </span>
-              <span class="lang-copy" data-lang-copy="de">
-                Das Problem sind nicht stärkere Agents.
-                <span class="desktop-break"></span>
-                Es ist, ob der Mensch die Arbeit noch besitzt.
-              </span>
-            </span>
-          </h1>
-
-          <div class="hero-copy hero-variant" data-hero-variant="A_control">
-            <p class="lead reveal">
-              <span class="copy-block" data-lang-copy="en">
-                <strong>Human Agent Interface (HAI)</strong>, created by <a href="./samuel/">Samuel Fleig</a>, turns agent chaos into work a human can still own: observable, bounded, verifiable, and human-owned.
-              </span>
-              <span class="copy-block" data-lang-copy="de">
-                <strong>Human Agent Interface (HAI)</strong>, entwickelt von <a href="./samuel/">Samuel Fleig</a>, macht aus Agenten-Chaos wieder Arbeit, die ein Mensch steuern kann: beobachtbar, begrenzt, überprüfbar und menschlich verantwortet.
-              </span>
-            </p>
-            <p class="reveal">
-              <span class="copy-block" data-lang-copy="en">
-                You have Claude Code open.<br>
-                Codex produced another plan.<br>
-                One chat says the build is done.<br>
-                Another says the architecture is wrong.<br>
-                You have five outputs and no decision.<br>
-                That is where HAI starts.
-              </span>
-              <span class="copy-block" data-lang-copy="de">
-                Claude Code ist offen.<br>
-                Codex hat den nächsten Plan geschrieben.<br>
-                Ein Chat sagt: fertig.<br>
-                Ein anderer sagt: Architektur falsch.<br>
-                Du hast fünf Outputs und keine Entscheidung.<br>
-                Genau dort startet HAI.
-              </span>
-            </p>
-            <div class="hero-actions reveal">
-              <a
-                class="button primary"
-                data-site-event="cta_click"
-                data-event-target="hero_fit_call_cal"
-                href="https://cal.com/human-agent-interface/agent-check"
-                target="_blank"
-                rel="noopener"
-              >
-                <span class="lang-copy" data-lang-copy="en">Book 20 min fit call</span>
-                <span class="lang-copy" data-lang-copy="de">20-Min-Fit-Call buchen</span>
-              </a>
-              <a
-                class="button"
-                data-site-event="cta_click"
-                data-event-target="hero_fit_call"
-                href="mailto:hallo@samuelfleig.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A"
-              >
-                <span class="lang-copy" data-lang-copy="en">Prefer email</span>
-                <span class="lang-copy" data-lang-copy="de">Lieber per Mail</span>
-              </a>
-              <a class="button" data-site-event="cta_click" data-event-target="hero_choose_path" href="#choose-path">
-                <span class="lang-copy" data-lang-copy="en">Choose your path</span>
-                <span class="lang-copy" data-lang-copy="de">Pfad wählen</span>
-              </a>
-              <a class="button" data-site-event="cta_click" data-event-target="hero_proof" href="./proof/">
-                <span class="lang-copy" data-lang-copy="en">Proof</span>
-                <span class="lang-copy" data-lang-copy="de">Nachweis</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="hero-copy hero-variant" data-hero-variant="B_offer_first">
-            <p class="lead reveal">
-              <span class="copy-block" data-lang-copy="en">
-                <strong>HAI starts with one workflow you can actually inspect.</strong> Bring the messy agent thread, stalled tool run, or pile of conflicting plans. Leave with a scoped packet: what the agent does, what you decide, and how the work gets verified.
-              </span>
-              <span class="copy-block" data-lang-copy="de">
-                <strong>HAI startet mit einem Workflow, den du wirklich prüfen kannst.</strong> Bring den verworrenen Agenten-Thread, den steckenden Tool-Run oder die widersprüchlichen Pläne. Am Ende steht ein kleiner Scope: was der Agent tut, was du entscheidest und wie die Arbeit geprüft wird.
-              </span>
-            </p>
-            <div class="hero-actions reveal">
-              <a class="button primary" data-site-event="cta_click" data-event-target="hero_fit" href="./fit/">
-                <span class="lang-copy" data-lang-copy="en">Check if HAI fits you</span>
-                <span class="lang-copy" data-lang-copy="de">Prüfen, ob HAI zu dir passt</span>
-              </a>
-              <a class="button" data-site-event="cta_click" data-event-target="hero_product" href="./product/">
-                <span class="lang-copy" data-lang-copy="en">What you actually get</span>
-                <span class="lang-copy" data-lang-copy="de">Was du konkret bekommst</span>
-              </a>
-              <a class="button" data-site-event="cta_click" data-event-target="hero_proof" href="./proof/">
-                <span class="lang-copy" data-lang-copy="en">Is this real?</span>
-                <span class="lang-copy" data-lang-copy="de">Ist das echt?</span>
-              </a>
-            </div>
-            <p class="hero-secondary reveal">
-              <span class="lang-copy" data-lang-copy="en">Already decided? <a data-site-event="cta_click" data-event-target="hero_fit_call" href="mailto:hallo@samuelfleig.com?subject=One%20messy%20agent%20workflow&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20bring%20one%20messy%20agent%20workflow.%0D%0A%0D%0AWhat%20is%20currently%20chaotic%3A%0D%0A%0D%0ATools%20involved%3A%0D%0A%0D%0APreferred%20time%20windows%3A">Book a 20 min fit call</a>.</span>
-              <span class="lang-copy" data-lang-copy="de">Schon entschieden? <a data-site-event="cta_click" data-event-target="hero_fit_call" href="mailto:hallo@samuelfleig.com?subject=Ein%20chaotischer%20Agenten-Workflow&amp;body=Hallo%20Samuel%2C%0D%0A%0D%0AIch%20will%20einen%20chaotischen%20Agenten-Workflow%20mitbringen.%0D%0A%0D%0AWas%20gerade%20chaotisch%20ist%3A%0D%0A%0D%0ATools%3A%0D%0A%0D%0AMoegliche%20Zeiten%3A">20-Min-Fit-Call buchen</a>.</span>
-            </p>
-          </div>
-
-          <div class="hero-copy hero-variant" data-hero-variant="C_proof_first">
-            <p class="lead reveal">
-              <span class="copy-block" data-lang-copy="en">
-                <strong>HAI is built from real local agent systems, evals, and owner-control artifacts.</strong> The point is not to worship stronger tools. The point is whether the human can still inspect, stop, verify, and own the work.
-              </span>
-              <span class="copy-block" data-lang-copy="de">
-                <strong>HAI kommt aus echten lokalen Agenten-Systemen, Evals und Owner-Control-Artefakten.</strong> Es geht nicht darum, stärkere Tools zu feiern. Es geht darum, ob der Mensch Arbeit noch prüfen, stoppen, verifizieren und besitzen kann.
-              </span>
-            </p>
-            <div class="hero-actions reveal">
-              <a class="button primary" data-site-event="cta_click" data-event-target="hero_proof" href="./proof/">
-                <span class="lang-copy" data-lang-copy="en">See proof</span>
-                <span class="lang-copy" data-lang-copy="de">Nachweis ansehen</span>
-              </a>
-              <a
-                class="button"
-                data-site-event="cta_click"
-                data-event-target="hero_fit_call_cal"
-                href="https://cal.com/human-agent-interface/agent-check"
-                target="_blank"
-                rel="noopener"
-              >
-                <span class="lang-copy" data-lang-copy="en">Book fit call</span>
-                <span class="lang-copy" data-lang-copy="de">Fit-Call buchen</span>
-              </a>
-              <a
-                class="button"
-                data-site-event="cta_click"
-                data-event-target="hero_fit_call"
-                href="mailto:hallo@samuelfleig.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A"
-              >
-                <span class="lang-copy" data-lang-copy="en">Prefer email</span>
-                <span class="lang-copy" data-lang-copy="de">Lieber per Mail</span>
-              </a>
-              <a class="button" data-site-event="cta_click" data-event-target="hero_product" href="./product/">
-                <span class="lang-copy" data-lang-copy="en">See offer</span>
-                <span class="lang-copy" data-lang-copy="de">Angebot ansehen</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section doors-section" aria-labelledby="doors-title">
-        <div class="section-inner">
-          <p class="kicker reveal">
-            <span class="lang-copy" data-lang-copy="en">Start here</span>
-            <span class="lang-copy" data-lang-copy="de">Hier starten</span>
-          </p>
-          <h2 class="reveal" id="doors-title">
-            <span class="lang-copy" data-lang-copy="en">What do you want to know first?</span>
-            <span class="lang-copy" data-lang-copy="de">Was willst du zuerst wissen?</span>
-          </h2>
-          <div class="doors reveal">
-            <a class="door" data-site-event="cta_click" data-event-target="door_method" href="./what_it_is/">
-              <span class="door-q">
-                <span class="lang-copy" data-lang-copy="en">What is HAI, exactly?</span>
-                <span class="lang-copy" data-lang-copy="de">Was ist HAI genau?</span>
-              </span>
-              <span class="door-a">
-                <span class="lang-copy" data-lang-copy="en">The definition, the control problem, and HAI-MCP.</span>
-                <span class="lang-copy" data-lang-copy="de">Definition, Kontrollproblem und HAI-MCP.</span>
-              </span>
-              <span class="door-go">
-                <span class="lang-copy" data-lang-copy="en">Definition · 2 min</span>
-                <span class="lang-copy" data-lang-copy="de">Definition · 2 Min</span>
-              </span>
-            </a>
-            <a class="door" data-site-event="cta_click" data-event-target="door_product" href="./product/">
-              <span class="door-q">
-                <span class="lang-copy" data-lang-copy="en">What do you actually get?</span>
-                <span class="lang-copy" data-lang-copy="de">Was bekommst du konkret?</span>
-              </span>
-              <span class="door-a">
-                <span class="lang-copy" data-lang-copy="en">Scope, deliverables, and how one workflow becomes a packet.</span>
-                <span class="lang-copy" data-lang-copy="de">Scope, Ergebnisse und wie ein Workflow zum Paket wird.</span>
-              </span>
-              <span class="door-go">
-                <span class="lang-copy" data-lang-copy="en">Offer</span>
-                <span class="lang-copy" data-lang-copy="de">Angebot</span>
-              </span>
-            </a>
-            <a class="door" data-site-event="cta_click" data-event-target="door_fit" href="./fit/">
-              <span class="door-q">
-                <span class="lang-copy" data-lang-copy="en">Does this fit you?</span>
-                <span class="lang-copy" data-lang-copy="de">Passt das zu dir?</span>
-              </span>
-              <span class="door-a">
-                <span class="lang-copy" data-lang-copy="en">Check the human fit before booking anything.</span>
-                <span class="lang-copy" data-lang-copy="de">Erst den Fit prüfen, dann buchen.</span>
-              </span>
-              <span class="door-go">
-                <span class="lang-copy" data-lang-copy="en">Fit check · 60 sec</span>
-                <span class="lang-copy" data-lang-copy="de">Fit-Check · 60 Sek</span>
-              </span>
-            </a>
-            <a class="door" data-site-event="cta_click" data-event-target="door_proof" href="./proof/">
-              <span class="door-q">
-                <span class="lang-copy" data-lang-copy="en">Is this real?</span>
-                <span class="lang-copy" data-lang-copy="de">Ist das echt?</span>
-              </span>
-              <span class="door-a">
-                <span class="lang-copy" data-lang-copy="en">Real artifacts from real agent work, not claims.</span>
-                <span class="lang-copy" data-lang-copy="de">Echte Artefakte aus echter Agenten-Arbeit, keine Behauptungen.</span>
-              </span>
-              <span class="door-go">
-                <span class="lang-copy" data-lang-copy="en">Proof</span>
-                <span class="lang-copy" data-lang-copy="de">Nachweis</span>
-              </span>
-            </a>
-            <a class="door" data-site-event="cta_click" data-event-target="door_samuel" href="./samuel/">
-              <span class="door-q">
-                <span class="lang-copy" data-lang-copy="en">Who is behind this?</span>
-                <span class="lang-copy" data-lang-copy="de">Wer steckt dahinter?</span>
-              </span>
-              <span class="door-a">
-                <span class="lang-copy" data-lang-copy="en">Samuel Fleig's origin path and operating model.</span>
-                <span class="lang-copy" data-lang-copy="de">Samuel Fleigs Herkunft und Arbeitsmodell.</span>
-              </span>
-              <span class="door-go">
-                <span class="lang-copy" data-lang-copy="en">About</span>
-                <span class="lang-copy" data-lang-copy="de">Über</span>
-              </span>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section class="section router-section" aria-labelledby="choose-path">
-        <div class="access-router reveal" id="choose-path" aria-label="Language and audience router">
-            <section class="router-panel" data-lang="en" aria-labelledby="router-title-en">
-              <div class="router-head">
-                <div>
-                  <p class="eyebrow">Language and audience routing</p>
-                  <h2 id="router-title-en">Start where your workflow actually is.</h2>
-                  <p>
-                    HAI is built for agent-native work. If you are not there yet, use the simpler
-                    door without turning HAI into beginner AI training.
-                  </p>
-                </div>
-                <div class="language-switch" aria-label="Language">
-                  <button class="lang-button" type="button" data-lang-toggle="de" aria-pressed="false">DE</button>
-                  <button class="lang-button" type="button" data-lang-toggle="en" aria-pressed="false">EN</button>
-                </div>
-              </div>
-
-              <div class="router-grid">
-                <article class="audience-card is-primary">
-                  <span class="route-label">Primary path / agent-native</span>
-                  <h3>I already work with agents.</h3>
-                  <p>
-                    You use Claude Code, Codex, Cursor, Hermes, custom harnesses, or repeated
-                    agent workflows. The problem is not access. It is scope, trust, verification,
-                    ownership, and where the human must stay in control.
-                  </p>
-                  <div class="route-tags" aria-label="Agent-native topics">
-                    <span>Terminal agents</span>
-                    <span>Verification</span>
-                    <span>Human gates</span>
-                    <span>Adminspace</span>
-                  </div>
-                  <div class="route-actions">
-                    <a class="button primary" data-site-event="cta_click" data-event-target="router_agent_workflow" href="mailto:hallo@samuelfleig.com?subject=Agent-native%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20already%20work%20with%20agents%20and%20want%20to%20scope%20one%20workflow.%0D%0A%0D%0AWhere%20control%20breaks%3A%0D%0A%0D%0ATools%20I%20use%3A%0D%0A%0D%0APreferred%20time%20windows%3A">Bring one agent workflow</a>
-                    <a class="button" data-site-event="cta_click" data-event-target="hero_product" href="./product/">See agent-native offers</a>
-                  </div>
-                </article>
-
-                <article class="audience-card">
-                  <span class="route-label">Entry path / non-agentic</span>
-                  <h3>I need to understand AI work before I delegate more.</h3>
-                  <p>
-                    You are not buying a beginner course. You need language, boundaries, and a
-                    safe first diagnostic so confusing AI work becomes one clear next step.
-                  </p>
-                  <div class="route-tags" aria-label="Non-agentic entry topics">
-                    <span>Orientation</span>
-                    <span>Trust</span>
-                    <span>Boundaries</span>
-                    <span>Diagnostic</span>
-                  </div>
-                  <div class="route-actions">
-                    <a class="button" data-site-event="cta_click" data-event-target="router_orientation" href="mailto:hallo@samuelfleig.com?subject=HAI%20orientation%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20am%20not%20agent-native%20yet%2C%20but%20I%20want%20to%20understand%20how%20to%20use%20AI%20work%20without%20losing%20control.%0D%0A%0D%0AWhere%20I%20feel%20confused%3A%0D%0A%0D%0AWhat%20I%20want%20to%20decide%20next%3A">Ask for orientation</a>
-                    <a class="button" data-site-event="cta_click" data-event-target="router_muenztelefon" href="./M%C3%BCnztelfon/">Start small: Muenztelefon diagnostic</a>
-                  </div>
-                </article>
-              </div>
-            </section>
-
-            <section class="router-panel" data-lang="de" aria-labelledby="router-title-de">
-              <div class="router-head">
-                <div>
-                  <p class="eyebrow">Sprache und Einstieg</p>
-                  <h2 id="router-title-de">Was ist gerade chaotisch?</h2>
-                  <p>
-                    Nicht noch mehr Output. Erst wieder Überblick: Wo kann ich Kontrolle, Überblick oder Vertrauen verlieren?
-                    Und was passiert mit meinem mentalen Modell des Projekts?
-                  </p>
-                </div>
-                <div class="language-switch" aria-label="Sprache">
-                  <button class="lang-button" type="button" data-lang-toggle="de" aria-pressed="false">DE</button>
-                  <button class="lang-button" type="button" data-lang-toggle="en" aria-pressed="false">EN</button>
-                </div>
-              </div>
-
-              <div class="router-grid">
-                <article class="audience-card is-primary">
-                  <span class="route-label">Kernpfad / agentisches Kopfweh</span>
-                  <h3>Ich arbeite schon mit Agents, aber es wird zu viel.</h3>
-                  <p>
-                    Es ist zu viel Output, aber keine Entscheidung: Claude Code ist offen, Codex
-                    plant weiter, drei Chats widersprechen sich, und am Ende musst du trotzdem
-                    entscheiden. Agenten dürfen arbeiten, aber sie dürfen mir nicht das Projekt aus der Hand nehmen.
-                    HAI macht daraus: ein kleiner, prüfbarer nächster Schritt.
-                  </p>
-                  <div class="route-tags" aria-label="Agent-native Themen">
-                    <span>Zu viel Output</span>
-                    <span>Keine Entscheidung</span>
-                    <span>Prüfbarer Schritt</span>
-                    <span>Projekt behalten</span>
-                  </div>
-                  <div class="route-actions">
-                    <a class="button primary" data-site-event="cta_click" data-event-target="router_agent_workflow" href="mailto:hallo@samuelfleig.com?subject=Agent-native%20HAI%20Fit-Call&amp;body=Hallo%20Samuel%2C%0D%0A%0D%0AIch%20arbeite%20schon%20mit%20Agents%20und%20will%20einen%20Workflow%20sauber%20scopen.%0D%0A%0D%0AWo%20Kontrolle%20bricht%3A%0D%0A%0D%0ATools%2C%20die%20ich%20nutze%3A%0D%0A%0D%0AMoegliche%20Zeiten%3A">Einen chaotischen Agent-Workflow mitbringen</a>
-                    <a class="button" data-site-event="cta_click" data-event-target="hero_product" href="./product/">Angebote ansehen</a>
-                  </div>
-                </article>
-
-                <article class="audience-card">
-                  <span class="route-label">Eingang / erst Orientierung</span>
-                  <h3>Ich will verstehen, was ich an KI abgeben kann, und was nicht.</h3>
-                  <p>
-                    Das ist kein KI-Einsteigerkurs. Es geht darum, Kontrolle, Vertrauen und Grenzen
-                    zu finden, bevor du mehr an Tools oder Agents delegierst. Münztelefon ist für Leute, die nicht lesen wollen oder gerade überfordert sind.
-                  </p>
-                  <div class="route-tags" aria-label="Non-agentic Einstiegsthemen">
-                    <span>Was abgeben?</span>
-                    <span>Was behalten?</span>
-                    <span>Was entscheiden?</span>
-                    <span>Grenzen</span>
-                  </div>
-                  <div class="route-actions">
-                    <a class="button" data-site-event="cta_click" data-event-target="router_orientation" href="mailto:hallo@samuelfleig.com?subject=HAI%20Orientierung&amp;body=Hallo%20Samuel%2C%0D%0A%0D%0AIch%20bin%20noch%20nicht%20agent-native%2C%20will%20aber%20KI-Arbeit%20nutzen%2C%20ohne%20Kontrolle%20zu%20verlieren.%0D%0A%0D%0AWo%20ich%20gerade%20unsicher%20bin%3A%0D%0A%0D%0AWas%20ich%20als%20naechstes%20entscheiden%20will%3A">Orientierung anfragen</a>
-                    <a class="button" data-site-event="cta_click" data-event-target="router_muenztelefon" href="./M%C3%BCnztelfon/">Keine Lust zu lesen: Münztelefon starten</a>
-                  </div>
-                </article>
-              </div>
-            </section>
-          </div>
-      </section>
-
-      <section class="section section-smoke" aria-labelledby="confusion-title">
-        <div class="section-inner split">
-          <div>
-            <p class="kicker reveal">
-              <span class="lang-copy" data-lang-copy="en">The customer pain</span>
-              <span class="lang-copy" data-lang-copy="de">Der eigentliche Schmerz</span>
-            </p>
-            <h2 class="reveal" id="confusion-title">
-              <span class="copy-block" data-lang-copy="en">AI work creates more confusion than momentum.</span>
-              <span class="copy-block" data-lang-copy="de">KI-Arbeit erzeugt oft mehr Unklarheit als Schwung.</span>
-            </h2>
-          </div>
-          <div>
-            <p class="body-copy reveal">
-              <span class="copy-block" data-lang-copy="en">
-                You start with an idea, open three chats, ask for a plan, launch an agent,
-                paste context into another tool, then lose the thread. The output is not
-                wrong. It is just not owned.
-              </span>
-              <span class="copy-block" data-lang-copy="de">
-                Du startest mit einer Idee, öffnest drei Chats, holst einen Plan, startest einen Agenten,
-                kopierst Kontext in das nächste Tool und verlierst den Faden. Der Output ist nicht
-                unbedingt falsch. Er gehört dir nur nicht mehr richtig.
-              </span>
-            </p>
-            <p class="body-copy reveal">
-              <span class="copy-block" data-lang-copy="en">
-                HAI exists for that moment: when the human state is messy, the agents are
-                loud, and the next responsible action is not obvious.
-              </span>
-              <span class="copy-block" data-lang-copy="de">
-                HAI ist für genau diesen Moment da: Der menschliche Zustand ist unordentlich,
-                die Agents produzieren weiter, und die nächste verantwortliche Handlung ist nicht klar.
-              </span>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section class="section fit-call" id="fit-call" aria-labelledby="fit-call-title">
-        <div class="section-inner fit-call-grid">
-          <div class="fit-hook">
-            <p class="kicker reveal">
-              <span class="lang-copy" data-lang-copy="en">20 min HAI fit call</span>
-              <span class="lang-copy" data-lang-copy="de">20-Minuten-Hypothese</span>
-            </p>
-            <h2 class="reveal" id="fit-call-title">
-              <span class="copy-block" data-lang-copy="en">Where do you lose control in your agent workflow?</span>
-              <span class="copy-block" data-lang-copy="de">Wo verlierst du Kontrolle in deinem Agenten-Workflow?</span>
-            </h2>
-            <p class="body-copy reveal">
-              <span class="copy-block" data-lang-copy="en">
-                Bring one real workflow, not a transformation plan. The call is for finding
-                whether HAI can turn your current agent mess into a bounded 4h audit.
-              </span>
-              <span class="copy-block" data-lang-copy="de">
-                Bring einen echten Workflow, keinen Transformationsplan. Der Call testet nur,
-                ob HAI aus deinem aktuellen Agenten-Durcheinander einen begrenzten 4h-Scope machen kann.
-              </span>
-            </p>
-
-            <div class="intake-list reveal" aria-label="Mini intake questions">
-              <div class="intake-question">
-                <div>
-                  <strong>
-                    <span class="lang-copy" data-lang-copy="en">What agent workflow is creating confusion?</span>
-                    <span class="lang-copy" data-lang-copy="de">Welcher Agenten-Workflow erzeugt gerade Verwirrung?</span>
-                  </strong>
-                  <span>
-                    <span class="lang-copy" data-lang-copy="en">Which chats, tools, agents, handoffs, or projects are involved?</span>
-                    <span class="lang-copy" data-lang-copy="de">Welche Chats, Tools, Agents, Übergaben oder Projekte hängen daran?</span>
-                  </span>
-                </div>
-              </div>
-              <div class="intake-question">
-                <div>
-                  <strong>
-                    <span class="lang-copy" data-lang-copy="en">Where do you lose control, overview, or trust?</span>
-                    <span class="lang-copy" data-lang-copy="de">Wo verlierst du Kontrolle, Überblick oder Vertrauen?</span>
-                  </strong>
-                  <span>
-                    <span class="lang-copy" data-lang-copy="en">Name the point where output keeps growing but ownership gets weaker.</span>
-                    <span class="lang-copy" data-lang-copy="de">Benenne den Punkt, an dem Output wächst, aber Ownership schwächer wird.</span>
-                  </span>
-                </div>
-              </div>
-              <div class="intake-question">
-                <div>
-                  <strong>
-                    <span class="lang-copy" data-lang-copy="en">What would be useful after 4 hours?</span>
-                    <span class="lang-copy" data-lang-copy="de">Was wäre nach 4 Stunden wirklich nützlich?</span>
-                  </strong>
-                  <span>
-                    <span class="lang-copy" data-lang-copy="en">A clearer setup, a stop rule, a verifier path, or one next action packet.</span>
-                    <span class="lang-copy" data-lang-copy="de">Ein klareres Setup, eine Stop-Regel, ein Verifier-Pfad oder ein nächstes Handlungspaket.</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <p class="pilot-note reveal">
-              <span class="copy-block" data-lang-copy="en">
-                Pilot status: testing HAI with the first 5-10 real workflows. One workflow,
-                one owner packet, one follow-up.
-              </span>
-              <span class="copy-block" data-lang-copy="de">
-                Pilotstatus: Ich teste HAI an den ersten 5-10 echten Workflows. Ein Workflow,
-                ein Owner Packet, ein Follow-up.
-              </span>
-            </p>
-          </div>
-
-          <aside class="output-panel reveal" aria-label="4 hour audit output">
-            <span class="state-label">
-              <span class="lang-copy" data-lang-copy="en">Visible output</span>
-              <span class="lang-copy" data-lang-copy="de">Sichtbarer Output</span>
-            </span>
-            <h3>
-              <span class="copy-block" data-lang-copy="en">What you get after the 4h audit.</span>
-              <span class="copy-block" data-lang-copy="de">Was nach dem 4h-Audit sichtbar ist.</span>
-            </h3>
-            <p>
-              <span class="copy-block" data-lang-copy="en">
-                A compact owner packet shaped by practical depth: Samuel has already seen
-                how agent workflows drift into overload, weak ownership, and false done signals.
-              </span>
-              <span class="copy-block" data-lang-copy="de">
-                Ein kompaktes Owner Packet aus echter Praxis: Ich kenne die Stellen, an denen
-                Agenten-Workflows in Overload, schwache Ownership und falsche Fertig-Signale kippen.
-              </span>
-            </p>
-            <ul class="output-list">
-              <li>
-                <span class="lang-copy" data-lang-copy="en">Workflow diagnosis</span>
-                <span class="lang-copy" data-lang-copy="de">Workflow-Diagnose</span>
-              </li>
-              <li>
-                <span class="lang-copy" data-lang-copy="en">3 friction points</span>
-                <span class="lang-copy" data-lang-copy="de">3 Reibungspunkte</span>
-              </li>
-              <li>
-                <span class="lang-copy" data-lang-copy="en">3 immediate changes</span>
-                <span class="lang-copy" data-lang-copy="de">3 Sofortänderungen</span>
-              </li>
-              <li>
-                <span class="lang-copy" data-lang-copy="en">Human gates</span>
-                <span class="lang-copy" data-lang-copy="de">Human Gates</span>
-              </li>
-              <li>
-                <span class="lang-copy" data-lang-copy="en">Verification rule</span>
-                <span class="lang-copy" data-lang-copy="de">Prüfregel</span>
-              </li>
-              <li>
-                <span class="lang-copy" data-lang-copy="en">Next Action Packet</span>
-                <span class="lang-copy" data-lang-copy="de">Nächstes Handlungspaket</span>
-              </li>
-            </ul>
-            <p class="trust-bridge">
-              <span class="copy-block" data-lang-copy="en">
-                The trust bridge is simple: he has already been where your problem can go.
-                The value is learning where your agent system breaks, who owns the decision,
-                and how the next step becomes checkable.
-              </span>
-              <span class="copy-block" data-lang-copy="de">
-                Die Trust-Brücke ist einfach: Ich war schon an vielen Stellen, an denen dein Problem hinführen kann.
-                Der Wert liegt darin, herauszufinden, wo dein Agentensystem bricht, wer entscheidet
-                und wie der nächste Schritt prüfbar wird.
-              </span>
-            </p>
-            <div class="fit-actions">
-              <a
-                class="button primary"
-                data-site-event="cta_click"
-                data-event-target="intake_start"
-                href="/intake/"
-              >
-                <span class="lang-copy" data-lang-copy="en">Start workflow intake</span>
-                <span class="lang-copy" data-lang-copy="de">Workflow-Intake starten</span>
-              </a>
-              <a
-                class="button"
-                data-site-event="cta_click"
-                data-event-target="contact_fit_call_cal"
-                href="https://cal.com/human-agent-interface/agent-check"
-                target="_blank"
-                rel="noopener"
-              >
-                <span class="lang-copy" data-lang-copy="en">Book 20 min HAI fit call</span>
-                <span class="lang-copy" data-lang-copy="de">20-Min-Fit-Call buchen</span>
-              </a>
-              <a
-                class="button"
-                data-site-event="cta_click"
-                data-event-target="contact_fit_call"
-                href="mailto:hallo@samuelfleig.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A"
-              >
-                <span class="lang-copy" data-lang-copy="en">Prefer email</span>
-                <span class="lang-copy" data-lang-copy="de">Lieber per Mail</span>
-              </a>
-              <a class="button" data-site-event="cta_click" data-event-target="hero_product" href="./product/">
-                <span class="lang-copy" data-lang-copy="en">See the 4h setup</span>
-                <span class="lang-copy" data-lang-copy="de">4h-Setup ansehen</span>
-              </a>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section class="wide-statement" aria-label="Human tool statement">
-        <div class="section-inner">
-          <p class="tool-line reveal">
-            <span class="copy-block" data-lang-copy="en">Humans are tool-using animals. Agents are the most powerful tool we have ever built.</span>
-            <span class="copy-block" data-lang-copy="de">Menschen nutzen Werkzeuge. Agents sind das mächtigste Werkzeug, das wir bisher gebaut haben.</span>
-          </p>
-          <p class="reveal">
-            <span class="copy-block" data-lang-copy="en">
-              Voice, text, drawing, terminal, IDE, browser, or background process are only
-              surfaces. The real interface is how the human directs, scopes, verifies, and
-              stays aligned with a system that can act.
-            </span>
-            <span class="copy-block" data-lang-copy="de">
-              Stimme, Text, Skizze, Terminal, IDE, Browser oder Hintergrundprozess sind nur
-              Oberflächen. Das echte Interface ist die Frage, wie der Mensch ein handelndes
-              System richtet, begrenzt, prüft und ausgerichtet hält.
-            </span>
-          </p>
-        </div>
-      </section>
-
-      <section class="section authority-teaser" aria-labelledby="authority-title">
-        <div class="section-inner authority-grid">
-          <div>
-            <p class="kicker reveal">
-              <span class="lang-copy" data-lang-copy="en">Why trust this work</span>
-              <span class="lang-copy" data-lang-copy="de">Warum mir diese Arbeit zuzutrauen ist</span>
-            </p>
-            <h2 class="reveal" id="authority-title">
-              <span class="copy-block" data-lang-copy="en">Samuel has already lived where agent work breaks.</span>
-              <span class="copy-block" data-lang-copy="de">Ich kenne die Stellen, an denen Agentenarbeit bricht.</span>
-            </h2>
-            <p class="body-copy reveal">
-              <span class="copy-block" data-lang-copy="en">
-                Samuel Fleig develops Human Agent Interface (HAI) from repeated work with terminal agents,
-                coding agents, harnesses, and owner-control artifacts. HAI-MCP is the open-source MCP
-                control-plane implementation of that method.
-              </span>
-              <span class="copy-block" data-lang-copy="de">
-                Ich habe die spätere Version des Problems schon gesehen: mehr Agents,
-                mehr Output, mehr Dashboards und weniger menschliche Ownership.
-              </span>
-            </p>
-          </div>
-          <aside class="authority-panel reveal" aria-label="Samuel trust layer">
-            <span>
-              <span class="lang-copy" data-lang-copy="en">Proof of depth</span>
-              <span class="lang-copy" data-lang-copy="de">Nachweis von Tiefe</span>
-            </span>
-            <p>
-              <span class="copy-block" data-lang-copy="en">
-                The artifact trail matters because it shows repeated contact with the same failure
-                path: Sidecar, HAI, harnesses, control surfaces, Luis handoffs, and failed
-                control-tower attempts turned into stricter workflow rules.
-              </span>
-              <span class="copy-block" data-lang-copy="de">
-                Die Artefaktspur ist wichtig, weil sie wiederholt denselben Failure-Pfad zeigt:
-                Sidecar, HAI, Harnesses, Kontrollflächen, Luis-Handoffs und gescheiterte
-                Control-Tower-Versuche wurden zu strengeren Workflow-Regeln.
-              </span>
-            </p>
-            <a class="button" href="./sidecar/">
-              <span class="lang-copy" data-lang-copy="en">See the Sidecar control layer</span>
-              <span class="lang-copy" data-lang-copy="de">Sidecar-Kontrollschicht ansehen</span>
-            </a>
-            <a class="button" href="./proof/">
-              <span class="lang-copy" data-lang-copy="en">See proof</span>
-              <span class="lang-copy" data-lang-copy="de">Nachweis ansehen</span>
-            </a>
-          </aside>
-        </div>
-        <div class="section-inner tokscale-proof reveal">
-          <p class="kicker">
-            <span class="lang-copy" data-lang-copy="en">Proof of work · public agent usage</span>
-            <span class="lang-copy" data-lang-copy="de">Arbeitsnachweis · öffentliche Agentennutzung</span>
-          </p>
-          <a class="tokscale-embed" href="https://tokscale.ai/u/smlfg" target="_blank" rel="noopener noreferrer">
-            <img
-              src="https://tokscale.ai/api/embed/smlfg/svg?view=3d"
-              alt="Tokscale Stats for @smlfg"
-              loading="lazy"
-              decoding="async"
-            />
-          </a>
-        </div>
-      </section>
-
-      <section class="section conversion" id="conversion" aria-labelledby="conversion-title">
-        <div class="section-inner">
-          <p class="kicker reveal">
-            <span class="lang-copy" data-lang-copy="en">The product unit is a conversion</span>
-            <span class="lang-copy" data-lang-copy="de">Die kleinste Einheit</span>
-          </p>
-          <h2 class="reveal" id="conversion-title">
-            <span class="copy-block" data-lang-copy="en">From scattered agent work to one concrete packet.</span>
-            <span class="copy-block" data-lang-copy="de">Von verstreuter Agentenarbeit zu einem konkreten Paket.</span>
-          </h2>
-          <div class="conversion-grid">
-            <article class="state before reveal">
-              <div class="state-content">
-                <span class="state-label">
-                  <span class="lang-copy" data-lang-copy="en">Before HAI</span>
-                  <span class="lang-copy" data-lang-copy="de">Vor HAI</span>
-                </span>
-                <h3>
-                  <span class="lang-copy" data-lang-copy="en">Messy human state</span>
-                  <span class="lang-copy" data-lang-copy="de">Unklarer menschlicher Zustand</span>
-                </h3>
-                <ul>
-                  <li>
-                    <span class="lang-copy" data-lang-copy="en">An idea with no shape.</span>
-                    <span class="lang-copy" data-lang-copy="de">Eine Idee ohne Form.</span>
-                  </li>
-                  <li>
-                    <span class="lang-copy" data-lang-copy="en">A stuck project with unclear ownership.</span>
-                    <span class="lang-copy" data-lang-copy="de">Ein festhängendes Projekt mit unklarer Ownership.</span>
-                  </li>
-                  <li>
-                    <span class="lang-copy" data-lang-copy="en">Too many agent threads competing for attention.</span>
-                    <span class="lang-copy" data-lang-copy="de">Zu viele Agenten-Threads konkurrieren um Aufmerksamkeit.</span>
-                  </li>
-                  <li>
-                    <span class="lang-copy" data-lang-copy="en">No trusted next step.</span>
-                    <span class="lang-copy" data-lang-copy="de">Kein vertrauenswürdiger nächster Schritt.</span>
-                  </li>
-                </ul>
-              </div>
-            </article>
-            <article class="state after reveal">
-              <div class="state-content">
-                <span class="state-label">
-                  <span class="lang-copy" data-lang-copy="en">After HAI</span>
-                  <span class="lang-copy" data-lang-copy="de">Nach HAI</span>
-                </span>
-                <h3>
-                  <span class="lang-copy" data-lang-copy="en">Agent-ready next action</span>
-                  <span class="lang-copy" data-lang-copy="de">Agent-ready nächster Schritt</span>
-                </h3>
-                <ul>
-                  <li>
-                    <span class="lang-copy" data-lang-copy="en">The problem type is named.</span>
-                    <span class="lang-copy" data-lang-copy="de">Der Problemtyp ist benannt.</span>
-                  </li>
-                  <li>
-                    <span class="lang-copy" data-lang-copy="en">Human decisions stay with the human.</span>
-                    <span class="lang-copy" data-lang-copy="de">Menschliche Entscheidungen bleiben beim Menschen.</span>
-                  </li>
-                  <li>
-                    <span class="lang-copy" data-lang-copy="en">Agent work is bounded and verifiable.</span>
-                    <span class="lang-copy" data-lang-copy="de">Agentenarbeit ist begrenzt und prüfbar.</span>
-                  </li>
-                  <li>
-                    <span class="lang-copy" data-lang-copy="en">The next packet of work is concrete.</span>
-                    <span class="lang-copy" data-lang-copy="de">Das nächste Arbeitspaket ist konkret.</span>
-                  </li>
-                </ul>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="category-title">
-        <div class="section-inner split">
-          <div>
-            <p class="kicker reveal">
-              <span class="lang-copy" data-lang-copy="en">The interface shift</span>
-              <span class="lang-copy" data-lang-copy="de">Der Interface-Wechsel</span>
-            </p>
-            <h2 class="reveal" id="category-title">
-              <span class="copy-block" data-lang-copy="en">GUI gave us control over screens. HAI gives us control over agency.</span>
-              <span class="copy-block" data-lang-copy="de">GUI gab uns Kontrolle über Screens. HAI gibt Kontrolle über Handlung.</span>
-            </h2>
-            <p class="hai-definition reveal" id="hai-definition">
-              <span class="copy-block" data-lang-copy="en"><dfn>Human–Agent Interface (HAI)</dfn> is an adaptive interaction layer that connects humans and AI agents across different modalities. It optimizes which information is exchanged when and how, to enable mutual understanding and effective collaboration – personalized and under human control.</span>
-              <span class="copy-block" data-lang-copy="de"><dfn>Human–Agent Interface (HAI)</dfn> ist eine adaptive Interaktionsschicht, die Menschen und KI-Agenten über unterschiedliche Modalitäten verbindet. Sie optimiert, welche Informationen wann und wie ausgetauscht werden, um gegenseitiges Verständnis und wirksame Zusammenarbeit zu ermöglichen – personalisiert und unter menschlicher Kontrolle.</span>
-            </p>
-          </div>
-          <div class="quote-rail">
-            <div class="quote-tile reveal">
-              <span>CLI</span>
-              <strong>
-                <span class="lang-copy" data-lang-copy="en">Tell the machine what to run.</span>
-                <span class="lang-copy" data-lang-copy="de">Sag der Maschine, was sie ausführen soll.</span>
-              </strong>
-            </div>
-            <div class="quote-tile reveal">
-              <span>GUI</span>
-              <strong>
-                <span class="lang-copy" data-lang-copy="en">Point at what the software exposes.</span>
-                <span class="lang-copy" data-lang-copy="de">Zeig auf das, was die Software sichtbar macht.</span>
-              </strong>
-            </div>
-            <div class="quote-tile reveal">
-              <span>HAI</span>
-              <strong>
-                <span class="lang-copy" data-lang-copy="en">Shape what an agent should do next.</span>
-                <span class="lang-copy" data-lang-copy="de">Forme, was ein Agent als Nächstes tun darf.</span>
-              </strong>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="method-title">
-        <div class="section-inner">
-          <p class="kicker reveal">
-            <span class="lang-copy" data-lang-copy="en">The minimum loop</span>
-            <span class="lang-copy" data-lang-copy="de">Der minimale Loop</span>
-          </p>
-          <h2 class="reveal" id="method-title">
-            <span class="copy-block" data-lang-copy="en">A human-owned path into agentic work.</span>
-              <span class="copy-block" data-lang-copy="de">Ein vom Menschen gesteuerter Weg in agentische Arbeit.</span>
-          </h2>
-          <div class="method-grid" aria-label="HAI method">
-            <article class="step reveal">
-              <span>01</span>
-              <h3>Intake</h3>
-              <p>
-                <span class="lang-copy" data-lang-copy="en">Capture the messy state without pretending it is already a task.</span>
-                <span class="lang-copy" data-lang-copy="de">Den unklaren Zustand aufnehmen, ohne so zu tun, als wäre er schon ein Task.</span>
-              </p>
-            </article>
-            <article class="step reveal">
-              <span>02</span>
-              <h3>
-                <span class="lang-copy" data-lang-copy="en">Classify</span>
-                <span class="lang-copy" data-lang-copy="de">Einordnen</span>
-              </h3>
-              <p>
-                <span class="lang-copy" data-lang-copy="en">Name what this is: decision, research, build, repair, or human-only.</span>
-                <span class="lang-copy" data-lang-copy="de">Benennen, was es ist: Entscheidung, Recherche, Build, Reparatur oder human-only.</span>
-              </p>
-            </article>
-            <article class="step reveal">
-              <span>03</span>
-              <h3>
-                <span class="lang-copy" data-lang-copy="en">Separate</span>
-                <span class="lang-copy" data-lang-copy="de">Trennen</span>
-              </h3>
-              <p>
-                <span class="lang-copy" data-lang-copy="en">Keep judgment, risk, and irreversible choices with the human.</span>
-                <span class="lang-copy" data-lang-copy="de">Urteil, Risiko und irreversible Entscheidungen beim Menschen lassen.</span>
-              </p>
-            </article>
-            <article class="step reveal">
-              <span>04</span>
-              <h3>Scope</h3>
-              <p>
-                <span class="lang-copy" data-lang-copy="en">Bound the agent work so it can be executed and checked.</span>
-                <span class="lang-copy" data-lang-copy="de">Agentenarbeit so begrenzen, dass sie ausgeführt und geprüft werden kann.</span>
-              </p>
-            </article>
-            <article class="step reveal">
-              <span>05</span>
-              <h3>Packet</h3>
-              <p>
-                <span class="lang-copy" data-lang-copy="en">Produce the next concrete action the agent can actually take.</span>
-                <span class="lang-copy" data-lang-copy="de">Die nächste konkrete Handlung erzeugen, die ein Agent wirklich tun kann.</span>
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section contact" id="contact" aria-labelledby="contact-title">
-        <div class="section-inner contact-panel">
-          <div>
-            <p class="kicker reveal">
-              <span class="lang-copy" data-lang-copy="en">20 min HAI fit call</span>
-              <span class="lang-copy" data-lang-copy="de">Fit-Call als Test</span>
-            </p>
-            <h2 class="reveal" id="contact-title">
-              <span class="copy-block" data-lang-copy="en">Bring one workflow where control breaks.</span>
-              <span class="copy-block" data-lang-copy="de">Bring einen Workflow, an dem Kontrolle bricht.</span>
-            </h2>
-          </div>
-          <div class="contact-note reveal">
-            <p>
-              <span class="copy-block" data-lang-copy="en">
-                Show me one agent workflow that currently creates confusion. Leave with
-                the next concrete packet of work: what this is, what an agent should do,
-                what you must decide yourself, and what happens next.
-              </span>
-              <span class="copy-block" data-lang-copy="de">
-                Zeig mir einen Agenten-Workflow, der gerade Verwirrung erzeugt. Ziel ist kein Verkaufstrick,
-                sondern ein Test: Wird daraus ein konkretes Arbeitspaket, eine klare menschliche Entscheidung
-                und ein prüfbarer nächster Schritt?
-              </span>
-            </p>
-            <p style="margin-top: 24px; display: flex; flex-wrap: wrap; gap: 12px;">
-              <a
-                class="button primary"
-                data-site-event="cta_click"
-                data-event-target="contact_fit_call_cal"
-                href="https://cal.com/human-agent-interface/agent-check"
-                target="_blank"
-                rel="noopener"
-              >
-                <span class="lang-copy" data-lang-copy="en">Book 20 min HAI fit call</span>
-                <span class="lang-copy" data-lang-copy="de">20-Min-Fit-Call buchen</span>
-              </a>
-              <a
-                class="button"
-                data-site-event="cta_click"
-                data-event-target="contact_fit_call"
-                href="mailto:hallo@samuelfleig.com?subject=20%20min%20HAI%20fit%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20book%20a%2020%20min%20HAI%20fit%20call.%0D%0A%0D%0A1.%20What%20agent%20workflow%20is%20creating%20confusion%3F%0D%0A%0D%0A2.%20Where%20do%20I%20lose%20control%2C%20overview%2C%20or%20trust%3F%0D%0A%0D%0A3.%20What%20would%20be%20useful%20after%204%20hours%3F%0D%0A%0D%0APreferred%20time%20windows%3A"
-              >
-                <span class="lang-copy" data-lang-copy="en">Prefer email</span>
-                <span class="lang-copy" data-lang-copy="de">Lieber per Mail</span>
-              </a>
-            </p>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <div class="section-inner">
-        <span>Human Agent Interface (HAI) by Samuel Fleig</span>
-        <span>
-          <span class="lang-copy" data-lang-copy="en">CLI -> TUI -> GUI -> HAI</span>
-          <span class="lang-copy" data-lang-copy="de">CLI -> TUI -> GUI -> HAI: Kontrolle über Agentenarbeit</span>
-        </span>
-        <span style="display: inline-flex; gap: 14px; flex-wrap: wrap;">
-          <a href="./impressum/" style="color: inherit; text-decoration: underline; text-underline-offset: 3px;">Impressum</a>
-          <a href="./datenschutz/" style="color: inherit; text-decoration: underline; text-underline-offset: 3px;">Datenschutz</a>
-        </span>
+            <figcaption>Du löst aus. Der Agent schreibt auf dieselbe Seite. Du entscheidest, ob er darf.</figcaption>
+          </figure>
+        </aside>
       </div>
-    </footer>
-
-    <script>
-      document.documentElement.classList.add("js");
-
-      const HERO_EXPERIMENT_ID = "homepage-hero-2026-05-23";
-      const HERO_VARIANTS = ["A_control", "B_offer_first", "C_proof_first"];
-
-      function isHeroVariant(value) {
-        return HERO_VARIANTS.includes(value);
-      }
-
-      function chooseHeroVariant() {
-        const params = new URLSearchParams(window.location.search);
-        const previewVariant = params.get("hero_variant");
-        if (isHeroVariant(previewVariant)) {
-          document.documentElement.dataset.heroVariant = previewVariant;
-          document.documentElement.dataset.heroExperiment = HERO_EXPERIMENT_ID;
-          return { variant: previewVariant, preview: true };
-        }
-
-        // Keine Cookies/kein Speicher: Variante kommt vom Server oder wird pro Aufruf zufaellig gewaehlt.
-        let variant = document.documentElement.dataset.heroVariant;
-        if (!isHeroVariant(variant)) {
-          variant = HERO_VARIANTS[Math.floor(Math.random() * HERO_VARIANTS.length)];
-        }
-
-        document.documentElement.dataset.heroVariant = variant;
-        document.documentElement.dataset.heroExperiment = HERO_EXPERIMENT_ID;
-        return { variant, preview: false };
-      }
-
-      const heroExperiment = chooseHeroVariant();
-
-      const storedLang = (() => {
-        try {
-          return localStorage.getItem("haiLang");
-        } catch {
-          return null;
-        }
-      })();
-      const browserLang = (navigator.languages || [navigator.language || "en"]).some((lang) => lang.toLowerCase().startsWith("de")) ? "de" : "en";
-
-      function setLanguage(lang, persist = false) {
-        const normalized = lang === "de" ? "de" : "en";
-        document.documentElement.classList.toggle("lang-de", normalized === "de");
-        document.documentElement.classList.toggle("lang-en", normalized === "en");
-        document.documentElement.lang = normalized;
-        document.querySelectorAll("[data-lang-toggle]").forEach((button) => {
-          button.setAttribute("aria-pressed", String(button.dataset.langToggle === normalized));
-        });
-
-        if (persist) {
-          try {
-            localStorage.setItem("haiLang", normalized);
-          } catch {
-            /* Language preference is optional. */
-          }
-        }
-      }
-
-      document.querySelectorAll("[data-lang-toggle]").forEach((button) => {
-        button.addEventListener("click", () => setLanguage(button.dataset.langToggle, true));
-      });
-      setLanguage(storedLang || browserLang);
-
-      function viewportClass() {
-        if (window.matchMedia("(max-width: 620px)").matches) return "mobile";
-        if (window.matchMedia("(max-width: 900px)").matches) return "tablet";
-        return "desktop";
-      }
-
-      function sendSiteEvent(event, target = "") {
-        if (heroExperiment.preview) return;
-
-        const payload = JSON.stringify({
-          experiment_id: HERO_EXPERIMENT_ID,
-          variant: heroExperiment.variant,
-          event,
-          target,
-          path: window.location.pathname || "/",
-          language: document.documentElement.lang || "en",
-          viewport_class: viewportClass(),
-        });
-
-        if (navigator.sendBeacon) {
-          const body = new Blob([payload], { type: "application/json" });
-          if (navigator.sendBeacon("/api/site-event", body)) return;
-        }
-
-        fetch("/api/site-event", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: payload,
-          keepalive: true,
-        }).catch(() => {
-          /* Analytics must never block navigation. */
-        });
-      }
-
-      sendSiteEvent("hero_impression");
-
-      document.querySelectorAll("[data-site-event]").forEach((element) => {
-        element.addEventListener("click", () => {
-          sendSiteEvent(element.dataset.siteEvent, element.dataset.eventTarget || "");
-        });
-      });
-
-      document.querySelectorAll(".epoch[data-stage]").forEach((button) => {
-        button.addEventListener("click", () => {
-          button.setAttribute("aria-pressed", String(button.getAttribute("aria-pressed") !== "true"));
-        });
-      });
-
-      const canvas = document.getElementById("agentField");
-      const ctx = canvas.getContext("2d");
-      const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-      let width = 0;
-      let height = 0;
-      let ratio = 1;
-      let particles = [];
-      let pointer = { x: 0.72, y: 0.38 };
-
-      function resize() {
-        ratio = Math.min(window.devicePixelRatio || 1, 2);
-        width = canvas.clientWidth;
-        height = canvas.clientHeight;
-        canvas.width = Math.floor(width * ratio);
-        canvas.height = Math.floor(height * ratio);
-        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-
-        const count = Math.max(38, Math.min(86, Math.floor(width / 18)));
-        particles = Array.from({ length: count }, (_, index) => ({
-          x: (index * 193) % Math.max(width, 1),
-          y: (index * 317) % Math.max(height, 1),
-          vx: ((index % 7) - 3) * 0.08,
-          vy: (((index * 3) % 9) - 4) * 0.06,
-          r: 1.4 + (index % 4) * 0.65
-        }));
-      }
-
-      function drawGrid(time) {
-        ctx.clearRect(0, 0, width, height);
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = "#090a08";
-        ctx.fillRect(0, 0, width, height);
-
-        const spacing = Math.max(54, Math.min(92, width / 14));
-        ctx.lineWidth = 1;
-        for (let x = -spacing; x < width + spacing; x += spacing) {
-          const wave = Math.sin(time * 0.0004 + x * 0.01) * 16;
-          ctx.strokeStyle = "rgba(247, 241, 223, 0.055)";
-          ctx.beginPath();
-          ctx.moveTo(x + wave, 0);
-          ctx.lineTo(x - wave * 0.4, height);
-          ctx.stroke();
-        }
-        for (let y = -spacing; y < height + spacing; y += spacing) {
-          ctx.strokeStyle = "rgba(247, 241, 223, 0.045)";
-          ctx.beginPath();
-          ctx.moveTo(0, y);
-          ctx.lineTo(width, y + Math.sin(time * 0.0005 + y * 0.01) * 18);
-          ctx.stroke();
-        }
-      }
-
-      function drawParticles(time) {
-        const focusX = pointer.x * width;
-        const focusY = pointer.y * height;
-
-        for (const point of particles) {
-          point.x += media.matches ? 0 : point.vx;
-          point.y += media.matches ? 0 : point.vy;
-
-          if (point.x < -20) point.x = width + 20;
-          if (point.x > width + 20) point.x = -20;
-          if (point.y < -20) point.y = height + 20;
-          if (point.y > height + 20) point.y = -20;
-
-          const dx = point.x - focusX;
-          const dy = point.y - focusY;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 190) {
-            ctx.strokeStyle = `rgba(167, 255, 79, ${0.2 * (1 - distance / 190)})`;
-            ctx.beginPath();
-            ctx.moveTo(focusX, focusY);
-            ctx.lineTo(point.x, point.y);
-            ctx.stroke();
-          }
-
-          ctx.fillStyle = distance < 190 ? "rgba(167, 255, 79, 0.86)" : "rgba(247, 241, 223, 0.28)";
-          ctx.beginPath();
-          ctx.arc(point.x, point.y, point.r, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        const pulse = 12 + Math.sin(time * 0.003) * 4;
-        ctx.strokeStyle = "rgba(167, 255, 79, 0.64)";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.arc(focusX, focusY, pulse, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.fillStyle = "rgba(167, 255, 79, 0.18)";
-        ctx.beginPath();
-        ctx.arc(focusX, focusY, pulse * 2.6, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      function frame(time) {
-        drawGrid(time);
-        drawParticles(time);
-        if (!media.matches) requestAnimationFrame(frame);
-      }
-
-      const siteNav = document.querySelector(".nav");
-      const syncNav = () => {
-        if (siteNav) siteNav.classList.toggle("is-scrolled", window.scrollY > 40);
-      };
-      syncNav();
-      window.addEventListener("scroll", syncNav, { passive: true });
-
-      // Mega-Menü: Hover (Desktop), Klick, Tastatur, ESC, Klick daneben.
-      const hoverCapable = window.matchMedia("(hover: hover) and (pointer: fine)");
-      const compactNav = window.matchMedia("(max-width: 760px)");
-      const menuItems = Array.from(document.querySelectorAll(".hainav-item"));
-      const navMenu = document.querySelector(".hainav-menu");
-      const menuToggle = document.querySelector(".nav-menu-toggle");
-      let hoverTimer = null;
-
-      const setMenuOpen = (item, open) => {
-        item.classList.toggle("is-open", open);
-        const trigger = item.querySelector(".hainav-trigger");
-        if (trigger) trigger.setAttribute("aria-expanded", open ? "true" : "false");
-      };
-
-      const closeMenus = (except) => {
-        menuItems.forEach((item) => {
-          if (item !== except) setMenuOpen(item, false);
-        });
-      };
-
-      const setMobileMenuOpen = (open) => {
-        if (!navMenu || !menuToggle) return;
-        navMenu.classList.toggle("is-open", open);
-        menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
-      };
-
-      menuItems.forEach((item) => {
-        const trigger = item.querySelector(".hainav-trigger");
-        if (!trigger) return;
-
-        item.addEventListener("pointerenter", () => {
-          if (!hoverCapable.matches || compactNav.matches) return;
-          window.clearTimeout(hoverTimer);
-          closeMenus(item);
-          setMenuOpen(item, true);
-        });
-
-        item.addEventListener("pointerleave", () => {
-          if (!hoverCapable.matches || compactNav.matches) return;
-          window.clearTimeout(hoverTimer);
-          hoverTimer = window.setTimeout(() => setMenuOpen(item, false), 140);
-        });
-
-        trigger.addEventListener("click", () => {
-          if (hoverCapable.matches && !compactNav.matches) {
-            // Hover already opens the panel on desktop; a click keeps it open
-            // instead of toggling it shut.
-            window.clearTimeout(hoverTimer);
-            closeMenus(item);
-            setMenuOpen(item, true);
-            return;
-          }
-          const willOpen = !item.classList.contains("is-open");
-          closeMenus(item);
-          setMenuOpen(item, willOpen);
-        });
-
-        item.addEventListener("keydown", (event) => {
-          if (event.key === "Escape") {
-            event.stopPropagation();
-            setMenuOpen(item, false);
-            trigger.focus();
-          }
-        });
-
-        item.addEventListener("focusout", (event) => {
-          if (!item.contains(event.relatedTarget)) setMenuOpen(item, false);
-        });
-      });
-
-      if (menuToggle) {
-        menuToggle.addEventListener("click", () => {
-          const willOpen = !(navMenu && navMenu.classList.contains("is-open"));
-          if (willOpen) closeMenus();
-          setMobileMenuOpen(willOpen);
-        });
-      }
-
-      document.addEventListener("click", (event) => {
-        if (!event.target.closest(".hainav-item") && !event.target.closest(".nav-menu-toggle")) {
-          closeMenus();
-        }
-        if (
-          navMenu &&
-          navMenu.classList.contains("is-open") &&
-          !event.target.closest(".hainav-menu") &&
-          !event.target.closest(".nav-menu-toggle")
-        ) {
-          setMobileMenuOpen(false);
-        }
-      });
-
-      document.addEventListener("keydown", (event) => {
-        if (event.key !== "Escape" || !navMenu || !navMenu.classList.contains("is-open")) return;
-        setMobileMenuOpen(false);
-        if (menuToggle) menuToggle.focus();
-      });
-
-      window.addEventListener("resize", () => {
-        if (!compactNav.matches) setMobileMenuOpen(false);
-      });
-
-      window.addEventListener("resize", resize);
-      window.addEventListener("pointermove", (event) => {
-        pointer = {
-          x: event.clientX / Math.max(window.innerWidth, 1),
-          y: event.clientY / Math.max(window.innerHeight, 1)
-        };
-      });
-
-      resize();
-      requestAnimationFrame(frame);
-    </script>
-
-    <!-- Erklär-Agent: /api/explain/* -> Worker cwh-11-explain (smlfg/claudeflareworkerhaus) -->
-    <style>
-      .explain-fab { position: fixed; right: 16px; bottom: 16px; z-index: 50; padding: 12px 18px; border: 1px solid var(--signal); border-radius: 999px; background: var(--void); color: var(--signal); font: inherit; font-weight: 600; cursor: pointer; }
-      .explain-box { position: fixed; right: 16px; bottom: 72px; z-index: 50; width: min(380px, calc(100vw - 32px)); max-height: min(520px, 70vh); display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 14px; background: var(--void); color: var(--ink); }
-      .explain-box[hidden] { display: none; }
-      .explain-log { flex: 1; overflow-y: auto; padding: 14px; display: grid; gap: 10px; font-size: 0.95rem; line-height: 1.45; }
-      .explain-log p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
-      .explain-log .q { color: var(--muted); }
-      .explain-log .hint { color: var(--dim); font-size: 0.85rem; }
-      .explain-form { display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--line-soft); }
-      .explain-form input { flex: 1; min-width: 0; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); font: inherit; }
-      .explain-form button { padding: 10px 14px; border: 0; border-radius: 8px; background: var(--signal); color: var(--void); font: inherit; font-weight: 600; cursor: pointer; }
-    </style>
-    <button class="explain-fab" id="explainFab" type="button" aria-expanded="false" aria-controls="explainBox">Lass es dir erklären</button>
-    <section class="explain-box" id="explainBox" hidden aria-label="Erklär-Agent">
-      <div class="explain-log" id="explainLog" aria-live="polite">
-        <p>Ich bin ein Agent und erkläre dir HAI. Frag einfach, z. B. „Was ist HAI?“ oder „Was kostet die Setup-Rettung?“</p>
-        <p class="hint"><strong>Du sprichst mit einer KI.</strong> Sie antwortet nur aus den Inhalten dieser Seite und kann sich irren. Deine Nachrichten werden über Cloudflare verarbeitet, bitte gib keine persönlichen Daten ein. <a href="https://www.human-agent-interface.com/datenschutz/#ki-chat">Datenschutz</a></p>
-      </div>
-      <form class="explain-form" id="explainForm">
-        <input id="explainInput" maxlength="500" autocomplete="off" placeholder="Deine Frage" aria-label="Deine Frage" required>
-        <button type="submit">Fragen</button>
-      </form>
     </section>
-    <script>
-      (() => {
-        const fab = document.getElementById("explainFab"), box = document.getElementById("explainBox");
-        const log = document.getElementById("explainLog"), form = document.getElementById("explainForm"), input = document.getElementById("explainInput");
-        let ready = false;
-        const say = (text, cls) => { const p = document.createElement("p"); if (cls) p.className = cls; p.textContent = text; log.append(p); log.scrollTop = log.scrollHeight; return p; };
-        const post = (path, body) => fetch("/api/explain/" + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) })
-          .then(async (r) => ({ status: r.status, data: await r.json().catch(() => ({})) }));
-        fab.addEventListener("click", () => { box.hidden = !box.hidden; fab.setAttribute("aria-expanded", String(!box.hidden)); if (!box.hidden) input.focus(); });
-        form.addEventListener("submit", async (event) => {
-          event.preventDefault();
-          const question = input.value.trim();
-          if (!question) return;
-          input.value = ""; say(question, "q");
-          const pending = say("…", "hint");
-          try {
-            if (!ready) {
-              const c = await post("checkout");
-              if (c.status === 429) throw new Error("Für heute sind alle Erklär-Gespräche verbraucht. Schreib gern an hallo@samuelfleig.com.");
-              if (!c.data.ok) throw new Error("Der Erklär-Agent ist gerade nicht erreichbar.");
-              await post("session/start"); ready = true;
-            }
-            const a = await post("session/advisory", { message: question });
-            if (a.data.error === "secret_like_input_rejected") throw new Error("Das sah nach einem Passwort oder Schlüssel aus. Bitte keine Geheimnisse eingeben.");
-            if (a.status === 429) throw new Error("Dieses Gespräch ist am Limit. Mehr gibt es im kostenlosen 20-Minuten-Gespräch: https://cal.com/human-agent-interface/agent-check");
-            if (!a.data.ok) throw new Error("Die Antwort konnte nicht erzeugt werden.");
-            pending.className = ""; pending.textContent = a.data.message;
-          } catch (err) { pending.className = "hint"; pending.textContent = err.message; }
-        });
-      })();
-    </script>
-  </body>
+
+    <section class="section" id="schicht" data-section="02 · Die Schicht">
+      <div class="wrap grid">
+        <div class="rail meta">01 / Die Schicht</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Definition</p>
+            <h2>Eine Schicht, kein Chatfenster.</h2>
+          </div>
+          <p>Wenn Agenten selbstständig planen, ausführen und delegieren, braucht es eine Ebene darüber. Nicht noch ein Fenster, in das man tippt. Eine Schicht, die festhält, wer die Aufgabe besitzt, was der Agent tun darf, wann er stoppen muss und welche Belege es gibt.<sup><a href="#fn1" id="ref1" aria-label="Fußnote 1">1</a></sup></p>
+          <ol class="components">
+            <li>
+              <span class="num">01</span>
+              <div><strong>Beobachtbar</strong><span>Du siehst, was der Agent tut und warum.</span></div>
+            </li>
+            <li>
+              <span class="num">02</span>
+              <div><strong>Begrenzt</strong><span>Aufgaben haben Scope, Rechte und Stop-Regeln.</span></div>
+            </li>
+            <li>
+              <span class="num">03</span>
+              <div><strong>Prüfbar</strong><span>Ergebnisse brauchen Belege, nicht Plausibilität.</span></div>
+            </li>
+            <li>
+              <span class="num">04</span>
+              <div><strong>Menschlich verantwortet</strong><span>Entscheidungen bleiben bei einer Person.</span></div>
+            </li>
+          </ol>
+        </div>
+        <aside class="aside" aria-label="Abgrenzung">
+          <p class="note"><strong>Abgrenzung.</strong> HAI ist kein Chat-Interface und keine fertige Enterprise-Plattform. HAI ist ein Ansatz und eine Open-Source-Kontrollschicht für menschlich verantwortete Agentenarbeit.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="03 · Das Problem">
+      <div class="wrap grid">
+        <div class="rail meta">02 / Das Problem</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Warum es HAI braucht</p>
+            <h2>Das Problem ist nicht der Agent.</h2>
+          </div>
+          <p>Sondern die Lücke zwischen Ausführung und Verantwortung. Sobald mehrere Agenten zusammenarbeiten, weiß niemand mehr genau, wer was veranlasst hat, welche Grenzen galten und warum ein Ergebnis als fertig gilt.</p>
+          <p>HAI schließt diese Lücke nicht mit mehr Automatisierung, sondern mit einer Schicht, die Arbeit beobachtbar, begrenzt, prüfbar und menschlich verantwortet macht.</p>
+        </div>
+        <aside class="aside" aria-label="Ohne HAI">
+          <p class="note"><strong>Ohne HAI:</strong> Die Arbeit ist schnell. Die Verantwortung ist unsichtbar.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="beweis" data-section="04 · Der Beweis">
+      <div class="wrap grid">
+        <div class="rail meta">03 / Der Beweis</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Drei Teile</p>
+            <h2>Drei Teile. Ein Prinzip.</h2>
+          </div>
+          <div class="entries">
+            <article class="entry reveal">
+              <div class="num">01</div>
+              <div>
+                <h3>PenEcho — der Agent schreibt auf dieselbe Seite zurück.</h3>
+                <p>Du rechnest mit dem Stift auf dem reMarkable. Der Agent liest die Seite, prüft den Schritt und schreibt einen kurzen Hinweis mit Tinte zurück — rot für falsch, grün für richtig. Kein Chatfenster, kein Gerätewechsel. Deine Schrift bleibt stehen.</p>
+                <dl><dt>Kanal</dt><dd>Stift und E-Ink</dd><dt>Status</dt><dd>L1 in Arbeit</dd></dl>
+              </div>
+              <span class="status" data-state="wip">L1 in Arbeit</span>
+            </article>
+            <article class="entry reveal">
+              <div class="num">02</div>
+              <div>
+                <h3>HAI-MCP — die Control Plane.</h3>
+                <p>Missionen, Verträge, Leases, Owner-Gates und Audit. Der Server ruft selbst kein Modell auf. 23 Tools (Glama, 08.09.2026), offen auf GitHub, modellunabhängig über MCP.</p>
+                <dl><dt>Kanal</dt><dd>MCP</dd><dt>Status</dt><dd>Open Source</dd></dl>
+              </div>
+              <span class="status" data-state="live">Open Source</span>
+            </article>
+            <article class="entry reveal">
+              <div class="num">03</div>
+              <div>
+                <h3>Plaud — Sprache als Eingang.</h3>
+                <p>223 Transkripte aus fünf Monaten (eigene Zählung, 30.10.2026). Plaud liefert die Aufnahme, HAI entscheidet, was daraus wird. Typisch höchstens drei Verweise pro Aufnahme — der Rest wird geparkt.</p>
+                <dl><dt>Kanal</dt><dd>Sprache</dd><dt>Status</dt><dd>Praxis</dd></dl>
+              </div>
+              <span class="status">Praxis</span>
+            </article>
+          </div>
+          <p class="note" style="margin-top:1.75rem"><strong>Ehrlich gesagt:</strong> Keiner dieser Teile ist HAI allein. HAI ist die Schicht, die sie verbindet. Heute ist das eine gelebte Praxis, noch keine verbundene Runtime.</p>
+        </div>
+        <aside class="aside" aria-label="Öffentlich">
+          <p class="note"><strong>Öffentlich:</strong> HAI-MCP ist Open Source. Die anderen Teile werden dokumentiert, sobald sie belastbar sind.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="gate" data-section="05 · Das Gate">
+      <div class="wrap grid">
+        <div class="rail meta">04 / Das Gate</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Die These als Interaktion</p>
+            <h2>Der Agent will handeln.<br><em>Du entscheidest.</em></h2>
+          </div>
+          <p>Drei Vorschläge, ein Gate. Nichts wird ausgeführt, bevor du freigibst.</p>
+
+          <div class="gate" data-gate role="group" aria-labelledby="gate-label">
+            <div class="gate-head">
+              <span id="gate-label">Beispiel-Gate · Mission 042</span>
+              <span data-gate-status role="status" aria-live="polite" aria-atomic="true">0 freigegeben · 0 abgelehnt · 3 offen</span>
+            </div>
+            <div class="gate-item" data-target="gate_read" role="group" aria-labelledby="gate-read-title" aria-describedby="gate-read-desc">
+              <span class="num">01</span>
+              <div class="what"><strong id="gate-read-title">Notiz vom 12. Juni lesen</strong><span id="gate-read-desc">Lesezugriff · keine Änderung</span></div>
+              <div class="gate-actions">
+                <button class="btn" type="button" data-action="approve" aria-pressed="false" aria-label="Freigeben: Notiz vom 12. Juni lesen">Freigeben</button>
+                <button class="btn deny" type="button" data-action="deny" aria-pressed="false" aria-label="Ablehnen: Notiz vom 12. Juni lesen">Ablehnen</button>
+              </div>
+            </div>
+            <div class="gate-item" data-target="gate_write" role="group" aria-labelledby="gate-write-title" aria-describedby="gate-write-desc">
+              <span class="num">02</span>
+              <div class="what"><strong id="gate-write-title">Zusammenfassung in dein Notizbuch schreiben</strong><span id="gate-write-desc">Schreibzugriff · dein Gerät</span></div>
+              <div class="gate-actions">
+                <button class="btn" type="button" data-action="approve" aria-pressed="false" aria-label="Freigeben: Zusammenfassung in dein Notizbuch schreiben">Freigeben</button>
+                <button class="btn deny" type="button" data-action="deny" aria-pressed="false" aria-label="Ablehnen: Zusammenfassung in dein Notizbuch schreiben">Ablehnen</button>
+              </div>
+            </div>
+            <div class="gate-item" data-target="gate_send" role="group" aria-labelledby="gate-send-title" aria-describedby="gate-send-desc">
+              <span class="num">03</span>
+              <div class="what"><strong id="gate-send-title">Zusammenfassung an das Team senden</strong><span id="gate-send-desc">Externer Versand · verlässt das Gerät</span></div>
+              <div class="gate-actions">
+                <button class="btn" type="button" data-action="approve" aria-pressed="false" aria-label="Freigeben: Zusammenfassung an das Team senden">Freigeben</button>
+                <button class="btn deny" type="button" data-action="deny" aria-pressed="false" aria-label="Ablehnen: Zusammenfassung an das Team senden">Ablehnen</button>
+              </div>
+            </div>
+            <div class="gate-foot">
+              <span>Demo · nichts verlässt dieses Gerät ohne Freigabe.</span>
+              <button class="btn" type="button" data-action="reset">Beispiel zurücksetzen</button>
+            </div>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Entscheidung">
+          <p class="note">Jede Freigabe ist eine Entscheidung, kein Klick. Genau das ist der Unterschied zwischen einem Agenten, der arbeitet, und einem, der arbeitet, ohne dass jemand weiß, wofür.</p>
+        </aside>
+      </div>
+    </section>
+
+
+    <section class="section" id="angebot" data-section="06 · Angebot">
+      <div class="wrap grid">
+        <div class="rail meta">05 / Angebot</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Für dein Setup</p>
+            <h2>Du willst das für deine Agenten?</h2>
+          </div>
+          <p>20 Minuten, kostenlos: ein echter Workflow, eine ehrliche Einschätzung. Wenn es passt, wird daraus ein 4h-Setup ab 500 € — begrenzt, prüfbar, mit Human Gates.</p>
+          <div class="actions">
+            <a href="https://cal.com/human-agent-interface/agent-check" rel="external" data-target="contact">Termin buchen</a>
+            <a href="/agentfaehig/" data-target="agentfaehig">Angebote ansehen</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Angebot">
+          <p class="note"><strong>Kein Verkaufsgespräch:</strong> ein Workflow, eine Entscheidung. Wenn HAI nicht passt, sagen wir das.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="mesh" data-section="07 · Das Mesh">
+      <div class="wrap grid">
+        <div class="rail meta">06 / Das Mesh</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Adressen</p>
+            <h2>Ein Herz, mehrere Adressen.</h2>
+          </div>
+          <p>HAI ist der Kern. Verkauf, Einstieg und Werkzeuge liegen auf eigenen Domains. Zwei sind live: diese Seite und agentfähig.de. Der Rest ist geplant.</p>
+          <table class="mesh-table">
+            <thead>
+              <tr><th scope="col">Domain</th><th scope="col">Rolle</th><th scope="col">Status</th></tr>
+            </thead>
+            <tbody>
+              <tr data-state="live"><td data-label="Domain">human-agent-interface.com</td><td data-label="Rolle">Herz. Diese Seite.</td><td data-label="Status">live</td></tr>
+              <tr data-state="live"><td data-label="Domain">agentfähig.de</td><td data-label="Rolle">Verkauf: Setup, Werkstatt, Teams.</td><td data-label="Status">live · eigener Worker</td></tr>
+              <tr data-state="planned"><td data-label="Domain">humanagentinterface.de</td><td data-label="Rolle">Einstieg in einfacher Sprache.</td><td data-label="Status">geplant</td></tr>
+              <tr data-state="planned"><td data-label="Domain">agentcontrol.systems</td><td data-label="Rolle">Gates und Nachweise.</td><td data-label="Status">geplant</td></tr>
+              <tr data-state="planned"><td data-label="Domain">humanagentcontrol.com</td><td data-label="Rolle">Workflow-Simulator.</td><td data-label="Status">geplant</td></tr>
+              <tr data-state="planned"><td data-label="Domain">samuelfleig.com</td><td data-label="Rolle">Person und Entscheidungslabor.</td><td data-label="Status">geplant</td></tr>
+                          <tr data-state="planned"><td data-label="Domain">agent-human-interface.com</td><td data-label="Rolle">Auftragswerkstatt.</td><td data-label="Status">geplant</td></tr>
+              <tr data-state="planned"><td data-label="Domain">humanagnet.com</td><td data-label="Rolle">Übergabekabine.</td><td data-label="Status">geplant</td></tr>
+            </tbody>
+          </table>
+          <p class="note" style="margin-top:1.5rem"><strong>Stand:</strong> Zwei von acht Domains sind live: diese Seite und agentfähig.de (eigener Worker). Die übrigen sind Absicht.</p>
+        </div>
+        <aside class="aside" aria-label="Regel">
+          <p class="note"><strong>Regel:</strong> Keine Domain wiederholt die andere. Das Herz erklärt. Der Verkauf verkauft. Die Werkzeuge beweisen.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="08 · Wer">
+      <div class="wrap grid">
+        <div class="rail meta">07 / Wer</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Person</p>
+            <h2>Wer das baut.</h2>
+          </div>
+          <p>Samuel Fleig. Ich arbeite mit Agenten, seit sie mehr können als antworten. HAI ist die Schicht, die mir dabei gefehlt hat.</p>
+          <div class="actions">
+            <a href="https://github.com/smlfg" rel="me" data-target="github">GitHub</a>
+            <a href="mailto:hallo@samuelfleig.com" data-target="contact">Kontakt</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Nicht verhandelbar">
+          <p class="note"><strong>Nicht verhandelbar:</strong> Keine Behauptung ohne Beleg. Kein Beleg ohne Datum. Kein Datum ohne Verantwortlichen.</p>
+        </aside>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <div class="footnotes">
+        <ol>
+          <li id="fn1">Kontrollverlust bei agentischer Arbeit: Wenn mehrere Agenten planen, ausführen und delegieren, fehlen Ownership, Grenzen, Belege und Stop-Regeln. HAI macht diese Ebene explizit. <a href="#ref1" aria-label="Zurück zur Textstelle">↩</a></li>
+        </ol>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <div class="foot-links">
+        <a href="/archiv/">Archiv</a>
+        <a href="https://cal.com/human-agent-interface/agent-check" rel="external">Termin buchen</a>
+        <a href="/impressum/">Impressum</a>
+        <a href="/datenschutz/">Datenschutz</a>
+        <a href="https://github.com/smlfg" rel="me">GitHub</a>
+        <a href="/en/" lang="en" hreflang="en">English</a>
+      </div>
+      <div class="variants" role="group" aria-label="Testvarianten">
+        <span>Variante</span>
+        <a href="?v=A" data-variant-link="A" aria-label="Variante A">A</a>
+        <a href="?v=B" data-variant-link="B" aria-label="Variante B">B</a>
+        <a href="?v=C" data-variant-link="C" aria-label="Variante C">C</a>
+      </div>
+      <div>Protokoll 001</div>
+    </div>
+  </footer>
+
+  <script src="/assets/hai.js" defer></script>
+</body>
 </html>

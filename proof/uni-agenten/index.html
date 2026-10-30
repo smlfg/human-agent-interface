@@ -3,258 +3,228 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Wie aus einer verwirrten Frage am Vorabend eines Kurztests in einer Nacht Uni-Agenten wurden: echte Kursdaten über ilias-cli, Regeln aus echten Fehlern, getestet auf dem echten Modell.">
   <title>Muss ich morgen einen Test schreiben? | Human Agent Interface</title>
+  <meta name="description" content="Wie aus einer verwirrten Frage am Vorabend eines Kurztests in einer Nacht Uni-Agenten wurden: echte Kursdaten über ilias-cli, Regeln aus echten Fehlern, getestet auf dem echten Modell.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/proof/uni-agenten/">
+  <meta name="theme-color" content="#f4f0e6">
+  <link rel="icon" href="/assets/favicon-64.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/newsreader-300_700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-300_700-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/hai.css">
   <style>
-    :root {
-      color-scheme: dark;
-      --ink: #f7f1df;
-      --muted: #b7ad97;
-      --quiet: #776f60;
-      --void: #080806;
-      --charcoal: #11100d;
-      --panel: rgba(247, 241, 223, .055);
-      --line: rgba(247, 241, 223, .16);
-      --signal: #a7ff4f;
-      --copper: #ff9f5f;
-      --cyan: #83dbc8;
-      --rose: #ff8ab8;
-      --max: 1180px;
-      --pad: clamp(18px, 4vw, 56px);
-      --display: Georgia, "Times New Roman", serif;
-      --body: Aptos, "Segoe UI", "Helvetica Neue", sans-serif;
-      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-    }
-
-    * { box-sizing: border-box; }
-    html { background: var(--void); scroll-behavior: smooth; }
-    body {
-      min-width: 320px;
-      margin: 0;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 82% 4%, rgba(131, 219, 200, .15), transparent 27rem),
-        radial-gradient(circle at 14% 22%, rgba(255, 159, 95, .11), transparent 26rem),
-        linear-gradient(180deg, #080806 0%, #10100d 48%, #070806 100%);
-      font-family: var(--body);
-      line-height: 1.5;
-      overflow-x: hidden;
-    }
-    body::before {
-      position: fixed;
-      inset: 0;
-      z-index: 20;
-      pointer-events: none;
-      content: "";
-      opacity: .25;
-      background-image: linear-gradient(rgba(247, 241, 223, .035) 1px, transparent 1px), linear-gradient(90deg, rgba(247, 241, 223, .025) 1px, transparent 1px);
-      background-size: 72px 72px;
-      mask-image: linear-gradient(180deg, black, transparent 78%);
-    }
-    a { color: inherit; }
-    p, h1, h2, h3 { margin: 0; }
-    .shell { width: min(var(--max), 100%); margin: 0 auto; }
-    .topbar { position: fixed; inset: 0 0 auto; z-index: 30; padding: 14px var(--pad) 0; pointer-events: none; }
-    .topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 12px 14px; border: 1px solid rgba(247, 241, 223, .13); background: rgba(8, 8, 6, .78); backdrop-filter: blur(18px); pointer-events: auto; }
-    .brand, .nav { display: flex; align-items: center; gap: 10px; min-width: 0; color: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; }
-    .brand { text-decoration: none; }
-    .brand-mark { display: grid; width: 30px; height: 30px; place-items: center; border: 1px solid var(--line); color: var(--signal); font-size: 12px; }
-    .nav { gap: clamp(12px, 2vw, 24px); }
-    .nav a { opacity: .82; text-decoration: none; transition: color 160ms ease, opacity 160ms ease; }
-    .nav a:hover, .nav a:focus-visible { color: var(--ink); opacity: 1; }
-    .hero { position: relative; min-height: 92svh; display: grid; align-items: end; padding: 132px var(--pad) 72px; border-bottom: 1px solid var(--line); }
-    .hero::after { position: absolute; inset: 0; z-index: -1; content: ""; background: linear-gradient(135deg, transparent 0 59%, rgba(167, 255, 79, .045) 59% 60%, transparent 60%), linear-gradient(45deg, transparent 0 76%, rgba(255, 159, 95, .05) 76% 77%, transparent 77%); background-size: 240px 240px; }
-    .hero-grid { display: grid; grid-template-columns: minmax(0, .93fr) minmax(280px, .5fr); gap: clamp(30px, 8vw, 120px); align-items: end; }
-    .eyebrow, .kicker { color: var(--copper); font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
-    .eyebrow { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 18px; }
-    .eyebrow::before { width: 42px; height: 1px; content: ""; background: currentColor; }
-    h1 { max-width: 900px; font-family: var(--display); font-size: clamp(3.25rem, 7.5vw, 7.3rem); font-weight: 500; line-height: .92; letter-spacing: -.03em; text-wrap: balance; }
-    .hero-lede { max-width: 700px; margin-top: 28px; color: var(--muted); font-size: clamp(1.08rem, 2vw, 1.38rem); }
-    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
-    .button { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; padding: 0 18px; border: 1px solid rgba(247, 241, 223, .3); background: rgba(247, 241, 223, .04); color: var(--ink); font-weight: 700; text-decoration: none; transition: transform 160ms ease, border-color 160ms ease, background 160ms ease; }
-    .button:hover, .button:focus-visible { transform: translateY(-2px); border-color: rgba(167, 255, 79, .72); background: rgba(167, 255, 79, .1); }
-    .button.primary { border-color: rgba(167, 255, 79, .56); background: rgba(167, 255, 79, .13); }
-    .boundary-card { position: relative; padding: 26px; border: 1px solid var(--line); background: rgba(8, 8, 6, .72); box-shadow: 0 24px 80px rgba(0, 0, 0, .28); }
-    .boundary-card::before { position: absolute; top: -1px; left: 22px; width: 64px; height: 3px; content: ""; background: var(--signal); }
-    .boundary-card h2 { font-family: var(--display); font-size: 1.7rem; font-weight: 500; }
-    .boundary-card p { margin-top: 14px; color: var(--muted); }
-    .boundary-list { display: grid; gap: 10px; margin: 20px 0 0; padding: 0; list-style: none; color: #dfd7c4; font-size: .9rem; }
-    .boundary-list li { display: grid; grid-template-columns: 14px 1fr; gap: 8px; }
-    .boundary-list li::before { color: var(--signal); content: "↳"; }
-    section { position: relative; }
-    .section { padding: clamp(78px, 11vw, 136px) var(--pad); border-bottom: 1px solid var(--line); }
-    .section-head { display: grid; grid-template-columns: minmax(0, .8fr) minmax(260px, .55fr); gap: clamp(26px, 7vw, 96px); align-items: end; }
-    .section-title { max-width: 720px; font-family: var(--display); font-size: clamp(2.35rem, 4.4vw, 4.6rem); font-weight: 500; line-height: .98; letter-spacing: -.025em; }
-    .section-copy { max-width: 510px; color: var(--muted); font-size: 1.04rem; }
-    .loop { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 54px; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
-    .loop-step { min-height: 250px; padding: 22px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(247, 241, 223, .018); }
-    .loop-step:nth-child(2) { background: rgba(131, 219, 200, .06); }
-    .loop-step:nth-child(3) { background: rgba(167, 255, 79, .045); }
-    .loop-step span { color: var(--copper); font-family: var(--mono); font-size: 12px; }
-    .loop-step h3 { margin-top: 42px; font-family: var(--display); font-size: 1.75rem; font-weight: 500; line-height: 1; }
-    .loop-step p { margin-top: 14px; color: var(--muted); font-size: .94rem; }
-    .role-strip { display: grid; grid-template-columns: 1fr auto 1fr; gap: 18px; align-items: center; margin-top: 22px; padding: 20px; border: 1px solid var(--line); background: var(--panel); }
-    .role-strip strong { display: block; color: var(--signal); font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
-    .role-strip p { margin-top: 5px; color: var(--muted); font-size: .92rem; }
-    .role-arrow { color: var(--copper); font-size: 1.45rem; }
-    .gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 54px; }
-    .artifact { position: relative; display: grid; min-height: 440px; grid-template-rows: auto 1fr auto; overflow: hidden; padding: 25px; border: 1px solid var(--line); background: rgba(247, 241, 223, .025); text-decoration: none; transition: transform 180ms ease, border-color 180ms ease, background 180ms ease; }
-    .artifact:hover, .artifact:focus-visible { transform: translateY(-5px); border-color: rgba(247, 241, 223, .42); background: rgba(247, 241, 223, .055); }
-    .artifact::after { position: absolute; right: -28px; bottom: -52px; width: 180px; height: 180px; border: 1px solid currentColor; border-radius: 50%; content: ""; opacity: .55; }
-    .artifact.ads { color: #ffbf6e; }
-    .artifact.mlg { color: #83dbc8; }
-    .artifact.ma1 { color: #ff8ab8; }
-    .artifact.dlm { color: #a7ff4f; }
-    .artifact-top { display: flex; justify-content: space-between; gap: 18px; color: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; }
-    .artifact-icon { position: relative; z-index: 1; align-self: center; color: currentColor; font-family: var(--display); font-size: clamp(4rem, 10vw, 7.8rem); line-height: .75; letter-spacing: -.12em; }
-    .artifact-copy { position: relative; z-index: 1; }
-    .artifact h3 { max-width: 430px; color: var(--ink); font-family: var(--display); font-size: clamp(1.9rem, 3vw, 3.1rem); font-weight: 500; line-height: .95; }
-    .artifact p { max-width: 440px; margin-top: 14px; color: var(--muted); }
-    .artifact-footer { display: flex; align-items: end; justify-content: space-between; gap: 14px; margin-top: 20px; color: var(--ink); font-family: var(--mono); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; }
-    .artifact-footer span:last-child { color: currentColor; font-size: 1.3rem; }
-    .boundary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 52px; }
-    .boundary { padding: 26px; border: 1px solid var(--line); background: rgba(247, 241, 223, .025); }
-    .boundary.warn { border-color: rgba(255, 159, 95, .45); background: rgba(255, 159, 95, .055); }
-    .boundary h3 { font-family: var(--display); font-size: 1.75rem; font-weight: 500; }
-    .boundary p { margin-top: 12px; color: var(--muted); }
-    .close { padding: clamp(92px, 13vw, 160px) var(--pad); text-align: center; }
-    .close h2 { max-width: 890px; margin: 14px auto 0; font-family: var(--display); font-size: clamp(2.8rem, 6vw, 6.5rem); font-weight: 500; line-height: .94; letter-spacing: -.035em; }
-    .close p { max-width: 620px; margin: 26px auto 0; color: var(--muted); font-size: 1.05rem; }
-    .close .actions { justify-content: center; }
-    footer { padding: 20px var(--pad); border-top: 1px solid var(--line); color: var(--quiet); font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
-    .footer-inner { display: flex; justify-content: space-between; gap: 18px; width: min(var(--max), 100%); margin: 0 auto; }
-    @media (max-width: 760px) {
-      .topbar-inner { padding: 10px; }
-      .brand > span:last-child, .nav a:not(:last-child) { display: none; }
-      .hero { min-height: auto; padding-top: 130px; }
-      .hero-grid, .section-head { grid-template-columns: 1fr; }
-      .loop, .gallery, .boundary-grid { grid-template-columns: 1fr; }
-      .loop-step { min-height: 190px; }
-      .loop-step h3 { margin-top: 24px; }
-      .role-strip { grid-template-columns: 1fr; }
-      .role-arrow { transform: rotate(90deg); }
-      .artifact { min-height: 350px; }
-      .footer-inner { flex-direction: column; }
-    }
-    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .001ms !important; } }
-
-    .article { padding: clamp(64px, 9vw, 112px) var(--pad); border-bottom: 1px solid var(--line); }
-    .article .shell { max-width: 780px; }
-    .article h2 { margin-top: 8px; font-family: var(--display); font-size: clamp(2rem, 3.6vw, 3.1rem); font-weight: 500; line-height: 1; letter-spacing: -.02em; }
-    .article p { margin-top: 18px; color: #dfd7c4; font-size: 1.08rem; line-height: 1.65; }
-    .article strong { color: var(--ink); }
-    .article a { color: var(--cyan); }
-    .article code { font-family: var(--mono); font-size: .92em; color: var(--signal); }
-    .article ol { margin: 18px 0 0; padding-left: 1.3em; color: #dfd7c4; font-size: 1.05rem; line-height: 1.7; }
-    .equation { margin-top: 26px; padding: 22px 24px; border: 1px solid rgba(167, 255, 79, .45); background: rgba(167, 255, 79, .06); font-family: var(--display); font-size: clamp(1.35rem, 2.6vw, 1.9rem); line-height: 1.2; }
-    .table-wrap { margin-top: 26px; overflow-x: auto; border: 1px solid var(--line); }
-    table { width: 100%; border-collapse: collapse; font-size: .95rem; }
-    th, td { padding: 12px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
-    th { color: var(--copper); font-family: var(--mono); font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; font-weight: 500; }
-    td { color: #dfd7c4; }
-    tr:last-child td { border-bottom: 0; }
+    /* Long table cells stay readable at desktop widths. */
+    .mesh-table td:last-child { white-space: normal; }
   </style>
 </head>
-<body>
-  <header class="topbar">
-    <div class="topbar-inner shell">
-      <a class="brand" href="../../index.html" aria-label="Human Agent Interface Startseite"><span class="brand-mark">HAI</span><span>Human Agent Interface</span></a>
-      <nav class="nav" aria-label="Navigation"><a href="../">Proof</a><a href="../learning-with-agents/">Learning</a><a href="https://github.com/smlfg/Settingup-Uni-Agents-Hermes-">Repo</a></nav>
-    </div>
-  </header>
+<body data-page="legacy">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-  <main>
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="shell hero-grid">
-        <div>
-          <p class="eyebrow">Proof · 19. Oktober 2026</p>
-          <h1 id="hero-title">Muss ich morgen einen Test schreiben?</h1>
-          <p class="hero-lede">Ein Abend, an dem meine Agenten eine einfache Frage nicht beantworten konnten – und wie daraus in einer Nacht Uni-Agenten wurden, die Kursdaten kennen und mir das Lernen trotzdem nicht abnehmen.</p>
-          <div class="actions"><a class="button primary" href="https://github.com/smlfg/Settingup-Uni-Agents-Hermes-">Setup auf GitHub</a><a class="button" href="https://github.com/smlfg/ilias-cli">ilias-cli</a></div>
+  <div class="statusline" aria-hidden="true">
+    <div class="wrap">
+      <span>HAI · Protokoll 001</span>
+      <span>Abschnitt: <strong data-status-section>01</strong></span>
+      <span data-variant-label>Variante A · Protokoll</span>
+    </div>
+  </div>
+
+  
+
+  <main id="main" tabindex="-1">
+
+    <section class="hero" data-section="01 · Proof">
+      <div class="wrap grid">
+        <div class="rail meta">
+          <div>Protokoll 001</div>
+          <div>19.10.2026</div>
+          <div>Deutsch</div>
         </div>
-        <aside class="boundary-card" aria-label="Kurz gesagt">
-          <h2>Kurz gesagt</h2>
-          <p>Guter Uni-Agent = klare Vorstellung von guter Beratung × echte Kursdaten.</p>
-          <ul class="boundary-list"><li>Daten aus ILIAS über ilias-cli</li><li>Regeln aus echten Fehlern</li><li>Getestet auf dem echten Modell, nicht im Kopf</li></ul>
+        <div class="main">
+          <p class="meta">Proof · 19. Oktober 2026</p>
+          <h1>Muss ich morgen einen Test schreiben?</h1>
+          <p class="lede">Ein Abend, an dem meine Agenten eine einfache Frage nicht beantworten konnten – und wie daraus in einer Nacht Uni-Agenten wurden, die Kursdaten kennen und mir das Lernen trotzdem nicht abnehmen.</p>
+          <div class="actions">
+            <a href="https://github.com/smlfg/Settingup-Uni-Agents-Hermes-" rel="external">Setup auf GitHub</a>
+            <a href="https://github.com/smlfg/ilias-cli" rel="external">ilias-cli</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Kurz gesagt">
+          <p class="meta">Kurz gesagt</p>
+          <p class="note"><strong>Guter Uni-Agent = klare Vorstellung von guter Beratung × echte Kursdaten.</strong></p>
+          <ul class="components" role="list">
+            <li><span class="num" aria-hidden="true">01</span><div><span>Daten aus ILIAS über ilias-cli</span></div></li>
+            <li><span class="num" aria-hidden="true">02</span><div><span>Regeln aus echten Fehlern</span></div></li>
+            <li><span class="num" aria-hidden="true">03</span><div><span>Getestet auf dem echten Modell, nicht im Kopf</span></div></li>
+          </ul>
         </aside>
       </div>
     </section>
 
-    <section class="article" aria-labelledby="s1"><div class="shell">
-      <p class="kicker">01 / Der Abend</p>
-      <h2 id="s1">Der Abend vor dem Kurztest</h2>
-      <p>Am Abend vor meinem ersten Kurztest wusste ich nicht, ob ich am nächsten Tag einen Test schreibe oder einen Vortrag halte. Ich verkaufe Agenten – und meine eigenen Agenten konnten mir diese eine Frage nicht beantworten.</p>
-      <p>Sie gaben mir die Aufgabenfolie einer Abgabe, die erst elf Tage später fällig war. Sie sagten „Schauen Sie die Videos zum Zeitmanagement“, ohne zu sagen, welche. Die eine Folie mit dem Semesterplan – „20.10.: Kurztest 1, Anwesenheitspflicht, 10 von 100 Punkten“ – lasen sie nicht.</p>
-      <p>Ich habe meinen Frust einfach eingesprochen. Daraus wurde in einer Nacht ein Setup, das ich jetzt teile. Dieser Beitrag erzählt, was dabei über Agenten zu lernen war.</p>
-    </div></section>
+    <section class="section" id="abend" data-section="02 · Der Abend">
+      <div class="wrap grid">
+        <div class="rail meta">01 / Der Abend</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Der Abend</p>
+            <h2 id="s1">Der Abend vor dem Kurztest</h2>
+          </div>
+          <p>Am Abend vor meinem ersten Kurztest wusste ich nicht, ob ich am nächsten Tag einen Test schreibe oder einen Vortrag halte. Ich verkaufe Agenten – und meine eigenen Agenten konnten mir diese eine Frage nicht beantworten.</p>
+          <p>Sie gaben mir die Aufgabenfolie einer Abgabe, die erst elf Tage später fällig war. Sie sagten „Schauen Sie die Videos zum Zeitmanagement“, ohne zu sagen, welche. Die eine Folie mit dem Semesterplan – „20.10.: Kurztest 1, Anwesenheitspflicht, 10 von 100 Punkten“ – lasen sie nicht.</p>
+          <p>Ich habe meinen Frust einfach eingesprochen. Daraus wurde in einer Nacht ein Setup, das ich jetzt teile. Dieser Beitrag erzählt, was dabei über Agenten zu lernen war.</p>
+        </div>
+        <aside class="aside" aria-label="Der Abend in einem Satz">
+          <p class="note"><strong>Der Abend.</strong> „Ich verkaufe Agenten – und meine eigenen Agenten konnten mir diese eine Frage nicht beantworten.“</p>
+        </aside>
+      </div>
+    </section>
 
-    <section class="article" aria-labelledby="s2"><div class="shell">
-      <p class="kicker">02 / Die Gleichung</p>
-      <h2 id="s2">Gute Beratung × echte Kursdaten</h2>
-      <p class="equation">Guter Uni-Agent = klare Vorstellung von guter Beratung × echte Kursdaten.</p>
-      <p>Fehlt einer der beiden Faktoren, ist das Ergebnis null.</p>
-      <p>Ein Agent ohne Kursdaten rät. Er kennt weder Semesterplan noch Testtermine noch die Folie, auf der „Anwesenheitspflicht“ steht. Die Daten holt bei mir <a href="https://github.com/smlfg/ilias-cli">ilias-cli</a>: ein Kommandozeilen-Tool, das jeden Morgen alles Neue aus ILIAS in meine bestehenden Studienordner lädt.</p>
-      <p>Ein Agent mit Daten, aber ohne klare Regeln, berät trotzdem schlecht. Er findet die richtige Folie und schätzt dann eine Videolänge. Diese Regeln konnte ich klar vorgeben, weil ich genau wusste, was mich an jenem Abend im Stich gelassen hatte: Beantworte meine Frage in der ersten Zeile. Nenne jede Frist mit Quelle. Trenne morgen von später. Schätze nie eine Zahl.</p>
-    </div></section>
+    <section class="section" id="gleichung" data-section="03 · Die Gleichung">
+      <div class="wrap grid">
+        <div class="rail meta">02 / Die Gleichung</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Die Gleichung</p>
+            <h2 id="s2">Gute Beratung × echte Kursdaten</h2>
+          </div>
+          <p class="lede">Guter Uni-Agent = klare Vorstellung von guter Beratung × echte Kursdaten.</p>
+          <p>Fehlt einer der beiden Faktoren, ist das Ergebnis null.</p>
+          <p>Ein Agent ohne Kursdaten rät. Er kennt weder Semesterplan noch Testtermine noch die Folie, auf der „Anwesenheitspflicht“ steht. Die Daten holt bei mir <a href="https://github.com/smlfg/ilias-cli" rel="external">ilias-cli</a>: ein Kommandozeilen-Tool, das jeden Morgen alles Neue aus ILIAS in meine bestehenden Studienordner lädt.</p>
+          <p>Ein Agent mit Daten, aber ohne klare Regeln, berät trotzdem schlecht. Er findet die richtige Folie und schätzt dann eine Videolänge. Diese Regeln konnte ich klar vorgeben, weil ich genau wusste, was mich an jenem Abend im Stich gelassen hatte: Beantworte meine Frage in der ersten Zeile. Nenne jede Frist mit Quelle. Trenne morgen von später. Schätze nie eine Zahl.</p>
+        </div>
+        <aside class="aside" aria-label="Die Gleichung in einem Satz">
+          <p class="note"><strong>Die Gleichung.</strong> Fehlt einer der beiden Faktoren, ist das Ergebnis null.</p>
+        </aside>
+      </div>
+    </section>
 
-    <section class="article" aria-labelledby="s3"><div class="shell">
-      <p class="kicker">03 / Das Setup</p>
-      <h2 id="s3">Was in einer Nacht entstand</h2>
-      <p>Auf meinem MacBook laufen jetzt sieben Agenten in <a href="https://hermes-agent.nousresearch.com/">Hermes</a>, jeder mit einem Desktop-Icon. Gebaut habe ich sie zusammen mit Claude, während ich nebenbei die Zeitmanagement-Videos geschaut habe.</p>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Agent</th><th>Was er tut</th><th>Was er nie tut</th></tr></thead>
-        <tbody>
-          <tr><td>ILIAS-Agent</td><td>gleicht jeden Morgen um 06:30 alle Kurse ab, schreibt eine Tageslage mit Fristen, warnt vor Terminkonflikten, schlägt Ablageorte für lose Dateien vor</td><td>Dateien löschen, ohne mein Ja verschieben, Kalender ändern</td></tr>
-          <tr><td>ein Fachagent pro Fach</td><td>nennt die nächste Frist mit Beleg, erklärt, schreibt Karteikarten und fragt sie ab</td><td>fertige Abgaben schreiben, Zahlen raten</td></tr>
-        </tbody>
-      </table></div>
-      <p>Drei Entscheidungen waren mir wichtig. Erstens: Lernen statt Abnehmen. Am Ende jeder Einheit stehen Karteikarten, und der Agent zeigt die Rückseite erst nach meiner Antwort. Zweitens: Meine Ordner bleiben meine Ordner, die Agenten passen sich an. Drittens: Hermes läuft immer. Fällt das Cloud-Modell aus, antwortet ein lokales Modell auf meinem M3 Max – getestet, indem wir die Cloud absichtlich abgeschaltet haben.</p>
-    </div></section>
+    <section class="section" id="setup" data-section="04 · Das Setup">
+      <div class="wrap grid">
+        <div class="rail meta">03 / Das Setup</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Das Setup</p>
+            <h2 id="s3">Was in einer Nacht entstand</h2>
+          </div>
+          <p>Auf meinem MacBook laufen jetzt sieben Agenten in <a href="https://hermes-agent.nousresearch.com/" rel="external">Hermes</a>, jeder mit einem Desktop-Icon. Gebaut habe ich sie zusammen mit Claude, während ich nebenbei die Zeitmanagement-Videos geschaut habe.</p>
+          <table class="mesh-table" aria-labelledby="s3">
+            <thead><tr><th scope="col">Agent</th><th scope="col">Was er tut</th><th scope="col">Was er nie tut</th></tr></thead>
+            <tbody>
+              <tr>
+                <td data-label="Agent">ILIAS-Agent</td>
+                <td data-label="Was er tut">gleicht jeden Morgen um 06:30 alle Kurse ab, schreibt eine Tageslage mit Fristen, warnt vor Terminkonflikten, schlägt Ablageorte für lose Dateien vor</td>
+                <td data-label="Was er nie tut">Dateien löschen, ohne mein Ja verschieben, Kalender ändern</td>
+              </tr>
+              <tr>
+                <td data-label="Agent">ein Fachagent pro Fach</td>
+                <td data-label="Was er tut">nennt die nächste Frist mit Beleg, erklärt, schreibt Karteikarten und fragt sie ab</td>
+                <td data-label="Was er nie tut">fertige Abgaben schreiben, Zahlen raten</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>Drei Entscheidungen waren mir wichtig. Erstens: Lernen statt Abnehmen. Am Ende jeder Einheit stehen Karteikarten, und der Agent zeigt die Rückseite erst nach meiner Antwort. Zweitens: Meine Ordner bleiben meine Ordner, die Agenten passen sich an. Drittens: Hermes läuft immer. Fällt das Cloud-Modell aus, antwortet ein lokales Modell auf meinem M3 Max – getestet, indem wir die Cloud absichtlich abgeschaltet haben.</p>
+        </div>
+        <aside class="aside" aria-label="Drei Entscheidungen">
+          <p class="note"><strong>Drei Entscheidungen.</strong> Lernen statt Abnehmen. Meine Ordner bleiben meine Ordner, die Agenten passen sich an. Hermes läuft immer.</p>
+        </aside>
+      </div>
+    </section>
 
-    <section class="article" aria-labelledby="s4"><div class="shell">
-      <p class="kicker">04 / Echt testen</p>
-      <h2 id="s4">Jeder Fehler wird eine Regel</h2>
-      <p>Der erste echte Test fiel durch. Ich stellte dem Arbeitstechniken-Agenten genau meine verwirrte Frage vom Abend. Er antwortete in 27 Sekunden: richtig, dass es ein Test war – aber mit einer Videolänge von „ca. 11 Minuten“. Das Video dauert 26:58.</p>
-      <p>Genau das ist der Punkt: Ein Agent, der schnell und plausibel klingt, ist gefährlicher als einer, der „nicht belegt“ sagt. Also wurde jeder Fehler zu einer Regel, und der Test lief erneut.</p>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Fehler im echten Test</th><th>Regel danach</th></tr></thead>
-        <tbody>
-          <tr><td>Abgabe in elf Tagen als Vorbereitung für morgen</td><td>Morgen, diese Woche und später getrennt</td></tr>
-          <tr><td>„Schau die Videos“, ohne zu sagen welche</td><td>Dateiname, Länge, Reihenfolge – kein Suchauftrag</td></tr>
-          <tr><td>Videolänge geschätzt</td><td>Zahlen nur aus einer gelesenen Quelle</td></tr>
-          <tr><td>Teil der Frage ignoriert</td><td>Jeder Fragenteil bekommt eine Zeile</td></tr>
-          <tr><td>Falscher Wochentag</td><td>Wochentage per <code>date</code> prüfen, nie im Kopf</td></tr>
-          <tr><td>Lernzentrum „heute 13–15 Uhr“ um 22 Uhr empfohlen</td><td>Nur Kommendes nennen</td></tr>
-          <tr><td>Sechs Minuten Wartezeit wegen Notion-Aufräumen</td><td>Erst antworten, dann Notizen</td></tr>
-        </tbody>
-      </table></div>
-      <p>Im zweiten Durchlauf bestand der Agent. Und die anderen fanden Dinge, nach denen ich nicht gefragt hatte: eine mögliche Teilprüfung in Informatik zwei Tage später, den MC-Test in Programmierung, ein laufendes Buchungsfenster für mein Vortragsthema. Und eine Kollision: Die Firmenkontaktmesse lag genau über dem Kurztest.</p>
-    </div></section>
+    <section class="section" id="echt-testen" data-section="05 · Echt testen">
+      <div class="wrap grid">
+        <div class="rail meta">04 / Echt testen</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Echt testen</p>
+            <h2 id="s4">Jeder Fehler wird eine Regel</h2>
+          </div>
+          <p>Der erste echte Test fiel durch. Ich stellte dem Arbeitstechniken-Agenten genau meine verwirrte Frage vom Abend. Er antwortete in 27 Sekunden: richtig, dass es ein Test war – aber mit einer Videolänge von „ca. 11 Minuten“. Das Video dauert 26:58.</p>
+          <p>Genau das ist der Punkt: Ein Agent, der schnell und plausibel klingt, ist gefährlicher als einer, der „nicht belegt“ sagt. Also wurde jeder Fehler zu einer Regel, und der Test lief erneut.</p>
+          <table class="mesh-table" aria-labelledby="s4">
+            <thead><tr><th scope="col">Fehler im echten Test</th><th scope="col">Regel danach</th></tr></thead>
+            <tbody>
+              <tr><td data-label="Fehler im echten Test">Abgabe in elf Tagen als Vorbereitung für morgen</td><td data-label="Regel danach">Morgen, diese Woche und später getrennt</td></tr>
+              <tr><td data-label="Fehler im echten Test">„Schau die Videos“, ohne zu sagen welche</td><td data-label="Regel danach">Dateiname, Länge, Reihenfolge – kein Suchauftrag</td></tr>
+              <tr><td data-label="Fehler im echten Test">Videolänge geschätzt</td><td data-label="Regel danach">Zahlen nur aus einer gelesenen Quelle</td></tr>
+              <tr><td data-label="Fehler im echten Test">Teil der Frage ignoriert</td><td data-label="Regel danach">Jeder Fragenteil bekommt eine Zeile</td></tr>
+              <tr><td data-label="Fehler im echten Test">Falscher Wochentag</td><td data-label="Regel danach">Wochentage per <code>date</code> prüfen, nie im Kopf</td></tr>
+              <tr><td data-label="Fehler im echten Test">Lernzentrum „heute 13–15 Uhr“ um 22 Uhr empfohlen</td><td data-label="Regel danach">Nur Kommendes nennen</td></tr>
+              <tr><td data-label="Fehler im echten Test">Sechs Minuten Wartezeit wegen Notion-Aufräumen</td><td data-label="Regel danach">Erst antworten, dann Notizen</td></tr>
+            </tbody>
+          </table>
+          <p>Im zweiten Durchlauf bestand der Agent. Und die anderen fanden Dinge, nach denen ich nicht gefragt hatte: eine mögliche Teilprüfung in Informatik zwei Tage später, den MC-Test in Programmierung, ein laufendes Buchungsfenster für mein Vortragsthema. Und eine Kollision: Die Firmenkontaktmesse lag genau über dem Kurztest.</p>
+        </div>
+        <aside class="aside" aria-label="Der Punkt">
+          <p class="note"><strong>Der Punkt.</strong> Ein Agent, der schnell und plausibel klingt, ist gefährlicher als einer, der „nicht belegt“ sagt.</p>
+        </aside>
+      </div>
+    </section>
 
-    <section class="article" aria-labelledby="s5"><div class="shell">
-      <p class="kicker">05 / HAI</p>
-      <h2 id="s5">Was das für HAI heißt</h2>
-      <p>HAI steht für Human-Agent Interface: Der Mensch soll nicht länger die Schnittstelle zwischen seinen Agenten sein müssen. An jenem Abend war ich genau diese Schnittstelle – zwischen ILIAS, Kalender, Folien und Agenten. Jetzt holen die Agenten die Daten, belegen ihre Aussagen und melden sich, wenn etwas kollidiert.</p>
-      <p>Ein Detail zeigt die Richtung: Wenn der ILIAS-Agent auf einen Fehler in ilias-cli stößt, eröffnet er selbst ein GitHub-Issue – ohne Passwörter, ohne Kursinhalte, ohne Labels, die Automatik auslösen. Ob daran gearbeitet wird, entscheidet ein Mensch. Agenten melden, Menschen entscheiden.</p>
-      <p>Ehrlich bleiben gehört dazu. Das Setup hat einen Abend, zwei Neuinstallationen und mehrere kaputte Builds gekostet. Solange HAI so viel Einrichtung braucht, ist es ein Bastelprojekt und kein Produkt. Und die größte Gefahr ist meine eigene: Systeme zu bauen statt zu lernen. HAI ist dann stark, wenn es mir Zeit fürs Lernen freiräumt – nicht, wenn es mir das Lernen abnimmt.</p>
-    </div></section>
+    <section class="section" id="hai" data-section="06 · HAI">
+      <div class="wrap grid">
+        <div class="rail meta">05 / HAI</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">HAI</p>
+            <h2 id="s5">Was das für HAI heißt</h2>
+          </div>
+          <p>HAI steht für Human-Agent Interface: Der Mensch soll nicht länger die Schnittstelle zwischen seinen Agenten sein müssen. An jenem Abend war ich genau diese Schnittstelle – zwischen ILIAS, Kalender, Folien und Agenten. Jetzt holen die Agenten die Daten, belegen ihre Aussagen und melden sich, wenn etwas kollidiert.</p>
+          <p>Ein Detail zeigt die Richtung: Wenn der ILIAS-Agent auf einen Fehler in ilias-cli stößt, eröffnet er selbst ein GitHub-Issue – ohne Passwörter, ohne Kursinhalte, ohne Labels, die Automatik auslösen. Ob daran gearbeitet wird, entscheidet ein Mensch. Agenten melden, Menschen entscheiden.</p>
+          <p>Ehrlich bleiben gehört dazu. Das Setup hat einen Abend, zwei Neuinstallationen und mehrere kaputte Builds gekostet. Solange HAI so viel Einrichtung braucht, ist es ein Bastelprojekt und kein Produkt. Und die größte Gefahr ist meine eigene: Systeme zu bauen statt zu lernen. HAI ist dann stark, wenn es mir Zeit fürs Lernen freiräumt – nicht, wenn es mir das Lernen abnimmt.</p>
+        </div>
+        <aside class="aside" aria-label="HAI in einem Satz">
+          <p class="note"><strong>HAI.</strong> Agenten melden, Menschen entscheiden.</p>
+        </aside>
+      </div>
+    </section>
 
-    <section class="article" aria-labelledby="s6"><div class="shell">
-      <p class="kicker">06 / Mitmachen</p>
-      <h2 id="s6">Selbst ausprobieren</h2>
-      <p>Das ganze Setup ist offen: <a href="https://github.com/smlfg/Settingup-Uni-Agents-Hermes-">Settingup-Uni-Agents-Hermes-</a> auf GitHub, MIT-Lizenz. Du trägst deine Fächer in eine Datei ein, ein Skript erzeugt die Agenten, ein zweites installiert sie.</p>
-      <ol>
-        <li><code>config.example.toml</code> kopieren und Fächer, Ordner und belegte Fakten eintragen.</li>
-        <li><code>python3 build.py</code> erzeugt die Agenten.</li>
-        <li><code>bash scripts/install.sh</code> installiert sie samt <a href="https://github.com/smlfg/ilias-cli">ilias-cli</a>.</li>
-        <li>Jeden Agenten einmal mit einer echten Frage testen, bevor du dich auf ihn verlässt.</li>
-      </ol>
-      <p>Wenn deine Agenten auf Fehler in ilias-cli stoßen, dürfen sie gern ein Issue öffnen. So wird das Werkzeug mit jeder Nutzung besser.</p>
-      <p>Ob die Agenten am Testmorgen wirklich geholfen haben, ergänze ich nach dem Kurztest.</p>
-    </div></section>
+    <section class="section" id="mitmachen" data-section="07 · Mitmachen">
+      <div class="wrap grid">
+        <div class="rail meta">06 / Mitmachen</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Mitmachen</p>
+            <h2 id="s6">Selbst ausprobieren</h2>
+          </div>
+          <p>Das ganze Setup ist offen: <a href="https://github.com/smlfg/Settingup-Uni-Agents-Hermes-" rel="external">Settingup-Uni-Agents-Hermes-</a> auf GitHub, MIT-Lizenz. Du trägst deine Fächer in eine Datei ein, ein Skript erzeugt die Agenten, ein zweites installiert sie.</p>
+          <ol class="components" role="list">
+            <li><span class="num" aria-hidden="true">01</span><div><span><code>config.example.toml</code> kopieren und Fächer, Ordner und belegte Fakten eintragen.</span></div></li>
+            <li><span class="num" aria-hidden="true">02</span><div><span><code>python3 build.py</code> erzeugt die Agenten.</span></div></li>
+            <li><span class="num" aria-hidden="true">03</span><div><span><code>bash scripts/install.sh</code> installiert sie samt <a href="https://github.com/smlfg/ilias-cli" rel="external">ilias-cli</a>.</span></div></li>
+            <li><span class="num" aria-hidden="true">04</span><div><span>Jeden Agenten einmal mit einer echten Frage testen, bevor du dich auf ihn verlässt.</span></div></li>
+          </ol>
+          <p>Wenn deine Agenten auf Fehler in ilias-cli stoßen, dürfen sie gern ein Issue öffnen. So wird das Werkzeug mit jeder Nutzung besser.</p>
+          <p>Ob die Agenten am Testmorgen wirklich geholfen haben, ergänze ich nach dem Kurztest.</p>
+        </div>
+        <aside class="aside" aria-label="Offen und ehrlich">
+          <p class="note"><strong>MIT-Lizenz.</strong> Das ganze Setup ist offen. Ob die Agenten am Testmorgen wirklich geholfen haben, ergänze ich nach dem Kurztest.</p>
+        </aside>
+      </div>
+    </section>
 
-    <section class="close" aria-labelledby="close-title"><p class="kicker">Human Agent Interface</p><h2 id="close-title">Agenten melden. Menschen entscheiden.</h2><p>HAI macht Arbeit mit Agenten begrenzt, überprüfbar und in menschlicher Hand. Das Studium ist ein Ort, an dem das jeden Tag halten muss.</p><div class="actions"><a class="button primary" href="https://github.com/smlfg/Settingup-Uni-Agents-Hermes-">Setup auf GitHub</a><a class="button" href="../">Zurück zu Proof</a></div></section>
+    <section class="section" id="schluss" data-section="08 · Schluss">
+      <div class="wrap grid">
+        <div class="rail meta">07 / Schluss</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Human Agent Interface</p>
+            <h2>Agenten melden. Menschen entscheiden.</h2>
+          </div>
+          <p>HAI macht Arbeit mit Agenten begrenzt, überprüfbar und in menschlicher Hand. Das Studium ist ein Ort, an dem das jeden Tag halten muss.</p>
+          <div class="actions">
+            <a href="https://github.com/smlfg/Settingup-Uni-Agents-Hermes-" rel="external">Setup auf GitHub</a>
+            <a href="../learning-with-agents/" data-target="proof-learning">Learning with agents</a>
+            <a href="../" data-target="proof">Zurück zu Proof</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Proof-Reihe">
+          <p class="note"><strong>Echte Daten / ehrliche Regeln / echte Tests.</strong> Human Agent Interface / Proof.</p>
+        </aside>
+      </div>
+    </section>
+
   </main>
-  <footer><div class="footer-inner"><span>Human Agent Interface / Proof</span><span>Echte Daten / ehrliche Regeln / echte Tests</span></div></footer>
+
+  
+
+  <script src="/assets/hai.js" defer></script>
 </body>
 </html>

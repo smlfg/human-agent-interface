@@ -1,123 +1,169 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Samuel Fleig - AI Builder Timeline</title>
   <meta name="description" content="Chronologische Showcase-Timeline aus gehosteten HTML-Artefakten, Apps, Architekturen, Websites und Analysen.">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="canonical" href="https://www.human-agent-interface.com/samuel/timeline/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Human Agent Interface (HAI)">
+  <meta property="og:title" content="Samuel Fleig - AI Builder Timeline">
+  <meta property="og:description" content="Chronologische Showcase-Timeline aus gehosteten HTML-Artefakten, Apps, Architekturen, Websites und Analysen.">
+  <meta property="og:image" content="https://www.human-agent-interface.com/assets/og/hai-og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HAI — Agenten arbeiten. Du entscheidest.">
+  
+  <meta property="og:url" content="https://www.human-agent-interface.com/samuel/timeline/">
+  <meta property="og:locale" content="de_DE">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#f4f0e6">
+  <link rel="icon" href="/assets/favicon-64.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/newsreader-300_700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-300_700-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/hai.css">
 </head>
-<body>
-  <a class="domain-strip" href="../" aria-label="Zurueck zu Samuels Proof-of-Work-Seite">
-    Samuel Fleig / Proof of Work / AI Builder Timeline
-  </a>
+<body data-page="legacy">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-  <header class="stats-bar">
-    <div class="stats-inner" id="statsBar"></div>
-  </header>
-
-  <div class="page-shell">
-    <section class="hero" aria-labelledby="pageTitle">
-      <div class="hero-panel">
-        <span class="eyebrow">AI Builder Timeline</span>
-        <h1 id="pageTitle">März bis Mai: sichtbare Entwicklung.</h1>
-        <p class="hero-copy">
-          Diese Seite inszeniert eine verdichtete Arbeitsphase aus Apps, Dashboards, Architekturen, Websites, Analysen und Explainern.
-          Nicht als Archiv ohne Haltung, sondern als Timeline einer technischen Arbeitsweise: schnell bauen, Systeme denken,
-          Muster erkennen, Versionen gegeneinander lesen und aus jeder Iteration ein sichtbares Artefakt machen.
-        </p>
-        <section class="hero-about" aria-labelledby="heroAboutTitle">
-          <div class="hero-section-head">
-            <span class="section-kicker">Über Samuel</span>
-            <h2 id="heroAboutTitle">Kein fertiger Senior-Mythos, sondern ein offener Lernprozess.</h2>
-          </div>
-          <p>
-            2 Jahre Vibe-Coding ohne Plan. 2 Monate Vibe-Coding mit Plan. 2 Wochen Eval-Driven Development.
-            Ich bin kein Senior Engineer, sondern jemand, der in Echtzeit lernt, wie man agentische Systeme nicht nur benutzt,
-            sondern systematisch besser macht.
-          </p>
-          <p>
-            Was ich anbiete, ist kein fertiges Produktversprechen, sondern ein ehrlicher Prozess mit messbaren Ergebnissen.
-          </p>
-        </section>
-        <div class="hero-actions">
-          <a class="button-link primary" href="#timelineStart">Zur Timeline</a>
-          <a class="button-link secondary" href="#detailPanel">Kuratiertes Detailpanel</a>
-        </div>
-        <div class="hero-bottom">
-          <section class="hero-featured" aria-labelledby="heroFeaturedTitle">
-            <div class="hero-section-head">
-              <span class="section-kicker">Featured Artifacts</span>
-              <h2 id="heroFeaturedTitle">Drei Beweise direkt am Einstieg.</h2>
-            </div>
-            <div class="hero-featured-grid" id="heroFeaturedGrid"></div>
-          </section>
-          <div class="hero-insights">
-            <section class="hero-method" aria-labelledby="heroMethodTitle">
-              <div class="hero-section-head">
-                <span class="section-kicker">Arbeitsweise</span>
-                <h2 id="heroMethodTitle">Wie diese Spur entsteht.</h2>
-              </div>
-              <div class="hero-method-grid" id="heroMethodGrid"></div>
-            </section>
-          </div>
-        </div>
-      </div>
-      <aside class="hero-meta" aria-labelledby="metaTitle">
-        <h2 id="metaTitle">Warum das zählt</h2>
-        <div class="meta-grid" id="metaGrid"></div>
-        <div>
-          <span class="section-kicker">Cluster</span>
-          <ul class="cluster-list" id="clusterList"></ul>
-        </div>
-        <div>
-          <span class="section-kicker">Phasen</span>
-          <ul class="phase-list" id="phaseList"></ul>
-        </div>
-      </aside>
-    </section>
-
-    <nav class="filter-bar" aria-label="Filter und Navigation">
-      <div class="filter-topline">
-        <p>Scan-orientierte Timeline mit Filtern nach Typ, Projekt und kuratierten Highlights.</p>
-        <div class="filter-result" id="filterResult"></div>
-      </div>
-      <div class="filter-grid">
-        <div class="filter-group">
-          <span class="filter-label">Typ</span>
-          <div class="chip-row" id="typeFilters"></div>
-        </div>
-        <div class="filter-group">
-          <span class="filter-label">Projekt</span>
-          <div class="chip-row" id="projectFilters"></div>
-        </div>
-        <div class="filter-group">
-          <span class="filter-label">Phasensprünge</span>
-          <div class="phase-jump" id="phaseJumps"></div>
-        </div>
-      </div>
-    </nav>
-
-    <section class="detail-layout">
-      <main class="timeline-wrap" id="timelineStart">
-        <div class="timeline-line" aria-hidden="true"></div>
-        <div class="timeline-grid" id="timelineGrid"></div>
-        <div class="empty-state hidden" id="emptyState">
-          Keine Treffer für diese Kombination. Entferne einen Filter oder wechsle zurück zu den kuratierten Highlights.
-        </div>
-        <p class="footer-note">
-          Datenbasis: <code>TIMELINE_DATA.md</code>. Gruppierte Einträge bleiben bewusst als Gruppen sichtbar, wenn die Rohdaten keine einzelnen Dateinamen liefern.
-        </p>
-      </main>
-
-      <aside class="detail-panel" id="detailPanel">
-        <span class="eyebrow">Artifact Focus</span>
-        <h2>Kuratiertes Detailpanel</h2>
-        <div id="detailContent"></div>
-      </aside>
-    </section>
+  <div class="statusline" aria-hidden="true">
+    <div class="wrap">
+      <span>HAI · Protokoll 001</span>
+      <span>Abschnitt: <strong data-status-section>01</strong></span>
+      <span data-variant-label>Variante A · Protokoll</span>
+    </div>
   </div>
 
+  
+
+  <main id="main" tabindex="-1">
+
+    <section class="hero" data-section="01 · Timeline">
+      <div class="wrap grid">
+        <div class="rail meta">
+          <div><a href="../">Samuel Fleig</a></div>
+          <div>März – Mai 2026</div>
+          <div>Deutsch</div>
+        </div>
+        <div class="main">
+          <p class="meta">Proof of Work · AI Builder Timeline</p>
+          <h1>März bis Mai: sichtbare Entwicklung.</h1>
+          <p class="lede">Diese Seite inszeniert eine verdichtete Arbeitsphase aus Apps, Dashboards, Architekturen, Websites, Analysen und Explainern.</p>
+          <p>Nicht als Archiv ohne Haltung, sondern als Timeline einer technischen Arbeitsweise: schnell bauen, Systeme denken, Muster erkennen, Versionen gegeneinander lesen und aus jeder Iteration ein sichtbares Artefakt machen.</p>
+          <div class="actions">
+            <a href="#timelineStart">Zur Timeline</a>
+            <a href="#detailPanel">Kuratiertes Detailpanel</a>
+          </div>
+          <div class="meta" id="statsBar"></div>
+        </div>
+        <aside class="aside" aria-labelledby="metaTitle">
+          <h2 id="metaTitle">Warum das zählt</h2>
+          <div class="meta" id="metaGrid"></div>
+          <p class="meta">Cluster</p>
+          <ul class="meta" id="clusterList"></ul>
+          <p class="meta">Phasen</p>
+          <ul class="meta" id="phaseList"></ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="02 · Über Samuel">
+      <div class="wrap grid">
+        <div class="rail meta">01 / Über Samuel</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Über Samuel</p>
+            <h2>Kein fertiger Senior-Mythos, sondern ein offener Lernprozess.</h2>
+          </div>
+          <p>2 Jahre Vibe-Coding ohne Plan. 2 Monate Vibe-Coding mit Plan. 2 Wochen Eval-Driven Development. Ich bin kein Senior Engineer, sondern jemand, der in Echtzeit lernt, wie man agentische Systeme nicht nur benutzt, sondern systematisch besser macht.</p>
+          <p>Was ich anbiete, ist kein fertiges Produktversprechen, sondern ein ehrlicher Prozess mit messbaren Ergebnissen.</p>
+        </div>
+        <aside class="aside" aria-label="Angebot">
+          <p class="note"><strong>Angebot.</strong> Kein fertiges Produktversprechen, sondern ein ehrlicher Prozess mit messbaren Ergebnissen.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="03 · Featured Artifacts">
+      <div class="wrap grid">
+        <div class="rail meta">02 / Featured Artifacts</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Featured Artifacts</p>
+            <h2>Drei Beweise direkt am Einstieg.</h2>
+          </div>
+          <div class="entries" id="heroFeaturedGrid"></div>
+        </div>
+        <aside class="aside" aria-label="Auswahl">
+          <p class="note"><strong>Auswahl.</strong> Die drei Karten verweisen auf Artefakte aus dem Datensatz.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="04 · Arbeitsweise">
+      <div class="wrap grid">
+        <div class="rail meta">03 / Arbeitsweise</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Arbeitsweise</p>
+            <h2>Wie diese Spur entsteht.</h2>
+          </div>
+          <ol class="components" id="heroMethodGrid"></ol>
+        </div>
+        <aside class="aside" aria-label="Methode">
+          <p class="note"><strong>Methode.</strong> Bauen, modellieren, evaluieren, vergleichen, verdichten.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="detailPanel" data-section="05 · Detailpanel">
+      <div class="wrap grid">
+        <div class="rail meta">04 / Detailpanel</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Artifact Focus</p>
+            <h2>Kuratiertes Detailpanel</h2>
+          </div>
+          <div id="detailContent"></div>
+        </div>
+        <aside class="aside" aria-label="Fokus">
+          <p class="note"><strong>Fokus.</strong> Details, Datum, Cluster und Nachbarn der aktuellen Auswahl.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="timelineStart" data-section="06 · Timeline">
+      <div class="wrap grid">
+        <div class="rail meta">05 / Timeline</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Filter</p>
+            <h2>Scan-orientierte Timeline.</h2>
+          </div>
+          <p>Scan-orientierte Timeline mit Filtern nach Typ, Projekt und kuratierten Highlights.</p>
+          <p class="meta" id="filterResult"></p>
+          <p class="meta">Typ</p>
+          <div class="actions" id="typeFilters"></div>
+          <p class="meta">Projekt</p>
+          <div class="actions" id="projectFilters"></div>
+          <p class="meta">Phasensprünge</p>
+          <div class="actions" id="phaseJumps"></div>
+          <div id="emptyState" hidden>Keine Treffer für diese Kombination. Entferne einen Filter oder wechsle zurück zu den kuratierten Highlights.</div>
+        </div>
+        <aside class="aside" aria-label="Datenbasis">
+          <p class="note"><strong>Datenbasis:</strong> <code>TIMELINE_DATA.md</code>. Gruppierte Einträge bleiben bewusst als Gruppen sichtbar, wenn die Rohdaten keine einzelnen Dateinamen liefern.</p>
+        </aside>
+      </div>
+    </section>
+
+    <div id="timelineGrid"></div>
+
+  </main>
+
+  
+
+  <script src="/assets/hai.js" defer></script>
   <script>
     (() => {
       const projectMeta = {
@@ -1101,9 +1147,17 @@
       const detailContent = document.getElementById("detailContent");
       const filterResult = document.getElementById("filterResult");
       const emptyState = document.getElementById("emptyState");
-      const filterBar = document.querySelector(".filter-bar");
       const heroFeaturedGrid = document.getElementById("heroFeaturedGrid");
       const heroMethodGrid = document.getElementById("heroMethodGrid");
+      const detailPanel = document.getElementById("detailPanel");
+
+      function esc(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
 
       function countBy(items, getter) {
         const map = new Map();
@@ -1120,17 +1174,17 @@
         const peakDay = timelineDays.reduce((current, day) => day.items.length > current.items.length ? day : current, timelineDays[0]);
         const heavyCount = allItems.filter((item) => item.heavy).length;
         statsBar.innerHTML = `
-          <span><span class="stat-num">${allItems.length}</span> Artefakte</span>
+          <span><strong>${allItems.length}</strong> Artefakte</span>
           <span>·</span>
-          <span><span class="stat-num">${timelineDays.length}</span> aktive Tage</span>
+          <span><strong>${timelineDays.length}</strong> aktive Tage</span>
           <span>·</span>
-          <span><span class="stat-num">${projectCount}</span> Projekte</span>
+          <span><strong>${projectCount}</strong> Projekte</span>
           <span>·</span>
-          <span>Peak: <span class="stat-num highlight">${peakDay.displayDate}</span></span>
+          <span>Peak: <strong>${esc(peakDay.displayDate)}</strong></span>
           <span>·</span>
-          <span><span class="stat-num">${typeCount}</span> Werktypen</span>
+          <span><strong>${typeCount}</strong> Werktypen</span>
           <span>·</span>
-          <span><span class="stat-num">${heavyCount}</span> Heavy Files</span>
+          <span><strong>${heavyCount}</strong> Heavy Files</span>
         `;
       }
 
@@ -1142,18 +1196,18 @@
         const phaseCounts = Array.from(countBy(timelineDays, (day) => day.phase).entries()).sort((a, b) => b[1] - a[1]);
 
         metaGrid.innerHTML = `
-          <div class="meta-card"><strong>${featuredCount}</strong><span>kuratiert hervorgehobene Artefakte</span></div>
-          <div class="meta-card"><strong>${groupedCount}</strong><span>gruppierte Quellblöcke aus den Rohdaten</span></div>
-          <div class="meta-card"><strong>${sidecarCount}</strong><span>Artefakte in der Sidecar-Evolutionsspur</span></div>
-          <div class="meta-card"><strong>${allItems.filter((item) => item.type === "app").length}</strong><span>App- oder Website-nahe Einträge</span></div>
+          <div><strong>${featuredCount}</strong> kuratiert hervorgehobene Artefakte</div>
+          <div><strong>${groupedCount}</strong> gruppierte Quellblöcke aus den Rohdaten</div>
+          <div><strong>${sidecarCount}</strong> Artefakte in der Sidecar-Evolutionsspur</div>
+          <div><strong>${allItems.filter((item) => item.type === "app").length}</strong> App- oder Website-nahe Einträge</div>
         `;
 
         clusterList.innerHTML = clusterCounts.map(([cluster, count]) => `
-          <li><strong>${cluster}</strong><span>${count} Artefakte</span></li>
+          <li><strong>${esc(cluster)}</strong> · ${count} Artefakte</li>
         `).join("");
 
         phaseList.innerHTML = phaseCounts.map(([phase, count]) => `
-          <li><strong>${phase}</strong><span>${count} aktive Tage</span></li>
+          <li><strong>${esc(phase)}</strong> · ${count} aktive Tage</li>
         `).join("");
       }
 
@@ -1165,47 +1219,44 @@
           })
           .filter(Boolean);
 
-        heroFeaturedGrid.innerHTML = featuredItems.map((item) => {
+        heroFeaturedGrid.innerHTML = featuredItems.map((item, index) => {
           const screenshot = resolveScreenshot(item);
           const artifactLink = resolveArtifactLink(item);
           return `
-            <article class="hero-feature-card" data-type="${item.type}">
-              ${screenshot.hasScreenshot ? `
-                <div class="hero-feature-media">
-                  <img src="${screenshot.src}" alt="${screenshot.alt}" loading="lazy" decoding="async">
-                </div>
-              ` : ""}
-              <div class="hero-feature-body">
-                <span class="hero-feature-kicker">${item.kicker}</span>
-                <h3>${item.title.replace(/\.html$/i, "")}</h3>
-                <p>${item.thesis}</p>
-                <div class="hero-feature-meta">
-                  <span>${item.dayLabel}</span>
-                  <span>${item.projectLabel}</span>
-                </div>
-                <div class="card-actions">
-                  <button class="card-button" type="button" data-select-artifact="${item.id}">Im Detail ansehen</button>
+            <article class="entry">
+              <div class="num" aria-hidden="true">0${index + 1}</div>
+              <div>
+                <p class="meta">${esc(item.kicker)} · ${esc(item.dayLabel)} · ${esc(item.projectLabel)}</p>
+                <h3>${esc(item.title.replace(/\.html$/i, ""))}</h3>
+                <p>${esc(item.thesis)}</p>
+                ${screenshot.hasScreenshot ? `
+                  <figure class="figure">
+                    <img src="${screenshot.src}" alt="${esc(screenshot.alt)}" loading="lazy" decoding="async">
+                  </figure>
+                ` : ""}
+                <div class="actions">
+                  <button class="btn" type="button" data-select-artifact="${item.id}">Im Detail ansehen</button>
                   ${artifactLink.resolved
-                    ? `<a class="card-link" href="${artifactLink.href}" target="_blank" rel="noreferrer">Open hosted artifact</a>`
-                    : `<span class="card-link disabled" aria-disabled="true">Artifact unavailable</span>`}
+                    ? `<a href="${artifactLink.href}" target="_blank" rel="noreferrer">Open hosted artifact</a>`
+                    : `<span>Artifact unavailable</span>`}
                 </div>
               </div>
             </article>
           `;
         }).join("");
 
-        heroMethodGrid.innerHTML = heroMethodConfig.map((item) => `
-          <article class="hero-method-item">
-            <strong>${item.verb}</strong>
-            <p>${item.copy}</p>
-          </article>
+        heroMethodGrid.innerHTML = heroMethodConfig.map((item, index) => `
+          <li>
+            <span class="num" aria-hidden="true">0${index + 1}</span>
+            <div><strong>${esc(item.verb)}</strong><span>${esc(item.copy)}</span></div>
+          </li>
         `).join("");
       }
 
       function renderFilters() {
         const typesInData = ["all", "featured", ...Object.keys(typeMeta).filter((key) => !["all", "featured"].includes(key) && allItems.some((item) => item.type === key))];
         typeFilters.innerHTML = typesInData.map((type) => `
-          <button class="chip ${state.type === type ? "active" : ""}" data-filter-type="${type}">${typeMeta[type].label}</button>
+          <button class="btn" type="button" data-filter-type="${type}" aria-pressed="${state.type === type}">${esc(typeMeta[type].label)}</button>
         `).join("");
 
         const projects = [
@@ -1216,49 +1267,15 @@
         ];
         projectFilters.innerHTML = projects.map((slug) => {
           const label = slug === "all" ? "Alle Projekte" : Object.values(projectMeta).find((project) => project.slug === slug).label;
-          return `<button class="chip ${state.project === slug ? "active" : ""}" data-filter-project="${slug}">${label}</button>`;
+          return `<button class="btn" type="button" data-filter-project="${slug}" aria-pressed="${state.project === slug}">${esc(label)}</button>`;
         }).join("");
 
         const phases = Array.from(new Set(timelineDays.map((day) => day.phase)));
         phaseJumps.innerHTML = phases.map((phase) => {
           const day = timelineDays.find((entry) => entry.phase === phase);
-          return `<a class="phase-link" href="#${day.id}">${phase}</a>`;
+          return `<a href="#${day.id}">${esc(phase)}</a>`;
         }).join("");
       }
-
-      const diagramRootFiles = new Set([
-        "agent-team-workflow-demo.html",
-        "agentide-git-history.html",
-        "buildmode-explainer.html",
-        "claude-api-tunnel-flow.html",
-        "claude-code-ecosystem-complete.html",
-        "claude-code-model-effort-system.html",
-        "claude-config-evolution.html",
-        "claude-directory-architecture.html",
-        "claudecodepanel-deep-review.html",
-        "dynamic-memory-system.html",
-        "haekel-buddy-app.html",
-        "haekel-buddy-architektur.html",
-        "haekel-buddy-konzept.html",
-        "haekel-rose-anleitung.html",
-        "memory-minimax-quality-analysis.html",
-        "meta-analyse-4wochen-samuel.html",
-        "promptgarage-launcher.html",
-        "sidecar-ecosystem-overview.html",
-        "sidecar-ng-skill-router.html",
-        "sidecar-v7-daemon-commits.html",
-        "sidecar-v7-introspection-session.html",
-        "sidecar-v7-lite-architecture.html",
-        "sidecar-v7-phase-unification.html",
-        "sidecar-v7-phase2-plan.html",
-        "sidecar-v7-visual-explainer.html",
-        "sidecar-v7-wie-es-hilft.html",
-        "smart-compact-flow.html",
-        "typotuner-architecture.html",
-        "v6-eval-analysis.html",
-        "v7-evaluation-deep-dive.html",
-        "viz-event-infrastructure.html"
-      ]);
 
       function resolveArtifactLink(item) {
         const key = `${item.project}::${item.path || ""}`;
@@ -1277,6 +1294,7 @@
       function renderTimeline() {
         const filteredItems = filterItems(allItems);
         const visibleIds = new Set(filteredItems.map((item) => item.id));
+        const renderedPhases = new Set();
         const sections = timelineDays.map((day) => {
           const dayItems = day.items
             .map((item, itemIndex) => allItems.find((entry) => entry.dayId === day.id && entry.itemIndex === itemIndex))
@@ -1288,35 +1306,37 @@
           }
 
           const note = phaseNotes[day.phase] || "";
+          const isPhaseStart = !renderedPhases.has(day.phase);
+          if (isPhaseStart) {
+            renderedPhases.add(day.phase);
+          }
           const marker = day.marker === "start"
-            ? '<span class="journey-marker start">&larr; Start</span>'
+            ? '<span class="status">Start</span>'
             : day.marker === "end"
-              ? '<span class="journey-marker end">Heute &rarr;</span>'
+              ? '<span class="status">Heute</span>'
               : "";
-          const header = timelineDays.find((entry) => entry.phase === day.phase && entry.id === day.id)
-            ? `
-              <div class="phase-banner">
-                <h2 class="phase-title">${day.phase}</h2>
-                <span class="phase-chip">${dayItems.length} Artefakte</span>
-              </div>
-              <p class="phase-copy">${note}</p>
-            `
-            : "";
+          const header = isPhaseStart ? `
+            <div class="section-head">
+              <p class="meta">Phase</p>
+              <h2>${esc(day.phase)}</h2>
+            </div>
+            ${note ? `<p>${esc(note)}</p>` : ""}
+          ` : "";
 
           return `
-            <section class="day-section" id="${day.id}">
-              <div class="day-rail">
-                <div class="day-label">
-                  <strong>${day.displayDate}</strong>
-                  <span>${dayItems.length} sichtbar</span>
+            <section class="section" id="${day.id}" data-section="${esc(day.displayDate)}" aria-label="Timeline ${esc(day.displayDate)}">
+              <div class="wrap grid">
+                <div class="rail meta">
+                  <div>${esc(day.displayDate)}</div>
+                  <div>${dayItems.length} sichtbar</div>
+                  ${marker}
+                  ${day.highlightDay ? '<span class="status">Peak</span>' : ""}
                 </div>
-                <span class="day-dot" aria-hidden="true"></span>
-                ${marker}
-              </div>
-              <div class="day-content">
-                ${header}
-                <div class="cards-grid">
-                  ${dayItems.map((item) => renderCard(item, day.highlightDay)).join("")}
+                <div class="main">
+                  ${header}
+                  <div class="entries">
+                    ${dayItems.map((item) => renderCard(item)).join("")}
+                  </div>
                 </div>
               </div>
             </section>
@@ -1324,50 +1344,49 @@
         }).join("");
 
         timelineGrid.innerHTML = sections;
-        emptyState.classList.toggle("hidden", filteredItems.length > 0);
+        emptyState.hidden = filteredItems.length > 0;
         filterResult.textContent = `${filteredItems.length} / ${allItems.length} Artefakte sichtbar`;
       }
 
-      function renderCard(item, highlightDay) {
+      function renderCard(item) {
         const artifactLink = resolveArtifactLink(item);
         const screenshot = resolveScreenshot(item);
-        const badge = item.size
-          ? `<span class="size-badge ${item.heavy ? "heavy" : ""}">${item.size}</span>`
-          : "";
+        const meta = [
+          typeMeta[item.type].label,
+          item.projectLabel,
+          item.size || null,
+          item.featured ? "Featured" : null
+        ].filter(Boolean).join(" · ");
         const note = [
           item.cluster,
           item.grouped ? "grouped source" : null
         ].filter(Boolean).join(" · ");
 
         return `
-          <article class="timeline-card ${highlightDay ? "highlight-day" : ""} ${screenshot.hasScreenshot ? "has-media" : ""}" data-type="${item.type}" data-project="${item.projectSlug}">
-            ${screenshot.hasScreenshot ? `
-              <div class="card-media">
-                <img src="${screenshot.src}" alt="${screenshot.alt}" loading="lazy" decoding="async">
-              </div>
-            ` : ""}
-            <div class="card-topline">
-              <span class="badge type-badge">${typeMeta[item.type].label}</span>
-              <span class="badge project-badge">${item.projectLabel}</span>
-              ${item.featured ? '<span class="badge phase-badge">Featured</span>' : ""}
-              ${badge}
-            </div>
-            <h3>${item.title}</h3>
-            <p>${item.summary}</p>
-            <div class="card-footer">
-              <span class="meta-note">${note}</span>
-              <div class="card-actions">
-                <button class="card-button" type="button" data-select-artifact="${item.id}">Details</button>
+          <article class="entry" data-type="${item.type}" data-project="${item.projectSlug}">
+            <div class="num" aria-hidden="true">${String(item.itemIndex + 1).padStart(2, "0")}</div>
+            <div>
+              <p class="meta">${esc(meta)}</p>
+              <h3>${esc(item.title)}</h3>
+              <p>${esc(item.summary)}</p>
+              ${note ? `<p class="meta">${esc(note)}</p>` : ""}
+              ${screenshot.hasScreenshot ? `
+                <figure class="figure">
+                  <img src="${screenshot.src}" alt="${esc(screenshot.alt)}" loading="lazy" decoding="async">
+                </figure>
+              ` : ""}
+              <div class="actions">
+                <button class="btn" type="button" data-select-artifact="${item.id}">Details</button>
                 ${artifactLink.resolved
-                  ? `<a class="card-link" href="${artifactLink.href}" target="_blank" rel="noreferrer">Open hosted artifact</a>`
-                  : `<span class="card-link disabled" aria-disabled="true">Artifact unavailable</span>`}
+                  ? `<a href="${artifactLink.href}" target="_blank" rel="noreferrer">Open hosted artifact</a>`
+                  : `<span>Artifact unavailable</span>`}
               </div>
             </div>
           </article>
         `;
       }
 
-      function selectArtifact(id, pushState = true) {
+      function selectArtifact(id, pushState = true, scroll = false) {
         const artifact = allItems.find((item) => item.id === id) || filterItems(allItems)[0] || allItems[0];
         if (!artifact) {
           detailContent.innerHTML = "<p>Keine Daten verfügbar.</p>";
@@ -1381,46 +1400,51 @@
         const samePhaseCount = allItems.filter((item) => item.phase === artifact.phase).length;
 
         detailContent.innerHTML = `
-          <div data-type="${artifact.type}">
-            <div class="detail-tags">
-              <span class="badge type-badge">${typeMeta[artifact.type].label}</span>
-              <span class="badge project-badge">${artifact.projectLabel}</span>
-              <span class="badge phase-badge">${artifact.phase}</span>
-            </div>
-            <h3 class="detail-title">${artifact.title}</h3>
-            <p>${artifact.summary}</p>
-            <div class="detail-stats">
-              <div class="detail-stat"><strong>${artifact.dayLabel}</strong><span>Datum im sichtbaren Sprint</span></div>
-              <div class="detail-stat"><strong>${samePhaseCount}</strong><span>Artefakte in derselben Phase</span></div>
-              <div class="detail-stat"><strong>${artifact.cluster}</strong><span>thematischer Cluster</span></div>
-            </div>
-            <p>
-              ${artifact.featured ? "Dieses Artefakt ist kuratiert hervorgehoben, weil es entweder einen Phasenwechsel, besondere technische Tiefe oder ungewöhnliche Produktbreite sichtbar macht." : "Dieses Artefakt ist Teil des vollständigen Stroms und zeigt, wie dicht verschiedene Arbeitsmodi in kurzer Zeit nebeneinander lagen."}
-            </p>
-            <p>
-              ${artifact.grouped ? "Der Rohdatensatz nennt hier einen gruppierten Block statt einzelner Dateien. Die Website behält diese Ehrlichkeit bei und zeigt den Block als gebündelten Produktionsschritt." : "Der Eintrag verweist auf ein einzelnes HTML-Artefakt. Öffentlich verlinkt wird es nur, wenn eine gehostete Version existiert."}
-            </p>
-            <div class="card-actions">
-              ${artifactLink.resolved
-                ? `<a class="card-link" href="${artifactLink.href}" target="_blank" rel="noreferrer">Open hosted artifact</a>`
-                : `<span class="card-link disabled" aria-disabled="true">Artifact unavailable</span>`}
-              <a class="card-link" href="#${artifact.dayId}">Jump to day</a>
-            </div>
-            <div class="detail-neighbors">
-              ${neighbors.map((neighbor) => `
-                <div class="neighbor-card" data-type="${neighbor.type}">
-                  <small>${neighbor.dayLabel} · ${typeMeta[neighbor.type].label}</small>
-                  <strong>${neighbor.title}</strong>
-                  <p>${neighbor.summary}</p>
-                  <button class="card-button" type="button" data-select-artifact="${neighbor.id}">Inspect artifact</button>
+          <div class="section-head">
+            <p class="meta">${esc(typeMeta[artifact.type].label)} · ${esc(artifact.phase)}</p>
+            <h3>${esc(artifact.title)}</h3>
+          </div>
+          <p>${esc(artifact.summary)}</p>
+          <div class="meta">
+            <div><strong>${esc(artifact.dayLabel)}</strong> · Datum im sichtbaren Sprint</div>
+            <div><strong>${samePhaseCount}</strong> · Artefakte in derselben Phase</div>
+            <div><strong>${esc(artifact.cluster)}</strong> · thematischer Cluster</div>
+          </div>
+          <p>
+            ${artifact.featured ? "Dieses Artefakt ist kuratiert hervorgehoben, weil es entweder einen Phasenwechsel, besondere technische Tiefe oder ungewöhnliche Produktbreite sichtbar macht." : "Dieses Artefakt ist Teil des vollständigen Stroms und zeigt, wie dicht verschiedene Arbeitsmodi in kurzer Zeit nebeneinander lagen."}
+          </p>
+          <p>
+            ${artifact.grouped ? "Der Rohdatensatz nennt hier einen gruppierten Block statt einzelner Dateien. Die Website behält diese Ehrlichkeit bei und zeigt den Block als gebündelten Produktionsschritt." : "Der Eintrag verweist auf ein einzelnes HTML-Artefakt. Öffentlich verlinkt wird es nur, wenn eine gehostete Version existiert."}
+          </p>
+          <div class="actions">
+            ${artifactLink.resolved
+              ? `<a href="${artifactLink.href}" target="_blank" rel="noreferrer">Open hosted artifact</a>`
+              : `<span>Artifact unavailable</span>`}
+            <a href="#${artifact.dayId}">Jump to day</a>
+          </div>
+          <div class="entries">
+            ${neighbors.map((neighbor) => `
+              <article class="entry">
+                <div class="num" aria-hidden="true">${String(neighbor.itemIndex + 1).padStart(2, "0")}</div>
+                <div>
+                  <p class="meta">${esc(neighbor.dayLabel)}</p>
+                  <h3>${esc(neighbor.title)}</h3>
+                  <p>${esc(neighbor.summary)}</p>
+                  <div class="actions">
+                    <button class="btn" type="button" data-select-artifact="${neighbor.id}">Inspect artifact</button>
+                  </div>
                 </div>
-              `).join("")}
-            </div>
+              </article>
+            `).join("")}
           </div>
         `;
 
         if (pushState) {
           syncUrl();
+        }
+
+        if (scroll) {
+          detailPanel.scrollIntoView({ block: "start" });
         }
       }
 
@@ -1431,12 +1455,6 @@
         if (state.selectedId) params.set("artifact", state.selectedId);
         const nextUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ""}`;
         window.history.replaceState({}, "", nextUrl);
-      }
-
-      function updateStickyOffsets() {
-        const root = document.documentElement;
-        const statsHeight = statsBar ? Math.ceil(statsBar.offsetHeight) : 54;
-        root.style.setProperty("--stats-bar-height", `${statsHeight}px`);
       }
 
       document.addEventListener("click", (event) => {
@@ -1460,7 +1478,7 @@
 
         const artifactButton = event.target.closest("[data-select-artifact]");
         if (artifactButton) {
-          selectArtifact(artifactButton.dataset.selectArtifact);
+          selectArtifact(artifactButton.dataset.selectArtifact, true, true);
         }
       });
 
@@ -1469,9 +1487,7 @@
       buildHeroBottom();
       renderFilters();
       renderTimeline();
-      selectArtifact(state.selectedId || allItems.find((item) => item.featured)?.id || allItems[0].id, false);
-      updateStickyOffsets();
-      window.addEventListener("resize", updateStickyOffsets);
+      selectArtifact(state.selectedId || allItems.find((item) => item.featured)?.id || allItems[0].id, false, false);
       syncUrl();
     })();
   </script>

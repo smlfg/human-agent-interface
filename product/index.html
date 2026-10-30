@@ -3,1342 +3,424 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090a08">
-  <meta
-    name="description"
-    content="Commercial Human Agent Interface offers: 4h HAI setup, agentic system setup, Sidecar-NG, and Adminspace / Userspace."
-  >
+  <meta name="theme-color" content="#f4f0e6">
   <title>Human Agent Interface Products</title>
-  <style>
-    :root {
-      color-scheme: dark;
-      --ink: #f7f1df;
-      --muted: #b7ad97;
-      --quiet: #7a715f;
-      --void: #080806;
-      --charcoal: #11100d;
-      --panel: rgba(247, 241, 223, 0.065);
-      --panel-strong: rgba(247, 241, 223, 0.12);
-      --line: rgba(247, 241, 223, 0.18);
-      --line-strong: rgba(247, 241, 223, 0.32);
-      --signal: #a7ff4f;
-      --copper: #ff9f5f;
-      --cyan: #7dd8ff;
-      --red: #ff5b4f;
-      --max: 1180px;
-      --pad: clamp(18px, 4vw, 56px);
-      --display: Georgia, "Times New Roman", serif;
-      --body: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
-      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      background: var(--void);
-    }
-
-    body {
-      margin: 0;
-      min-width: 320px;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 76% 12%, rgba(167, 255, 79, 0.13), transparent 28rem),
-        radial-gradient(circle at 18% 34%, rgba(255, 159, 95, 0.1), transparent 26rem),
-        linear-gradient(180deg, #080806 0%, #11100d 46%, #070806 100%);
-      font-family: var(--body);
-      line-height: 1.5;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 20;
-      pointer-events: none;
-      opacity: 0.24;
-      background-image:
-        linear-gradient(rgba(247, 241, 223, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(247, 241, 223, 0.03) 1px, transparent 1px);
-      background-size: 72px 72px;
-      mask-image: linear-gradient(180deg, black, transparent 78%);
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    p,
-    h1,
-    h2,
-    h3,
-    h4 {
-      margin: 0;
-    }
-
-    .site-shell {
-      position: relative;
-      isolation: isolate;
-    }
-
-    .topbar {
-      position: fixed;
-      inset: 0 0 auto;
-      z-index: 30;
-      display: flex;
-      justify-content: center;
-      padding: 14px var(--pad) 0;
-      pointer-events: none;
-    }
-
-    .topbar-inner {
-      width: min(var(--max), 100%);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 12px 14px;
-      border: 1px solid rgba(247, 241, 223, 0.13);
-      background: rgba(8, 8, 6, 0.72);
-      backdrop-filter: blur(18px);
-      box-shadow: 0 18px 70px rgba(0, 0, 0, 0.3);
-      pointer-events: auto;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .brand-mark {
-      width: 30px;
-      height: 30px;
-      display: grid;
-      place-items: center;
-      border: 1px solid var(--line-strong);
-      color: var(--signal);
-      font-size: 12px;
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: clamp(12px, 2vw, 24px);
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .nav a {
-      opacity: 0.82;
-      transition: color 160ms ease, opacity 160ms ease;
-    }
-
-    .nav a:hover,
-    .nav a:focus-visible {
-      color: var(--ink);
-      opacity: 1;
-    }
-
-    .nav .nav-cta {
-      min-height: 34px;
-      display: inline-flex;
-      align-items: center;
-      padding: 0 12px;
-      border: 1px solid rgba(167, 255, 79, 0.48);
-      background: rgba(167, 255, 79, 0.1);
-      color: var(--ink);
-      opacity: 1;
-    }
-
-    .hero {
-      min-height: 96svh;
-      display: grid;
-      align-items: center;
-      padding: 126px var(--pad) 72px;
-      border-bottom: 1px solid var(--line);
-      background:
-        linear-gradient(90deg, rgba(247, 241, 223, 0.075), transparent 1px),
-        linear-gradient(180deg, rgba(247, 241, 223, 0.04), transparent 1px);
-      background-size: 84px 84px;
-    }
-
-    .hero-inner {
-      width: min(var(--max), 100%);
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: minmax(0, 0.96fr) minmax(320px, 0.44fr);
-      gap: clamp(32px, 6vw, 88px);
-      align-items: end;
-    }
-
-    .eyebrow,
-    .kicker {
-      color: var(--copper);
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 42px;
-      height: 1px;
-      background: var(--copper);
-    }
-
-    h1 {
-      max-width: 920px;
-      font-family: var(--display);
-      font-weight: 500;
-      font-size: clamp(3.4rem, 8.2vw, 7.9rem);
-      line-height: 0.92;
-      letter-spacing: 0;
-      overflow-wrap: break-word;
-      text-wrap: balance;
-    }
-
-    .promise {
-      max-width: 760px;
-      margin-top: 28px;
-      color: var(--ink);
-      font-size: clamp(1.24rem, 2.25vw, 1.85rem);
-      line-height: 1.18;
-      text-wrap: balance;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 28px;
-      align-items: center;
-    }
-
-    .button {
-      min-height: 52px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 0 20px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--ink);
-      font-weight: 800;
-      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
-    }
-
-    .button.primary {
-      border-color: rgba(167, 255, 79, 0.7);
-      background: var(--signal);
-      color: #11150d;
-    }
-
-    .button:hover,
-    .button:focus-visible {
-      transform: translateY(-2px);
-      border-color: rgba(247, 241, 223, 0.44);
-      background: var(--panel-strong);
-    }
-
-    .button.primary:hover,
-    .button.primary:focus-visible {
-      border-color: var(--signal);
-      background: #c4ff86;
-    }
-
-    .price-line {
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .proof-panel {
-      border-left: 1px solid var(--line-strong);
-      background: linear-gradient(90deg, rgba(247, 241, 223, 0.075), transparent);
-      padding: 24px;
-    }
-
-    .proof-panel h2 {
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .proof-list {
-      display: grid;
-      gap: 14px;
-      margin-top: 18px;
-    }
-
-    .proof-item {
-      display: grid;
-      gap: 4px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .proof-item:last-child {
-      padding-bottom: 0;
-      border-bottom: 0;
-    }
-
-    .proof-item strong {
-      color: var(--ink);
-      font-family: var(--display);
-      font-size: clamp(1.35rem, 2.5vw, 2rem);
-      font-weight: 500;
-      line-height: 1;
-    }
-
-    .proof-item span {
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .proof-item a {
-      color: var(--signal);
-      font-weight: 800;
-    }
-
-    .section {
-      padding: clamp(70px, 10vw, 132px) var(--pad);
-    }
-
-    .section-inner {
-      width: min(var(--max), 100%);
-      margin: 0 auto;
-    }
-
-    .section-head {
-      display: grid;
-      grid-template-columns: minmax(0, 0.8fr) minmax(280px, 0.46fr);
-      gap: clamp(24px, 6vw, 78px);
-      align-items: end;
-      margin-bottom: 36px;
-    }
-
-    h2 {
-      margin-top: 12px;
-      font-family: var(--display);
-      font-size: clamp(2.35rem, 5.8vw, 5.8rem);
-      font-weight: 500;
-      line-height: 0.98;
-      letter-spacing: 0;
-      text-wrap: balance;
-    }
-
-    .section-copy {
-      color: var(--muted);
-      font-size: clamp(1rem, 1.55vw, 1.18rem);
-    }
-
-    .fit-matrix {
-      display: grid;
-      gap: 12px;
-      margin-top: 34px;
-    }
-
-    .fit-row {
-      display: grid;
-      grid-template-columns: minmax(170px, 0.8fr) minmax(220px, 1.1fr) minmax(120px, 0.42fr) minmax(260px, 1.3fr);
-      gap: 18px;
-      align-items: center;
-      padding: 18px 20px;
-      border: 1px solid var(--line);
-      background: rgba(247, 241, 223, 0.04);
-    }
-
-    .fit-row.header {
-      padding-block: 12px;
-      color: var(--quiet);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      background: rgba(247, 241, 223, 0.025);
-    }
-
-    .fit-row:not(.header) {
-      min-height: 104px;
-    }
-
-    .fit-area,
-    .fit-tools,
-    .fit-statement {
-      color: var(--muted);
-      font-size: 0.98rem;
-    }
-
-    .fit-area strong {
-      display: block;
-      color: var(--ink);
-      font-family: var(--display);
-      font-size: clamp(1.3rem, 2vw, 1.9rem);
-      font-weight: 500;
-      line-height: 1;
-    }
-
-    .fit-tools {
-      color: var(--ink);
-    }
-
-    .fit-badge {
-      min-height: 34px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: fit-content;
-      padding: 0 12px;
-      border: 1px solid currentColor;
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .fit-badge.strong {
-      color: var(--signal);
-      background: rgba(167, 255, 79, 0.08);
-    }
-
-    .fit-badge.medium {
-      color: var(--copper);
-      background: rgba(255, 159, 95, 0.08);
-    }
-
-    .fit-badge.limited {
-      color: var(--cyan);
-      background: rgba(125, 216, 255, 0.08);
-    }
-
-    .fit-badge.no {
-      color: #ff5b4f;
-      background: rgba(255, 91, 79, 0.07);
-    }
-
-    .fit-note {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 22px;
-      align-items: center;
-      margin-top: 18px;
-      padding: 20px;
-      border: 1px solid var(--line);
-      background: rgba(8, 9, 6, 0.46);
-    }
-
-    .fit-note p {
-      color: var(--muted);
-      font-size: clamp(1rem, 1.7vw, 1.22rem);
-    }
-
-    .fit-note strong {
-      color: var(--ink);
-    }
-
-    .fit-proof-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .fit-proof-intro {
-      margin-top: 18px;
-      padding: 16px 20px;
-      border: 1px solid var(--line);
-      color: var(--muted);
-      background: rgba(247, 241, 223, 0.025);
-      font-size: 0.98rem;
-    }
-
-    .fit-proof-intro strong {
-      color: var(--ink);
-    }
-
-    .fit-proof-card {
-      min-height: 230px;
-      display: grid;
-      align-content: start;
-      gap: 12px;
-      padding: 20px;
-      border: 1px solid var(--line);
-      background: rgba(247, 241, 223, 0.035);
-    }
-
-    .fit-proof-card span {
-      color: var(--quiet);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .fit-proof-card strong {
-      color: var(--ink);
-      font-family: var(--display);
-      font-size: clamp(1.45rem, 2.35vw, 2.25rem);
-      font-weight: 500;
-      line-height: 1.02;
-    }
-
-    .fit-proof-card p {
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .fit-proof-card a {
-      color: var(--signal);
-      text-decoration: none;
-    }
-
-    .offers-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .offer {
-      min-height: 620px;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 28px;
-      padding: clamp(22px, 3vw, 32px);
-      border: 1px solid var(--line);
-      background: rgba(247, 241, 223, 0.045);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .offer::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      opacity: 0.18;
-      background-image: linear-gradient(135deg, transparent 0 47%, currentColor 48% 49%, transparent 50% 100%);
-      background-size: 38px 38px;
-    }
-
-    .offer:nth-child(1) {
-      color: rgba(167, 255, 79, 0.72);
-    }
-
-    .offer:nth-child(2) {
-      color: rgba(125, 216, 255, 0.66);
-    }
-
-    .offer:nth-child(3) {
-      color: rgba(255, 159, 95, 0.68);
-    }
-
-    .offer:nth-child(4) {
-      color: rgba(255, 91, 79, 0.62);
-    }
-
-    .offer > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .offer-code {
-      color: var(--quiet);
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .offer h3 {
-      margin-top: 16px;
-      color: var(--ink);
-      font-family: var(--display);
-      font-size: clamp(2rem, 3.7vw, 3.6rem);
-      font-weight: 500;
-      line-height: 0.98;
-      text-wrap: balance;
-    }
-
-    .offer-lede {
-      max-width: 560px;
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 1.04rem;
-    }
-
-    .offer-spec {
-      display: grid;
-      gap: 18px;
-    }
-
-    .spec-block {
-      padding-top: 16px;
-      border-top: 1px solid var(--line);
-    }
-
-    .spec-block h4 {
-      color: var(--copper);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .spec-block p {
-      margin-top: 7px;
-      color: var(--ink);
-      font-size: 0.98rem;
-    }
-
-    .spec-block ul {
-      display: grid;
-      gap: 7px;
-      margin: 9px 0 0;
-      padding: 0;
-      color: var(--ink);
-      list-style: none;
-      font-size: 0.98rem;
-    }
-
-    .spec-block li {
-      display: grid;
-      grid-template-columns: 16px 1fr;
-      gap: 8px;
-      align-items: start;
-    }
-
-    .spec-block li::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      margin-top: 8px;
-      background: currentColor;
-    }
-
-    .offer-footer {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      justify-content: space-between;
-      border-top: 1px solid var(--line);
-      padding-top: 18px;
-    }
-
-    .offer-note {
-      color: var(--quiet);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .commercial {
-      border-block: 1px solid var(--line);
-      background:
-        linear-gradient(180deg, rgba(247, 241, 223, 0.05), rgba(247, 241, 223, 0.015)),
-        #0c0d0a;
-    }
-
-    .commercial-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 0.82fr) minmax(280px, 0.48fr);
-      gap: clamp(24px, 6vw, 84px);
-      align-items: center;
-    }
-
-    .commercial h2 {
-      max-width: 760px;
-    }
-
-    .commercial-list {
-      display: grid;
-      gap: 12px;
-      margin-top: 26px;
-      color: var(--muted);
-      font-size: 1rem;
-    }
-
-    .commercial-list p {
-      padding-left: 16px;
-      border-left: 2px solid var(--line-strong);
-    }
-
-    .booking-box {
-      border: 1px solid var(--line-strong);
-      background: rgba(8, 8, 6, 0.52);
-      padding: 24px;
-    }
-
-    .booking-box strong {
-      display: block;
-      color: var(--signal);
-      font-family: var(--display);
-      font-size: clamp(1.9rem, 4vw, 3.2rem);
-      font-weight: 500;
-      line-height: 1;
-    }
-
-    .booking-box p {
-      margin-top: 14px;
-      color: var(--muted);
-    }
-
-    .booking-box .button {
-      width: 100%;
-      margin-top: 22px;
-    }
-
-    .faq-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .faq-item {
-      min-height: 190px;
-      padding: 24px;
-      border: 1px solid var(--line);
-      background: rgba(247, 241, 223, 0.045);
-    }
-
-    .faq-item h3 {
-      color: var(--ink);
-      font-family: var(--display);
-      font-size: clamp(1.45rem, 2.4vw, 2.1rem);
-      font-weight: 500;
-      line-height: 1.04;
-    }
-
-    .faq-item p {
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: 1rem;
-    }
-
-    footer {
-      padding: 28px var(--pad);
-      border-top: 1px solid var(--line);
-      color: var(--quiet);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .footer-inner {
-      width: min(var(--max), 100%);
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    @media (max-width: 940px) {
-      .hero-inner,
-      .section-head,
-      .fit-note,
-      .commercial-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero {
-        min-height: auto;
-      }
-
-      .offers-grid,
-      .fit-proof-grid,
-      .faq-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .fit-row,
-      .fit-row.header {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-
-      .fit-row.header {
-        display: none;
-      }
-
-      .offer {
-        min-height: auto;
-      }
-    }
-
-    @media (max-width: 700px) {
-      .topbar {
-        position: absolute;
-      }
-
-      .topbar-inner {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .brand span:last-child {
-        display: none;
-      }
-
-      .nav {
-        width: 100%;
-        display: flex;
-        gap: 14px;
-        overflow-x: auto;
-        padding-bottom: 4px;
-        scrollbar-width: none;
-      }
-
-      .nav::-webkit-scrollbar {
-        display: none;
-      }
-
-      .nav .nav-cta {
-        display: none;
-      }
-
-      .hero {
-        width: 100vw;
-        padding: 148px 20px 58px;
-      }
-
-      .section {
-        width: 100vw;
-        padding-left: 20px;
-        padding-right: 20px;
-      }
-
-      .hero-inner,
-      .section-inner,
-      .footer-inner {
-        width: 350px;
-        max-width: calc(100vw - 40px);
-        margin-left: 0;
-        margin-right: 0;
-      }
-
-      h1 {
-        font-size: clamp(2.8rem, 13.8vw, 4.6rem);
-        line-height: 0.96;
-      }
-
-      h2 {
-        font-size: clamp(2.25rem, 11vw, 3.4rem);
-      }
-
-      .hero-actions,
-      .offer-footer {
-        display: grid;
-      }
-
-      .button {
-        width: 100%;
-      }
-
-      .proof-panel,
-      .booking-box,
-      .faq-item,
-      .offer {
-        padding: 22px;
-      }
-
-      .footer-inner {
-        display: grid;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-        transition-duration: 0.001ms !important;
-      }
-    }
-
-    @view-transition { navigation: auto; }
-
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 200; padding: 12px 18px; background: #090a08; color: #f7f1df; border: 1px solid #a7ff4f; text-decoration: none; }
-    .skip-link:focus { left: 10px; top: 10px; }
-    [id] { scroll-margin-top: 88px; }
-
-    /* .topbar is already position: fixed; .topbar-inner already has a semi-opaque dark bg + blur.
-       Only add the explicit readable bottom border. */
-    .topbar-inner { border-bottom: 1px solid rgba(247,241,223,.18); }
-
-    nav a[aria-current="page"] { color: #a7ff4f; }
-
-    /* Preise (Phase 1: Pricing-Ziel fuer die Navigation) */
-    .price-grid {
-      display: grid;
-      gap: 12px;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      margin-top: 10px;
-    }
-
-    .price-card {
-      border: 1px solid var(--line);
-      padding: 18px;
-      background: var(--panel);
-    }
-
-    .price-label {
-      margin: 0 0 6px;
-      color: var(--copper);
-      font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .price-value {
-      margin: 0 0 8px;
-      color: var(--ink);
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
-
-    .price-note {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.86rem;
-    }
-  </style>
-  <script src="/mail-fallback.js" defer></script>
+  <meta name="description" content="Commercial Human Agent Interface offers: 4h HAI setup, agentic system setup, Sidecar-NG, and Adminspace / Userspace.">
+  <link rel="icon" href="/assets/favicon-64.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/newsreader-300_700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-300_700-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/hai.css">
 </head>
-<body>
-  <a class="skip-link" href="#top">Skip to content</a>
-  <div class="site-shell">
-    <header class="topbar" aria-label="Site navigation">
-      <div class="topbar-inner">
-        <a class="brand" href="../index.html" aria-label="Human Agent Interface home">
-          <span class="brand-mark">HAI</span>
-          <span>Human Agent Interface</span>
-        </a>
-        <nav class="nav" aria-label="Site navigation">
-          <a href="../what_it_is/">Method</a>
-          <a href="../proof/">Proof</a>
-          <a href="../samuel/">Samuel</a>
-          <a href="../product/" aria-current="page">Offer</a>
-          <a class="nav-cta" href="mailto:hallo@samuelfleig.com?subject=Scope%20the%204h%20HAI%20Setup&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20scope%20a%204h%20HAI%20Setup.%0D%0A%0D%0AMy%20current%20agentic%20workflow%20problem%3A%0D%0A%0D%0ARelevant%20tools%20or%20team%20context%3A%0D%0A%0D%0APreferred%20time%20windows%3A">Scope setup</a>
-        </nav>
-      </div>
-    </header>
+<body data-page="legacy">
+  <a class="skip-link" href="#main">Skip to content</a>
 
-    <main id="top">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-inner">
-          <div>
-            <p class="eyebrow">Commercial HAI offers</p>
-            <h1 id="hero-title">Human Agent Interface Products</h1>
-            <p class="promise">
-              I turn messy AI work into scoped, controllable systems humans can actually own.
-            </p>
-            <div class="hero-actions" aria-label="Primary booking actions">
-              <a
-                class="button primary"
-                href="mailto:hallo@samuelfleig.com?subject=Scope%20the%204h%20HAI%20Setup&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20scope%20a%204h%20HAI%20Setup.%0D%0A%0D%0AMy%20current%20agentic%20workflow%20problem%3A%0D%0A%0D%0ARelevant%20tools%20or%20team%20context%3A%0D%0A%0D%0APreferred%20time%20windows%3A"
-              >Scope the 4h HAI Setup</a>
-              <a class="button" href="mailto:hallo@samuelfleig.com?subject=10%20min%20HAI%20diagnostic&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20start%20small%20with%20a%2010%20minute%20Muenztelefon%20diagnostic.%0D%0A%0D%0AMy%20current%20AI%20or%20agent%20confusion%3A">Start small: Muenztelefon diagnostic</a>
-              <span class="price-line">Price on request after a short scope call</span>
-            </div>
-          </div>
+  <div class="statusline" aria-hidden="true">
+    <div class="wrap">
+      <span>HAI · Record 001</span>
+      <span>Section: <strong data-status-section>01</strong></span>
+      <span data-variant-label>Variant A · Protocol</span>
+    </div>
+  </div>
 
-          <aside class="proof-panel" aria-label="Evidence">
-            <h2>Evidence behind the work</h2>
-            <div class="proof-list">
-              <div class="proof-item">
-                <strong>Lived practice</strong>
-                <span>Built from agentic work in real projects, local systems, and evaluation loops.</span>
-              </div>
-              <div class="proof-item">
-                <strong>Sidecar-NG / AgentArena</strong>
-                <span>Experience from building watcher, verifier, and agent-evaluation systems. <a href="../sidecar/">See the Sidecar proof.</a></span>
-              </div>
-              <div class="proof-item">
-                <strong>97.3%</strong>
-                <span>Eval result in an internal Sidecar-NG V2 benchmark, not a third-party audited claim.</span>
-              </div>
-            </div>
-          </aside>
+  
+
+  <main id="main" tabindex="-1">
+
+    <section class="hero" data-section="01 · Products">
+      <div class="wrap grid">
+        <div class="rail meta">
+          <div>Commercial HAI offers</div>
+          <div>Human Agent Interface Products</div>
+          <div>Commercial HAI / Setup / Sidecar / Adminspace</div>
+          <div>English</div>
         </div>
-      </section>
+        <div class="main">
+          <h1>Human Agent Interface Products</h1>
+          <p class="lede">
+            I turn messy AI work into scoped, controllable systems humans can actually own.
+          </p>
+          <div class="actions" aria-label="Primary booking actions">
+            <a href="mailto:hallo@samuelfleig.com?subject=Scope%20the%204h%20HAI%20Setup&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20scope%20a%204h%20HAI%20Setup.%0D%0A%0D%0AMy%20current%20agentic%20workflow%20problem%3A%0D%0A%0D%0ARelevant%20tools%20or%20team%20context%3A%0D%0A%0D%0APreferred%20time%20windows%3A">Scope the 4h HAI Setup</a>
+            <a href="mailto:hallo@samuelfleig.com?subject=10%20min%20HAI%20diagnostic&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20start%20small%20with%20a%2010%20minute%20Muenztelefon%20diagnostic.%0D%0A%0D%0AMy%20current%20AI%20or%20agent%20confusion%3A">Start small: Muenztelefon diagnostic</a>
+          </div>
+          <p class="note"><strong>Price on request after a short scope call</strong></p>
+        </div>
+        <aside class="aside" aria-label="Evidence">
+          <span class="stamp">97.3%</span>
+          <p class="note"><strong>Internal evidence.</strong> Eval result in an internal Sidecar-NG V2 benchmark, not a third-party audited claim.</p>
+        </aside>
+      </div>
+    </section>
 
-      <section class="section" id="tool-fit" aria-labelledby="tool-fit-title">
-        <div class="section-inner">
+    <section class="section" id="evidence" data-section="02 · Evidence">
+      <div class="wrap grid">
+        <div class="rail meta">01 / Evidence</div>
+        <div class="main">
           <div class="section-head">
-            <div>
-              <p class="kicker">Tool-fit matrix</p>
-              <h2 id="tool-fit-title">For which tools am I the right person?</h2>
-            </div>
-            <p class="section-copy">
-              I am not your general AI-coding-tool advisor. I am strongest when the problem is terminal-based
-              agent work, control layers, project context, verification, and human ownership.
-            </p>
+            <p class="meta">Evidence</p>
+            <h2>Evidence behind the work</h2>
+          </div>
+          <ol class="components" role="list">
+            <li>
+              <span class="num" aria-hidden="true">01</span>
+              <div><strong>Lived practice</strong><span>Built from agentic work in real projects, local systems, and evaluation loops.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">02</span>
+              <div><strong>Sidecar-NG / AgentArena</strong><span>Experience from building watcher, verifier, and agent-evaluation systems. <a href="/sidecar/">See the Sidecar proof.</a></span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">03</span>
+              <div><strong>97.3%</strong><span>Eval result in an internal Sidecar-NG V2 benchmark, not a third-party audited claim.</span></div>
+            </li>
+          </ol>
+        </div>
+        <aside class="aside" aria-label="Evidence status">
+          <p class="note"><strong>Internal evidence.</strong> Eval result in an internal Sidecar-NG V2 benchmark, not a third-party audited claim.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="tool-fit" data-section="03 · Tool fit">
+      <div class="wrap grid">
+        <div class="rail meta">02 / Tool fit</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Tool-fit matrix</p>
+            <h2 id="tool-fit-title">For which tools am I the right person?</h2>
+          </div>
+          <p>
+            I am not your general AI-coding-tool advisor. I am strongest when the problem is terminal-based
+            agent work, control layers, project context, verification, and human ownership.
+          </p>
+
+          <table class="mesh-table" aria-labelledby="tool-fit-title">
+            <thead>
+              <tr><th scope="col">Area</th><th scope="col">Tools / workflows</th><th scope="col">What it means</th><th scope="col">Fit</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Area"><strong>Terminal agents</strong></td>
+                <td data-label="Tools / workflows">Claude Code in the terminal, Codex CLI, Hermes</td>
+                <td data-label="What it means">Core competency: agentic work that lives close to the shell, repo, hooks, artifacts, and verification loop.</td>
+                <td data-label="Fit">Very strong</td>
+              </tr>
+              <tr>
+                <td data-label="Area"><strong>Terminal-adjacent agents</strong></td>
+                <td data-label="Tools / workflows">OpenCode, custom harnesses, human-in-the-loop workflows</td>
+                <td data-label="What it means">Good if the problem is structure, scope, control, verification, or project context rather than product-specific support.</td>
+                <td data-label="Fit">Possible</td>
+              </tr>
+              <tr>
+                <td data-label="Area"><strong>App-based agents</strong></td>
+                <td data-label="Tools / workflows">Claude Code Mac App, Codex App, chat-style agent UIs</td>
+                <td data-label="What it means">Methodically useful, but weaker for deep tool setup when the workflow is mainly inside an app surface.</td>
+                <td data-label="Fit">Limited</td>
+              </tr>
+              <tr>
+                <td data-label="Area"><strong>IDE-based AI tools</strong></td>
+                <td data-label="Tools / workflows">Cursor, Lovable, Google Antigravity, vibe-coding platforms</td>
+                <td data-label="What it means">Usually not the right fit for deep product advice or tool support. I can still help with ownership, gates, and workflow boundaries.</td>
+                <td data-label="Fit">Not focus</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            <strong>HAI does not mean knowing every AI-coding tool perfectly.</strong>
+            HAI means structuring agentic work so the human keeps orientation, control, and ownership.
+          </p>
+          <div class="actions">
+            <a href="/setupinflow/">Not sure? Scope your setup</a>
           </div>
 
-          <div class="fit-matrix" role="table" aria-label="Tool fit matrix">
-            <div class="fit-row header" role="row">
-              <span role="columnheader">Area</span>
-              <span role="columnheader">Tools / workflows</span>
-              <span role="columnheader">Fit</span>
-              <span role="columnheader">What it means</span>
-            </div>
-            <div class="fit-row" role="row">
-              <div class="fit-area" role="cell"><strong>Terminal agents</strong></div>
-              <div class="fit-tools" role="cell">Claude Code in the terminal, Codex CLI, Hermes</div>
-              <div role="cell"><span class="fit-badge strong">Very strong</span></div>
-              <div class="fit-statement" role="cell">Core competency: agentic work that lives close to the shell, repo, hooks, artifacts, and verification loop.</div>
-            </div>
-            <div class="fit-row" role="row">
-              <div class="fit-area" role="cell"><strong>Terminal-adjacent agents</strong></div>
-              <div class="fit-tools" role="cell">OpenCode, custom harnesses, human-in-the-loop workflows</div>
-              <div role="cell"><span class="fit-badge medium">Possible</span></div>
-              <div class="fit-statement" role="cell">Good if the problem is structure, scope, control, verification, or project context rather than product-specific support.</div>
-            </div>
-            <div class="fit-row" role="row">
-              <div class="fit-area" role="cell"><strong>App-based agents</strong></div>
-              <div class="fit-tools" role="cell">Claude Code Mac App, Codex App, chat-style agent UIs</div>
-              <div role="cell"><span class="fit-badge limited">Limited</span></div>
-              <div class="fit-statement" role="cell">Methodically useful, but weaker for deep tool setup when the workflow is mainly inside an app surface.</div>
-            </div>
-            <div class="fit-row" role="row">
-              <div class="fit-area" role="cell"><strong>IDE-based AI tools</strong></div>
-              <div class="fit-tools" role="cell">Cursor, Lovable, Google Antigravity, vibe-coding platforms</div>
-              <div role="cell"><span class="fit-badge no">Not focus</span></div>
-              <div class="fit-statement" role="cell">Usually not the right fit for deep product advice or tool support. I can still help with ownership, gates, and workflow boundaries.</div>
-            </div>
-          </div>
-
-          <div class="fit-note">
-            <p>
-              <strong>HAI does not mean knowing every AI-coding tool perfectly.</strong>
-              HAI means structuring agentic work so the human keeps orientation, control, and ownership.
-            </p>
-            <a class="button" href="../setupinflow/">Not sure? Scope your setup</a>
-          </div>
-
-          <p class="fit-proof-intro">
+          <p>
             <strong>Why the terminal-agent row is marked very strong:</strong>
             these are local evidence snapshots from real work. They combine the Claude Code backup before
             the April reset with the current post-reset usage data, then deduplicate by session id.
           </p>
 
-          <div class="fit-proof-grid" aria-label="Internal evidence behind the tool fit">
-            <article class="fit-proof-card">
-              <span>Claude Code log depth</span>
-              <strong>786 sessions<br>2,573h / 8.02M tokens</strong>
-              <p>Backup plus current usage-data: 20,052 recorded tool uses across 64 project paths. <a href="../tripwire-map/">The Tripwire Map shows the control rules behind this work.</a></p>
-            </article>
-            <article class="fit-proof-card">
-              <span>Codex HAI depth</span>
-              <strong>38 repo sessions<br>2,627 tool calls</strong>
-              <p>Strict Human-Agent-Interface repo sessions from 2026-05-11 to 2026-05-14, with 163 turn records and 7,476 response items.</p>
-            </article>
-            <article class="fit-proof-card">
-              <span>Hermes insights</span>
-              <strong>369 sessions<br>282.6M tokens</strong>
-              <p>Last 30 days: 3,928 tool calls, 39 distinct skills loaded, and a manual CLI slice of 61 sessions with 7,018 messages. <a href="../hermes/">See Hermes system.</a></p>
-            </article>
-            <article class="fit-proof-card">
-              <span>Eval discipline</span>
-              <strong>166 runs<br>44 / 44 gate eval</strong>
-              <p>AgentArena has 166 runs, 9 tasks, and 37 agents. Sidecar-NG adds 37 prompts and 97.3% internal local-eval accuracy.</p>
-            </article>
-          </div>
-
-        </div>
-      </section>
-
-      <section class="section" id="offers" aria-labelledby="offers-title">
-        <div class="section-inner">
-          <div class="section-head">
-            <div>
-              <p class="kicker">Four real offers</p>
-              <h2 id="offers-title">Pick the product that matches the shape of your agentic problem.</h2>
-            </div>
-            <p class="section-copy">
-              The core path is still agent-native. If the problem is earlier than that, start with
-              a small diagnostic or orientation call before a full audit is priced.
-            </p>
-          </div>
-
-          <div class="offers-grid">
-            <article class="offer" aria-labelledby="audit-title">
+          <div class="entries" aria-label="Internal evidence behind the tool fit">
+            <article class="entry">
+              <span class="num" aria-hidden="true">01</span>
               <div>
-                <span class="offer-code">Offer 01 / Paid setup</span>
-                <h3 id="audit-title">Personal HAI Audit</h3>
-                <p class="offer-lede">
-                  A 4h teardown and rebuild of how you currently work with agents.
-                </p>
-              </div>
-              <div class="offer-spec">
-                <div class="spec-block">
-                  <h4>Who it is for</h4>
-                  <p>Founders, builders, developers, and operators with terminal-based or terminal-adjacent agent workflows, especially Claude Code, Codex CLI, Hermes, OpenCode, or custom harnesses.</p>
-                </div>
-                <div class="spec-block">
-                  <h4>Problem it solves</h4>
-                  <p>You have momentum, but the work fragments into chats, half-plans, unclear decisions, and agent output you do not fully own.</p>
-                </div>
-                <div class="spec-block">
-                  <h4>What happens</h4>
-                  <p>We inspect the current workflow, identify failure points, separate human decisions from delegable work, and redesign the next agent loop.</p>
-                </div>
-                <div class="spec-block">
-                  <h4>Deliverables</h4>
-                  <ul>
-                    <li>Workflow diagnosis</li>
-                    <li>Rewritten next-action packet</li>
-                    <li>Tool/setup changes to make immediately</li>
-                    <li>Risks, limits, and stop rules</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="offer-footer">
-                <span class="offer-note">Price after short scope</span>
-                <a class="button primary" href="mailto:hallo@samuelfleig.com?subject=Scope%20Personal%20HAI%20Audit&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20scope%20a%204h%20Personal%20HAI%20Audit.%0D%0A%0D%0AMy%20current%20workflow%20problem%3A%0D%0A%0D%0ATools%20I%20use%3A%0D%0A%0D%0APreferred%20time%20windows%3A">Scope this setup</a>
+                <h3>Claude Code log depth</h3>
+                <p><strong>786 sessions<br>2,573h / 8.02M tokens</strong></p>
+                <p>Backup plus current usage-data: 20,052 recorded tool uses across 64 project paths. <a href="/tripwire-map/">The Tripwire Map shows the control rules behind this work.</a></p>
               </div>
             </article>
-
-            <article class="offer" aria-labelledby="system-title">
+            <article class="entry">
+              <span class="num" aria-hidden="true">02</span>
               <div>
-                <span class="offer-code">Offer 02 / Build the system</span>
-                <h3 id="system-title">Agentic System Setup</h3>
-                <p class="offer-lede">
-                  A practical setup for people who need a working harness, not another AI strategy note.
-                </p>
-              </div>
-              <div class="offer-spec">
-                <div class="spec-block">
-                  <h4>Who it is for</h4>
-                  <p>Technical founders, small teams, and serious individual builders who want repeatable agentic work across projects.</p>
-                </div>
-                <div class="spec-block">
-                  <h4>Problem it solves</h4>
-                  <p>Your tools can run, but the operating system around them is missing: roles, permissions, artifacts, verification, and handoff.</p>
-                </div>
-                <div class="spec-block">
-                  <h4>What happens</h4>
-                  <p>We design the minimum agentic operating loop, configure role boundaries, and define how work moves from request to execution to verification.</p>
-                </div>
-                <div class="spec-block">
-                  <h4>Deliverables</h4>
-                  <ul>
-                    <li>Agent role map</li>
-                    <li>Bounded execution workflow</li>
-                    <li>Verifier path and definition of done</li>
-                    <li>Handoff packet for repeated use</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="offer-footer">
-                <span class="offer-note">Best after one audit or clear system pain</span>
-                <a class="button" href="../setupinflow/">Scope this setup</a>
+                <h3>Codex HAI depth</h3>
+                <p><strong>38 repo sessions<br>2,627 tool calls</strong></p>
+                <p>Strict Human-Agent-Interface repo sessions from 2026-05-11 to 2026-05-14, with 163 turn records and 7,476 response items.</p>
               </div>
             </article>
-
-            <article class="offer" aria-labelledby="sidecar-title">
+            <article class="entry">
+              <span class="num" aria-hidden="true">03</span>
               <div>
-                <span class="offer-code">Offer 03 / Prototype-backed layer</span>
-                <h3 id="sidecar-title">Sidecar / Sidecar-NG</h3>
-                <p class="offer-lede">
-                  A watcher and downscope layer for long, risky, or overloaded human-agent sessions.
-                </p>
-              </div>
-              <div class="offer-spec">
-                <div class="spec-block">
-                  <h4>Who it is for</h4>
-                  <p>Heavy agent users who lose focus, over-delegate, miss stop points, or need a second system watching the collaboration itself.</p>
-                </div>
-                <div class="spec-block">
-                  <h4>Problem it solves</h4>
-                  <p>The main agent optimizes for doing work. Sidecar watches the interaction: scope, overload, drift, verification gaps, and human decision points.</p>
-                </div>
-                <div class="spec-block">
-                  <h4>What happens</h4>
-                  <p>We map where your sessions fail and decide whether a Sidecar-style watcher, prompt layer, or workflow rule set is the right intervention.</p>
-                </div>
-                <div class="spec-block">
-                  <h4>Deliverables</h4>
-                  <ul>
-                    <li>Sidecar-fit assessment</li>
-                    <li>Watcher rules or prompt layer</li>
-                    <li>Downscope triggers and intervention points</li>
-                    <li>Prototype path if a custom layer is worth building</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="offer-footer">
-                <span class="offer-note">Prototype direction, not mature SaaS</span>
-                <a class="button" href="../sidecar/">Read Sidecar proof</a>
-                <a class="button" href="mailto:hallo@samuelfleig.com?subject=Sidecar%20%2F%20Sidecar-NG%20fit&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20understand%20whether%20Sidecar%20%2F%20Sidecar-NG%20fits%20my%20workflow.%0D%0A%0D%0AWhere%20my%20agent%20sessions%20drift%20or%20overload%3A%0D%0A%0D%0ATools%20I%20use%3A">Check Sidecar fit</a>
+                <h3>Hermes insights</h3>
+                <p><strong>369 sessions<br>282.6M tokens</strong></p>
+                <p>Last 30 days: 3,928 tool calls, 39 distinct skills loaded, and a manual CLI slice of 61 sessions with 7,018 messages. <a href="/hermes/">See Hermes system.</a></p>
               </div>
             </article>
-
-            <article class="offer" aria-labelledby="admin-title">
+            <article class="entry">
+              <span class="num" aria-hidden="true">04</span>
               <div>
-                <span class="offer-code">Offer 04 / Team architecture</span>
-                <h3 id="admin-title">Adminspace / Userspace</h3>
-                <p class="offer-lede">
-                  Separate productive agent use from governance, review, permissions, and system evolution.
-                </p>
-              </div>
-              <div class="offer-spec">
-                <div class="spec-block">
-                  <h4>Who it is for</h4>
-                  <p>Companies and technical teams where multiple people or agents touch the same workflows, repositories, or operational decisions.</p>
-                </div>
-                <div class="spec-block">
-                  <h4>Problem it solves</h4>
-                  <p>Teams blur user work, admin work, security decisions, prompt changes, review, and tool access until no one owns the risk.</p>
-                </div>
-                <div class="spec-block">
-                  <h4>What happens</h4>
-                  <p>We draw the boundary between userspace and adminspace, then define who can change agents, approve work, inspect evidence, and stop runs.</p>
-                </div>
-                <div class="spec-block">
-                  <h4>Deliverables</h4>
-                  <ul>
-                    <li>Userspace/adminspace separation map</li>
-                    <li>Permission and review model</li>
-                    <li>Governance and escalation gates</li>
-                    <li>Next pilot slice for a real team workflow</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="offer-footer">
-                <span class="offer-note">Company/team discovery first</span>
-                <a class="button" href="mailto:hallo@samuelfleig.com?subject=Adminspace%20%2F%20Userspace%20for%20a%20team&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20discuss%20Adminspace%20%2F%20Userspace%20for%20a%20company%20or%20team.%0D%0A%0D%0ATeam%20context%3A%0D%0A%0D%0AWhere%20agent%20control%2C%20permissions%2C%20or%20review%20are%20unclear%3A">Map team system</a>
+                <h3>Eval discipline</h3>
+                <p><strong>166 runs<br>44 / 44 gate eval</strong></p>
+                <p>AgentArena has 166 runs, 9 tasks, and 37 agents. Sidecar-NG adds 37 prompts and 97.3% internal local-eval accuracy.</p>
               </div>
             </article>
           </div>
         </div>
-      </section>
-
-      <section class="section commercial" id="book" aria-labelledby="book-title">
-        <div class="section-inner commercial-grid">
-          <div>
-            <p class="kicker">First commercial step</p>
-            <h2 id="book-title">Start with scope. Not a price wall.</h2>
-            <div class="commercial-list">
-              <p>Not a price wall means no opaque tiers: two fixed entry prices, and one conversation for teams.</p>
-              <p>You bring one real agentic workflow problem, not a hypothetical transformation program.</p>
-              <p>We leave with a concrete setup, packet, boundary model, or decision about what not to build.</p>
-              <p>If you are not agent-native yet, start smaller with orientation or a Muenztelefon diagnostic.</p>
-              <p>The exact scope is agreed before the work starts, so the number you see is the number you get.</p>
-            </div>
-          </div>
-          <aside class="booking-box" aria-label="Booking details">
-            <strong>Scope first</strong>
-            <p>Fixed entry prices above. The first step may be a Muenztelefon diagnostic, an orientation call, or a full 4h setup.</p>
-            <a
-              class="button primary"
-              href="mailto:hallo@samuelfleig.com?subject=Scope%20the%204h%20HAI%20Setup&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20scope%20a%204h%20HAI%20Setup.%0D%0A%0D%0AMy%20current%20agentic%20workflow%20problem%3A%0D%0A%0D%0ARelevant%20tools%20or%20team%20context%3A%0D%0A%0D%0APreferred%20time%20windows%3A"
-            >Ask for scope</a>
-            <a class="button" href="mailto:hallo@samuelfleig.com?subject=10%20min%20HAI%20diagnostic&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20start%20small%20with%20a%2010%20minute%20Muenztelefon%20diagnostic.%0D%0A%0D%0AMy%20current%20AI%20or%20agent%20confusion%3A">Start small: Muenztelefon diagnostic</a>
-          </aside>
-        </div>
-        <div class="section-inner">
-          <div class="price-grid" id="pricing">
-            <div class="price-card">
-              <p class="price-label">4h HAI Setup</p>
-              <p class="price-value">500 &euro;</p>
-              <p class="price-note">Fixed entry price. One workflow, scoped and verified.</p>
-            </div>
-            <div class="price-card">
-              <p class="price-label">HAI Audit</p>
-              <p class="price-value">1.000&ndash;1.500 &euro;</p>
-              <p class="price-note">Fixed price by scope. A deeper review of an existing agent system.</p>
-            </div>
-            <div class="price-card">
-              <p class="price-label">Team pilot</p>
-              <p class="price-value">On request</p>
-              <p class="price-note">For company and team governance. Talk to Samuel.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="faq" aria-labelledby="faq-title">
-        <div class="section-inner">
-          <div class="section-head">
-            <div>
-              <p class="kicker">FAQ</p>
-              <h2 id="faq-title">Commercially clear, technically honest.</h2>
-            </div>
-            <p class="section-copy">
-              HAI is early, but not vague. The first sale is a setup session. The deeper products grow from real workflow evidence.
-            </p>
-          </div>
-
-          <div class="faq-grid">
-            <article class="faq-item">
-              <h3>Is this consulting or software?</h3>
-              <p>Today, the first offer is a paid setup and audit. Some parts are software-backed, especially Sidecar-NG and evaluation work, but the sale starts with the human workflow.</p>
-            </article>
-            <article class="faq-item">
-              <h3>Who is this for?</h3>
-              <p>The core fit is people already working with agents who feel the cost of unclear scope, context drift, weak verification, too many threads, or tool setups that do not fit how they think.</p>
-            </article>
-            <article class="faq-item">
-              <h3>Can I start if I am not agent-native yet?</h3>
-              <p>Yes, but the entry stays narrow: orientation, trust, boundaries, and one diagnostic next step. HAI does not become a generic AI beginner course.</p>
-            </article>
-            <article class="faq-item">
-              <h3>What do I get after 4 hours?</h3>
-              <p>A diagnosis of the current setup, concrete workflow changes, a next-action packet, and a clearer boundary between human decisions and agent-executable work.</p>
-            </article>
-            <article class="faq-item">
-              <h3>Is Sidecar-NG a product or a prototype?</h3>
-              <p>It is prototype-backed product direction. The benchmark result is internal evidence, not an audited market claim. The setup decides whether a watcher layer fits your case.</p>
-            </article>
-            <article class="faq-item" id="team">
-              <h3>Can this work for a company/team?</h3>
-              <p>Yes, but the team version starts by mapping userspace, adminspace, ownership, review, permissions, and stop rules before any larger rollout.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <div class="footer-inner">
-        <span>Human Agent Interface Products</span>
-        <span>Commercial HAI / Setup / Sidecar / Adminspace</span>
+        <aside class="aside" aria-label="Why very strong">
+          <p class="note"><strong>Why very strong.</strong> These are local evidence snapshots from real work. They combine the Claude Code backup before the April reset with the current post-reset usage data, then deduplicate by session id.</p>
+        </aside>
       </div>
-    </footer>
-  </div>
+    </section>
+
+    <section class="section" id="offers" data-section="04 · Offers">
+      <div class="wrap grid">
+        <div class="rail meta">03 / Offers</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Four real offers</p>
+            <h2 id="offers-title">Pick the product that matches the shape of your agentic problem.</h2>
+          </div>
+          <p>
+            The core path is still agent-native. If the problem is earlier than that, start with
+            a small diagnostic or orientation call before a full audit is priced.
+          </p>
+
+          <div class="entries">
+            <article class="entry" aria-labelledby="audit-title">
+              <span class="num" aria-hidden="true">01</span>
+              <div>
+                <p class="meta">Offer 01 / Paid setup</p>
+                <h3 id="audit-title">Personal HAI Audit</h3>
+                <p>A 4h teardown and rebuild of how you currently work with agents.</p>
+                <h4>Who it is for</h4>
+                <p>Founders, builders, developers, and operators with terminal-based or terminal-adjacent agent workflows, especially Claude Code, Codex CLI, Hermes, OpenCode, or custom harnesses.</p>
+                <h4>Problem it solves</h4>
+                <p>You have momentum, but the work fragments into chats, half-plans, unclear decisions, and agent output you do not fully own.</p>
+                <h4>What happens</h4>
+                <p>We inspect the current workflow, identify failure points, separate human decisions from delegable work, and redesign the next agent loop.</p>
+                <h4>Deliverables</h4>
+                <ul>
+                  <li>Workflow diagnosis</li>
+                  <li>Rewritten next-action packet</li>
+                  <li>Tool/setup changes to make immediately</li>
+                  <li>Risks, limits, and stop rules</li>
+                </ul>
+                <p class="note"><strong>Price after short scope</strong></p>
+                <div class="actions">
+                  <a href="mailto:hallo@samuelfleig.com?subject=Scope%20Personal%20HAI%20Audit&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20scope%20a%204h%20Personal%20HAI%20Audit.%0D%0A%0D%0AMy%20current%20workflow%20problem%3A%0D%0A%0D%0ATools%20I%20use%3A%0D%0A%0D%0APreferred%20time%20windows%3A">Scope this setup</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="entry" aria-labelledby="system-title">
+              <span class="num" aria-hidden="true">02</span>
+              <div>
+                <p class="meta">Offer 02 / Build the system</p>
+                <h3 id="system-title">Agentic System Setup</h3>
+                <p>A practical setup for people who need a working harness, not another AI strategy note.</p>
+                <h4>Who it is for</h4>
+                <p>Technical founders, small teams, and serious individual builders who want repeatable agentic work across projects.</p>
+                <h4>Problem it solves</h4>
+                <p>Your tools can run, but the operating system around them is missing: roles, permissions, artifacts, verification, and handoff.</p>
+                <h4>What happens</h4>
+                <p>We design the minimum agentic operating loop, configure role boundaries, and define how work moves from request to execution to verification.</p>
+                <h4>Deliverables</h4>
+                <ul>
+                  <li>Agent role map</li>
+                  <li>Bounded execution workflow</li>
+                  <li>Verifier path and definition of done</li>
+                  <li>Handoff packet for repeated use</li>
+                </ul>
+                <p class="note"><strong>Best after one audit or clear system pain</strong></p>
+                <div class="actions">
+                  <a href="/setupinflow/">Scope this setup</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="entry" aria-labelledby="sidecar-title">
+              <span class="num" aria-hidden="true">03</span>
+              <div>
+                <p class="meta">Offer 03 / Prototype-backed layer</p>
+                <h3 id="sidecar-title">Sidecar / Sidecar-NG</h3>
+                <p>A watcher and downscope layer for long, risky, or overloaded human-agent sessions.</p>
+                <h4>Who it is for</h4>
+                <p>Heavy agent users who lose focus, over-delegate, miss stop points, or need a second system watching the collaboration itself.</p>
+                <h4>Problem it solves</h4>
+                <p>The main agent optimizes for doing work. Sidecar watches the interaction: scope, overload, drift, verification gaps, and human decision points.</p>
+                <h4>What happens</h4>
+                <p>We map where your sessions fail and decide whether a Sidecar-style watcher, prompt layer, or workflow rule set is the right intervention.</p>
+                <h4>Deliverables</h4>
+                <ul>
+                  <li>Sidecar-fit assessment</li>
+                  <li>Watcher rules or prompt layer</li>
+                  <li>Downscope triggers and intervention points</li>
+                  <li>Prototype path if a custom layer is worth building</li>
+                </ul>
+                <p class="note"><strong>Prototype direction, not mature SaaS</strong></p>
+                <div class="actions">
+                  <a href="/sidecar/">Read Sidecar proof</a>
+                  <a href="mailto:hallo@samuelfleig.com?subject=Sidecar%20%2F%20Sidecar-NG%20fit&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20understand%20whether%20Sidecar%20%2F%20Sidecar-NG%20fits%20my%20workflow.%0D%0A%0D%0AWhere%20my%20agent%20sessions%20drift%20or%20overload%3A%0D%0A%0D%0ATools%20I%20use%3A">Check Sidecar fit</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="entry" aria-labelledby="admin-title">
+              <span class="num" aria-hidden="true">04</span>
+              <div>
+                <p class="meta">Offer 04 / Team architecture</p>
+                <h3 id="admin-title">Adminspace / Userspace</h3>
+                <p>Separate productive agent use from governance, review, permissions, and system evolution.</p>
+                <h4>Who it is for</h4>
+                <p>Companies and technical teams where multiple people or agents touch the same workflows, repositories, or operational decisions.</p>
+                <h4>Problem it solves</h4>
+                <p>Teams blur user work, admin work, security decisions, prompt changes, review, and tool access until no one owns the risk.</p>
+                <h4>What happens</h4>
+                <p>We draw the boundary between userspace and adminspace, then define who can change agents, approve work, inspect evidence, and stop runs.</p>
+                <h4>Deliverables</h4>
+                <ul>
+                  <li>Userspace/adminspace separation map</li>
+                  <li>Permission and review model</li>
+                  <li>Governance and escalation gates</li>
+                  <li>Next pilot slice for a real team workflow</li>
+                </ul>
+                <p class="note"><strong>Company/team discovery first</strong></p>
+                <div class="actions">
+                  <a href="mailto:hallo@samuelfleig.com?subject=Adminspace%20%2F%20Userspace%20for%20a%20team&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20discuss%20Adminspace%20%2F%20Userspace%20for%20a%20company%20or%20team.%0D%0A%0D%0ATeam%20context%3A%0D%0A%0D%0AWhere%20agent%20control%2C%20permissions%2C%20or%20review%20are%20unclear%3A">Map team system</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Core path">
+          <p class="note"><strong>Core path.</strong> The core path is still agent-native. If the problem is earlier than that, start with a small diagnostic or orientation call before a full audit is priced.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="book" data-section="05 · Scope">
+      <div class="wrap grid">
+        <div class="rail meta">04 / Scope</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">First commercial step</p>
+            <h2 id="book-title">Start with scope. Not a price wall.</h2>
+          </div>
+          <p>Not a price wall means no opaque tiers: two fixed entry prices, and one conversation for teams.</p>
+          <p>You bring one real agentic workflow problem, not a hypothetical transformation program.</p>
+          <p>We leave with a concrete setup, packet, boundary model, or decision about what not to build.</p>
+          <p>If you are not agent-native yet, start smaller with orientation or a Muenztelefon diagnostic.</p>
+          <p>The exact scope is agreed before the work starts, so the number you see is the number you get.</p>
+          <div class="actions">
+            <a href="mailto:hallo@samuelfleig.com?subject=Scope%20the%204h%20HAI%20Setup&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20scope%20a%204h%20HAI%20Setup.%0D%0A%0D%0AMy%20current%20agentic%20workflow%20problem%3A%0D%0A%0D%0ARelevant%20tools%20or%20team%20context%3A%0D%0A%0D%0APreferred%20time%20windows%3A">Ask for scope</a>
+            <a href="mailto:hallo@samuelfleig.com?subject=10%20min%20HAI%20diagnostic&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20start%20small%20with%20a%2010%20minute%20Muenztelefon%20diagnostic.%0D%0A%0D%0AMy%20current%20AI%20or%20agent%20confusion%3A">Start small: Muenztelefon diagnostic</a>
+          </div>
+
+          <table class="mesh-table" id="pricing" aria-labelledby="book-title">
+            <thead>
+              <tr><th scope="col">Offer</th><th scope="col">What it covers</th><th scope="col">Entry price</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Offer">4h HAI Setup</td>
+                <td data-label="What it covers">Fixed entry price. One workflow, scoped and verified.</td>
+                <td data-label="Entry price">500 &euro;</td>
+              </tr>
+              <tr>
+                <td data-label="Offer">HAI Audit</td>
+                <td data-label="What it covers">Fixed price by scope. A deeper review of an existing agent system.</td>
+                <td data-label="Entry price">1.000&ndash;1.500 &euro;</td>
+              </tr>
+              <tr>
+                <td data-label="Offer">Team pilot</td>
+                <td data-label="What it covers">For company and team governance. Talk to Samuel.</td>
+                <td data-label="Entry price">On request</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <aside class="aside" aria-label="Booking details">
+          <p class="note"><strong>Scope first.</strong> Fixed entry prices above. The first step may be a Muenztelefon diagnostic, an orientation call, or a full 4h setup.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="faq" data-section="06 · FAQ">
+      <div class="wrap grid">
+        <div class="rail meta">05 / FAQ</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">FAQ</p>
+            <h2 id="faq-title">Commercially clear, technically honest.</h2>
+          </div>
+          <p>
+            HAI is early, but not vague. The first sale is a setup session. The deeper products grow from real workflow evidence.
+          </p>
+          <div class="entries">
+            <article class="entry">
+              <span class="num" aria-hidden="true">01</span>
+              <div>
+                <h3>Is this consulting or software?</h3>
+                <p>Today, the first offer is a paid setup and audit. Some parts are software-backed, especially Sidecar-NG and evaluation work, but the sale starts with the human workflow.</p>
+              </div>
+            </article>
+            <article class="entry">
+              <span class="num" aria-hidden="true">02</span>
+              <div>
+                <h3>Who is this for?</h3>
+                <p>The core fit is people already working with agents who feel the cost of unclear scope, context drift, weak verification, too many threads, or tool setups that do not fit how they think.</p>
+              </div>
+            </article>
+            <article class="entry">
+              <span class="num" aria-hidden="true">03</span>
+              <div>
+                <h3>Can I start if I am not agent-native yet?</h3>
+                <p>Yes, but the entry stays narrow: orientation, trust, boundaries, and one diagnostic next step. HAI does not become a generic AI beginner course.</p>
+              </div>
+            </article>
+            <article class="entry">
+              <span class="num" aria-hidden="true">04</span>
+              <div>
+                <h3>What do I get after 4 hours?</h3>
+                <p>A diagnosis of the current setup, concrete workflow changes, a next-action packet, and a clearer boundary between human decisions and agent-executable work.</p>
+              </div>
+            </article>
+            <article class="entry">
+              <span class="num" aria-hidden="true">05</span>
+              <div>
+                <h3>Is Sidecar-NG a product or a prototype?</h3>
+                <p>It is prototype-backed product direction. The benchmark result is internal evidence, not an audited market claim. The setup decides whether a watcher layer fits your case.</p>
+              </div>
+            </article>
+            <article class="entry" id="team">
+              <span class="num" aria-hidden="true">06</span>
+              <div>
+                <h3>Can this work for a company/team?</h3>
+                <p>Yes, but the team version starts by mapping userspace, adminspace, ownership, review, permissions, and stop rules before any larger rollout.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Status">
+          <p class="note"><strong>Early, but not vague.</strong> The first sale is a setup session. The deeper products grow from real workflow evidence.</p>
+        </aside>
+      </div>
+    </section>
+
+  </main>
+
+  
+
+  <script src="/mail-fallback.js" defer></script>
+  <script src="/assets/hai.js" defer></script>
 </body>
 </html>

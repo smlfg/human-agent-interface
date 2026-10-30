@@ -3,974 +3,239 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090a08">
-  <meta
-    name="description"
-    content="Proof that Human Agent Interface comes from real agent practice: building systems, finding breakpoints, and taking control back."
-  >
   <title>Proof | Human Agent Interface</title>
-  <style>
-    :root {
-      color-scheme: dark;
-      --ink: #f7f1df;
-      --muted: #b7ad97;
-      --quiet: #776f60;
-      --void: #080806;
-      --charcoal: #11100d;
-      --panel: rgba(247, 241, 223, 0.065);
-      --panel-strong: rgba(247, 241, 223, 0.12);
-      --line: rgba(247, 241, 223, 0.17);
-      --line-strong: rgba(247, 241, 223, 0.31);
-      --signal: #a7ff4f;
-      --copper: #ff9f5f;
-      --cyan: #83dbc8;
-      --red: #ff665c;
-      --max: 1180px;
-      --pad: clamp(18px, 4vw, 56px);
-      --display: Georgia, "Times New Roman", serif;
-      --body: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
-      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      background: var(--void);
-    }
-
-    body {
-      margin: 0;
-      min-width: 320px;
-      color: var(--ink);
-      background:
-        linear-gradient(180deg, rgba(167, 255, 79, 0.045), transparent 22rem),
-        linear-gradient(120deg, rgba(255, 159, 95, 0.055), transparent 34rem),
-        linear-gradient(180deg, #080806 0%, #11100d 47%, #070806 100%);
-      font-family: var(--body);
-      line-height: 1.5;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 20;
-      pointer-events: none;
-      opacity: 0.25;
-      background-image:
-        linear-gradient(rgba(247, 241, 223, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(247, 241, 223, 0.03) 1px, transparent 1px);
-      background-size: 72px 72px;
-      mask-image: linear-gradient(180deg, black, transparent 78%);
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    p,
-    h1,
-    h2,
-    h3 {
-      margin: 0;
-    }
-
-    .site-shell {
-      position: relative;
-      isolation: isolate;
-    }
-
-    .topbar {
-      position: fixed;
-      inset: 0 0 auto;
-      z-index: 40;
-      display: flex;
-      justify-content: center;
-      padding: 14px var(--pad) 0;
-      pointer-events: none;
-    }
-
-    .topbar-inner {
-      width: min(var(--max), 100%);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 12px 14px;
-      border: 1px solid rgba(247, 241, 223, 0.13);
-      background: rgba(8, 8, 6, 0.72);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      box-shadow: 0 18px 70px rgba(0, 0, 0, 0.3);
-      pointer-events: auto;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .brand-mark {
-      width: 30px;
-      height: 30px;
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
-      border: 1px solid var(--line-strong);
-      color: var(--signal);
-      font-size: 12px;
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: clamp(12px, 2vw, 24px);
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .nav a {
-      opacity: 0.82;
-      transition: color 160ms ease, opacity 160ms ease;
-    }
-
-    .nav a:hover,
-    .nav a:focus-visible {
-      color: var(--ink);
-      opacity: 1;
-    }
-
-    .hero {
-      min-height: 96svh;
-      display: grid;
-      align-items: end;
-      padding: 126px var(--pad) 72px;
-      border-bottom: 1px solid var(--line);
-      background:
-        linear-gradient(90deg, rgba(247, 241, 223, 0.075), transparent 1px),
-        linear-gradient(180deg, rgba(247, 241, 223, 0.04), transparent 1px);
-      background-size: 84px 84px;
-    }
-
-    .hero-inner {
-      width: min(var(--max), 100%);
-      min-width: 0;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: minmax(0, 0.92fr) minmax(300px, 0.48fr);
-      gap: clamp(32px, 6vw, 88px);
-      align-items: end;
-    }
-
-    .eyebrow,
-    .kicker,
-    .label {
-      color: var(--copper);
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 42px;
-      height: 1px;
-      background: var(--copper);
-    }
-
-    h1 {
-      max-width: 920px;
-      font-family: var(--display);
-      font-weight: 500;
-      font-size: clamp(3.15rem, 7.4vw, 7.2rem);
-      line-height: 0.93;
-      letter-spacing: 0;
-      overflow-wrap: break-word;
-      text-wrap: balance;
-    }
-
-    .hero-lede {
-      max-width: 800px;
-      min-width: 0;
-      margin-top: 28px;
-      color: var(--muted);
-      font-size: clamp(1.1rem, 2.1vw, 1.45rem);
-      line-height: 1.45;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 32px;
-    }
-
-    .button {
-      min-height: 48px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 18px;
-      border: 1px solid var(--line-strong);
-      background: rgba(247, 241, 223, 0.045);
-      color: var(--ink);
-      font-weight: 700;
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-    }
-
-    .button:hover,
-    .button:focus-visible {
-      transform: translateY(-2px);
-      border-color: rgba(167, 255, 79, 0.68);
-      background: rgba(167, 255, 79, 0.1);
-    }
-
-    .button.primary {
-      border-color: rgba(167, 255, 79, 0.56);
-      background: rgba(167, 255, 79, 0.13);
-    }
-
-    .proof-panel {
-      min-width: 0;
-      padding: 24px;
-      border: 1px solid var(--line);
-      background: rgba(8, 8, 6, 0.7);
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
-    }
-
-    .proof-panel h2 {
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--signal);
-    }
-
-    .proof-panel p {
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: 0.98rem;
-    }
-
-    .proof-panel strong {
-      color: var(--ink);
-      font-weight: 800;
-    }
-
-    .proof-list {
-      display: grid;
-      gap: 12px;
-      margin-top: 22px;
-      padding-top: 22px;
-      border-top: 1px solid var(--line);
-    }
-
-    .proof-list span {
-      display: grid;
-      grid-template-columns: 8px minmax(0, 1fr);
-      gap: 12px;
-      color: var(--ink);
-      font-size: 0.95rem;
-    }
-
-    .proof-list span::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      margin-top: 8px;
-      flex: 0 0 auto;
-      background: var(--signal);
-    }
-
-    section {
-      padding: clamp(72px, 10vw, 128px) var(--pad);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .section-inner {
-      width: min(var(--max), 100%);
-      min-width: 0;
-      margin: 0 auto;
-    }
-
-    .section-head {
-      display: grid;
-      grid-template-columns: minmax(0, 0.9fr) minmax(260px, 0.46fr);
-      gap: clamp(24px, 5vw, 72px);
-      align-items: end;
-      margin-bottom: clamp(32px, 6vw, 72px);
-    }
-
-    .section-title {
-      max-width: 840px;
-      margin-top: 14px;
-      font-family: var(--display);
-      font-weight: 500;
-      font-size: clamp(2.2rem, 5.2vw, 4.9rem);
-      line-height: 0.98;
-      text-wrap: balance;
-    }
-
-    .section-copy {
-      color: var(--muted);
-      font-size: clamp(1rem, 1.5vw, 1.12rem);
-    }
-
-    .boundary-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .boundary {
-      min-height: 100%;
-      padding: 24px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-    }
-
-    .boundary.warn {
-      border-color: rgba(255, 102, 92, 0.32);
-      background: rgba(255, 102, 92, 0.055);
-    }
-
-    .boundary h3 {
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .boundary p {
-      margin-top: 14px;
-      color: var(--muted);
-    }
-
-    .boundary strong {
-      color: var(--ink);
-    }
-
-    .case-list {
-      display: grid;
-      gap: 42px;
-    }
-
-    .case-file {
-      display: grid;
-      grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.72fr);
-      gap: clamp(24px, 5vw, 62px);
-      align-items: center;
-      padding: clamp(22px, 4vw, 38px);
-      border: 1px solid var(--line);
-      background:
-        linear-gradient(135deg, rgba(247, 241, 223, 0.08), rgba(247, 241, 223, 0.025)),
-        rgba(8, 8, 6, 0.48);
-    }
-
-    .case-file:nth-child(even) {
-      grid-template-columns: minmax(320px, 0.72fr) minmax(0, 0.9fr);
-    }
-
-    .case-file:nth-child(even) .case-media {
-      order: -1;
-    }
-
-    .case-copy {
-      min-width: 0;
-    }
-
-    .case-number {
-      display: inline-flex;
-      margin-bottom: 18px;
-      color: var(--cyan);
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .case-file h3 {
-      max-width: 720px;
-      font-family: var(--display);
-      font-weight: 500;
-      font-size: clamp(2rem, 4vw, 3.8rem);
-      line-height: 1;
-      text-wrap: balance;
-    }
-
-    .case-file p {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 1.04rem;
-    }
-
-    .case-proof {
-      display: grid;
-      gap: 10px;
-      margin-top: 24px;
-      padding-top: 20px;
-      border-top: 1px solid var(--line);
-    }
-
-    .case-proof span {
-      color: var(--quiet);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .case-proof strong {
-      color: var(--ink);
-      font-weight: 800;
-    }
-
-    .case-media {
-      min-width: 0;
-    }
-
-    .case-media img {
-      display: block;
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      object-fit: cover;
-      border: 1px solid var(--line-strong);
-      background: #050504;
-      box-shadow: 0 24px 72px rgba(0, 0, 0, 0.36);
-    }
-
-    .method-strip {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 1px;
-      border: 1px solid var(--line);
-      background: var(--line);
-    }
-
-    .method-step {
-      min-height: 180px;
-      padding: 22px;
-      background: #0d0d0a;
-    }
-
-    .method-step span {
-      color: var(--signal);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .method-step h3 {
-      margin-top: 28px;
-      font-size: 1.1rem;
-    }
-
-    .method-step p {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .transfer {
-      background:
-        linear-gradient(90deg, rgba(167, 255, 79, 0.08), transparent),
-        #0b0c08;
-    }
-
-    .transfer-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 0.72fr) minmax(300px, 0.5fr);
-      gap: clamp(28px, 6vw, 86px);
-      align-items: center;
-    }
-
-    .transfer h2 {
-      font-family: var(--display);
-      font-weight: 500;
-      font-size: clamp(2.35rem, 5.8vw, 5.4rem);
-      line-height: 0.98;
-      text-wrap: balance;
-    }
-
-    .transfer p {
-      margin-top: 22px;
-      color: var(--muted);
-      font-size: clamp(1.04rem, 1.7vw, 1.22rem);
-    }
-
-    .transfer-box {
-      padding: 26px;
-      border: 1px solid rgba(167, 255, 79, 0.34);
-      background: rgba(167, 255, 79, 0.08);
-    }
-
-    .transfer-box p {
-      margin: 0;
-      color: var(--ink);
-      font-size: clamp(1.3rem, 2.4vw, 2rem);
-      line-height: 1.2;
-      font-family: var(--display);
-    }
-
-    .transfer-box small {
-      display: block;
-      margin-top: 18px;
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .technical-deep-link {
-      display: grid;
-      grid-template-columns: minmax(0, 0.9fr) auto;
-      gap: 24px;
-      align-items: center;
-      margin-top: 42px;
-      padding: 22px;
-      border: 1px solid rgba(131, 219, 200, 0.34);
-      background: rgba(131, 219, 200, 0.06);
-    }
-
-    .technical-deep-link h3 {
-      color: var(--cyan);
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .technical-deep-link p {
-      margin-top: 10px;
-      color: var(--muted);
-    }
-
-    footer {
-      padding: 28px var(--pad);
-      color: var(--quiet);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .footer-inner {
-      width: min(var(--max), 100%);
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
-    @media (max-width: 920px) {
-      .hero-inner,
-      .section-head,
-      .transfer-grid,
-      .case-file,
-      .case-file:nth-child(even),
-      .technical-deep-link {
-        grid-template-columns: 1fr;
-      }
-
-      .case-file:nth-child(even) .case-media {
-        order: initial;
-      }
-
-      .boundary-grid,
-      .method-strip {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar {
-        position: absolute;
-      }
-    }
-
-    @media (max-width: 720px) {
-      .topbar,
-      .hero,
-      section {
-        padding-left: 20px;
-        padding-right: 20px;
-      }
-
-      .topbar-inner {
-        width: calc(100vw - 40px);
-        min-width: 0;
-        max-width: calc(100vw - 40px);
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav {
-        min-width: 0;
-        width: 100%;
-        overflow-x: auto;
-        padding-bottom: 4px;
-      }
-
-      .hero {
-        min-height: auto;
-        padding-top: 150px;
-      }
-
-      .hero-inner,
-      .section-inner {
-        width: calc(100vw - 40px);
-        max-width: calc(100vw - 40px);
-      }
-
-      .proof-panel,
-      .boundary,
-      .case-file,
-      .transfer-box,
-      .technical-deep-link {
-        padding: 20px;
-      }
-
-      h1 {
-        font-size: clamp(2.55rem, 11vw, 3rem);
-        line-height: 1.04;
-        text-wrap: normal;
-      }
-
-      .section-title,
-      .transfer h2,
-      .case-file h3 {
-        text-wrap: normal;
-      }
-
-      .hero-lede,
-      .proof-panel p,
-      .proof-list span,
-      .section-copy,
-      .case-file p,
-      .transfer p {
-        overflow-wrap: anywhere;
-      }
-
-      .hero-lede {
-        font-size: 1.02rem;
-      }
-
-      .proof-panel p,
-      .proof-list span {
-        font-size: 0.92rem;
-      }
-
-      .button {
-        width: 100%;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-        transition-duration: 0.001ms !important;
-      }
-    }
-    .trust-preamble { margin:26px 0 8px; padding:18px 20px; border:1px solid rgba(247,241,223,.18); }
-    .trust-preamble .trust-q { margin:0 0 12px; color:#b7ad97; }
-    .trust-preamble .trust-q:last-child { margin-bottom:0; }
-    .trust-preamble strong { color:#f7f1df; }
-    .proof-closing { margin-top:56px; padding-top:28px; border-top:1px solid rgba(247,241,223,.18); }
-    .proof-closing-eyebrow { margin:0 0 8px; color:#b7ad97; text-transform:uppercase; letter-spacing:.08em; font-size:.78rem; }
-    .proof-closing p { color:#b7ad97; }
-    .proof-closing-actions { margin:16px 0 0; }
-    .proof-closing-actions a { display:inline-block; margin:0 10px 10px 0; padding:12px 18px; text-decoration:none; border:1px solid rgba(247,241,223,.18); color:#f7f1df; }
-    .proof-closing-actions a.proof-closing-primary { border-color:#a7ff4f; color:#a7ff4f; }
-
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 200; padding: 12px 18px; background: #090a08; color: #f7f1df; border: 1px solid #a7ff4f; text-decoration: none; }
-    .skip-link:focus { left: 10px; top: 10px; }
-    [id] { scroll-margin-top: 88px; }
-    nav a[aria-current="page"] { color: #a7ff4f; }
-
-    @view-transition { navigation: auto; }
-  </style>
-  <script src="/mail-fallback.js" defer></script>
+  <meta name="description" content="Proof that Human Agent Interface comes from real agent practice: building systems, finding breakpoints, and taking control back.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/proof/">
+  <meta name="theme-color" content="#f4f0e6">
+  <link rel="icon" href="/assets/favicon-64.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/newsreader-300_700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-300_700-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/hai.css">
 </head>
-<body>
-  <a class="skip-link" href="#top">Skip to content</a>
-  <div class="site-shell">
-    <header class="topbar" aria-label="Site navigation">
-      <div class="topbar-inner">
-        <a class="brand" href="../index.html" aria-label="Human Agent Interface home">
-          <span class="brand-mark">HAI</span>
-          <span>Human Agent Interface</span>
-        </a>
-        <nav class="nav" aria-label="Site navigation">
-          <a href="../what_it_is/">Method</a>
-          <a href="../proof/" aria-current="page">Proof</a>
-          <a href="../samuel/">Samuel</a>
-          <a href="../product/">Offer</a>
-          <a href="../fit/" data-site-event="cta_click" data-event-target="nav_fit">Fit</a>
-          <a href="#contact">Contact</a>
-        </nav>
+<body data-page="legacy">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="statusline" aria-hidden="true">
+    <div class="wrap">
+      <span>HAI · Record 001</span>
+      <span>Section: <strong data-status-section>01</strong></span>
+      <span data-variant-label>Variant A · Protocol</span>
+    </div>
+  </div>
+
+  
+
+  <main id="main" tabindex="-1">
+
+    <section class="hero" data-section="01 · Archive">
+      <div class="wrap grid">
+        <div class="rail meta">
+          <div>Protokoll 001</div>
+          <div>Version 001</div>
+          <div>English</div>
+        </div>
+        <div class="main">
+          <p class="meta">Proof of practice · Archive</p>
+          <h1>HAI comes from real agent practice.</h1>
+          <p class="lede">Not from a theory of agents. From building systems, watching them break, and learning how humans can take control back.</p>
+          <p><strong>Did Samuel really work with agents?</strong> Yes — these artifacts come from real local agent systems, runs, and owner-control work, not from a slide deck.</p>
+          <p><strong>Can he control it?</strong> The point of every artifact here is the boundary: what the agent did, what the human decided, and how it was verified.</p>
+          <p><strong>Is this more than AI hype?</strong> Judge it on the evidence below, not on the claims.</p>
+          <div class="actions">
+            <a href="/beweis/" data-target="proof">Current overview: /beweis/</a>
+            <a href="#case-files" data-target="proof-page">See the case files</a>
+            <a href="../product/" data-target="product">Turn this into a setup</a>
+            <a href="/archiv/" data-target="archive">Archive</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Archive status and proof claim">
+          <span class="stamp">Archive · 30.10.2026</span>
+          <p class="note" style="margin-top:1.5rem"><strong>Archive.</strong> This page preserves the earlier proof material. The current overview is <a href="/beweis/">/beweis/</a>.</p>
+          <p class="meta" style="margin-top:1.5rem">What this page must prove</p>
+          <p class="note"><strong>Samuel is really deep in agentic work.</strong> He has operated local agent systems, hit their failure modes, built control surfaces around them, and turned those lessons into HAI.</p>
+          <ul class="components" role="list">
+            <li><span class="num" aria-hidden="true">01</span><div><span>100+ local artifacts made inspectable.</span></div></li>
+            <li><span class="num" aria-hidden="true">02</span><div><span>Hundreds of local agent sessions analyzed.</span></div></li>
+            <li><span class="num" aria-hidden="true">03</span><div><span>Failure modes converted into gates and working rules.</span></div></li>
+          </ul>
+        </aside>
       </div>
-    </header>
+    </section>
 
-    <main id="top">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-inner">
-          <div>
-            <p class="eyebrow">Proof of practice</p>
-            <h1 id="hero-title">HAI comes from real agent practice.</h1>
-            <div class="trust-preamble">
-              <p class="trust-q"><strong>Did Samuel really work with agents?</strong> Yes — these artifacts come from real local agent systems, runs, and owner-control work, not from a slide deck.</p>
-              <p class="trust-q"><strong>Can he control it?</strong> The point of every artifact here is the boundary: what the agent did, what the human decided, and how it was verified.</p>
-              <p class="trust-q"><strong>Is this more than AI hype?</strong> Judge it on the evidence below, not on the claims.</p>
-            </div>
-            <p class="hero-lede">
-              Not from a theory of agents. From building systems, watching them break, and learning how humans can take control back.
-            </p>
-            <div class="hero-actions">
-              <a class="button primary" href="#case-files">See the case files</a>
-              <a class="button" href="../product/">Turn this into a setup</a>
-            </div>
-          </div>
-
-          <aside class="proof-panel" aria-label="Proof claim">
-            <h2>What this page must prove</h2>
-            <p>
-              <strong>Samuel is really deep in agentic work.</strong> He has operated local agent systems, hit their failure modes, built control surfaces around them, and turned those lessons into HAI.
-            </p>
-            <div class="proof-list">
-              <span>100+ local artifacts made inspectable.</span>
-              <span>Hundreds of local agent sessions analyzed.</span>
-              <span>Failure modes converted into gates and working rules.</span>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section aria-labelledby="boundary-title">
-        <div class="section-inner">
+    <section class="section" id="boundary" data-section="02 · Evidence boundary">
+      <div class="wrap grid">
+        <div class="rail meta">01 / Evidence boundary</div>
+        <div class="main">
           <div class="section-head">
-            <div>
-              <p class="kicker">Evidence boundary</p>
-              <h2 class="section-title" id="boundary-title">Internal proof is useful only when it stays honest.</h2>
-            </div>
-            <p class="section-copy">
-              The claim here is deliberately narrow. This page proves lived practice and method formation. It does not pretend to be customer ROI data.
-            </p>
+            <p class="meta">Evidence boundary</p>
+            <h2>Internal proof is useful only when it stays honest.</h2>
           </div>
-
-          <div class="boundary-grid">
-            <article class="boundary">
-              <h3>What is proven enough to say</h3>
-              <p>
-                Samuel has used real agentic systems for his own work, exposed breakdowns such as scope drift, wrong assumptions, weak verification, and overload, then converted those breakdowns into HAI controls.
-              </p>
+          <p>The claim here is deliberately narrow. This page proves lived practice and method formation. It does not pretend to be customer ROI data.</p>
+          <div class="entries">
+            <article class="entry">
+              <span class="num" aria-hidden="true">01</span>
+              <div>
+                <h3>What is proven enough to say</h3>
+                <p>Samuel has used real agentic systems for his own work, exposed breakdowns such as scope drift, wrong assumptions, weak verification, and overload, then converted those breakdowns into HAI controls.</p>
+              </div>
             </article>
-            <article class="boundary warn">
-              <h3>What is not claimed yet</h3>
-              <p>
-                This is not external customer proof, not a universal model benchmark, and not a promise that every workflow needs the same system. The transferable claim is the method: make agent work visible, gated, owned, and verifiable.
-              </p>
+            <article class="entry">
+              <span class="num" aria-hidden="true">02</span>
+              <div>
+                <h3>What is not claimed yet</h3>
+                <p>This is not external customer proof, not a universal model benchmark, and not a promise that every workflow needs the same system. The transferable claim is the method: make agent work visible, gated, owned, and verifiable.</p>
+              </div>
             </article>
           </div>
-
-          <aside class="technical-deep-link" aria-label="Technical proof deep dive">
-            <div>
-              <h3>For technical buyers</h3>
-              <p>
-                AgentArena, First Real Harness Evaluation, and Sidecar-NG show the deeper validation layer: runs, gates, traces, eval failures, and claim boundaries.
-              </p>
-            </div>
-            <a class="button" href="technical/">Dig deeper: technical proof</a>
-          </aside>
         </div>
-      </section>
+        <aside class="aside" aria-label="Technical proof deep dive">
+          <p class="note"><strong>For technical buyers.</strong> AgentArena, First Real Harness Evaluation, and Sidecar-NG show the deeper validation layer: runs, gates, traces, eval failures, and claim boundaries. <a href="technical/">Dig deeper: technical proof</a>.</p>
+        </aside>
+      </div>
+    </section>
 
-      <section id="case-files" aria-labelledby="cases-title">
-        <div class="section-inner">
-            <div class="section-head">
-            <div>
-              <p class="kicker">Four case files</p>
-              <h2 class="section-title" id="cases-title">The proof is a chain: visibility, control, method, transfer.</h2>
-            </div>
-            <p class="section-copy">
-              Each case answers the same question in sequence: can Samuel see the problem, bound the agent role, and then produce transfer through his own decisions?
-            </p>
+    <section class="section" id="case-files" data-section="03 · Case files">
+      <div class="wrap grid">
+        <div class="rail meta">02 / Case files</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Four case files</p>
+            <h2>The proof is a chain: visibility, control, method, transfer.</h2>
           </div>
-
-          <div class="case-list">
-            <article class="case-file">
-              <div class="case-copy">
-                <span class="case-number">Case file 01 / Visibility</span>
+          <p>Each case answers the same question in sequence: can Samuel see the problem, bound the agent role, and then produce transfer through his own decisions?</p>
+          <div class="entries">
+            <article class="entry">
+              <span class="num" aria-hidden="true">01</span>
+              <div>
+                <p class="meta">Case file 01 / Visibility</p>
                 <h3>When the work became too much, it became inspectable.</h3>
-                <p>
-                  PortfolioTimeline turned a dense local build trail into a public-safe evidence surface. The point is not volume. The point is that agentic output can be sorted, inspected, and explained instead of living as private chaos.
-                </p>
-                <div class="case-proof">
-                  <span>Evidence artifact</span>
-                  <strong>PortfolioTimeline screenshot and local artifact registry.</strong>
-                </div>
+                <p>PortfolioTimeline turned a dense local build trail into a public-safe evidence surface. The point is not volume. The point is that agentic output can be sorted, inspected, and explained instead of living as private chaos.</p>
+                <figure class="figure">
+                  <img src="assets/portfolio-timeline--index.png" alt="PortfolioTimeline screenshot showing an AI builder timeline">
+                  <figcaption>Case file 01 / Visibility</figcaption>
+                </figure>
+                <dl><dt>Evidence artifact</dt><dd>PortfolioTimeline screenshot and local artifact registry.</dd></dl>
                 <p><a href="../samuel/timeline/">Open the public PortfolioTimeline.</a></p>
               </div>
-              <div class="case-media">
-                <img src="assets/portfolio-timeline--index.png" alt="PortfolioTimeline screenshot showing an AI builder timeline">
-              </div>
             </article>
 
-            <article class="case-file">
-              <div class="case-copy">
-                <span class="case-number">Case file 02 / Control</span>
+            <article class="entry">
+              <span class="num" aria-hidden="true">02</span>
+              <div>
+                <p class="meta">Case file 02 / Control</p>
                 <h3>When agents drifted, the answer was not more agents.</h3>
-                <p>
-                  Sidecar and the Tripwire Map are control work: read-before-edit rules, ambiguity gates, verification gates, commit approval, resource limits, and owner decisions. That is the core HAI lesson: the human needs operating boundaries, not just automation.
-                </p>
-                <div class="case-proof">
-                  <span>Evidence artifact</span>
-                  <strong>Sidecar visual explainer plus technical Tripwire Map appendix.</strong>
-                </div>
-              </div>
-              <div class="case-media">
-                <img src="assets/diagrams--sidecar-v7-visual-explainer.png" alt="Sidecar visual explainer screenshot">
+                <p>Sidecar and the Tripwire Map are control work: read-before-edit rules, ambiguity gates, verification gates, commit approval, resource limits, and owner decisions. That is the core HAI lesson: the human needs operating boundaries, not just automation.</p>
+                <figure class="figure">
+                  <img src="assets/diagrams--sidecar-v7-visual-explainer.png" alt="Sidecar visual explainer screenshot">
+                  <figcaption>Case file 02 / Control</figcaption>
+                </figure>
+                <dl><dt>Evidence artifact</dt><dd>Sidecar visual explainer plus technical Tripwire Map appendix.</dd></dl>
               </div>
             </article>
 
-            <article class="case-file">
-              <div class="case-copy">
-                <span class="case-number">Case file 03 / Method</span>
+            <article class="entry">
+              <span class="num" aria-hidden="true">03</span>
+              <div>
+                <p class="meta">Case file 03 / Method</p>
                 <h3>When experience was noisy, it became evidence work.</h3>
-                <p>
-                  MetaMetaMeta and the Claude Insights timeline separate observations from evidence, task-local claims from transfer claims, and product proof from method proof. That is why HAI does not have to overclaim to be useful.
-                </p>
-                <div class="case-proof">
-                  <span>Evidence artifact</span>
-                  <strong>Claude Insights profile and MetaMetaMeta evidence contract.</strong>
-                </div>
-              </div>
-              <div class="case-media">
-                <img src="assets/claude-insights-timeline--samuel-agentic-profile-v2.png" alt="Claude Insights agentic profile screenshot">
+                <p>MetaMetaMeta and the Claude Insights timeline separate observations from evidence, task-local claims from transfer claims, and product proof from method proof. That is why HAI does not have to overclaim to be useful.</p>
+                <figure class="figure">
+                  <img src="assets/claude-insights-timeline--samuel-agentic-profile-v2.png" alt="Claude Insights agentic profile screenshot">
+                  <figcaption>Case file 03 / Method</figcaption>
+                </figure>
+                <dl><dt>Evidence artifact</dt><dd>Claude Insights profile and MetaMetaMeta evidence contract.</dd></dl>
               </div>
             </article>
-            <article class="case-file">
-              <div class="case-copy">
-                <span class="case-number">Case file 04 / Study transfer</span>
+
+            <article class="entry">
+              <span class="num" aria-hidden="true">04</span>
+              <div>
+                <p class="meta">Case file 04 / Study transfer</p>
                 <h3>Samuel used bounded agents to restore his own study control.</h3>
-                <p>
-                  In the ADS study proof, he kept the decision loop with the human while using agents as bounded tooling for structure and interactive workflows.
-                  The visible artifacts are the study pages themselves and the transfer traces they expose.
-                </p>
-                <div class="case-proof">
-                  <span>Evidence artifact</span>
-                  <strong>Public ADS learning suite as human-owned proof.</strong>
-                </div>
+                <p>In the ADS study proof, he kept the decision loop with the human while using agents as bounded tooling for structure and interactive workflows. The visible artifacts are the study pages themselves and the transfer traces they expose.</p>
+                <figure class="figure">
+                  <img src="assets/portfolio-timeline--index.png" alt="ADS study proof preview">
+                  <figcaption>Case file 04 / Study transfer</figcaption>
+                </figure>
+                <dl><dt>Evidence artifact</dt><dd>Public ADS learning suite as human-owned proof.</dd></dl>
                 <p><a href="ads/">Open the ADS study proof.</a></p>
               </div>
-              <div class="case-media">
-                <img src="assets/portfolio-timeline--index.png" alt="ADS study proof preview">
-              </div>
             </article>
           </div>
         </div>
-      </section>
-
-      <section aria-labelledby="method-title">
-        <div class="section-inner">
-          <div class="section-head">
-            <div>
-              <p class="kicker">The working method</p>
-              <h2 class="section-title" id="method-title">A controllable agent workflow needs a small reality contact.</h2>
-            </div>
-            <p class="section-copy">
-              The deepest lesson from the local system is simple: do not begin with an architecture. Begin with one observable step.
-            </p>
-          </div>
-
-          <div class="method-strip" aria-label="HAI proof method">
-            <article class="method-step">
-              <span>01</span>
-              <h3>Purpose sentence</h3>
-              <p>What must become easier, faster, safer, or clearer for the human?</p>
-            </article>
-            <article class="method-step">
-              <span>02</span>
-              <h3>Smallest observable artifact</h3>
-              <p>A file, log, screenshot, test, response, run, or decision that can be checked.</p>
-            </article>
-            <article class="method-step">
-              <span>03</span>
-              <h3>PASS / FAIL / UNCLEAR</h3>
-              <p>No vague progress. Either the artifact supports the next step, breaks it, or needs better measurement.</p>
-            </article>
-            <article class="method-step">
-              <span>04</span>
-              <h3>One next step</h3>
-              <p>No dashboard, swarm, refactor, or framework until a real artifact demands it.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="transfer" id="contact" aria-labelledby="contact-title">
-        <div class="section-inner transfer-grid">
-          <div>
-            <p class="kicker">What this means for a client</p>
-            <h2 id="contact-title">Your AI work may not need more agents. It may need control.</h2>
-            <p>
-              Bring one workflow where context gets lost, agents overproduce, checks are weak, ownership is unclear, or the system feels too hard to trust. HAI turns that into a bounded setup: visible steps, gates, owner decisions, and verification.
-            </p>
-            <div class="hero-actions">
-              <a
-                class="button primary"
-                href="mailto:hallo@samuelfleig.com?subject=Agentic%20workflow%20control%20proof&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20have%20one%20agentic%20workflow%20that%20feels%20out%20of%20control.%0D%0A%0D%0AWhere%20it%20breaks%3A%0D%0A%0D%0AWhat%20I%20want%20to%20trust%20again%3A%0D%0A%0D%0APreferred%20time%20windows%3A"
-              >Bring one workflow</a>
-              <a class="button" href="../tripwire-map/">Technical appendix</a>
-            </div>
-          </div>
-
-        </div>
-      </section>
-      <section class="proof-closing">
-        <p class="proof-closing-eyebrow">Next step</p>
-        <h2>Convinced enough to check the fit?</h2>
-        <p>Bring one messy agent workflow and see whether HAI fits it.</p>
-        <p class="proof-closing-actions">
-          <a class="proof-closing-primary" data-site-event="cta_click" data-event-target="door_fit" href="../fit/">Check if HAI fits you</a>
-          <a data-site-event="cta_click" data-event-target="door_product" href="../product/">What you actually get</a>
-        </p>
-      </section>
-    </main>
-
-    <footer>
-      <div class="footer-inner">
-        <span>Human Agent Interface Proof</span>
-        <span>Build systems / find breakpoints / take control back</span>
+        <aside class="aside" aria-label="How to read the case files">
+          <p class="note"><strong>Read the chain in order.</strong> Visibility first, then control, then method, then transfer. Each case names its evidence artifact so the claim stays checkable.</p>
+        </aside>
       </div>
-    </footer>
-  </div>
+    </section>
+
+    <section class="section" id="method" data-section="04 · Method">
+      <div class="wrap grid">
+        <div class="rail meta">03 / Method</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">The working method</p>
+            <h2>A controllable agent workflow needs a small reality contact.</h2>
+          </div>
+          <p>The deepest lesson from the local system is simple: do not begin with an architecture. Begin with one observable step.</p>
+          <ol class="components" role="list">
+            <li><span class="num" aria-hidden="true">01</span><div><h3>Purpose sentence</h3><p>What must become easier, faster, safer, or clearer for the human?</p></div></li>
+            <li><span class="num" aria-hidden="true">02</span><div><h3>Smallest observable artifact</h3><p>A file, log, screenshot, test, response, run, or decision that can be checked.</p></div></li>
+            <li><span class="num" aria-hidden="true">03</span><div><h3>PASS / FAIL / UNCLEAR</h3><p>No vague progress. Either the artifact supports the next step, breaks it, or needs better measurement.</p></div></li>
+            <li><span class="num" aria-hidden="true">04</span><div><h3>One next step</h3><p>No dashboard, swarm, refactor, or framework until a real artifact demands it.</p></div></li>
+          </ol>
+        </div>
+        <aside class="aside" aria-label="Method rule">
+          <p class="note"><strong>Rule.</strong> No dashboard, swarm, refactor, or framework until a real artifact demands it.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="contact" data-section="05 · Client transfer">
+      <div class="wrap grid">
+        <div class="rail meta">04 / Client transfer</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">What this means for a client</p>
+            <h2>Your AI work may not need more agents. It may need control.</h2>
+          </div>
+          <p>Bring one workflow where context gets lost, agents overproduce, checks are weak, ownership is unclear, or the system feels too hard to trust. HAI turns that into a bounded setup: visible steps, gates, owner decisions, and verification.</p>
+          <div class="actions">
+            <a href="mailto:hallo@samuelfleig.com?subject=Agentic%20workflow%20control%20proof&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20have%20one%20agentic%20workflow%20that%20feels%20out%20of%20control.%0D%0A%0D%0AWhere%20it%20breaks%3A%0D%0A%0D%0AWhat%20I%20want%20to%20trust%20again%3A%0D%0A%0D%0APreferred%20time%20windows%3A">Bring one workflow</a>
+            <a href="../tripwire-map/">Technical appendix</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Proof tagline">
+          <p class="meta">Human Agent Interface Proof</p>
+          <p class="note"><strong>Build systems / find breakpoints / take control back.</strong></p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="next" data-section="06 · Next step">
+      <div class="wrap grid">
+        <div class="rail meta">05 / Next step</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Next step</p>
+            <h2>Convinced enough to check the fit?</h2>
+          </div>
+          <p>Bring one messy agent workflow and see whether HAI fits it.</p>
+          <div class="actions">
+            <a href="../fit/" data-target="fit">Check if HAI fits you</a>
+            <a href="../product/" data-target="product">What you actually get</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Scope of this proof">
+          <p class="note"><strong>Scope.</strong> Internal proof of method formation, not external customer proof or customer ROI data.</p>
+        </aside>
+      </div>
+    </section>
+
+  </main>
+
+  
+
+  <script src="/assets/hai.js" defer></script>
 </body>
 </html>

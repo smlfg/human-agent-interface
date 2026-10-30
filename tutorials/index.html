@@ -6,396 +6,559 @@
   <title>Agent-Harness-Tutorial: Claude Code, Codex, Hermes und OpenCode kontrolliert einsetzen — Human Agent Interface</title>
   <meta name="description" content="Kostenloses, interaktives Tutorial: Wie du KI-Coding-Agenten (Claude Code, Codex, Hermes, OpenCode) mit Owner Packet, Delegation Card und Verification Report kontrolliert einsetzt.">
   <link rel="canonical" href="https://www.human-agent-interface.com/tutorials/">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="/assets/favicon-64.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/newsreader-300_700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-300_700-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/hai.css">
+  <style>
+    /* Page-scoped reading polish: wide tables and the delegation card. */
+    .main pre {
+      margin: 1.25rem 0;
+      padding: 1rem 1.1rem;
+      background: var(--paper-2);
+      border: 1px solid var(--rule);
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      line-height: 1.6;
+      tab-size: 2;
+    }
+    .main pre code { font-family: inherit; font-size: inherit; }
+    .main code { font-family: var(--font-mono); font-size: 0.86em; }
+    .main ul { margin: 0.5rem 0 1rem; padding-left: 1.2rem; max-width: var(--measure); }
+    .main li { margin-bottom: 0.35rem; }
+    .aside .note { font-size: var(--step--1); }
+    .mesh-table td { vertical-align: top; }
+    .mesh-table td:last-child { white-space: normal; }
+  </style>
 </head>
-<body>
-  <header class="hero" id="top">
-    <canvas id="harnessCanvas" aria-hidden="true"></canvas>
-    <nav class="topbar" aria-label="Seitennavigation">
-      <a class="brand" href="#top" aria-label="Zur Startansicht">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span>Agent Harness</span>
-      </a>
-      <div class="nav-links">
-        <a href="#map">Map</a>
-        <a href="#tools">Tools</a>
-        <a href="#builder">Packet</a>
-        <a href="#gates">Gates</a>
-        <a href="#runbook">Runbook</a>
-        <a href="#docs">Docs</a>
-      </div>
-    </nav>
+<body data-page="legacy">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-    <div class="hero-inner">
-      <p class="eyebrow">Interactive Visual Explainer</p>
-      <h1>Agenten werden brauchbar, wenn der Mensch das Harness fuehrt.</h1>
-      <p class="hero-copy">
-        Diese Website macht das Tutorial bedienbar: Waehle eine Harness-Phase,
-        beobachte die Kontrollschicht und erzeuge daraus ein konkretes Packet
-        fuer Claude Code, Hermes, OpenClaw, OpenCode, Pi, Conductor oder Codex.
-      </p>
-
-      <div class="stage-control" aria-label="Harness Phasen">
-        <button class="stage-button is-active" type="button" data-stage="owner">Owner</button>
-        <button class="stage-button" type="button" data-stage="scope">Scope</button>
-        <button class="stage-button" type="button" data-stage="delegate">Delegate</button>
-        <button class="stage-button" type="button" data-stage="verify">Verify</button>
-        <button class="stage-button" type="button" data-stage="handoff">Handoff</button>
-      </div>
-
-      <section class="stage-readout" aria-live="polite" aria-label="Aktive Harness Phase">
-        <div>
-          <span id="stageKicker">01 / Human Ownership</span>
-          <h2 id="stageTitle">Der Mensch setzt Ziel, Risiko und Abbruchlinie.</h2>
-        </div>
-        <p id="stageBody">
-          Agenten arbeiten erst sinnvoll, wenn Ziel, Nicht-Ziel und Human-only
-          Entscheidungen sichtbar sind.
-        </p>
-      </section>
+  <div class="statusline" aria-hidden="true">
+    <div class="wrap">
+      <span>HAI · Protokoll 001</span>
+      <span>Abschnitt: <strong data-status-section>01</strong></span>
+      <span data-variant-label>Variante A · Protokoll</span>
     </div>
-  </header>
+  </div>
 
-  <main>
-    <section class="band map-band" id="map">
-      <div class="section-inner">
-        <div class="section-head">
-          <p class="kicker">Harness Map</p>
-          <h2>Das Harness ist keine App-Schale. Es ist die Entscheidungskette.</h2>
-          <p>
-            Jeder Block hat eine andere Aufgabe. Wenn ein Block fehlt, sieht
-            Agentenarbeit produktiv aus, aber der Mensch verliert Kontrolle.
-          </p>
+  
+
+  <main id="main" tabindex="-1">
+
+    <section class="hero" data-section="01 · Agent Harness">
+      <div class="wrap grid">
+        <div class="rail meta">
+          <div>Protokoll 001</div>
+          <div>Version 001</div>
+          <div>Deutsch</div>
         </div>
-
-        <div class="flow-grid" aria-label="Agent Harness Komponenten">
-          <button class="flow-node is-active" type="button" data-stage="owner">
-            <span>01</span>
-            <strong>Owner Packet</strong>
-            <em>Ziel, Risiko, Human-only</em>
-          </button>
-          <button class="flow-node" type="button" data-stage="scope">
-            <span>02</span>
-            <strong>Scope Boundary</strong>
-            <em>kleiner Auftrag statt Rohwunsch</em>
-          </button>
-          <button class="flow-node" type="button" data-stage="delegate">
-            <span>03</span>
-            <strong>Delegation Card</strong>
-            <em>erlaubt, verboten, Artefakt</em>
-          </button>
-          <button class="flow-node" type="button" data-stage="verify">
-            <span>04</span>
-            <strong>Verifier Loop</strong>
-            <em>Belege statt Done-Text</em>
-          </button>
-          <button class="flow-node" type="button" data-stage="handoff">
-            <span>05</span>
-            <strong>Next Action</strong>
-            <em>anschlussfaehige Entscheidung</em>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <section class="band tools-band" id="tools">
-      <div class="section-inner">
-        <div class="section-head">
-          <p class="kicker">Tool Profiles</p>
-          <h2>Dasselbe HAI-Muster, aber jede Oberflaeche braucht einen anderen Griff.</h2>
-          <p>
-            Waehle ein Tool. Die Website zeigt, welche Rolle es im Harness hat,
-            welches Artefakt es liefern soll und wo der Mensch stoppen muss.
-          </p>
-        </div>
-
-        <div class="tool-switcher" role="group" aria-label="Harness Tool waehlen">
-          <button class="tool-tab is-active" type="button" data-tool="codex">Codex</button>
-          <button class="tool-tab" type="button" data-tool="claude">Claude Code</button>
-          <button class="tool-tab" type="button" data-tool="hermes">Hermes</button>
-          <button class="tool-tab" type="button" data-tool="openclaw">OpenClaw</button>
-          <button class="tool-tab" type="button" data-tool="opencode">OpenCode</button>
-          <button class="tool-tab" type="button" data-tool="pi">Pi</button>
-          <button class="tool-tab" type="button" data-tool="conductor">Conductor</button>
-        </div>
-
-        <div class="tool-readout" aria-live="polite">
-          <aside>
-            <span id="toolSource">source: official OpenAI docs + local tutorial</span>
-            <h3 id="toolName">Codex</h3>
-            <p id="toolRole">Lokaler Coding-Agent fuer Repo-Arbeit, Review, Tests und sichtbare Diffs.</p>
-          </aside>
-          <div class="tool-spec">
-            <div><strong>Best use</strong><span id="toolUse">bounded implementation, repo audit, tests, docs</span></div>
-            <div><strong>Needs</strong><span id="toolNeeds">AGENTS.md, konkrete Aufgabe, Done when, Verifikation</span></div>
-            <div><strong>Artifact</strong><span id="toolArtifact">Diff, Tests, Verification Report, Next Action</span></div>
-            <div><strong>Human Gate</strong><span id="toolGate">Scope drift, dependencies, destructive actions, deploy</span></div>
+        <div class="main">
+          <h1>Agenten werden brauchbar, wenn der Mensch das <em>Harness</em> fuehrt.</h1>
+          <p class="lede">Diese Website macht das Tutorial bedienbar: Waehle eine Harness-Phase,
+          beobachte die Kontrollschicht und erzeuge daraus ein konkretes Packet
+          fuer Claude Code, Hermes, OpenClaw, OpenCode, Pi, Conductor oder Codex.</p>
+          <div class="actions">
+            <a href="#map">Die Harness Map</a>
+            <a href="#tools">Tool-Profile</a>
+            <a href="/tutorials/">Alle Tutorials</a>
           </div>
         </div>
+        <aside class="aside" aria-label="Harness">
+          <span class="stamp">Entscheidungskette</span>
+          <p class="note" style="margin-top:1.5rem">Jeder Block hat eine andere Aufgabe. Wenn ein Block fehlt, sieht Agentenarbeit produktiv aus, aber der Mensch verliert Kontrolle.</p>
+        </aside>
       </div>
     </section>
 
-    <section class="band builder-band" id="builder">
-      <div class="section-inner workbench">
-        <div class="section-head compact">
-          <p class="kicker">Packet Builder</p>
-          <h2>Aus einem diffusen Wunsch wird ein Agent-Auftrag.</h2>
+    <section class="section" id="map" data-section="02 · Harness Map">
+      <div class="wrap grid">
+        <div class="rail meta">01 / Harness Map</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Harness Map</p>
+            <h2>Das Harness ist keine App-Schale. Es ist die Entscheidungskette.</h2>
+          </div>
+          <p>Jeder Block hat eine andere Aufgabe. Wenn ein Block fehlt, sieht
+          Agentenarbeit produktiv aus, aber der Mensch verliert Kontrolle.</p>
+          <ol class="components" role="list">
+            <li>
+              <span class="num" aria-hidden="true">01</span>
+              <div><strong>Owner Packet</strong><span>Human Ownership — Ziel, Risiko, Human-only. Der Mensch setzt Ziel, Risiko und Abbruchlinie. Agenten arbeiten erst sinnvoll, wenn Ziel, Nicht-Ziel und Human-only Entscheidungen sichtbar sind.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">02</span>
+              <div><strong>Scope Boundary</strong><span>kleiner Auftrag statt Rohwunsch. Der Auftrag wird klein genug, dass Erfolg pruefbar ist. Das Harness trennt Wunsch, Kontext, Nicht-Ziel und erlaubte Aktionen, bevor der Agent arbeitet.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">03</span>
+              <div><strong>Delegation Card</strong><span>erlaubt, verboten, Artefakt. Das Tool bekommt Rolle, Grenze und Artefaktpflicht. Die Delegation Card ersetzt den diffusen Prompt durch Ziel, Scope, Human Gates und Verifikation.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">04</span>
+              <div><strong>Verifier Loop</strong><span>Belege statt Done-Text. Done ist erst wahr, wenn Belege danebenliegen. Tests, Diffs, Dateien, Screenshots oder Reports schlagen die Erfolgserzaehlung des Agenten.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">05</span>
+              <div><strong>Next Action</strong><span>anschlussfaehige Entscheidung. Am Ende steht eine Entscheidung, kein Rohlog. Der Mensch sieht, was geaendert wurde, welche Belege existieren, was offen bleibt und was als naechstes passiert.</span></div>
+            </li>
+          </ol>
+        </div>
+        <aside class="aside" aria-label="Kontrolle">
+          <p class="note"><strong>Wenn ein Block fehlt,</strong> sieht Agentenarbeit produktiv aus, aber der Mensch verliert Kontrolle.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="tools" data-section="03 · Tool Profiles">
+      <div class="wrap grid">
+        <div class="rail meta">02 / Tool Profiles</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Tool Profiles</p>
+            <h2>Dasselbe HAI-Muster, aber jede Oberflaeche braucht einen anderen Griff.</h2>
+          </div>
+          <p>Waehle ein Tool. Die Website zeigt, welche Rolle es im Harness hat,
+          welches Artefakt es liefern soll und wo der Mensch stoppen muss.</p>
+          <div class="entries">
+            <article class="entry">
+              <div class="num" aria-hidden="true">01</div>
+              <div>
+                <h3>Codex</h3>
+                <p>Lokaler Coding-Agent fuer Repo-Arbeit, Review, Tests und sichtbare Diffs.</p>
+                <dl>
+                  <dt>Best use</dt><dd>bounded implementation, repo audit, tests, docs</dd>
+                  <dt>Needs</dt><dd>AGENTS.md, konkrete Aufgabe, Done when, Verifikation</dd>
+                  <dt>Artifact</dt><dd>Diff, Tests, Verification Report, Next Action</dd>
+                  <dt>Human Gate</dt><dd>Scope drift, dependencies, destructive actions, deploy</dd>
+                  <dt>source:</dt><dd>official OpenAI docs + local tutorial</dd>
+                  <dt>Prompt handle</dt><dd>Codex arbeitet im aktuellen Repo und liefert Diffs, Checks und Handoff.</dd>
+                </dl>
+              </div>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">02</div>
+              <div>
+                <h3>Claude Code</h3>
+                <p>Tiefer Codebase-Arbeiter fuer Planung, Implementierung und Review gegen Repo-Kontext.</p>
+                <dl>
+                  <dt>Best use</dt><dd>komplexe Codebase-Arbeit, Architekturfragen, laengere Debug-Loops</dd>
+                  <dt>Needs</dt><dd>CLAUDE.md/Repo-Regeln, kleine Tasks, klare Tests, sichtbarer Diff</dd>
+                  <dt>Artifact</dt><dd>Plan, Patch, Tests, Review Notes</dd>
+                  <dt>Human Gate</dt><dd>Engine-Grenzen ehrlich markieren, breite Refactors und Tool-Rechte freigeben lassen</dd>
+                  <dt>source:</dt><dd>local HAI notes + Claude Code practice layer</dd>
+                  <dt>Prompt handle</dt><dd>Claude Code nutzt Repo-Kontext, soll aber mit klarer Human Gate- und Testpflicht arbeiten.</dd>
+                </dl>
+              </div>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">03</div>
+              <div>
+                <h3>Hermes</h3>
+                <p>Control Plane mit Profilen, Skills, Memory, Verifiern und Owner-Schutz.</p>
+                <dl>
+                  <dt>Best use</dt><dd>Projektzustand laden, Profil waehlen, kleine naechste Schritte fuehren</dd>
+                  <dt>Needs</dt><dd>explizites Profil, Scope, Artefaktpflicht, Verifier oder Decision-Control</dd>
+                  <dt>Artifact</dt><dd>Owner Packet, Delegation Card, Verifier Report, Resume State</dd>
+                  <dt>Human Gate</dt><dd>Samuel entscheidet Produkt, Scope, Architektur, irreversible Freigaben</dd>
+                  <dt>source:</dt><dd>local Zustand-Hermes</dd>
+                  <dt>Prompt handle</dt><dd>Hermes soll als Control Plane arbeiten: Profil waehlen, Briefing bauen, bounded delegieren.</dd>
+                </dl>
+              </div>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">04</div>
+              <div>
+                <h3>OpenClaw</h3>
+                <p>Router/Gateway-System fuer Agenten, Sessions, Devices und komplexe Scout-Build-Verify-Flows.</p>
+                <dl>
+                  <dt>Best use</dt><dd>Frontdoor-Routing, Gateway-Status, Agent-Sessions, komplexe Projektpipeline</dd>
+                  <dt>Needs</dt><dd>router/hermes/specialist topology, gateway health, session choice, explicit approvals</dd>
+                  <dt>Artifact</dt><dd>Routing Decision, Session State, Scout-Build-Verify Trace</dd>
+                  <dt>Human Gate</dt><dd>gateway/config/devices/auth commands and new specialists need explicit human approval</dd>
+                  <dt>source:</dt><dd>local OpenClaw commands + architecture notes</dd>
+                  <dt>Prompt handle</dt><dd>OpenClaw soll Routing und Sessions kontrolliert fuehren; komplexe Aufgaben gehen Scout -> Build -> Verify.</dd>
+                </dl>
+              </div>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">05</div>
+              <div>
+                <h3>OpenCode</h3>
+                <p>Schneller Builder und Reality-Check-Agent mit strenger Scope-Anweisung.</p>
+                <dl>
+                  <dt>Best use</dt><dd>one-shot Drafts, Gegenentwurf, schnelle Dateistrukturen, Implementierung</dd>
+                  <dt>Needs</dt><dd>vollstaendiger Kontext pro Run, Output-Pfad, Nicht-Ziele, Tests</dd>
+                  <dt>Artifact</dt><dd>kleiner Diff, Risiken, bewusst weggelassene Features</dd>
+                  <dt>Human Gate</dt><dd>wenn der erste Run falsch scoped ist: neue Session mit besserem Briefing statt Reparatur-Chat</dd>
+                  <dt>source:</dt><dd>local OpenCode tutorials + handoff docs</dd>
+                  <dt>Prompt handle</dt><dd>OpenCode bekommt einen engen one-shot Auftrag mit Output-Pfad und expliziten Nicht-Zielen.</dd>
+                </dl>
+              </div>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">06</div>
+              <div>
+                <h3>Pi</h3>
+                <p>Persoenlicher Intake- und Denkdialog fuer unstrukturierte menschliche Ausgangslage.</p>
+                <dl>
+                  <dt>Best use</dt><dd>Wunsch klaeren, emotionale/kognitive Lage sortieren, Owner Packet vorbereiten</dd>
+                  <dt>Needs</dt><dd>keine Writes, keine Done-Claims, klare Uebergabe an Arbeitsagent</dd>
+                  <dt>Artifact</dt><dd>Problemklassifikation, Human-only Liste, naechste Frage</dd>
+                  <dt>Human Gate</dt><dd>Reflexion ist kein Beleg; Umsetzung startet erst in einem anderen bounded Tool</dd>
+                  <dt>source:</dt><dd>generic HAI profile; no canonical local tool source found</dd>
+                  <dt>Prompt handle</dt><dd>Pi soll nur klaeren und verdichten, nicht implementieren oder Erfolg behaupten.</dd>
+                </dl>
+              </div>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">07</div>
+              <div>
+                <h3>Conductor</h3>
+                <p>Orchestrierungsrolle fuer mehrere Worker, ohne selbst die Ownership zu uebernehmen.</p>
+                <dl>
+                  <dt>Best use</dt><dd>Run-Leitung, Task-Slicing, Worker-Reihenfolge, Handoff und Integration</dd>
+                  <dt>Needs</dt><dd>ein Lead, getrennte Write Scopes, Stop Rules, gemeinsamer Verifier</dd>
+                  <dt>Artifact</dt><dd>Run Plan, Worker Contracts, Integration Checklist</dd>
+                  <dt>Human Gate</dt><dd>kein Fanout ohne disjunkte Schreibbereiche und klares Integrationsartefakt</dd>
+                  <dt>source:</dt><dd>generic HAI orchestration profile; no canonical local tool source found</dd>
+                  <dt>Prompt handle</dt><dd>Conductor koordiniert nur bounded Worker und muss Human Gates und Verifier sichtbar halten.</dd>
+                </dl>
+              </div>
+            </article>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Quellenlage">
+          <p class="note"><strong>Quellenlage.</strong> Pi und Conductor: generic HAI profile; no canonical local tool source found.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="builder" data-section="04 · Packet Builder">
+      <div class="wrap grid">
+        <div class="rail meta">03 / Packet Builder</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Packet Builder</p>
+            <h2>Aus einem diffusen Wunsch wird ein Agent-Auftrag.</h2>
+          </div>
           <p>Waehle Tool, Aufgabe und Risiko. Das Packet bleibt absichtlich eng.</p>
+
+          <h3>Tool</h3>
+          <ul>
+            <li>Codex</li>
+            <li>Claude Code</li>
+            <li>Hermes</li>
+            <li>OpenClaw</li>
+            <li>OpenCode</li>
+            <li>Pi</li>
+            <li>Conductor</li>
+          </ul>
+
+          <h3>Aufgabentyp</h3>
+          <table class="mesh-table">
+            <thead>
+              <tr><th scope="col">Aufgabentyp</th><th scope="col">Ziel</th><th scope="col">Artefakt</th><th scope="col">Verifikation</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Aufgabentyp">Doku</td>
+                <td data-label="Ziel">Baue oder verbessere ein Tutorial-Artefakt.</td>
+                <td data-label="Artefakt">Markdown-Dokumente, Quellenliste, Completion Checklist</td>
+                <td data-label="Verifikation">rg-Coverage, Link-Check, git diff --check</td>
+              </tr>
+              <tr>
+                <td data-label="Aufgabentyp">Bugfix</td>
+                <td data-label="Ziel">Reproduziere und behebe einen konkreten Fehler.</td>
+                <td data-label="Artefakt">kleiner Diff, fokussierter Test oder Repro-Log</td>
+                <td data-label="Verifikation">Fehler reproduziert, Fix ausgefuehrt, Test/Smoke-Check gruen</td>
+              </tr>
+              <tr>
+                <td data-label="Aufgabentyp">UI</td>
+                <td data-label="Ziel">Verbessere eine konkrete UI-Ansicht.</td>
+                <td data-label="Artefakt">HTML/CSS/JS-Diff, Screenshot, responsive Check</td>
+                <td data-label="Verifikation">Headless Screenshot, mobile/desktop Sichtpruefung, keine Overlaps</td>
+              </tr>
+              <tr>
+                <td data-label="Aufgabentyp">Audit</td>
+                <td data-label="Ziel">Pruefe ein Repo oder Ergebnis read-only.</td>
+                <td data-label="Artefakt">Audit-Report mit Findings, Belegen und Next Action</td>
+                <td data-label="Verifikation">Datei-/Zeilenbelege, keine Schreiboperationen, offene Risiken markiert</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Risikoprofil</h3>
+          <table class="mesh-table">
+            <thead>
+              <tr><th scope="col">Risiko</th><th scope="col">Harness readiness</th><th scope="col">Gate</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Risiko">Low</td>
+                <td data-label="Harness readiness">bounded</td>
+                <td data-label="Gate">Stoppe bei Scope Drift oder fehlenden Belegen.</td>
+              </tr>
+              <tr>
+                <td data-label="Risiko">Medium</td>
+                <td data-label="Harness readiness">gated</td>
+                <td data-label="Gate">Frage vor Dependencies, breiteren Datei-Aenderungen und unklaren Tests.</td>
+              </tr>
+              <tr>
+                <td data-label="Risiko">High</td>
+                <td data-label="Harness readiness">human gate required</td>
+                <td data-label="Gate">Keine Ausfuehrung ohne menschliche Freigabe fuer Risiko, Auth, Deploy oder destruktive Aktionen.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Delegation Card</h3>
+          <pre><code>Tool:
+Codex
+
+Ziel:
+Baue oder verbessere ein Tutorial-Artefakt.
+
+Tool-Rolle:
+- Codex arbeitet im aktuellen Repo und liefert Diffs, Checks und Handoff.
+
+Kontext:
+- Nutze das bestehende Repo und lies betroffene Dateien zuerst.
+- Behandle Chat als Steuerpult, nicht als Arbeitsflaeche.
+- Tool braucht: AGENTS.md, konkrete Aufgabe, Done when, Verifikation.
+
+Scope:
+- Arbeite nur an dieser Aufgabe.
+- Erzeuge ein pruefbares Artefakt: Markdown-Dokumente, Quellenliste, Completion Checklist.
+- Tool-Artefakt: Diff, Tests, Verification Report, Next Action.
+
+Nicht tun:
+- keine Commits ohne Freigabe
+- keine neuen Dependencies ohne Gate
+- keine Scope-Erweiterung ohne Rueckfrage
+
+Human Gates:
+- Scope drift, dependencies, destructive actions, deploy.
+- Stoppe bei Scope Drift oder fehlenden Belegen.
+- Stoppe bei destruktiven Aktionen, Secrets/Auth/Deploy oder unklarem Arbeitsordner.
+
+Verifikation:
+- rg-Coverage, Link-Check, git diff --check
+- Liefere einen Verification Report mit Belegen.
+
+Abschluss:
+- Geaendert
+- Belege
+- Checks
+- Offen
+- Naechste Entscheidung
+</code></pre>
         </div>
-
-        <div class="builder-layout">
-          <div class="tool-panel" aria-label="Packet Auswahl">
-            <div class="field-group">
-              <h3>Tool</h3>
-              <select id="toolSelect" aria-label="Tool fuer Packet Builder">
-                <option value="codex">Codex</option>
-                <option value="claude">Claude Code</option>
-                <option value="hermes">Hermes</option>
-                <option value="openclaw">OpenClaw</option>
-                <option value="opencode">OpenCode</option>
-                <option value="pi">Pi</option>
-                <option value="conductor">Conductor</option>
-              </select>
-            </div>
-
-            <div class="field-group">
-              <h3>Aufgabentyp</h3>
-              <div class="chip-row" role="group" aria-label="Aufgabentyp waehlen">
-                <button class="chip is-active" type="button" data-task="docs">Doku</button>
-                <button class="chip" type="button" data-task="bug">Bugfix</button>
-                <button class="chip" type="button" data-task="ui">UI</button>
-                <button class="chip" type="button" data-task="audit">Audit</button>
-              </div>
-            </div>
-
-            <div class="field-group">
-              <h3>Risikoprofil</h3>
-              <div class="chip-row" role="group" aria-label="Risiko waehlen">
-                <button class="chip risk is-active" type="button" data-risk="low">Low</button>
-                <button class="chip risk" type="button" data-risk="medium">Medium</button>
-                <button class="chip risk" type="button" data-risk="high">High</button>
-              </div>
-            </div>
-
-            <div class="packet-meter" aria-label="Harness Qualitaet">
-              <span>Harness readiness</span>
-              <div><i id="readinessMeter"></i></div>
-              <strong id="readinessLabel">bounded</strong>
-            </div>
-          </div>
-
-          <div class="prompt-panel" aria-label="Generiertes Packet">
-            <div class="panel-topline">
-              <span>Delegation Card</span>
-              <button class="copy-button" type="button" id="copyPrompt">Copy</button>
-            </div>
-            <pre id="promptOutput"></pre>
-          </div>
-        </div>
+        <aside class="aside" aria-label="Readiness">
+          <p class="note"><strong>Harness readiness.</strong> Low: bounded · Medium: gated · High: human gate required. Das Packet bleibt absichtlich eng.</p>
+        </aside>
       </div>
     </section>
 
-    <section class="band gates-band" id="gates">
-      <div class="section-inner">
-        <div class="section-head">
-          <p class="kicker">Human Gate Simulator</p>
-          <h2>Der Agent darf nicht jede Unsicherheit in Aktion umwandeln.</h2>
-          <p>
-            Markiere, was in deiner Aufgabe vorkommt. Das Gate entscheidet, ob
-            das Tool laufen darf oder erst eine menschliche Freigabe braucht.
-          </p>
-        </div>
-
-        <div class="gate-layout">
-          <div class="gate-list" aria-label="Gate Faktoren">
-            <label><input type="checkbox" value="dependency"> neue Dependency</label>
-            <label><input type="checkbox" value="destructive"> destruktive Aktion</label>
-            <label><input type="checkbox" value="secret"> Secrets, Auth oder Deploy</label>
-            <label><input type="checkbox" value="scope"> Scope wird groesser</label>
-            <label><input type="checkbox" value="unknown"> unklare Tests oder unbekannter Fehler</label>
+    <section class="section" id="gates" data-section="05 · Human Gate Simulator">
+      <div class="wrap grid">
+        <div class="rail meta">04 / Human Gates</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Human Gate Simulator</p>
+            <h2>Der Agent darf nicht jede Unsicherheit in Aktion umwandeln.</h2>
           </div>
-
-          <aside class="gate-verdict" aria-live="polite">
-            <span id="gateMode">RUN</span>
-            <h3 id="gateTitle">Das Tool darf bounded arbeiten.</h3>
-            <p id="gateBody">
-              Kein harter Human Gate aktiv. Der Auftrag braucht trotzdem
-              Artefaktpflicht und Verifikation.
-            </p>
-          </aside>
+          <p>Markiere, was in deiner Aufgabe vorkommt. Das Gate entscheidet, ob
+          das Tool laufen darf oder erst eine menschliche Freigabe braucht.</p>
+          <ul>
+            <li>neue Dependency</li>
+            <li>destruktive Aktion</li>
+            <li>Secrets, Auth oder Deploy</li>
+            <li>Scope wird groesser</li>
+            <li>unklare Tests oder unbekannter Fehler</li>
+          </ul>
+          <ol class="components" role="list">
+            <li>
+              <span class="num" aria-hidden="true">01</span>
+              <div><strong>RUN: Das Tool darf bounded arbeiten.</strong><span>Kein harter Human Gate aktiv. Der Auftrag braucht trotzdem Artefaktpflicht und Verifikation.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">02</span>
+              <div><strong>WARN: Der Agent darf nur diagnostizieren.</strong><span>Unklare Tests oder unbekannte Fehler brauchen erst Reproduktion und Beleg, nicht direkt einen Fix.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">03</span>
+              <div><strong>STOP: Erst Human Gate, dann Codex.</strong><span>Mindestens ein harter Gate-Faktor ist aktiv. Der Mensch entscheidet Scope, Risiko oder Freigabe, bevor der Agent weiterarbeitet.</span></div>
+            </li>
+          </ol>
         </div>
+        <aside class="aside" aria-label="Warnung">
+          <p class="note"><strong>WARN.</strong> Unklare Tests oder unbekannte Fehler brauchen erst Reproduktion und Beleg, nicht direkt einen Fix.</p>
+        </aside>
       </div>
     </section>
 
-    <section class="band runbook-band" id="runbook">
-      <div class="section-inner">
-        <div class="section-head">
-          <p class="kicker">Runbook</p>
-          <h2>Eine Agenten-Session laeuft in sechs kontrollierten Bewegungen.</h2>
+    <section class="section" id="runbook" data-section="06 · Runbook">
+      <div class="wrap grid">
+        <div class="rail meta">05 / Runbook</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Runbook</p>
+            <h2>Eine Agenten-Session laeuft in sechs kontrollierten Bewegungen.</h2>
+          </div>
           <p>Oeffne die Schritte. Jeder Schritt ist ein eigener Gate-Punkt.</p>
+          <ol class="components" role="list">
+            <li>
+              <span class="num" aria-hidden="true">01</span>
+              <div><strong>Intake</strong><span>lesen, nicht bauen — Das Tool liest Kontext, HAI-Ziel und Auftrag. Output: Was ist klar, was ist unklar, welche Artefakte waeren sinnvoll?</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">02</span>
+              <div><strong>Plan</strong><span>maximal sechs Schritte — Der Plan nennt Artefakt, Beleg und Human Gate pro Schritt. Noch keine Datei-Aenderung.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">03</span>
+              <div><strong>Bounded Build</strong><span>nur der vereinbarte Scope — Der Agent arbeitet klein. Wenn der Ansatz kippt oder breiter wird, stoppt der Lauf.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">04</span>
+              <div><strong>Evidence</strong><span>Tests, Diffs, Dateien — Erfolg wird als Beleg sichtbar: Checks, Smoke-Test, Doku-Struktur, Screenshot oder Diff.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">05</span>
+              <div><strong>Review</strong><span>kritische Gegenpruefung — Der Agent sucht Scope Drift, falsche Claims, fehlende Belege und riskante Empfehlungen.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">06</span>
+              <div><strong>Handoff</strong><span>naechste Entscheidung — Der Mensch bekommt keine Rohgeschichte, sondern: geaendert, Belege, offen, naechste Entscheidung.</span></div>
+            </li>
+          </ol>
         </div>
-
-        <div class="accordion" id="runbookAccordion">
-          <button class="run-step is-open" type="button" data-step="0">
-            <span>01</span>
-            <strong>Intake</strong>
-            <em>lesen, nicht bauen</em>
-          </button>
-          <div class="run-detail is-open">
-            <p>Das Tool liest Kontext, HAI-Ziel und Auftrag. Output: Was ist klar, was ist unklar, welche Artefakte waeren sinnvoll?</p>
-          </div>
-
-          <button class="run-step" type="button" data-step="1">
-            <span>02</span>
-            <strong>Plan</strong>
-            <em>maximal sechs Schritte</em>
-          </button>
-          <div class="run-detail">
-            <p>Der Plan nennt Artefakt, Beleg und Human Gate pro Schritt. Noch keine Datei-Aenderung.</p>
-          </div>
-
-          <button class="run-step" type="button" data-step="2">
-            <span>03</span>
-            <strong>Bounded Build</strong>
-            <em>nur der vereinbarte Scope</em>
-          </button>
-          <div class="run-detail">
-            <p>Der Agent arbeitet klein. Wenn der Ansatz kippt oder breiter wird, stoppt der Lauf.</p>
-          </div>
-
-          <button class="run-step" type="button" data-step="3">
-            <span>04</span>
-            <strong>Evidence</strong>
-            <em>Tests, Diffs, Dateien</em>
-          </button>
-          <div class="run-detail">
-            <p>Erfolg wird als Beleg sichtbar: Checks, Smoke-Test, Doku-Struktur, Screenshot oder Diff.</p>
-          </div>
-
-          <button class="run-step" type="button" data-step="4">
-            <span>05</span>
-            <strong>Review</strong>
-            <em>kritische Gegenpruefung</em>
-          </button>
-          <div class="run-detail">
-            <p>Der Agent sucht Scope Drift, falsche Claims, fehlende Belege und riskante Empfehlungen.</p>
-          </div>
-
-          <button class="run-step" type="button" data-step="5">
-            <span>06</span>
-            <strong>Handoff</strong>
-            <em>naechste Entscheidung</em>
-          </button>
-          <div class="run-detail">
-            <p>Der Mensch bekommt keine Rohgeschichte, sondern: geaendert, Belege, offen, naechste Entscheidung.</p>
-          </div>
-        </div>
+        <aside class="aside" aria-label="Handoff">
+          <p class="note"><strong>Handoff.</strong> Der Mensch bekommt keine Rohgeschichte, sondern: geaendert, Belege, offen, naechste Entscheidung.</p>
+        </aside>
       </div>
     </section>
 
-    <section class="band docs-band" id="docs">
-      <div class="section-inner">
-        <div class="section-head">
-          <p class="kicker">Artifacts</p>
-          <h2>Die Website ist die visuelle Schicht. Markdown bleibt die Wahrheitsebene.</h2>
+    <section class="section" id="docs" data-section="07 · Artifacts">
+      <div class="wrap grid">
+        <div class="rail meta">06 / Artifacts</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Artifacts</p>
+            <h2>Die Website ist die visuelle Schicht. Markdown bleibt die Wahrheitsebene.</h2>
+          </div>
           <p>Oeffne die kanonischen Artefakte, wenn du den Ablauf in einer Agenten-Session verwenden willst.</p>
+          <ol class="components" role="list">
+            <li>
+              <span class="num" aria-hidden="true">01</span>
+              <div><strong><a href="CODEX_APP_HARNESS_TUTORIAL.md">CODEX_APP_HARNESS_TUTORIAL.md</a></strong><span>Tutorial</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">02</span>
+              <div><strong><a href="MULTI_TOOL_HARNESS_TUTORIAL.md">MULTI_TOOL_HARNESS_TUTORIAL.md</a></strong><span>Tutorial</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">03</span>
+              <div><strong><a href="templates/OWNER_PACKET.md">OWNER_PACKET.md</a></strong><span>Template</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">04</span>
+              <div><strong><a href="templates/DELEGATION_CARD.md">DELEGATION_CARD.md</a></strong><span>Template</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">05</span>
+              <div><strong><a href="templates/VERIFICATION_REPORT.md">VERIFICATION_REPORT.md</a></strong><span>Template</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">06</span>
+              <div><strong><a href="examples/ONE_SESSION_WALKTHROUGH.md">ONE_SESSION_WALKTHROUGH.md</a></strong><span>Example</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">07</span>
+              <div><strong><a href="SOURCES.md">SOURCES.md</a></strong><span>Trace</span></div>
+            </li>
+          </ol>
         </div>
-
-        <div class="doc-grid">
-          <a class="doc-link" href="CODEX_APP_HARNESS_TUTORIAL.md">
-            <span>Tutorial</span>
-            <strong>CODEX_APP_HARNESS_TUTORIAL.md</strong>
-          </a>
-          <a class="doc-link" href="MULTI_TOOL_HARNESS_TUTORIAL.md">
-            <span>Tutorial</span>
-            <strong>MULTI_TOOL_HARNESS_TUTORIAL.md</strong>
-          </a>
-          <a class="doc-link" href="templates/OWNER_PACKET.md">
-            <span>Template</span>
-            <strong>OWNER_PACKET.md</strong>
-          </a>
-          <a class="doc-link" href="templates/DELEGATION_CARD.md">
-            <span>Template</span>
-            <strong>DELEGATION_CARD.md</strong>
-          </a>
-          <a class="doc-link" href="templates/VERIFICATION_REPORT.md">
-            <span>Template</span>
-            <strong>VERIFICATION_REPORT.md</strong>
-          </a>
-          <a class="doc-link" href="examples/ONE_SESSION_WALKTHROUGH.md">
-            <span>Example</span>
-            <strong>ONE_SESSION_WALKTHROUGH.md</strong>
-          </a>
-          <a class="doc-link" href="SOURCES.md">
-            <span>Trace</span>
-            <strong>SOURCES.md</strong>
-          </a>
-        </div>
+        <aside class="aside" aria-label="Wahrheitsebene">
+          <p class="note"><strong>Wahrheitsebene.</strong> Markdown bleibt die Wahrheitsebene.</p>
+        </aside>
       </div>
     </section>
-    <section class="band docs-band" id="tools-guides">
-      <div class="section-inner">
-        <div class="section-head">
-          <p class="kicker">Anleitungen pro Tool</p>
-          <h2>Claude Code, Codex, Hermes und OpenCode: Tutorial und Referenz.</h2>
+
+    <section class="section" id="tools-guides" data-section="08 · Anleitungen">
+      <div class="wrap grid">
+        <div class="rail meta">07 / Anleitungen</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Anleitungen pro Tool</p>
+            <h2>Claude Code, Codex, Hermes und OpenCode: Tutorial und Referenz.</h2>
+          </div>
           <p>Je ein Praxis-Tutorial (Workflow, Stärken, Schwächen, Übergaben) und eine Referenz (Architektur, Konfiguration, Tuning). Stand: März 2026.</p>
+          <ol class="components" role="list">
+            <li>
+              <span class="num" aria-hidden="true">01</span>
+              <div><strong><a href="/tutorials/claude-code/">Claude Code · Tutorial</a></strong><span>Schnellstart, Workflow, Stärken und Schwächen</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">02</span>
+              <div><strong><a href="/tutorials/claude-code/referenz/">Claude Code · Referenz</a></strong><span>Architektur, Konfiguration und Tuning</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">03</span>
+              <div><strong><a href="/tutorials/codex/">Codex · Tutorial</a></strong><span>Schnellstart, Workflow, Stärken und Schwächen</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">04</span>
+              <div><strong><a href="/tutorials/codex/referenz/">Codex · Referenz</a></strong><span>Architektur, Konfiguration und Tuning</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">05</span>
+              <div><strong><a href="/tutorials/hermes/">Hermes · Tutorial</a></strong><span>Schnellstart, Workflow, Stärken und Schwächen</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">06</span>
+              <div><strong><a href="/tutorials/hermes/referenz/">Hermes · Referenz</a></strong><span>Architektur, Konfiguration und Tuning</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">07</span>
+              <div><strong><a href="/tutorials/opencode/">OpenCode · Tutorial</a></strong><span>Schnellstart, Workflow, Stärken und Schwächen</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">08</span>
+              <div><strong><a href="/tutorials/opencode/referenz/">OpenCode · Referenz</a></strong><span>Architektur, Konfiguration und Tuning</span></div>
+            </li>
+          </ol>
         </div>
-        <div class="doc-grid">
-          <a class="doc-link" href="/tutorials/claude-code/">
-            <span>Claude Code · Tutorial</span>
-            <strong>Schnellstart, Workflow, Stärken und Schwächen</strong>
-          </a>
-          <a class="doc-link" href="/tutorials/claude-code/referenz/">
-            <span>Claude Code · Referenz</span>
-            <strong>Architektur, Konfiguration und Tuning</strong>
-          </a>
-          <a class="doc-link" href="/tutorials/codex/">
-            <span>Codex · Tutorial</span>
-            <strong>Schnellstart, Workflow, Stärken und Schwächen</strong>
-          </a>
-          <a class="doc-link" href="/tutorials/codex/referenz/">
-            <span>Codex · Referenz</span>
-            <strong>Architektur, Konfiguration und Tuning</strong>
-          </a>
-          <a class="doc-link" href="/tutorials/hermes/">
-            <span>Hermes · Tutorial</span>
-            <strong>Schnellstart, Workflow, Stärken und Schwächen</strong>
-          </a>
-          <a class="doc-link" href="/tutorials/hermes/referenz/">
-            <span>Hermes · Referenz</span>
-            <strong>Architektur, Konfiguration und Tuning</strong>
-          </a>
-          <a class="doc-link" href="/tutorials/opencode/">
-            <span>OpenCode · Tutorial</span>
-            <strong>Schnellstart, Workflow, Stärken und Schwächen</strong>
-          </a>
-          <a class="doc-link" href="/tutorials/opencode/referenz/">
-            <span>OpenCode · Referenz</span>
-            <strong>Architektur, Konfiguration und Tuning</strong>
-          </a>
-        </div>
+        <aside class="aside" aria-label="Stand">
+          <p class="note"><strong>Stand.</strong> März 2026.</p>
+        </aside>
       </div>
     </section>
 
-    <section class="band cta-band" id="hilfe">
-      <div class="section-inner">
-        <div class="section-head">
-          <p class="kicker">Hilfe beim Einrichten</p>
-          <h2>Dein Setup hakt trotzdem? Ich richte es mit dir ein.</h2>
+    <section class="section" id="hilfe" data-section="09 · Hilfe">
+      <div class="wrap grid">
+        <div class="rail meta">08 / Hilfe</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Hilfe beim Einrichten</p>
+            <h2>Dein Setup hakt trotzdem? Ich richte es mit dir ein.</h2>
+          </div>
           <p>Setup-Rettung: 90 Minuten remote am eigenen Rechner, 190 € Festpreis. Oder ein 3-Stunden-Workshop fürs Team.
-            <a href="/agentfaehig/">Angebote ansehen</a> oder direkt einen
-            <a href="https://cal.com/human-agent-interface/agent-check" target="_blank" rel="noopener">kostenlosen 20-Min-Termin buchen</a>.</p>
+          <a href="/agentfaehig/">Angebote ansehen</a> oder direkt einen
+          <a href="https://cal.com/human-agent-interface/agent-check" target="_blank" rel="noopener">kostenlosen 20-Min-Termin buchen</a>.</p>
         </div>
+        <aside class="aside" aria-label="Angebot">
+          <span class="stamp">Festpreis · 190 €</span>
+        </aside>
       </div>
     </section>
+
   </main>
 
-  <footer class="site-footer">
-    <span><a href="/">Human Agent Interface</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></span>
-    <span>Human-owned agent work.</span>
-    <span>No silent success.</span>
-  </footer>
+  
 
-  <script src="app.js"></script>
+  <script src="/assets/hai.js" defer></script>
 </body>
 </html>

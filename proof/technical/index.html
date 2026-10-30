@@ -3,947 +3,257 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta
-    name="description"
-    content="Technical proof for Human Agent Interface: AgentArena, First Real Harness Evaluation, Sidecar-NG, and supporting evidence for evaluating agentic work."
-  >
   <title>Technical Proof | Human Agent Interface</title>
-  <style>
-    :root {
-      color-scheme: dark;
-      --ink: #f7f1df;
-      --muted: #b7ad97;
-      --quiet: #776f60;
-      --void: #080806;
-      --charcoal: #11100d;
-      --panel: rgba(247, 241, 223, 0.065);
-      --panel-strong: rgba(247, 241, 223, 0.12);
-      --line: rgba(247, 241, 223, 0.17);
-      --line-strong: rgba(247, 241, 223, 0.31);
-      --signal: #a7ff4f;
-      --copper: #ff9f5f;
-      --cyan: #83dbc8;
-      --red: #ff665c;
-      --max: 1180px;
-      --pad: clamp(18px, 4vw, 56px);
-      --display: Georgia, "Times New Roman", serif;
-      --body: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
-      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      background: var(--void);
-    }
-
-    body {
-      margin: 0;
-      min-width: 320px;
-      color: var(--ink);
-      background:
-        linear-gradient(180deg, rgba(131, 219, 200, 0.055), transparent 24rem),
-        linear-gradient(120deg, rgba(255, 159, 95, 0.06), transparent 34rem),
-        linear-gradient(180deg, #080806 0%, #11100d 52%, #070806 100%);
-      font-family: var(--body);
-      line-height: 1.5;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 20;
-      pointer-events: none;
-      opacity: 0.24;
-      background-image:
-        linear-gradient(rgba(247, 241, 223, 0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(247, 241, 223, 0.032) 1px, transparent 1px);
-      background-size: 72px 72px;
-      mask-image: linear-gradient(180deg, black, transparent 78%);
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    p,
-    h1,
-    h2,
-    h3 {
-      margin: 0;
-    }
-
-    .site-shell {
-      position: relative;
-      isolation: isolate;
-    }
-
-    .topbar {
-      position: fixed;
-      inset: 0 0 auto;
-      z-index: 40;
-      display: flex;
-      justify-content: center;
-      padding: 14px var(--pad) 0;
-      pointer-events: none;
-    }
-
-    .topbar-inner {
-      width: min(var(--max), 100%);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 12px 14px;
-      border: 1px solid rgba(247, 241, 223, 0.13);
-      background: rgba(8, 8, 6, 0.72);
-      backdrop-filter: blur(18px);
-      box-shadow: 0 18px 70px rgba(0, 0, 0, 0.3);
-      pointer-events: auto;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .brand-mark {
-      width: 30px;
-      height: 30px;
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
-      border: 1px solid var(--line-strong);
-      color: var(--signal);
-      font-size: 12px;
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: clamp(12px, 2vw, 24px);
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .nav a {
-      opacity: 0.82;
-      transition: color 160ms ease, opacity 160ms ease;
-    }
-
-    .nav a:hover,
-    .nav a:focus-visible {
-      color: var(--ink);
-      opacity: 1;
-    }
-
-    .hero {
-      min-height: 94svh;
-      display: grid;
-      align-items: end;
-      padding: 126px var(--pad) 72px;
-      border-bottom: 1px solid var(--line);
-      background:
-        linear-gradient(90deg, rgba(247, 241, 223, 0.07), transparent 1px),
-        linear-gradient(180deg, rgba(247, 241, 223, 0.04), transparent 1px);
-      background-size: 84px 84px;
-    }
-
-    .hero-inner,
-    .section-inner {
-      width: min(var(--max), 100%);
-      min-width: 0;
-      margin: 0 auto;
-    }
-
-    .hero-inner {
-      display: grid;
-      grid-template-columns: minmax(0, 0.9fr) minmax(300px, 0.48fr);
-      gap: clamp(32px, 6vw, 88px);
-      align-items: end;
-    }
-
-    .eyebrow,
-    .kicker,
-    .label {
-      color: var(--copper);
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 42px;
-      height: 1px;
-      background: var(--copper);
-    }
-
-    h1 {
-      max-width: 980px;
-      font-family: var(--display);
-      font-weight: 500;
-      font-size: clamp(3rem, 7vw, 7rem);
-      line-height: 0.94;
-      letter-spacing: 0;
-      overflow-wrap: break-word;
-      text-wrap: balance;
-    }
-
-    .hero-lede {
-      max-width: 800px;
-      margin-top: 28px;
-      color: var(--muted);
-      font-size: clamp(1.1rem, 2.1vw, 1.45rem);
-      line-height: 1.45;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 32px;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 12px 16px;
-      border: 1px solid var(--line-strong);
-      color: var(--ink);
-      background: rgba(247, 241, 223, 0.045);
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
-    }
-
-    .button:hover,
-    .button:focus-visible {
-      transform: translateY(-2px);
-      border-color: var(--signal);
-      background: rgba(167, 255, 79, 0.1);
-    }
-
-    .button.primary {
-      border-color: rgba(167, 255, 79, 0.54);
-      color: #101307;
-      background: var(--signal);
-    }
-
-    .proof-panel {
-      padding: 24px;
-      border: 1px solid var(--line);
-      background:
-        linear-gradient(180deg, rgba(247, 241, 223, 0.1), rgba(247, 241, 223, 0.03)),
-        rgba(8, 8, 6, 0.74);
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
-    }
-
-    .proof-panel h2 {
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--signal);
-    }
-
-    .proof-panel p {
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: 0.98rem;
-    }
-
-    .proof-panel strong {
-      color: var(--ink);
-      font-weight: 800;
-    }
-
-    .proof-list {
-      display: grid;
-      gap: 12px;
-      margin-top: 22px;
-      padding-top: 22px;
-      border-top: 1px solid var(--line);
-    }
-
-    .proof-list span {
-      display: grid;
-      grid-template-columns: 8px minmax(0, 1fr);
-      gap: 12px;
-      color: var(--ink);
-      font-size: 0.95rem;
-    }
-
-    .proof-list span::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      margin-top: 8px;
-      background: var(--signal);
-    }
-
-    section {
-      padding: clamp(72px, 10vw, 128px) var(--pad);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .section-head {
-      display: grid;
-      grid-template-columns: minmax(0, 0.9fr) minmax(260px, 0.48fr);
-      gap: clamp(24px, 5vw, 72px);
-      align-items: end;
-      margin-bottom: clamp(32px, 6vw, 72px);
-    }
-
-    .section-title {
-      max-width: 880px;
-      margin-top: 14px;
-      font-family: var(--display);
-      font-weight: 500;
-      font-size: clamp(2.2rem, 5.2vw, 4.9rem);
-      line-height: 0.98;
-      text-wrap: balance;
-    }
-
-    .section-copy {
-      color: var(--muted);
-      font-size: clamp(1rem, 1.5vw, 1.12rem);
-    }
-
-    .boundary-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .boundary {
-      min-height: 100%;
-      padding: 24px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-    }
-
-    .boundary.warn {
-      border-color: rgba(255, 102, 92, 0.32);
-      background: rgba(255, 102, 92, 0.055);
-    }
-
-    .boundary h3,
-    .mini-card h3 {
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .boundary p,
-    .mini-card p {
-      margin-top: 14px;
-      color: var(--muted);
-    }
-
-    .case-list {
-      display: grid;
-      gap: 42px;
-    }
-
-    .case-file {
-      display: grid;
-      grid-template-columns: minmax(0, 0.94fr) minmax(320px, 0.68fr);
-      gap: clamp(24px, 5vw, 62px);
-      align-items: center;
-      padding: clamp(22px, 4vw, 38px);
-      border: 1px solid var(--line);
-      background:
-        linear-gradient(135deg, rgba(247, 241, 223, 0.08), rgba(247, 241, 223, 0.025)),
-        rgba(8, 8, 6, 0.48);
-    }
-
-    .case-file:nth-child(even) {
-      grid-template-columns: minmax(320px, 0.68fr) minmax(0, 0.94fr);
-    }
-
-    .case-file:nth-child(even) .case-media {
-      order: -1;
-    }
-
-    .case-number {
-      display: inline-flex;
-      margin-bottom: 18px;
-      color: var(--cyan);
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .case-file h3 {
-      max-width: 760px;
-      font-family: var(--display);
-      font-weight: 500;
-      font-size: clamp(2rem, 4vw, 3.8rem);
-      line-height: 1;
-      text-wrap: balance;
-    }
-
-    .case-file p {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 1.04rem;
-    }
-
-    .fact-row {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1px;
-      margin-top: 24px;
-      border: 1px solid var(--line);
-      background: var(--line);
-    }
-
-    .fact {
-      min-height: 96px;
-      padding: 16px;
-      background: #0d0d0a;
-    }
-
-    .fact span {
-      color: var(--quiet);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .fact strong {
-      display: block;
-      margin-top: 10px;
-      color: var(--ink);
-      font-size: 1.05rem;
-      line-height: 1.2;
-    }
-
-    .claim-boundary {
-      margin-top: 22px;
-      padding-top: 20px;
-      border-top: 1px solid var(--line);
-    }
-
-    .claim-boundary span {
-      color: var(--red);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .claim-boundary p {
-      margin-top: 8px;
-      font-size: 0.96rem;
-    }
-
-    .case-media {
-      min-width: 0;
-    }
-
-    .case-media img {
-      display: block;
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      object-fit: cover;
-      border: 1px solid var(--line-strong);
-      background: #050504;
-      box-shadow: 0 24px 72px rgba(0, 0, 0, 0.36);
-    }
-
-    .support-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .mini-card {
-      padding: 24px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-    }
-
-    .mini-card strong {
-      color: var(--ink);
-    }
-
-    .transfer {
-      background:
-        linear-gradient(90deg, rgba(167, 255, 79, 0.08), transparent),
-        #0b0c08;
-    }
-
-    .transfer-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 0.72fr) minmax(300px, 0.5fr);
-      gap: clamp(28px, 6vw, 86px);
-      align-items: center;
-    }
-
-    .transfer h2 {
-      font-family: var(--display);
-      font-weight: 500;
-      font-size: clamp(2.35rem, 5.8vw, 5.4rem);
-      line-height: 0.98;
-      text-wrap: balance;
-    }
-
-    .transfer p {
-      margin-top: 22px;
-      color: var(--muted);
-      font-size: clamp(1.04rem, 1.7vw, 1.22rem);
-    }
-
-    .transfer-box {
-      padding: 26px;
-      border: 1px solid rgba(167, 255, 79, 0.34);
-      background: rgba(167, 255, 79, 0.08);
-    }
-
-    .transfer-box p {
-      margin: 0;
-      color: var(--ink);
-      font-size: clamp(1.25rem, 2.2vw, 1.85rem);
-      line-height: 1.22;
-      font-family: var(--display);
-    }
-
-    .transfer-box small {
-      display: block;
-      margin-top: 18px;
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    footer {
-      padding: 28px var(--pad);
-      color: var(--quiet);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .footer-inner {
-      width: min(var(--max), 100%);
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
-    @media (max-width: 920px) {
-      .hero-inner,
-      .section-head,
-      .transfer-grid,
-      .case-file,
-      .case-file:nth-child(even) {
-        grid-template-columns: 1fr;
-      }
-
-      .case-file:nth-child(even) .case-media {
-        order: initial;
-      }
-
-      .boundary-grid,
-      .support-grid,
-      .fact-row {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar {
-        position: absolute;
-      }
-    }
-
-    @media (max-width: 720px) {
-      .topbar,
-      .hero,
-      section {
-        padding-left: 20px;
-        padding-right: 20px;
-      }
-
-      .topbar-inner {
-        width: calc(100vw - 40px);
-        min-width: 0;
-        max-width: calc(100vw - 40px);
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav {
-        min-width: 0;
-        width: 100%;
-        overflow-x: auto;
-        padding-bottom: 4px;
-      }
-
-      .hero {
-        min-height: auto;
-        padding-top: 150px;
-      }
-
-      .hero-inner,
-      .section-inner {
-        width: calc(100vw - 40px);
-        max-width: calc(100vw - 40px);
-      }
-
-      .proof-panel,
-      .boundary,
-      .case-file,
-      .mini-card,
-      .transfer-box {
-        padding: 20px;
-      }
-
-      h1 {
-        font-size: clamp(2.45rem, 11vw, 3rem);
-        line-height: 1.04;
-        text-wrap: normal;
-      }
-
-      .section-title,
-      .transfer h2,
-      .case-file h3 {
-        text-wrap: normal;
-      }
-
-      .hero-lede,
-      .proof-panel p,
-      .proof-list span,
-      .section-copy,
-      .case-file p,
-      .transfer p,
-      .mini-card p {
-        overflow-wrap: anywhere;
-      }
-
-      .button {
-        width: 100%;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-        transition-duration: 0.001ms !important;
-      }
-    }
-  </style>
-  <script src="/mail-fallback.js" defer></script>
+  <meta name="description" content="Technical proof for Human Agent Interface: AgentArena, First Real Harness Evaluation, Sidecar-NG, and supporting evidence for evaluating agentic work.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/proof/technical/">
+  <meta name="theme-color" content="#f4f0e6">
+  <link rel="icon" href="/assets/favicon-64.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/newsreader-300_700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-300_700-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/hai.css">
 </head>
-<body>
-  <div class="site-shell">
-    <header class="topbar" aria-label="Site navigation">
-      <div class="topbar-inner">
-        <a class="brand" href="../../index.html" aria-label="Human Agent Interface home">
-          <span class="brand-mark">HAI</span>
-          <span>Human Agent Interface</span>
-        </a>
-        <nav class="nav" aria-label="Technical proof navigation">
-          <a href="../">Proof</a>
-          <a href="../../product/">Products</a>
-          <a href="../../sidecar/">Sidecar</a>
-          <a href="#cases">Cases</a>
-          <a href="#contact">Contact</a>
-        </nav>
-      </div>
-    </header>
+<body data-page="legacy">
+  <a class="skip-link" href="#main">Skip to content</a>
 
-    <main id="top">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-inner">
-          <div>
-            <p class="eyebrow">Technical proof / due diligence</p>
-            <h1 id="hero-title">Agent work you can inspect, not just believe.</h1>
-            <p class="hero-lede">
-              For technical buyers: HAI is grounded in attempts to measure, falsify, gate, and control real agent workflows. The point is not a shiny benchmark. The point is knowing when the evidence is valid and when it is not.
-            </p>
-            <div class="hero-actions">
-              <a class="button primary" href="#cases">Read the technical cases</a>
-              <a class="button" href="../">Back to proof</a>
-            </div>
-          </div>
-
-          <aside class="proof-panel" aria-label="Technical proof claim">
-            <h2>What this page proves</h2>
-            <p>
-              <strong>Samuel has tried to make agentic work falsifiable.</strong> Tasks, hooks, runs, judges, traces, gates, and claim boundaries are treated as engineering objects, not as vibes.
-            </p>
-            <div class="proof-list">
-              <span>Agent runs stored as inspectable evidence.</span>
-              <span>Invalid evals blocked from becoming claims.</span>
-              <span>Control hooks tested before being sold as method.</span>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section aria-labelledby="boundary-title">
-        <div class="section-inner">
-          <div class="section-head">
-            <div>
-              <p class="kicker">Claim boundary</p>
-              <h2 class="section-title" id="boundary-title">This is internal technical evidence, not benchmark theater.</h2>
-            </div>
-            <p class="section-copy">
-              The useful claim is narrow: Samuel has built and broken evaluation/control surfaces for agent workflows, and he knows where eval evidence can lie.
-            </p>
-          </div>
-
-          <div class="boundary-grid">
-            <article class="boundary">
-              <h3>Safe to claim</h3>
-              <p>
-                Local tools, docs, run artifacts, dashboards, and evaluation loops exist. They show repeated contact with agent failure modes: drift, weak verification, invalid comparisons, scope creep, and missing human ownership.
-              </p>
-            </article>
-            <article class="boundary warn">
-              <h3>Not claimed</h3>
-              <p>
-                This is not third-party audited performance, not customer ROI data, not a public benchmark, and not a guarantee of safe autonomous agents. It is technical proof of method formation.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="cases" aria-labelledby="cases-title">
-        <div class="section-inner">
-          <div class="section-head">
-            <div>
-              <p class="kicker">Primary cases</p>
-              <h2 class="section-title" id="cases-title">Three attempts to make agent work measurable and owned.</h2>
-            </div>
-            <p class="section-copy">
-              Each case is framed by the same question: what did the project reveal about trusting agents in real technical workflows?
-            </p>
-          </div>
-
-          <div class="case-list">
-            <article class="case-file">
-              <div class="case-copy">
-                <span class="case-number">Case 01 / AgentArena</span>
-                <h3>Coding agents became task contracts, stored runs, and isolated judgments.</h3>
-                <p>
-                  AgentArena explored the gap between an agent saying it completed a task and a buyer being able to compare the result. It used task YAMLs, adapters, local run storage, cost tracking, diff/trajectory metrics, and judge-side verification to make agent behavior inspectable.
-                </p>
-                <div class="fact-row" aria-label="AgentArena source-backed facts">
-                  <div class="fact">
-                    <span>Local DB snapshot</span>
-                    <strong>166 runs</strong>
-                  </div>
-                  <div class="fact">
-                    <span>Task bank</span>
-                    <strong>9 tasks</strong>
-                  </div>
-                  <div class="fact">
-                    <span>Agent records</span>
-                    <strong>37 agents</strong>
-                  </div>
-                </div>
-                <div class="claim-boundary">
-                  <span>Claim boundary</span>
-                  <p>
-                    Do not call this a public benchmark or quote a clean success rate. The DB schema evolved and old status fields disagree with stored metric JSON.
-                  </p>
-                </div>
-              </div>
-              <div class="case-media">
-                <img src="../assets/technical-agentarena-architecture.png" alt="AgentArena architecture screenshot">
-              </div>
-            </article>
-
-            <article class="case-file">
-              <div class="case-copy">
-                <span class="case-number">Case 02 / First Real Harness Evaluation</span>
-                <h3>The strongest result was that the eval refused to overclaim.</h3>
-                <p>
-                  This Aider plus SWE-bench Lite harness tested whether small Markdown policy changes could measurably change coding-agent behavior. It produced run artifacts, summaries, a local DB, a cockpit, and the important negative result: many runs were not valid evidence.
-                </p>
-                <div class="fact-row" aria-label="First Real Harness source-backed facts">
-                  <div class="fact">
-                    <span>Run records</span>
-                    <strong>102 runs</strong>
-                  </div>
-                  <div class="fact">
-                    <span>Valid hard metrics</span>
-                    <strong>19 runs</strong>
-                  </div>
-                  <div class="fact">
-                    <span>Validity blocker</span>
-                    <strong>80 zero-test rows</strong>
-                  </div>
-                </div>
-                <div class="claim-boundary">
-                  <span>Claim boundary</span>
-                  <p>
-                    Do not claim the Karpathy-style policy won or that GPT-5.5 was fairly compared. The honest proof is the validity gate: bad evidence did not become a conclusion.
-                  </p>
-                </div>
-              </div>
-              <div class="case-media">
-                <img src="../assets/technical-first-real-harness-dashboard.png" alt="First Real Harness Evaluation dashboard screenshot">
-              </div>
-            </article>
-
-            <article class="case-file">
-              <div class="case-copy">
-                <span class="case-number">Case 03 / Sidecar-NG</span>
-                <h3>A small hook beat the fantasy of a giant watcher.</h3>
-                <p>
-                  Sidecar-NG wrapped Claude Code with prompt-time policy, mode-specific context injection, deterministic PreTool safety gates, and local eval artifacts. The lesson was precise: bounded hooks plus eval loops are more useful than a large observer system that cannot prove it helped.
-                </p>
-                <div class="fact-row" aria-label="Sidecar-NG source-backed facts">
-                  <div class="fact">
-                    <span>Prompt eval</span>
-                    <strong>37 prompts</strong>
-                  </div>
-                  <div class="fact">
-                    <span>Internal accuracy</span>
-                    <strong>97.3%</strong>
-                  </div>
-                  <div class="fact">
-                    <span>Safety gate eval</span>
-                    <strong>44 / 44</strong>
-                  </div>
-                </div>
-                <div class="claim-boundary">
-                  <span>Claim boundary</span>
-                  <p>
-                    Publish as an internal local eval only. Do not claim production monitoring, guaranteed safety, or independent benchmark performance.
-                  </p>
-                </div>
-              </div>
-              <div class="case-media">
-                <img src="../assets/technical-sidecar-ng-skill-router.png" alt="Sidecar-NG skill router screenshot">
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section aria-labelledby="supporting-title">
-        <div class="section-inner">
-          <div class="section-head">
-            <div>
-              <p class="kicker">Supporting evidence</p>
-              <h2 class="section-title" id="supporting-title">The surrounding work shows the same control instinct.</h2>
-            </div>
-            <p class="section-copy">
-              These are not primary proof cards. They are useful because they show how the same HAI logic appears in telemetry, handoff contracts, prompt compilation, evidence rules, and private eval loops.
-            </p>
-          </div>
-
-          <div class="support-grid">
-            <article class="mini-card">
-              <h3>HarnessEcosystem</h3>
-              <p>
-                A telemetry and harness-comparison surface for making token pressure, scope discipline, and model-vs-harness confusion visible. Good supporting proof for evidence boundaries; not a controlled performance benchmark.
-              </p>
-            </article>
-            <article class="mini-card">
-              <h3>MultiHarnessStudio</h3>
-              <p>
-                A spec-first contract spine for traceable handoffs: task, routing, execution, artifacts, events, and evals modeled as shared objects. Useful proof of architecture thinking; not a shipped runtime.
-              </p>
-            </article>
-            <article class="mini-card">
-              <h3>MetaMetaMeta</h3>
-              <p>
-                The evidence-discipline layer behind the work: claims need scope, baseline, intervention, measurement, artifacts, falsifiers, transfer limits, and a next clean test. Strong proof of method governance; private notes and raw databases stay out.
-              </p>
-            </article>
-            <article class="mini-card">
-              <h3>PromptBoost</h3>
-              <p>
-                A prompt-compiler and eval layer that turns raw intent into harness- and model-aware task specs with boundaries, verification gates, and no-new-facts checks. Strong proof of control before orchestration; not proof that prompts universally improve model output.
-              </p>
-            </article>
-            <article class="mini-card">
-              <h3>WerBinIch</h3>
-              <p>
-                A small visible eval harness for prompt iteration: fixed task set, player/referee prompts, run metadata, warning taxonomy, summaries, and human-gated comparison. Useful as private mechanics proof; transcripts and personal/self-analysis material are not public evidence.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="transfer" id="contact" aria-labelledby="contact-title">
-        <div class="section-inner transfer-grid">
-          <div>
-            <p class="kicker">Customer transfer</p>
-            <h2 id="contact-title">The value is not the harness. It is the judgment to know what can be trusted.</h2>
-            <p>
-              If your team is adding agents to coding, operations, research, or internal workflows, the hard part is often not output. It is knowing which run counts, which claim is valid, where the human must approve, and where the system is drifting.
-            </p>
-            <div class="hero-actions">
-              <a
-                class="button primary"
-                href="mailto:hallo@samuelfleig.com?subject=Technical%20HAI%20proof%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20talk%20through%20a%20technical%20agent%20workflow%20where%20we%20need%20better%20evaluation%2C%20gates%2C%20or%20ownership.%0D%0A%0D%0AOur%20current%20agent%20workflow%3A%0D%0A%0D%0AWhat%20we%20cannot%20trust%20yet%3A%0D%0A%0D%0APreferred%20time%20windows%3A"
-              >Book technical fit call</a>
-              <a class="button" href="../../product/">See HAI setup</a>
-            </div>
-          </div>
-
-          <aside class="transfer-box" aria-label="Technical buyer reaction">
-            <p>"He has already seen where agent evals can lie, and he knows how to put a boundary around the claim."</p>
-            <small>Target technical buyer reaction</small>
-          </aside>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <div class="footer-inner">
-        <span>Human Agent Interface Technical Proof</span>
-        <span>Runs / gates / traces / claim boundaries</span>
-      </div>
-    </footer>
+  <div class="statusline" aria-hidden="true">
+    <div class="wrap">
+      <span>HAI · Record 001</span>
+      <span>Section: <strong data-status-section>01</strong></span>
+      <span data-variant-label>Variant A · Protocol</span>
+    </div>
   </div>
+
+  
+
+  <main id="main" tabindex="-1">
+
+    <section class="hero" data-section="01 · Technical proof">
+      <div class="wrap grid">
+        <div class="rail meta">
+          <div>Protokoll 001</div>
+          <div>Version 001</div>
+          <div>English</div>
+        </div>
+        <div class="main">
+          <p class="meta">Technical proof / due diligence · Archive</p>
+          <h1>Agent work you can inspect, not just believe.</h1>
+          <p class="lede">For technical buyers: HAI is grounded in attempts to measure, falsify, gate, and control real agent workflows. The point is not a shiny benchmark. The point is knowing when the evidence is valid and when it is not.</p>
+          <div class="actions">
+            <a href="/beweis/" data-target="proof">Current overview: /beweis/</a>
+            <a href="#cases" data-target="proof-technical">Read the technical cases</a>
+            <a href="../" data-target="proof">Back to proof</a>
+            <a href="/archiv/" data-target="archive">Archive</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Archive status and technical proof claim">
+          <span class="stamp">Archive · 30.10.2026</span>
+          <p class="note" style="margin-top:1.5rem"><strong>Archive.</strong> This page is part of the older technical proof material. The current overview is <a href="/beweis/">/beweis/</a>.</p>
+          <p class="meta" style="margin-top:1.5rem">What this page proves</p>
+          <p class="note"><strong>Samuel has tried to make agentic work falsifiable.</strong> Tasks, hooks, runs, judges, traces, gates, and claim boundaries are treated as engineering objects, not as vibes.</p>
+          <ul class="components" role="list">
+            <li><span class="num" aria-hidden="true">01</span><div><span>Agent runs stored as inspectable evidence.</span></div></li>
+            <li><span class="num" aria-hidden="true">02</span><div><span>Invalid evals blocked from becoming claims.</span></div></li>
+            <li><span class="num" aria-hidden="true">03</span><div><span>Control hooks tested before being sold as method.</span></div></li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="boundary" data-section="02 · Claim boundary">
+      <div class="wrap grid">
+        <div class="rail meta">01 / Claim boundary</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Claim boundary</p>
+            <h2>This is internal technical evidence, not benchmark theater.</h2>
+          </div>
+          <p>The useful claim is narrow: Samuel has built and broken evaluation/control surfaces for agent workflows, and he knows where eval evidence can lie.</p>
+          <div class="entries">
+            <article class="entry">
+              <span class="num" aria-hidden="true">01</span>
+              <div>
+                <h3>Safe to claim</h3>
+                <p>Local tools, docs, run artifacts, dashboards, and evaluation loops exist. They show repeated contact with agent failure modes: drift, weak verification, invalid comparisons, scope creep, and missing human ownership.</p>
+              </div>
+            </article>
+            <article class="entry">
+              <span class="num" aria-hidden="true">02</span>
+              <div>
+                <h3>Not claimed</h3>
+                <p>This is not third-party audited performance, not customer ROI data, not a public benchmark, and not a guarantee of safe autonomous agents. It is technical proof of method formation.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Archive status">
+          <p class="note"><strong>Archive.</strong> This page is part of the older technical proof material. The current overview is <a href="/beweis/">/beweis/</a>.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="cases" data-section="03 · Primary cases">
+      <div class="wrap grid">
+        <div class="rail meta">02 / Primary cases</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Primary cases</p>
+            <h2>Three attempts to make agent work measurable and owned.</h2>
+          </div>
+          <p>Each case is framed by the same question: what did the project reveal about trusting agents in real technical workflows?</p>
+          <div class="entries">
+            <article class="entry">
+              <span class="num" aria-hidden="true">01</span>
+              <div>
+                <p class="meta">Case 01 / AgentArena</p>
+                <h3>Coding agents became task contracts, stored runs, and isolated judgments.</h3>
+                <p>AgentArena explored the gap between an agent saying it completed a task and a buyer being able to compare the result. It used task YAMLs, adapters, local run storage, cost tracking, diff/trajectory metrics, and judge-side verification to make agent behavior inspectable.</p>
+                <table class="mesh-table" aria-label="AgentArena source-backed facts">
+                  <thead><tr><th scope="col">Fact</th><th scope="col">Value</th></tr></thead>
+                  <tbody>
+                    <tr><td data-label="Fact">Local DB snapshot</td><td data-label="Value">166 runs</td></tr>
+                    <tr><td data-label="Fact">Task bank</td><td data-label="Value">9 tasks</td></tr>
+                    <tr><td data-label="Fact">Agent records</td><td data-label="Value">37 agents</td></tr>
+                  </tbody>
+                </table>
+                <p class="note"><strong>Claim boundary.</strong> Do not call this a public benchmark or quote a clean success rate. The DB schema evolved and old status fields disagree with stored metric JSON.</p>
+                <figure class="figure">
+                  <img src="../assets/technical-agentarena-architecture.png" alt="AgentArena architecture screenshot">
+                  <figcaption>AgentArena architecture screenshot</figcaption>
+                </figure>
+              </div>
+            </article>
+
+            <article class="entry">
+              <span class="num" aria-hidden="true">02</span>
+              <div>
+                <p class="meta">Case 02 / First Real Harness Evaluation</p>
+                <h3>The strongest result was that the eval refused to overclaim.</h3>
+                <p>This Aider plus SWE-bench Lite harness tested whether small Markdown policy changes could measurably change coding-agent behavior. It produced run artifacts, summaries, a local DB, a cockpit, and the important negative result: many runs were not valid evidence.</p>
+                <table class="mesh-table" aria-label="First Real Harness source-backed facts">
+                  <thead><tr><th scope="col">Fact</th><th scope="col">Value</th></tr></thead>
+                  <tbody>
+                    <tr><td data-label="Fact">Run records</td><td data-label="Value">102 runs</td></tr>
+                    <tr><td data-label="Fact">Valid hard metrics</td><td data-label="Value">19 runs</td></tr>
+                    <tr><td data-label="Fact">Validity blocker</td><td data-label="Value">80 zero-test rows</td></tr>
+                  </tbody>
+                </table>
+                <p class="note"><strong>Claim boundary.</strong> Do not claim the Karpathy-style policy won or that GPT-5.5 was fairly compared. The honest proof is the validity gate: bad evidence did not become a conclusion.</p>
+                <figure class="figure">
+                  <img src="../assets/technical-first-real-harness-dashboard.png" alt="First Real Harness Evaluation dashboard screenshot">
+                  <figcaption>First Real Harness Evaluation dashboard screenshot</figcaption>
+                </figure>
+              </div>
+            </article>
+
+            <article class="entry">
+              <span class="num" aria-hidden="true">03</span>
+              <div>
+                <p class="meta">Case 03 / Sidecar-NG</p>
+                <h3>A small hook beat the fantasy of a giant watcher.</h3>
+                <p>Sidecar-NG wrapped Claude Code with prompt-time policy, mode-specific context injection, deterministic PreTool safety gates, and local eval artifacts. The lesson was precise: bounded hooks plus eval loops are more useful than a large observer system that cannot prove it helped.</p>
+                <table class="mesh-table" aria-label="Sidecar-NG source-backed facts">
+                  <thead><tr><th scope="col">Fact</th><th scope="col">Value</th></tr></thead>
+                  <tbody>
+                    <tr><td data-label="Fact">Prompt eval</td><td data-label="Value">37 prompts</td></tr>
+                    <tr><td data-label="Fact">Internal accuracy</td><td data-label="Value">97.3%</td></tr>
+                    <tr><td data-label="Fact">Safety gate eval</td><td data-label="Value">44 / 44</td></tr>
+                  </tbody>
+                </table>
+                <p class="note"><strong>Claim boundary.</strong> Publish as an internal local eval only. Do not claim production monitoring, guaranteed safety, or independent benchmark performance.</p>
+                <figure class="figure">
+                  <img src="../assets/technical-sidecar-ng-skill-router.png" alt="Sidecar-NG skill router screenshot">
+                  <figcaption>Sidecar-NG skill router screenshot</figcaption>
+                </figure>
+              </div>
+            </article>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Before quoting a number">
+          <p class="note"><strong>Before quoting.</strong> These are internal source-backed facts. Do not call them a public benchmark or quote a clean success rate.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="supporting" data-section="04 · Supporting evidence">
+      <div class="wrap grid">
+        <div class="rail meta">03 / Supporting evidence</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Supporting evidence</p>
+            <h2>The surrounding work shows the same control instinct.</h2>
+          </div>
+          <p>These are not primary proof cards. They are useful because they show how the same HAI logic appears in telemetry, handoff contracts, prompt compilation, evidence rules, and private eval loops.</p>
+          <div class="entries">
+            <article class="entry">
+              <span class="num" aria-hidden="true">01</span>
+              <div>
+                <h3>HarnessEcosystem</h3>
+                <p>A telemetry and harness-comparison surface for making token pressure, scope discipline, and model-vs-harness confusion visible. Good supporting proof for evidence boundaries; not a controlled performance benchmark.</p>
+              </div>
+            </article>
+            <article class="entry">
+              <span class="num" aria-hidden="true">02</span>
+              <div>
+                <h3>MultiHarnessStudio</h3>
+                <p>A spec-first contract spine for traceable handoffs: task, routing, execution, artifacts, events, and evals modeled as shared objects. Useful proof of architecture thinking; not a shipped runtime.</p>
+              </div>
+            </article>
+            <article class="entry">
+              <span class="num" aria-hidden="true">03</span>
+              <div>
+                <h3>MetaMetaMeta</h3>
+                <p>The evidence-discipline layer behind the work: claims need scope, baseline, intervention, measurement, artifacts, falsifiers, transfer limits, and a next clean test. Strong proof of method governance; private notes and raw databases stay out.</p>
+              </div>
+            </article>
+            <article class="entry">
+              <span class="num" aria-hidden="true">04</span>
+              <div>
+                <h3>PromptBoost</h3>
+                <p>A prompt-compiler and eval layer that turns raw intent into harness- and model-aware task specs with boundaries, verification gates, and no-new-facts checks. Strong proof of control before orchestration; not proof that prompts universally improve model output.</p>
+              </div>
+            </article>
+            <article class="entry">
+              <span class="num" aria-hidden="true">05</span>
+              <div>
+                <h3>WerBinIch</h3>
+                <p>A small visible eval harness for prompt iteration: fixed task set, player/referee prompts, run metadata, warning taxonomy, summaries, and human-gated comparison. Useful as private mechanics proof; transcripts and personal/self-analysis material are not public evidence.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Supporting evidence status">
+          <p class="note"><strong>Status.</strong> Supporting evidence, not primary proof cards.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="contact" data-section="05 · Customer transfer">
+      <div class="wrap grid">
+        <div class="rail meta">04 / Customer transfer</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Customer transfer</p>
+            <h2>The value is not the harness. It is the judgment to know what can be trusted.</h2>
+          </div>
+          <p>If your team is adding agents to coding, operations, research, or internal workflows, the hard part is often not output. It is knowing which run counts, which claim is valid, where the human must approve, and where the system is drifting.</p>
+          <div class="actions">
+            <a href="mailto:hallo@samuelfleig.com?subject=Technical%20HAI%20proof%20call&amp;body=Hi%20Samuel%2C%0D%0A%0D%0AI%20want%20to%20talk%20through%20a%20technical%20agent%20workflow%20where%20we%20need%20better%20evaluation%2C%20gates%2C%20or%20ownership.%0D%0A%0D%0AOur%20current%20agent%20workflow%3A%0D%0A%0D%0AWhat%20we%20cannot%20trust%20yet%3A%0D%0A%0D%0APreferred%20time%20windows%3A">Book technical fit call</a>
+            <a href="../../product/" data-target="product">See HAI setup</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Technical buyer reaction">
+          <p class="meta">Human Agent Interface Technical Proof</p>
+          <p class="note"><strong>"He has already seen where agent evals can lie, and he knows how to put a boundary around the claim."</strong></p>
+          <p class="meta">Target technical buyer reaction</p>
+          <p class="note"><strong>Runs / gates / traces / claim boundaries.</strong></p>
+        </aside>
+      </div>
+    </section>
+
+  </main>
+
+  
+
+  <script src="/assets/hai.js" defer></script>
 </body>
 </html>

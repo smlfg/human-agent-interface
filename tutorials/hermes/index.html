@@ -6,68 +6,132 @@
   <title>Hermes Tutorial: Schnellstart, Workflow, Stärken und Schwächen — Human Agent Interface</title>
   <meta name="description" content="Praxis-Tutorial für Hermes als Coding-Agent: Schnellstart, typischer Workflow, Stärken nutzen, Schwächen kompensieren, Übergaben an andere Agenten.">
   <link rel="canonical" href="https://www.human-agent-interface.com/tutorials/hermes/">
-  <link rel="icon" href="/favicon.png">
-  <style>
-    :root { color-scheme: dark; --ink:#f7f1df; --muted:#b7ad97; --void:#090a08; --panel:rgba(247,241,223,.06); --line:rgba(247,241,223,.18); --signal:#a7ff4f; --mono:ui-monospace,SFMono-Regular,Menlo,monospace; }
-    @media (prefers-color-scheme: light) { :root { color-scheme: light; --ink:#16180f; --muted:#5c5647; --void:#f6f1e4; --panel:rgba(22,24,15,.05); --line:rgba(22,24,15,.16); --signal:#3d7a00; } }
-    * { box-sizing: border-box; }
-    body { margin:0; background:var(--void); color:var(--ink); font:17px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif; }
-    .wrap { width:min(100% - 32px, 780px); margin:0 auto; }
-    header, footer { border-bottom:1px solid var(--line); padding:14px 0; font-size:.9rem; }
-    footer { border-top:1px solid var(--line); border-bottom:0; margin-top:56px; color:var(--muted); }
-    a { color:var(--signal); }
-    .crumbs a { color:var(--muted); text-decoration:none; }
-    .stand { border-left:3px solid var(--signal); background:var(--panel); padding:10px 14px; color:var(--muted); font-size:.92rem; margin:22px 0; }
-    h1 { font-size:clamp(1.7rem,4vw,2.4rem); line-height:1.15; margin:28px 0 8px; }
-    h2 { margin-top:40px; border-top:1px solid var(--line); padding-top:20px; }
-    pre { background:var(--panel); border:1px solid var(--line); padding:14px; overflow-x:auto; font:14px/1.5 var(--mono); }
-    code { font-family:var(--mono); font-size:.92em; }
-    table { border-collapse:collapse; width:100%; display:block; overflow-x:auto; font-size:.92rem; }
-    th, td { border:1px solid var(--line); padding:6px 10px; text-align:left; vertical-align:top; }
-    blockquote { margin:0; padding:4px 16px; border-left:3px solid var(--line); color:var(--muted); }
-    .cta { margin:48px 0 0; padding:20px; border:1px solid var(--signal); }
-    .cta strong { display:block; font-size:1.1rem; margin-bottom:6px; }
-  </style>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Human Agent Interface (HAI)">
+  <meta property="og:title" content="Hermes Tutorial: Schnellstart, Workflow, Stärken und Schwächen — Human Agent Interface">
+  <meta property="og:description" content="Praxis-Tutorial für Hermes als Coding-Agent: Schnellstart, typischer Workflow, Stärken nutzen, Schwächen kompensieren, Übergaben an andere Agenten.">
+  <meta property="og:image" content="https://www.human-agent-interface.com/assets/og/hai-og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HAI — Agenten arbeiten. Du entscheidest.">
+  
+  <meta property="og:url" content="https://www.human-agent-interface.com/tutorials/hermes/">
+  <meta property="og:locale" content="de_DE">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#f4f0e6">
+  <link rel="icon" href="/assets/favicon-64.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/newsreader-300_700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-300_700-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/hai.css">
 </head>
-<body>
-  <header><div class="wrap crumbs"><a href="/">Human Agent Interface</a> / <a href="/tutorials/">Tutorials</a> / Hermes Tutorial</div></header>
-  <main class="wrap">
-    <h1>Hermes — Harness Tutorial</h1>
-    <p class="stand">Stand: März 2026. Aus der täglichen Praxis mit Hermes; Flags, Preise und Bugs können sich seitdem geändert haben. Siehe auch: <a href="https://www.human-agent-interface.com/tutorials/hermes/referenz/">Hermes Referenz</a>.</p>
+<body data-page="legacy">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-<blockquote>
-<p>Pipeline-Rolle: <strong>Output bauen</strong> (Wave 2, Implementierung)
-Hermes ist das guenstigste und anpassungsfahigste Arbeits-Harness. Hier entsteht der meiste Code.</p>
-</blockquote>
-<hr />
-<h2>1. Quick Start</h2>
-<pre><code class="language-bash">cd ~/Projekte/MeinProjekt     # KRITISCH: IMMER im Projektordner starten
+  <div class="statusline" aria-hidden="true">
+    <div class="wrap">
+      <span>HAI · Protokoll 001</span>
+      <span>Abschnitt: <strong data-status-section>01</strong></span>
+      <span data-variant-label>Variante A · Protokoll</span>
+    </div>
+  </div>
+
+  
+
+  <main id="main" tabindex="-1">
+
+    <section class="hero" data-section="01 · Hermes">
+      <div class="wrap grid">
+        <div class="rail meta">
+          <div><a href="/tutorials/">Tutorials</a></div>
+          <div>Stand · März 2026</div>
+          <div>Deutsch</div>
+        </div>
+        <div class="main">
+          <p class="meta">Harness Tutorial</p>
+          <h1>Hermes — Harness Tutorial</h1>
+          <p class="lede">Pipeline-Rolle: <strong>Output bauen</strong> (Wave 2, Implementierung)<br>Hermes ist das guenstigste und anpassungsfahigste Arbeits-Harness. Hier entsteht der meiste Code.</p>
+          <div class="actions">
+            <a href="#quick-start">Quick Start</a>
+            <a href="/archiv/">Zum Archiv</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Stand und Referenz">
+          <span class="stamp">Stand · März 2026</span>
+          <p class="note">Stand: März 2026. Aus der täglichen Praxis mit Hermes; Flags, Preise und Bugs können sich seitdem geändert haben. Siehe auch: <a href="https://www.human-agent-interface.com/tutorials/hermes/referenz/">Hermes Referenz</a>.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="quick-start" data-section="02 · Quick Start">
+      <div class="wrap grid">
+        <div class="rail meta">01 / Quick Start</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Schnellstart</p>
+            <h2>Quick Start</h2>
+          </div>
+          <figure class="figure">
+            <pre style="overflow-x:auto"><code>cd ~/Projekte/MeinProjekt     # KRITISCH: IMMER im Projektordner starten
                               # NICHT in ~/.hermes/ oder irgendwo anders
 
 hermes chat                   # interaktive Session
 # oder mit spezifischem Modell:
 hermes chat --model minimax/minimax-text-01
 </code></pre>
-<p>Erste 2 Minuten:</p>
-<pre><code>&gt; [Tasksheet aus harness-tasksheets/ einfuegen]
+          </figure>
+          <p>Erste 2 Minuten:</p>
+          <figure class="figure">
+            <pre style="overflow-x:auto"><code>&gt; [Tasksheet aus harness-tasksheets/ einfuegen]
 &gt; Bestatige: In welchem Verzeichnis arbeitest du gerade?
 &gt; Welche Dateien wirst du anlegen/aendern?
 </code></pre>
-<p>Den zweiten und dritten Schritt IMMER machen — Hermes driftet sonst
-in <code>~/.hermes/</code> oder baut an der falschen Stelle.</p>
-<hr />
-<h2>2. Typischer Workflow</h2>
-<p><strong>Hermes ist fuer iteratives Arbeiten gemacht — nicht fuer Einmal-Outputs.</strong></p>
-<ol>
-<li><strong>Tasksheet einfuegen</strong> — Scope, Output-Pfad, Constraints klar definieren.</li>
-<li><strong>Verzeichnis-Check</strong> — Bestaetigen lassen wo Hermes gerade ist.</li>
-<li><strong>Ersten Output</strong> — Hermes baut. Warten, bis Output erscheint (kann kurz still sein).</li>
-<li><strong>Feedback geben</strong> — Konkret und priazise. Hermes nimmt Korrekturen gut an.</li>
-<li><strong>Iterieren</strong> — 2-4 Iterationen bis Ergebnis passt.</li>
-<li><strong>Summary</strong> — "Fasse zusammen was du geaendert hast" — fuer Handoff an Codex.</li>
-</ol>
-<p>Beispiel-Flow:</p>
-<pre><code>&gt; [Tasksheet einfuegen]
+          </figure>
+          <p>Den zweiten und dritten Schritt IMMER machen — Hermes driftet sonst in <code>~/.hermes/</code> oder baut an der falschen Stelle.</p>
+        </div>
+        <aside class="aside" aria-label="Regel">
+          <p class="note"><strong>Regel.</strong> Immer im Projektordner starten, nicht in <code>~/.hermes/</code>.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="workflow" data-section="03 · Workflow">
+      <div class="wrap grid">
+        <div class="rail meta">02 / Typischer Workflow</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Ablauf</p>
+            <h2>Typischer Workflow</h2>
+          </div>
+          <p><strong>Hermes ist fuer iteratives Arbeiten gemacht — nicht fuer Einmal-Outputs.</strong></p>
+          <ol class="components" role="list">
+            <li>
+              <span class="num" aria-hidden="true">01</span>
+              <div><strong>Tasksheet einfuegen</strong><span>Scope, Output-Pfad, Constraints klar definieren.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">02</span>
+              <div><strong>Verzeichnis-Check</strong><span>Bestaetigen lassen wo Hermes gerade ist.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">03</span>
+              <div><strong>Ersten Output</strong><span>Hermes baut. Warten, bis Output erscheint (kann kurz still sein).</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">04</span>
+              <div><strong>Feedback geben</strong><span>Konkret und priazise. Hermes nimmt Korrekturen gut an.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">05</span>
+              <div><strong>Iterieren</strong><span>2-4 Iterationen bis Ergebnis passt.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">06</span>
+              <div><strong>Summary</strong><span>"Fasse zusammen was du geaendert hast" — fuer Handoff an Codex.</span></div>
+            </li>
+          </ol>
+          <p>Beispiel-Flow:</p>
+          <figure class="figure">
+            <pre style="overflow-x:auto"><code>&gt; [Tasksheet einfuegen]
 &gt; Implementiere src/api.py mit dem /health Endpunkt.
 [Output abwarten]
 &gt; Gut. Jetzt fuege /api/status hinzu, der {&quot;agents&quot;: [], &quot;status&quot;: &quot;ok&quot;} zurueckgibt.
@@ -76,16 +140,33 @@ in <code>~/.hermes/</code> oder baut an der falschen Stelle.</p>
 [Output abwarten]
 &gt; Fasse zusammen: Welche Dateien hast du veraendert und was hast du gemacht?
 </code></pre>
-<hr />
-<h2>3. Starken nutzen</h2>
-<p><strong>Beste Feedback-Annahme:</strong> Hermes akzeptiert Korrekturen ohne zu diskutieren.
-Fehler direkt benennen — Hermes baut sofort weiter:</p>
-<pre><code>&gt; Das ist falsch. src/api.py Zeile 23: status_code muss 200 sein, nicht 404.
+          </figure>
+        </div>
+        <aside class="aside" aria-label="Rhythmus">
+          <p class="note"><strong>Rhythmus.</strong> 2-4 Iterationen bis das Ergebnis passt. Feedback konkret und priazise.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="staerken" data-section="04 · Starken nutzen">
+      <div class="wrap grid">
+        <div class="rail meta">03 / Starken nutzen</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Stärken</p>
+            <h2>Starken nutzen</h2>
+          </div>
+          <p><strong>Beste Feedback-Annahme:</strong> Hermes akzeptiert Korrekturen ohne zu diskutieren.
+          Fehler direkt benennen — Hermes baut sofort weiter:</p>
+          <figure class="figure">
+            <pre style="overflow-x:auto"><code>&gt; Das ist falsch. src/api.py Zeile 23: status_code muss 200 sein, nicht 404.
   Korrigiere nur diese Zeile.
 </code></pre>
-<p><strong>Iteratives Arbeiten:</strong> Ideal fuer Aufgaben die mehrere Runden brauchen.
-Feature by Feature vorgehen statt alles auf einmal beauftragen.</p>
-<pre><code># Statt:
+          </figure>
+          <p><strong>Iteratives Arbeiten:</strong> Ideal fuer Aufgaben die mehrere Runden brauchen.
+          Feature by Feature vorgehen statt alles auf einmal beauftragen.</p>
+          <figure class="figure">
+            <pre style="overflow-x:auto"><code># Statt:
 &gt; Implementiere das komplette Dashboard mit allen Endpunkten
 
 # Besser:
@@ -95,46 +176,82 @@ Feature by Feature vorgehen statt alles auf einmal beauftragen.</p>
 [fertig]
 &gt; Implementiere /api/status
 </code></pre>
-<p><strong>Guenstig fuer taeagliche Arbeit:</strong> Mit MiniMax ~150x guenstiger als Opus.
-Hermes fuer alle Routineaufgaben nutzen, Claude Code nur fuer Planung.</p>
-<p><strong>Parallele unabhaengige Tasks mit --worktree:</strong></p>
-<pre><code class="language-bash"># Zwei unabhaengige Features parallel:
+          </figure>
+          <p><strong>Guenstig fuer taeagliche Arbeit:</strong> Mit MiniMax ~150x guenstiger als Opus.
+          Hermes fuer alle Routineaufgaben nutzen, Claude Code nur fuer Planung.</p>
+          <p><strong>Parallele unabhaengige Tasks mit --worktree:</strong></p>
+          <figure class="figure">
+            <pre style="overflow-x:auto"><code># Zwei unabhaengige Features parallel:
 hermes chat --worktree feature-health-endpoint
 hermes chat --worktree feature-agent-list
 </code></pre>
-<hr />
-<h2>4. Schwachen kompensieren</h2>
-<p><strong>Scope-Drift: Hermes groesstes Problem.</strong>
-Ohne expliziten Output-Pfad baut Hermes in <code>~/.hermes/</code> statt im Projektordner.</p>
-<p>IMMER im Tasksheet angeben:</p>
-<pre><code>Output-Pfad: ~/Projekte/MeinProjekt/src/
+          </figure>
+        </div>
+        <aside class="aside" aria-label="Modell">
+          <p class="note"><strong>Modell.</strong> MiniMax ist rund 150x guenstiger als Opus.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="schwaechen" data-section="05 · Schwachen kompensieren">
+      <div class="wrap grid">
+        <div class="rail meta">04 / Schwachen kompensieren</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Schwächen</p>
+            <h2>Schwachen kompensieren</h2>
+          </div>
+          <p><strong>Scope-Drift: Hermes groesstes Problem.</strong>
+          Ohne expliziten Output-Pfad baut Hermes in <code>~/.hermes/</code> statt im Projektordner.</p>
+          <p>IMMER im Tasksheet angeben:</p>
+          <figure class="figure">
+            <pre style="overflow-x:auto"><code>Output-Pfad: ~/Projekte/MeinProjekt/src/
 Verzeichnis: ~/Projekte/MeinProjekt/
 NICHT: ~/.hermes/ oder relative Pfade
 </code></pre>
-<p><strong>Langsamer Start:</strong> Hermes ist kurz still bevor Output kommt.
-Das ist normal — nicht abbrechen und neu starten.
-Nach ~10-15 Sekunden Stille: einmal Enter druecken.</p>
-<p><strong>Output-Qualitaet mittel:</strong> Hermes schreibt funktionalen aber
-nicht eleganten Code. Fuer finales Polishing → Codex.</p>
-<pre><code># Hermes-Output ist funktional:
+          </figure>
+          <p><strong>Langsamer Start:</strong> Hermes ist kurz still bevor Output kommt.
+          Das ist normal — nicht abbrechen und neu starten.
+          Nach ~10-15 Sekunden Stille: einmal Enter druecken.</p>
+          <p><strong>Output-Qualitaet mittel:</strong> Hermes schreibt funktionalen aber
+          nicht eleganten Code. Fuer finales Polishing → Codex.</p>
+          <figure class="figure">
+            <pre style="overflow-x:auto"><code># Hermes-Output ist funktional:
 def get_agents():
     with open(&quot;config.yaml&quot;) as f:
         return yaml.safe_load(f)[&quot;agents&quot;]
 
 # Codex macht daraus sauberen Code mit Error-Handling, Types, Docstrings
 </code></pre>
-<p><strong>Was passiert dann plotzlich Output:</strong> Hermes denkt intern — der Output
-kommt manchmal in einem Block. Das ist kein Fehler.</p>
-<hr />
-<h2>5. Handoff-Muster</h2>
-<p><strong>Von OpenCode zu Hermes:</strong></p>
-<pre><code>&gt; Lies src/ — OpenCode hat das Geruest angelegt.
+          </figure>
+          <p><strong>Was passiert dann plotzlich Output:</strong> Hermes denkt intern — der Output
+          kommt manchmal in einem Block. Das ist kein Fehler.</p>
+        </div>
+        <aside class="aside" aria-label="Scope-Drift">
+          <p class="note"><strong>Scope-Drift.</strong> Ohne expliziten Output-Pfad baut Hermes in <code>~/.hermes/</code> statt im Projektordner.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="handoff" data-section="06 · Handoff">
+      <div class="wrap grid">
+        <div class="rail meta">05 / Handoff-Muster</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Übergabe</p>
+            <h2>Handoff-Muster</h2>
+          </div>
+          <p><strong>Von OpenCode zu Hermes:</strong></p>
+          <figure class="figure">
+            <pre style="overflow-x:auto"><code>&gt; Lies src/ — OpenCode hat das Geruest angelegt.
   Deine Aufgabe: Implementiere die Logik in src/api.py.
   Scope: Nur src/api.py und src/services/agent_service.py.
   Keine neuen Dateien anlegen.
 </code></pre>
-<p><strong>Von Hermes zu Codex (Polishing):</strong></p>
-<pre><code class="language-bash"># Hermes gibt Summary:
+          </figure>
+          <p><strong>Von Hermes zu Codex (Polishing):</strong></p>
+          <figure class="figure">
+            <pre style="overflow-x:auto"><code># Hermes gibt Summary:
 &gt; Fasse zusammen: Welche Dateien hast du geaendert? Was hast du implementiert?
   Was fehlt noch? Was ist TODO?
 
@@ -151,44 +268,88 @@ Aufgabe fuer Codex:
 - README.md aktualisieren
 EOF
 </code></pre>
-<p><strong>--worktree fuer parallele Tasks:</strong></p>
-<pre><code class="language-bash"># Unabhaengige Features parallel:
+          </figure>
+          <p><strong>--worktree fuer parallele Tasks:</strong></p>
+          <figure class="figure">
+            <pre style="overflow-x:auto"><code># Unabhaengige Features parallel:
 hermes chat --worktree frontend    # baut src/templates/
 hermes chat --worktree backend     # baut src/api.py
 # Am Ende: git merge
 </code></pre>
-<hr />
-<h2>6. Kosten-Tipps</h2>
-<p><strong>Guenstigstes Harness fuer iterative Arbeit.</strong> MiniMax nutzen:</p>
-<pre><code class="language-bash">hermes chat --model minimax/minimax-text-01
+          </figure>
+        </div>
+        <aside class="aside" aria-label="Übergabe">
+          <p class="note"><strong>Übergabe.</strong> Hermes gibt eine Summary für Codex; Codex poliert.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="kosten" data-section="07 · Kosten">
+      <div class="wrap grid">
+        <div class="rail meta">06 / Kosten-Tipps</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Kosten</p>
+            <h2>Kosten-Tipps</h2>
+          </div>
+          <p><strong>Guenstigstes Harness fuer iterative Arbeit.</strong> MiniMax nutzen:</p>
+          <figure class="figure">
+            <pre style="overflow-x:auto"><code>hermes chat --model minimax/minimax-text-01
 </code></pre>
-<p><strong>Tasksheet verhindert Scope-Drift = verhindert Token-Verschwendung:</strong>
-Drift bedeutet Hermes baut das Falsche → Session wegwerfen → neu starten.
-Ein gutes Tasksheet kostet 2 Minuten aber spart eine komplette Re-Session.</p>
-<p><strong>Feature by Feature ist guenstiger als Big-Bang:</strong></p>
-<pre><code># Teuer (wenn ein Feature falsch → alles nochmal):
+          </figure>
+          <p><strong>Tasksheet verhindert Scope-Drift = verhindert Token-Verschwendung:</strong>
+          Drift bedeutet Hermes baut das Falsche → Session wegwerfen → neu starten.
+          Ein gutes Tasksheet kostet 2 Minuten aber spart eine komplette Re-Session.</p>
+          <p><strong>Feature by Feature ist guenstiger als Big-Bang:</strong></p>
+          <figure class="figure">
+            <pre style="overflow-x:auto"><code># Teuer (wenn ein Feature falsch → alles nochmal):
 &gt; Implementiere alle 8 Endpunkte
 
 # Guenstiger (jeder Schritt kann frueh korrigiert werden):
 &gt; Implementiere /health
 &gt; [Feedback] Gut. Jetzt /api/agents.
 </code></pre>
-<p><strong>Iteration ist guenstig:</strong> Eine Korrektur-Runde kostet &lt;10% einer
-neuen Session. Hermes iterieren lassen statt neu starten.</p>
-<p><strong>Verzeichnis-Check ist kostenlos:</strong> 2 Sekunden fragen wo Hermes arbeitet
-verhindert eine weggeworfene Session wegen falschem Pfad.</p>
-<p><strong>Faustregeln:</strong>
-- Einfache Funktion implementieren: ~$0.01-0.03
-- Vollstaendiger Endpunkt mit Tests: ~$0.05-0.10
-- Feature-Iteration (3-4 Runden): ~$0.10-0.20
-- Re-Session wegen Scope-Drift: gleiche Kosten nochmal</p>
-    <aside class="cta">
-      <strong>Dein Setup hakt trotzdem?</strong>
-      Setup-Rettung: 90 Minuten remote an deinem Rechner, 190 € Festpreis.
-      <a href="/agentfaehig/">Angebote ansehen</a> oder
-      <a href="https://cal.com/human-agent-interface/agent-check" target="_blank" rel="noopener">kostenlosen 20-Min-Termin buchen</a>.
-    </aside>
+          </figure>
+          <p><strong>Iteration ist guenstig:</strong> Eine Korrektur-Runde kostet &lt;10% einer
+          neuen Session. Hermes iterieren lassen statt neu starten.</p>
+          <p><strong>Verzeichnis-Check ist kostenlos:</strong> 2 Sekunden fragen wo Hermes arbeitet
+          verhindert eine weggeworfene Session wegen falschem Pfad.</p>
+          <p><strong>Faustregeln:</strong></p>
+          <ul>
+            <li>Einfache Funktion implementieren: ~$0.01-0.03</li>
+            <li>Vollstaendiger Endpunkt mit Tests: ~$0.05-0.10</li>
+            <li>Feature-Iteration (3-4 Runden): ~$0.10-0.20</li>
+            <li>Re-Session wegen Scope-Drift: gleiche Kosten nochmal</li>
+          </ul>
+        </div>
+        <aside class="aside" aria-label="Faustregel">
+          <p class="note"><strong>Faustregel.</strong> Einfache Funktion: ~$0.01-0.03. Re-Session wegen Scope-Drift: gleiche Kosten nochmal.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="setup-rettung" data-section="08 · Setup-Rettung">
+      <div class="wrap grid">
+        <div class="rail meta">07 / Setup-Rettung</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Hilfe</p>
+            <h2>Dein Setup hakt trotzdem?</h2>
+          </div>
+          <p>Setup-Rettung: 90 Minuten remote an deinem Rechner, 190 € Festpreis.
+          <a href="/agentfaehig/">Angebote ansehen</a> oder
+          <a href="https://cal.com/human-agent-interface/agent-check" target="_blank" rel="noopener">kostenlosen 20-Min-Termin buchen</a>.</p>
+        </div>
+        <aside class="aside" aria-label="Termin">
+          <p class="note"><strong>Termin.</strong> Kostenlos, 20 Minuten.</p>
+        </aside>
+      </div>
+    </section>
+
   </main>
-  <footer><div class="wrap"><a href="/">Human Agent Interface</a> · <a href="/tutorials/">Tutorials</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></div></footer>
+
+  
+
+  <script src="/assets/hai.js" defer></script>
 </body>
 </html>

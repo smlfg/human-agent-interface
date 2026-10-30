@@ -1,3 +1,5 @@
+Status: v1 umgesetzt am 30.10.2026 (8 Seiten DE/EN, Protokoll-Design, A/B/C-Verhalten). Offene Punkte: Deployment, agentfähig.de-Rewrite, Beweisfreigabe.
+
 # TODO: Website-Redesign (Brief)
 
 Status: offen, kein Termin. Kein Redesign, bevor Schritt 1 erledigt ist.

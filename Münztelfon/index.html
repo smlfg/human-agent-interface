@@ -1,181 +1,170 @@
 <!doctype html>
 <html lang="de">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta
-      name="description"
-      content="Text-only HAI Harness Onboarding Demo: ein begrenzter 10-Minuten-Check fuer Claude Code, Codex, Hermes oder General HAI Triage."
-    >
-    <title>HAI Harness Check</title>
-    <link rel="icon" type="image/png" href="../favicon.png">
-    <link rel="stylesheet" href="./styles.css">
-    <script defer src="./app.js"></script>
-    <script src="/mail-fallback.js" defer></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HAI Harness Check</title>
+  <meta name="description" content="Text-only HAI Harness Onboarding Demo: ein begrenzter 10-Minuten-Check fuer Claude Code, Codex, Hermes oder General HAI Triage.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/Münztelfon/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Human Agent Interface (HAI)">
+  <meta property="og:title" content="HAI Harness Check">
+  <meta property="og:description" content="Text-only HAI Harness Onboarding Demo: ein begrenzter 10-Minuten-Check fuer Claude Code, Codex, Hermes oder General HAI Triage.">
+  <meta property="og:image" content="https://www.human-agent-interface.com/assets/og/hai-og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HAI — Agenten arbeiten. Du entscheidest.">
+  
+  <meta property="og:url" content="https://www.human-agent-interface.com/Münztelfon/">
+  <meta property="og:locale" content="de_DE">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#f4f0e6">
+  <link rel="icon" href="../favicon.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/newsreader-300_700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-300_700-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/hai.css">
 </head>
-  <body>
-    <div class="site-shell">
-      <header class="topbar" aria-label="Seitennavigation">
-        <a class="brand" href="../index.html" aria-label="Zur Human Agent Interface Startseite">
-          <span class="brand-mark">HAI</span>
-          <span>Harness Check</span>
-        </a>
-        <nav class="topnav" aria-label="Projektlinks">
-          <a href="../product/index.html">Setup</a>
-          <a href="../what_it_is/index.html">Methode</a>
-          <a href="../index.html#contact">Kontakt</a>
-        </nav>
-      </header>
+<body data-page="legacy">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-      <main class="workbench" aria-label="HAI Live Harness Onboarding Demo">
-        <section class="intake-panel" aria-labelledby="intake-title">
-          <div class="panel-head">
-            <p class="kicker">V0 Demo</p>
-            <h1 id="intake-title">10-Minuten Harness Check</h1>
-            <p>
-              Aus einem diffusen Agentenproblem wird ein kontrollierbarer naechster Schritt.
-            </p>
+  <div class="statusline" aria-hidden="true">
+    <div class="wrap">
+      <span>HAI · Protokoll 001</span>
+      <span>Abschnitt: <strong data-status-section>01</strong></span>
+      <span data-variant-label>Variante A · Protokoll</span>
+    </div>
+  </div>
+
+  
+
+  <main id="main" tabindex="-1">
+
+    <section class="hero" data-section="01 · Harness Check">
+      <div class="wrap grid">
+        <div class="rail meta">
+          <div>V0 Demo</div>
+          <div>10 Minuten</div>
+          <div>Deutsch</div>
+        </div>
+        <div class="main">
+          <h1>10-Minuten <em>Harness Check</em></h1>
+          <p class="lede">Aus einem diffusen Agentenproblem wird ein kontrollierbarer naechster Schritt.</p>
+          <div class="actions">
+            <a href="/product/">Setup</a>
+            <a href="/what_it_is/">Methode</a>
+            <a href="mailto:hallo@samuelfleig.com">Kontakt</a>
           </div>
+        </div>
+        <aside class="aside" aria-label="Hinweis">
+          <span class="stamp">V0 · Demo</span>
+          <p class="note">Backend-Agent fuer Beratung und Onboarding. Keine Ausfuehrung, keine Uploads, keine Secrets.</p>
+          <p class="note"><strong>Hinweis:</strong> Der Live-Chat ist derzeit vorübergehend deaktiviert; Eingaben werden nicht an ein KI-Modell weitergegeben.</p>
+        </aside>
+      </div>
+    </section>
 
-          <form id="intakeForm" class="intake-form">
+    <section class="section" data-section="02 · Intake">
+      <div class="wrap grid">
+        <div class="rail meta">01 / Intake</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Harness Check</p>
+            <h2>Harness, Level und Problem</h2>
+          </div>
+          <form id="intakeForm">
             <fieldset>
               <legend>Harness</legend>
-              <div class="choice-grid" role="radiogroup" aria-label="Harness auswaehlen">
-                <label class="choice">
-                  <input type="radio" name="harness" value="claude" checked>
-                  <span>Claude Code</span>
-                </label>
-                <label class="choice">
-                  <input type="radio" name="harness" value="codex">
-                  <span>Codex</span>
-                </label>
-                <label class="choice">
-                  <input type="radio" name="harness" value="hermes">
-                  <span>Hermes</span>
-                </label>
-                <label class="choice">
-                  <input type="radio" name="harness" value="unknown">
-                  <span>Anderes / unklar</span>
-                </label>
-              </div>
+              <div><label><input type="radio" name="harness" value="claude" checked> Claude Code</label></div>
+              <div><label><input type="radio" name="harness" value="codex"> Codex</label></div>
+              <div><label><input type="radio" name="harness" value="hermes"> Hermes</label></div>
+              <div><label><input type="radio" name="harness" value="unknown"> Anderes / unklar</label></div>
             </fieldset>
 
             <fieldset>
               <legend>Level</legend>
-              <div class="choice-grid level-grid" role="radiogroup" aria-label="Nutzerlevel auswaehlen">
-                <label class="choice">
-                  <input type="radio" name="level" value="beginner">
-                  <span>Anfaenger</span>
-                </label>
-                <label class="choice">
-                  <input type="radio" name="level" value="intermediate" checked>
-                  <span>Fortgeschritten</span>
-                </label>
-                <label class="choice">
-                  <input type="radio" name="level" value="power">
-                  <span>Power User</span>
-                </label>
-              </div>
+              <div><label><input type="radio" name="level" value="beginner"> Anfaenger</label></div>
+              <div><label><input type="radio" name="level" value="intermediate" checked> Fortgeschritten</label></div>
+              <div><label><input type="radio" name="level" value="power"> Power User</label></div>
             </fieldset>
 
-            <label class="field">
-              <span>Aktuelles Problem</span>
-              <textarea
-                id="problemInput"
-                rows="4"
-                maxlength="520"
-                placeholder="z.B. Mein Agent baut zu breit, verliert Kontext oder meldet Done ohne brauchbaren Beleg."
-              ></textarea>
-            </label>
+            <p>
+              <label for="problemInput">Aktuelles Problem</label><br>
+              <textarea id="problemInput" rows="4" maxlength="520" placeholder="z.B. Mein Agent baut zu breit, verliert Kontext oder meldet Done ohne brauchbaren Beleg."></textarea>
+            </p>
 
-            <label class="field">
-              <span>Ziel der Session</span>
-              <input
-                id="goalInput"
-                type="text"
-                maxlength="180"
-                placeholder="z.B. eine sicherere Arbeitsweise fuer mein Projekt"
-              >
-            </label>
+            <p>
+              <label for="goalInput">Ziel der Session</label><br>
+              <input id="goalInput" type="text" maxlength="180" placeholder="z.B. eine sicherere Arbeitsweise fuer mein Projekt">
+            </p>
 
             <fieldset>
               <legend>Harte Grenzen</legend>
-              <div class="guardrails">
-                <label><input type="checkbox" name="constraint" value="keine Secrets" checked> Keine Secrets</label>
-                <label><input type="checkbox" name="constraint" value="kein Upload" checked> Kein Upload</label>
-                <label><input type="checkbox" name="constraint" value="kein Repo-Zugriff" checked> Kein Repo-Zugriff</label>
-                <label><input type="checkbox" name="constraint" value="Mensch entscheidet" checked> Mensch entscheidet</label>
-              </div>
+              <div><label><input type="checkbox" name="constraint" value="keine Secrets" checked> Keine Secrets</label></div>
+              <div><label><input type="checkbox" name="constraint" value="kein Upload" checked> Kein Upload</label></div>
+              <div><label><input type="checkbox" name="constraint" value="kein Repo-Zugriff" checked> Kein Repo-Zugriff</label></div>
+              <div><label><input type="checkbox" name="constraint" value="Mensch entscheidet" checked> Mensch entscheidet</label></div>
             </fieldset>
 
-            <button class="primary-action" type="submit">Session starten</button>
+            <p><button type="submit">Session starten</button></p>
           </form>
-        </section>
+        </div>
+        <aside class="aside" aria-label="Grenzen">
+          <p class="note"><strong>Grenzen.</strong> Keine Secrets, kein Upload, kein Repo-Zugriff. Der Mensch entscheidet.</p>
+        </aside>
+      </div>
+    </section>
 
-        <section class="session-panel" aria-labelledby="session-title">
-          <div class="session-toolbar">
-            <div>
-              <p class="kicker">Live Shell</p>
-              <h2 id="session-title">Routing: <span id="routeLabel">Claude-Code-Onboarding</span></h2>
-            </div>
-            <div class="meters" aria-label="Session Status">
-              <span id="timerDisplay">10:00</span>
-              <span id="messageCounter">0/10</span>
-            </div>
+    <section class="section" data-section="03 · Live Shell">
+      <div class="wrap grid">
+        <div class="rail meta">02 / Live Shell</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Live Shell</p>
+            <h2>Routing: <span id="routeLabel">Claude-Code-Onboarding</span></h2>
           </div>
+          <p class="meta"><span id="timerDisplay">10:00</span> · <span id="messageCounter">0/10</span></p>
 
-          <div id="safetyStrip" class="safety-strip">
-            Backend-Agent fuer Beratung und Onboarding. Keine Ausfuehrung, keine Uploads, keine Secrets.
-            <strong>Hinweis:</strong> Der Live-Chat ist derzeit vorübergehend deaktiviert; Eingaben werden nicht an ein KI-Modell weitergegeben.
-          </div>
-
-          <div id="chatLog" class="chat-log" aria-live="polite" aria-label="Session Transkript">
-            <article class="message agent">
-              <span class="message-role">HAI Shell</span>
-              <p>
-                Waehle links Harness, Level und Problem. Danach route ich in ein begrenztes
-                Onboarding-Profil und schliesse mit einem Session-Paket ab.
-              </p>
+          <div id="chatLog" class="entries" aria-live="polite" aria-label="Session Transkript">
+            <article class="entry">
+              <div class="num" aria-hidden="true">01</div>
+              <div>
+                <p class="meta">HAI Shell</p>
+                <p>Waehle links Harness, Level und Problem. Danach route ich in ein begrenztes Onboarding-Profil und schliesse mit einem Session-Paket ab.</p>
+              </div>
             </article>
           </div>
 
-          <form id="chatForm" class="chat-form">
-            <label class="sr-only" for="messageInput">Nachricht</label>
-            <textarea
-              id="messageInput"
-              rows="2"
-              maxlength="620"
-              placeholder="Session starten, dann hier antworten."
-              disabled
-            ></textarea>
-            <div class="chat-actions">
-              <button id="endSessionButton" class="secondary-action" type="button" disabled>Abschluss erzeugen</button>
-              <button id="sendButton" class="primary-action" type="submit" disabled>Senden</button>
+          <form id="chatForm">
+            <p>
+              <label class="meta" for="messageInput">Nachricht</label><br>
+              <textarea id="messageInput" rows="2" maxlength="620" placeholder="Session starten, dann hier antworten." disabled></textarea>
+            </p>
+            <div class="actions">
+              <button id="endSessionButton" type="button" disabled>Abschluss erzeugen</button>
+              <button id="sendButton" type="submit" disabled>Senden</button>
             </div>
           </form>
-        </section>
-
-        <aside class="summary-panel" aria-labelledby="summary-title">
-          <div class="panel-head">
-            <p class="kicker">Session Packet</p>
-            <h2 id="summary-title">Noch nicht erzeugt</h2>
-            <p id="summaryIntro">Das Paket erscheint nach dem Abschluss der begrenzten Session.</p>
+        </div>
+        <aside class="aside" aria-labelledby="summary-title">
+          <p class="meta">Session Packet</p>
+          <h2 id="summary-title">Noch nicht erzeugt</h2>
+          <p id="summaryIntro">Das Paket erscheint nach dem Abschluss der begrenzten Session.</p>
+          <div id="summaryOutput" class="note" aria-live="polite">
+            <p>Kein persistenter Speicher. Das Paket bleibt in dieser Browser-Session.</p>
           </div>
-
-          <div id="summaryOutput" class="summary-output" aria-live="polite">
-            <p class="empty-state">Kein persistenter Speicher. Das Paket bleibt in dieser Browser-Session.</p>
-          </div>
-
-          <div class="summary-actions">
-            <button id="copySummaryButton" class="secondary-action" type="button" disabled>Paket kopieren</button>
-            <label class="consent">
-              <input id="consentInput" type="checkbox" disabled>
-              <span>Samuel darf diese Zusammenfassung fuer eine moegliche Beratung sehen.</span>
-            </label>
-            <a id="mailLink" class="primary-action mail-link disabled" href="#" aria-disabled="true">Mail vorbereiten</a>
-          </div>
+          <p><button id="copySummaryButton" type="button" disabled>Paket kopieren</button></p>
+          <p><label><input id="consentInput" type="checkbox" disabled> Samuel darf diese Zusammenfassung fuer eine moegliche Beratung sehen.</label></p>
+          <p><a id="mailLink" class="status" href="#" aria-disabled="true">Mail vorbereiten</a></p>
         </aside>
-      </main>
-    </div>
-  </body>
+      </div>
+    </section>
+
+  </main>
+
+  
+
+  <script src="./app.js" defer></script>
+  <script src="/mail-fallback.js" defer></script>
+  <script src="/assets/hai.js" defer></script>
+</body>
 </html>

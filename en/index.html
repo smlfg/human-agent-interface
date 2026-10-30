@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HAI — Agents do the work. You keep the call.</title>
+  <meta name="description" content="How people control autonomous AI agents: observation, boundaries and evidence plus a named decision — explained through PenEcho, HAI-MCP and Plaud.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/en/">
+  <link rel="alternate" hreflang="de" href="https://www.human-agent-interface.com/">
+  <link rel="alternate" hreflang="en" href="https://www.human-agent-interface.com/en/">
+  <link rel="alternate" hreflang="x-default" href="https://www.human-agent-interface.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Human Agent Interface (HAI)">
+  <meta property="og:title" content="HAI — Agents do the work. You keep the call.">
+  <meta property="og:description" content="How people control autonomous AI agents: observation, boundaries and evidence plus a named decision — explained through PenEcho, HAI-MCP and Plaud.">
+  <meta property="og:image" content="https://www.human-agent-interface.com/assets/og/hai-og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HAI — Agents do the work. You keep the call.">
+  
+  <meta property="og:url" content="https://www.human-agent-interface.com/en/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#f4f0e6">
+  <link rel="icon" href="/assets/favicon-64.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/newsreader-300_700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-300_700-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/hai.css">
+  <style>
+    /* Page-scoped polish. The design system stays in /assets/hai.css. */
+
+    /* Text links: 24px minimum target size (WCAG 2.2 AA). */
+    .brand,
+    .nav a,
+    .actions a,
+    .foot-links a,
+    .footnotes a,
+    .variants a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+    }
+
+    /* Gate controls: comfortable on desktop, 44x44 on touch. */
+    .gate .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.7rem;
+    }
+
+    .gate-actions {
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    @media (pointer: coarse), (max-width: 620px) {
+      .brand,
+      .nav a,
+      .foot-links a,
+      .variants a { min-height: 44px; }
+      .nav a,
+      .variants a { min-width: 44px; justify-content: center; }
+      .gate .btn { min-height: 44px; min-width: 44px; }
+    }
+
+    /* Variant C's sticky line must not cover anchors or focused controls. */
+    html[data-variant="c"] { scroll-padding-top: 5rem; }
+    @media (min-width: 620px) {
+      html[data-variant="c"] { scroll-padding-top: 3.5rem; }
+    }
+
+    h1, h2, h3,
+    .gate-item .what strong { text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .gate-item .what strong,
+    .entry h3,
+    .mesh-table td { overflow-wrap: break-word; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.human-agent-interface.com/#website",
+        "url": "https://www.human-agent-interface.com/",
+        "name": "Human Agent Interface (HAI)",
+        "inLanguage": ["de", "en"]
+      },
+      {
+        "@type": "DefinedTerm",
+        "@id": "https://www.human-agent-interface.com/#hai",
+        "name": "Human Agent Interface (HAI)",
+        "description": "HAI is the control layer between humans and autonomous AI agents: it makes agentic work observable, bounded, verifiable and human-owned.",
+        "url": "https://www.human-agent-interface.com/en/what-is-hai/"
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.human-agent-interface.com/#samuel-fleig",
+        "name": "Samuel Fleig",
+        "url": "https://samuelfleig.com/",
+        "sameAs": ["https://github.com/smlfg"]
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.human-agent-interface.com/#organization",
+        "name": "Human Agent Interface (HAI)",
+        "url": "https://www.human-agent-interface.com/",
+        "founder": { "@id": "https://www.human-agent-interface.com/#samuel-fleig" },
+        "sameAs": ["https://github.com/smlfg"]
+      },
+      {
+        "@type": "Service",
+        "@id": "https://www.human-agent-interface.com/#service",
+        "name": "4h HAI Setup",
+        "serviceType": "Human-Agent-Interface Setup",
+        "provider": { "@id": "https://www.human-agent-interface.com/#organization" },
+        "description": "One agent workflow becomes a bounded, verifiable setup in four hours — with human gates, verification and a next-action packet.",
+        "offers": {
+          "@type": "Offer",
+          "price": "500",
+          "priceCurrency": "EUR",
+          "url": "https://cal.com/human-agent-interface/agent-check",
+          "availability": "https://schema.org/InStock"
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body data-page="home">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="statusline" aria-hidden="true">
+    <div class="wrap">
+      <span>HAI · Record 001</span>
+      <span>Section: <strong data-status-section>01</strong></span>
+      <span data-variant-label>Variant A · Protocol</span>
+    </div>
+  </div>
+
+  <header class="site-head">
+    <div class="wrap">
+      <a class="brand" href="/en/" aria-current="page"><strong>HAI</strong> · Human Agent Interface</a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="/en/what-is-hai/" data-target="what-is-hai">What is HAI</a>
+        <a href="/en/proof/" data-target="proof">Proof</a>
+        <a href="/en/mesh/" data-target="mesh">Mesh</a>
+        <a href="/archiv/" data-target="archive">Archive</a>
+        <a href="/" lang="de" hreflang="de" data-target="lang_de" aria-label="Deutsch">DE</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <section class="hero" data-section="01 · Start">
+      <div class="wrap grid">
+        <div class="rail meta">
+          <div>Record 001</div>
+          <div>Version 001</div>
+          <div>English</div>
+        </div>
+        <div class="main">
+          <h1>Agents do the work.<br><em>You keep the call.</em></h1>
+          <p class="lede">HAI is the layer between you and your agents. It makes the work visible, bounds what they may do, and leaves the decision with you.</p>
+          <div class="actions">
+            <a href="#layer" data-target="what-is-hai">See the layer</a>
+            <a href="https://cal.com/human-agent-interface/agent-check" rel="external" data-target="contact">Book a call</a>
+            <a href="/en/proof/" data-target="proof">See the proof</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Sketch">
+          <span class="stamp">Checked · Human</span>
+          <figure class="figure demo" data-demo>
+            <div class="demo-head">
+              <span>PenEcho · live</span>
+              <span data-demo-status role="status" aria-live="polite">Ready</span>
+            </div>
+            <div class="demo-page">
+              <div class="demo-line">3(x+2)=15</div>
+              <div class="demo-line demo-target">3x+2=15
+                <svg class="demo-mark" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M2 6 C 50 2, 120 10, 198 5" pathLength="1"></path>
+                </svg>
+              </div>
+              <div class="demo-hint" data-demo-hint>
+                <svg class="demo-hint-line" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M2 6 C 60 12, 130 2, 198 7" pathLength="1"></path>
+                </svg>
+                <span>distribute</span>
+              </div>
+            </div>
+            <div class="demo-actions">
+              <button class="btn" type="button" data-demo-action="check">Check with agent</button>
+              <button class="btn deny" type="button" data-demo-action="stop">Stop</button>
+            </div>
+            <figcaption>You trigger it. The agent writes on the same page. You decide whether it may.</figcaption>
+          </figure>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="layer" data-section="02 · The layer">
+      <div class="wrap grid">
+        <div class="rail meta">01 / The layer</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Definition</p>
+            <h2>A layer, not a chat window.</h2>
+          </div>
+          <p>When agents plan, execute and delegate on their own, there has to be a level above them. Not another window to type into. A layer that records who owns the task, what the agent may do, when it must stop and which evidence exists.<sup><a href="#fn1" id="ref1" aria-label="Footnote 1">1</a></sup></p>
+          <ol class="components">
+            <li>
+              <span class="num">01</span>
+              <div><strong>Observable</strong><span>You see what the agent does and why.</span></div>
+            </li>
+            <li>
+              <span class="num">02</span>
+              <div><strong>Bounded</strong><span>Tasks have scope, permissions and stop rules.</span></div>
+            </li>
+            <li>
+              <span class="num">03</span>
+              <div><strong>Verifiable</strong><span>Results need evidence, not plausibility.</span></div>
+            </li>
+            <li>
+              <span class="num">04</span>
+              <div><strong>Human-owned</strong><span>Decisions stay with a person.</span></div>
+            </li>
+          </ol>
+        </div>
+        <aside class="aside" aria-label="Boundary">
+          <p class="note"><strong>Boundary.</strong> HAI is not a chat interface and not a finished enterprise platform. HAI is an approach and a control layer for human-owned agentic work.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="03 · The problem">
+      <div class="wrap grid">
+        <div class="rail meta">02 / The problem</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Why HAI exists</p>
+            <h2>The problem isn't the agent.</h2>
+          </div>
+          <p>It is the gap between execution and accountability. Once several agents work together, nobody can say precisely who caused what, which limits applied, and why a result counts as done.</p>
+          <p>HAI closes that gap not with more automation, but with a layer that makes work observable, bounded, verifiable and human-owned.</p>
+        </div>
+        <aside class="aside" aria-label="Without HAI">
+          <p class="note"><strong>Without HAI:</strong> the work is fast. The responsibility is invisible.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="proof" data-section="04 · Proof">
+      <div class="wrap grid">
+        <div class="rail meta">03 / Proof</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Three parts</p>
+            <h2>Three parts. One principle.</h2>
+          </div>
+          <div class="entries">
+            <article class="entry reveal">
+              <div class="num">01</div>
+              <div>
+                <h3>PenEcho — the agent writes back on the same page.</h3>
+                <p>You work with a pen on a reMarkable. The agent reads the page, checks the step and writes a short hint back in ink — red for wrong, green for right. No chat window, no device switch. Your handwriting stays.</p>
+                <dl><dt>Channel</dt><dd>Pen and e-ink</dd><dt>Status</dt><dd>L1 in progress</dd></dl>
+              </div>
+              <span class="status" data-state="wip">L1 in progress</span>
+            </article>
+            <article class="entry reveal">
+              <div class="num">02</div>
+              <div>
+                <h3>HAI-MCP — the control plane.</h3>
+                <p>Missions, contracts, leases, owner gates and audit. The server never calls a model itself. 23 tools (Glama, 8 Sep 2026), open on GitHub, model-agnostic through MCP.</p>
+                <dl><dt>Channel</dt><dd>MCP</dd><dt>Status</dt><dd>Open source</dd></dl>
+              </div>
+              <span class="status" data-state="live">Open source</span>
+            </article>
+            <article class="entry reveal">
+              <div class="num">03</div>
+              <div>
+                <h3>Plaud — voice as input.</h3>
+                <p>223 transcripts across five months (our own count, 30 Oct 2026). Plaud captures the recording; HAI decides what becomes of it. Typically no more than three links per recording — everything else is parked.</p>
+                <dl><dt>Channel</dt><dd>Voice</dd><dt>Status</dt><dd>Practice</dd></dl>
+              </div>
+              <span class="status">Practice</span>
+            </article>
+          </div>
+          <p class="note" style="margin-top:1.75rem"><strong>To be honest:</strong> none of these parts is HAI on its own. HAI is the layer that connects them. Today that is working practice, not yet a connected runtime.</p>
+        </div>
+        <aside class="aside" aria-label="Public">
+          <p class="note"><strong>Public:</strong> HAI-MCP is open source. The other parts will be documented once they hold up.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="gate" data-section="05 · The gate">
+      <div class="wrap grid">
+        <div class="rail meta">04 / The gate</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">The thesis as interaction</p>
+            <h2>The agent wants to act.<br><em>You decide.</em></h2>
+          </div>
+          <p>Three proposals, one gate. Nothing runs until you approve it.</p>
+
+          <div class="gate" data-gate role="group" aria-labelledby="gate-label">
+            <div class="gate-head">
+              <span id="gate-label">Example gate · Mission 042</span>
+              <span data-gate-status role="status" aria-live="polite" aria-atomic="true">0 approved · 0 denied · 3 open</span>
+            </div>
+            <div class="gate-item" data-target="gate_read" role="group" aria-labelledby="gate-read-title" aria-describedby="gate-read-desc">
+              <span class="num">01</span>
+              <div class="what"><strong id="gate-read-title">Read the note from 12 June</strong><span id="gate-read-desc">Read access · no change</span></div>
+              <div class="gate-actions">
+                <button class="btn" type="button" data-action="approve" aria-pressed="false" aria-label="Approve: Read the note from 12 June">Approve</button>
+                <button class="btn deny" type="button" data-action="deny" aria-pressed="false" aria-label="Deny: Read the note from 12 June">Deny</button>
+              </div>
+            </div>
+            <div class="gate-item" data-target="gate_write" role="group" aria-labelledby="gate-write-title" aria-describedby="gate-write-desc">
+              <span class="num">02</span>
+              <div class="what"><strong id="gate-write-title">Write a summary into your notebook</strong><span id="gate-write-desc">Write access · your device</span></div>
+              <div class="gate-actions">
+                <button class="btn" type="button" data-action="approve" aria-pressed="false" aria-label="Approve: Write a summary into your notebook">Approve</button>
+                <button class="btn deny" type="button" data-action="deny" aria-pressed="false" aria-label="Deny: Write a summary into your notebook">Deny</button>
+              </div>
+            </div>
+            <div class="gate-item" data-target="gate_send" role="group" aria-labelledby="gate-send-title" aria-describedby="gate-send-desc">
+              <span class="num">03</span>
+              <div class="what"><strong id="gate-send-title">Send the summary to the team</strong><span id="gate-send-desc">External send · leaves the device</span></div>
+              <div class="gate-actions">
+                <button class="btn" type="button" data-action="approve" aria-pressed="false" aria-label="Approve: Send the summary to the team">Approve</button>
+                <button class="btn deny" type="button" data-action="deny" aria-pressed="false" aria-label="Deny: Send the summary to the team">Deny</button>
+              </div>
+            </div>
+            <div class="gate-foot">
+              <span>Demo · nothing leaves this device without approval.</span>
+              <button class="btn" type="button" data-action="reset">Reset example all</button>
+            </div>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Decision">
+          <p class="note">Every approval is a decision, not a click. That is the difference between an agent that works and one that works without anyone knowing what for.</p>
+        </aside>
+      </div>
+    </section>
+
+
+    <section class="section" id="offer" data-section="06 · Offer">
+      <div class="wrap grid">
+        <div class="rail meta">05 / Offer</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">For your setup</p>
+            <h2>Want this for your agents?</h2>
+          </div>
+          <p>20 minutes, free: one real workflow, one honest assessment. If it fits, it becomes a 4h setup from €500 — bounded, verifiable, with human gates.</p>
+          <div class="actions">
+            <a href="https://cal.com/human-agent-interface/agent-check" rel="external" data-target="contact">Book a call</a>
+            <a href="/agentfaehig/" data-target="agentfaehig">See the offers</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Offer">
+          <p class="note"><strong>Not a sales call:</strong> one workflow, one decision. If HAI does not fit, we say so.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="mesh" data-section="07 · Mesh">
+      <div class="wrap grid">
+        <div class="rail meta">06 / Mesh</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Addresses</p>
+            <h2>One heart, several addresses.</h2>
+          </div>
+          <p>HAI is the core. Sales, entry points and tools live on their own domains. Two are live: this page and agentfähig.de. The rest is planned.</p>
+          <table class="mesh-table">
+            <thead>
+              <tr><th scope="col">Domain</th><th scope="col">Role</th><th scope="col">Status</th></tr>
+            </thead>
+            <tbody>
+              <tr data-state="live"><td data-label="Domain">human-agent-interface.com</td><td data-label="Role">Heart. This site.</td><td data-label="Status">live</td></tr>
+              <tr data-state="live"><td data-label="Domain">agentfähig.de</td><td data-label="Role">Sales: setup, workshop, teams.</td><td data-label="Status">live · own worker</td></tr>
+              <tr data-state="planned"><td data-label="Domain">humanagentinterface.de</td><td data-label="Role">Entry point in plain language.</td><td data-label="Status">planned</td></tr>
+              <tr data-state="planned"><td data-label="Domain">agentcontrol.systems</td><td data-label="Role">Gates and evidence.</td><td data-label="Status">planned</td></tr>
+              <tr data-state="planned"><td data-label="Domain">humanagentcontrol.com</td><td data-label="Role">Workflow simulator.</td><td data-label="Status">planned</td></tr>
+              <tr data-state="planned"><td data-label="Domain">samuelfleig.com</td><td data-label="Role">Person and decision lab.</td><td data-label="Status">planned</td></tr>
+                          <tr data-state="planned"><td data-label="Domain">agent-human-interface.com</td><td data-label="Role">Contract workshop.</td><td data-label="Status">planned</td></tr>
+              <tr data-state="planned"><td data-label="Domain">humanagnet.com</td><td data-label="Role">Handover cabin.</td><td data-label="Status">planned</td></tr>
+            </tbody>
+          </table>
+          <p class="note" style="margin-top:1.5rem"><strong>State:</strong> two of eight domains are live: this page and agentfähig.de (its own worker). The rest is intent.</p>
+        </div>
+        <aside class="aside" aria-label="Rule">
+          <p class="note"><strong>Rule:</strong> no domain repeats another. The heart explains. Sales sells. The tools prove.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="08 · Who">
+      <div class="wrap grid">
+        <div class="rail meta">07 / Who</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Person</p>
+            <h2>Who builds this.</h2>
+          </div>
+          <p>Samuel Fleig. I have worked with agents since they could do more than answer. HAI is the layer I was missing.</p>
+          <div class="actions">
+            <a href="https://github.com/smlfg" rel="me" data-target="github">GitHub</a>
+            <a href="mailto:hallo@samuelfleig.com" data-target="contact">Contact</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Non-negotiable">
+          <p class="note"><strong>Non-negotiable:</strong> no claim without evidence. No evidence without a date. No date without an owner.</p>
+        </aside>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <div class="footnotes">
+        <ol>
+          <li id="fn1">Loss of control in agentic work: when several agents plan, execute and delegate, ownership, limits, evidence and stop rules disappear. HAI makes that level explicit. <a href="#ref1" aria-label="Back to the text">↩</a></li>
+        </ol>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <div class="foot-links">
+        <a href="/impressum/" hreflang="de">Legal notice</a>
+        <a href="/datenschutz/">Privacy</a>
+        <a href="https://github.com/smlfg" rel="me">GitHub</a>
+        <a href="/" lang="de" hreflang="de">Deutsch</a>
+      </div>
+      <div class="variants" role="group" aria-label="Test variants">
+        <span>Variant</span>
+        <a href="?v=A" data-variant-link="A" aria-label="Variant A">A</a>
+        <a href="?v=B" data-variant-link="B" aria-label="Variant B">B</a>
+        <a href="?v=C" data-variant-link="C" aria-label="Variant C">C</a>
+      </div>
+      <div>Record 001</div>
+    </div>
+  </footer>
+
+  <script src="/assets/hai.js" defer></script>
+</body>
+</html>

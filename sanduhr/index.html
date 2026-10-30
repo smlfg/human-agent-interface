@@ -4,384 +4,252 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HAI Sanduhr – von Luis’ Handoff zum Kontroll-Loop</title>
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #08111f;
-      --panel: #101b2d;
-      --panel-strong: #17243a;
-      --text: #edf4ff;
-      --muted: #a9b8d3;
-      --line: rgba(255, 255, 255, 0.15);
-      --accent: #7dd3fc;
-      --accent-2: #fbbf24;
-      --accent-3: #c4b5fd;
-      --danger: #fb7185;
-      --ok: #86efac;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background:
-        radial-gradient(circle at 15% 10%, rgba(125, 211, 252, 0.18), transparent 32rem),
-        radial-gradient(circle at 85% 20%, rgba(196, 181, 253, 0.16), transparent 28rem),
-        linear-gradient(180deg, #08111f 0%, #0b1220 52%, #050914 100%);
-      color: var(--text);
-      line-height: 1.55;
-    }
-
-    main {
-      width: min(1120px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 48px 0 64px;
-    }
-
-    header {
-      display: grid;
-      gap: 18px;
-      margin-bottom: 34px;
-    }
-
-    .eyebrow {
-      width: fit-content;
-      padding: 6px 12px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: var(--accent);
-      background: rgba(125, 211, 252, 0.08);
-      font-size: 0.9rem;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-    }
-
-    h1, h2, h3 { line-height: 1.08; margin: 0; }
-    h1 { max-width: 900px; font-size: clamp(2.5rem, 7vw, 5.8rem); letter-spacing: -0.07em; }
-    h2 { font-size: clamp(1.75rem, 3vw, 2.8rem); letter-spacing: -0.04em; }
-    h3 { font-size: 1.1rem; letter-spacing: -0.02em; }
-    p { margin: 0; color: var(--muted); }
-    strong { color: var(--text); }
-
-    .lead {
-      max-width: 760px;
-      font-size: clamp(1.1rem, 2vw, 1.35rem);
-      color: #dbeafe;
-    }
-
-    section {
-      margin-top: 28px;
-      padding: 28px;
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      background: rgba(16, 27, 45, 0.78);
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
-      backdrop-filter: blur(14px);
-    }
-
-    .grid { display: grid; gap: 18px; }
-    .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
-    .card {
-      padding: 20px;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: rgba(255, 255, 255, 0.045);
-    }
-
-    .card .label {
-      display: inline-flex;
-      margin-bottom: 12px;
-      color: var(--accent-2);
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .timeline {
-      position: relative;
-      display: grid;
-      gap: 16px;
-      margin-top: 20px;
-    }
-
-    .timeline::before {
-      content: "";
-      position: absolute;
-      left: 16px;
-      top: 12px;
-      bottom: 12px;
-      width: 2px;
-      background: linear-gradient(var(--accent), var(--accent-2), var(--accent-3));
-      opacity: 0.55;
-    }
-
-    .step {
-      position: relative;
-      display: grid;
-      grid-template-columns: 48px 1fr;
-      gap: 14px;
-      align-items: start;
-    }
-
-    .dot {
-      z-index: 1;
-      display: grid;
-      place-items: center;
-      width: 34px;
-      height: 34px;
-      border: 1px solid rgba(255, 255, 255, 0.28);
-      border-radius: 999px;
-      background: #0f1c31;
-      color: var(--text);
-      font-weight: 800;
-    }
-
-    .sanduhr-wrap {
-      display: grid;
-      grid-template-columns: minmax(280px, 0.9fr) minmax(280px, 1.1fr);
-      gap: 24px;
-      align-items: center;
-    }
-
-    .hourglass {
-      position: relative;
-      min-height: 580px;
-      display: grid;
-      place-items: center;
-      padding: 22px;
-      border-radius: 30px;
-      background: linear-gradient(180deg, rgba(125, 211, 252, 0.10), rgba(251, 191, 36, 0.08));
-      overflow: hidden;
-    }
-
-    .glass {
-      position: relative;
-      width: min(360px, 100%);
-      height: 500px;
-      clip-path: polygon(8% 0, 92% 0, 55% 48%, 92% 100%, 8% 100%, 45% 48%);
-      border: 2px solid rgba(255, 255, 255, 0.32);
-      background: linear-gradient(180deg, rgba(23, 36, 58, 0.96), rgba(8, 17, 31, 0.96));
-      box-shadow: inset 0 0 60px rgba(125, 211, 252, 0.13);
-    }
-
-    .sand-top, .sand-bottom {
-      position: absolute;
-      left: 8%;
-      width: 84%;
-      background: linear-gradient(135deg, rgba(251, 191, 36, 0.95), rgba(125, 211, 252, 0.72));
-      opacity: 0.9;
-    }
-
-    .sand-top {
-      top: 0;
-      height: 34%;
-      clip-path: polygon(0 0, 100% 0, 58% 100%, 42% 100%);
-    }
-
-    .sand-bottom {
-      bottom: 0;
-      height: 34%;
-      clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
-    }
-
-    .flow {
-      position: absolute;
-      top: 35%;
-      left: calc(50% - 2px);
-      width: 4px;
-      height: 30%;
-      border-radius: 999px;
-      background: var(--accent-2);
-      box-shadow: 0 0 18px rgba(251, 191, 36, 0.7);
-    }
-
-    .glass-label {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 76%;
-      padding: 12px;
-      border-radius: 18px;
-      text-align: center;
-      background: rgba(8, 17, 31, 0.72);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      color: var(--text);
-      font-weight: 750;
-    }
-
-    .glass-label.top { top: 46px; }
-    .glass-label.middle { top: 225px; color: var(--accent-2); }
-    .glass-label.bottom { bottom: 48px; }
-
-    .legend { display: grid; gap: 14px; }
-    .legend-item { border-left: 3px solid var(--accent); padding-left: 14px; }
-    .legend-item:nth-child(2) { border-left-color: var(--accent-2); }
-    .legend-item:nth-child(3) { border-left-color: var(--accent-3); }
-    .legend-item:nth-child(4) { border-left-color: var(--ok); }
-
-    .note {
-      border-color: rgba(251, 191, 36, 0.35);
-      background: rgba(251, 191, 36, 0.08);
-    }
-
-    .next {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .pill {
-      padding: 10px 14px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.06);
-      font-weight: 700;
-    }
-
-    @media (max-width: 860px) {
-      .two, .three, .sanduhr-wrap { grid-template-columns: 1fr; }
-      section { padding: 22px; border-radius: 22px; }
-      .hourglass { min-height: 520px; }
-      .glass { height: 460px; }
-    }
-  </style>
+  <meta name="description" content="Diese Seite erklärt als eigenständiger Review-Stand, was sich seit dem ursprünglichen Luis-Handoff verändert hat: Aus einem diffusen Projektpaket wurde ein System, das Anliegen oben einsammelt, durch klare Agenten-Arbeit verengt und unten als überprüfbarer nächster Schritt wieder an Samuel zurückgibt.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/sanduhr/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Human Agent Interface (HAI)">
+  <meta property="og:title" content="HAI Sanduhr – von Luis’ Handoff zum Kontroll-Loop">
+  <meta property="og:description" content="Vom Luis-Handoff zum kontrollierbaren Arbeitsloop: oben diffuse Wünsche, in der Mitte Scope-Gate und Entscheidung, unten ein geprüfter nächster Schritt.">
+  <meta property="og:image" content="https://www.human-agent-interface.com/assets/og/hai-og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HAI — Agenten arbeiten. Du entscheidest.">
+  
+  <meta property="og:url" content="https://www.human-agent-interface.com/sanduhr/">
+  <meta property="og:locale" content="de_DE">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#f4f0e6">
+  <link rel="icon" href="/assets/favicon-64.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/newsreader-300_700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-300_700-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/hai.css">
 </head>
-<body>
-  <main>
-    <header>
-      <div class="eyebrow">Standalone Visual Explainer · für Luis</div>
-      <h1>Die HAI-Sanduhr: vom Luis-Handoff zum kontrollierbaren Arbeitsloop.</h1>
-      <p class="lead">Diese Seite erklärt als eigenständiger Review-Stand, was sich seit dem ursprünglichen Luis-Handoff verändert hat: Aus einem diffusen Projektpaket wurde ein System, das Anliegen oben einsammelt, durch klare Agenten-Arbeit verengt und unten als überprüfbarer nächster Schritt wieder an Samuel zurückgibt.</p>
-    </header>
+<body data-page="legacy">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-    <section aria-labelledby="luis-origin">
-      <div class="grid two">
-        <div>
-          <h2 id="luis-origin">Luis origin: der Startpunkt war ein Handoff, kein fertiges Produkt.</h2>
+  <div class="statusline" aria-hidden="true">
+    <div class="wrap">
+      <span>HAI · Protokoll 001</span>
+      <span>Abschnitt: <strong data-status-section>01</strong></span>
+      <span data-variant-label>Variante A · Protokoll</span>
+    </div>
+  </div>
+
+  
+
+  <main id="main" tabindex="-1">
+
+    <section class="hero" data-section="01 · Sanduhr">
+      <div class="wrap grid">
+        <div class="rail meta">
+          <div>Standalone Visual Explainer · für Luis</div>
+          <div>Deutsch</div>
         </div>
-        <div class="grid">
+        <div class="main">
+          <h1>Die HAI-Sanduhr: vom Luis-Handoff zum <em>kontrollierbaren Arbeitsloop.</em></h1>
+          <p class="lede">Diese Seite erklärt als eigenständiger Review-Stand, was sich seit dem ursprünglichen Luis-Handoff verändert hat: Aus einem diffusen Projektpaket wurde ein System, das Anliegen oben einsammelt, durch klare Agenten-Arbeit verengt und unten als überprüfbarer nächster Schritt wieder an Samuel zurückgibt.</p>
+          <div class="actions">
+            <a href="/">Zur Startseite</a>
+            <a href="/archiv/">Zum Archiv</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Einordnung">
+          <span class="stamp">Review-Stand</span>
+          <p class="note">Der Startpunkt war ein Handoff, kein fertiges Produkt. Diese Seite ist ein eigenständiger Review-Stand für Luis.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="luis-origin" data-section="02 · Luis origin">
+      <div class="wrap grid">
+        <div class="rail meta">01 / Luis origin</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Luis origin</p>
+            <h2>Luis origin: der Startpunkt war ein Handoff, kein fertiges Produkt.</h2>
+          </div>
           <p>Luis bekam nicht nur eine Website-Idee oder einen Textentwurf übergeben. Der eigentliche Auftrag war: <strong>Wie wird aus Samuels vielen HAI-Signalen ein bedienbares System, das Entscheidungen vorbereitet und Umsetzung begrenzt?</strong></p>
           <p>Seitdem ist HAI nicht größer geworden, sondern schärfer: Der Kern ist Kontrolle. Ein Mensch soll verstehen, was passiert, wenn er einen Wunsch absetzt, welcher Agent was darf, wann gestoppt wird und welche Entscheidung zurück zum Menschen muss.</p>
         </div>
+        <aside class="aside" aria-label="Kern">
+          <p class="note"><strong>Kern.</strong> Der Kern ist Kontrolle. HAI ist nicht größer geworden, sondern schärfer.</p>
+        </aside>
       </div>
     </section>
 
-    <section aria-labelledby="before-after">
-      <h2 id="before-after">Before / After</h2>
-      <div class="grid two" style="margin-top: 20px;">
-        <article class="card">
-          <span class="label">Vorher · Luis-Handoff</span>
-          <h3>Viele Signale, viel Kontext, schwer zu bedienen.</h3>
-          <p>Website, Produktidee, Agentenrollen, Audit-Angebot, persönliche Arbeitsweise und technische Artefakte lagen nebeneinander. Das war wertvoll, aber für Außenstehende schwer als Maschine zu lesen.</p>
-        </article>
-        <article class="card">
-          <span class="label">Nachher · HAI-Kontroll-Loop</span>
-          <h3>Ein Anliegen wird bewusst verengt und prüfbar ausgegeben.</h3>
-          <p>HAI fragt nach Zweck, Grenzen, Erlaubnissen, Verifikation und menschlichen Entscheidungspunkten. Aus Chaos entsteht ein kleiner nächster Schritt statt ein unkontrollierter Agenten-Schwarm.</p>
-        </article>
+    <section class="section" id="before-after" data-section="03 · Vorher und nachher">
+      <div class="wrap grid">
+        <div class="rail meta">02 / Vergleich</div>
+        <div class="main">
+          <div class="section-head">
+            <h2>Before / After</h2>
+          </div>
+          <div class="entries">
+            <article class="entry">
+              <div class="num" aria-hidden="true">01</div>
+              <div>
+                <h3>Viele Signale, viel Kontext, schwer zu bedienen.</h3>
+                <p>Website, Produktidee, Agentenrollen, Audit-Angebot, persönliche Arbeitsweise und technische Artefakte lagen nebeneinander. Das war wertvoll, aber für Außenstehende schwer als Maschine zu lesen.</p>
+              </div>
+              <span class="status">Vorher · Luis-Handoff</span>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">02</div>
+              <div>
+                <h3>Ein Anliegen wird bewusst verengt und prüfbar ausgegeben.</h3>
+                <p>HAI fragt nach Zweck, Grenzen, Erlaubnissen, Verifikation und menschlichen Entscheidungspunkten. Aus Chaos entsteht ein kleiner nächster Schritt statt ein unkontrollierter Agenten-Schwarm.</p>
+              </div>
+              <span class="status">Nachher · HAI-Kontroll-Loop</span>
+            </article>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Ergebnis">
+          <p class="note"><strong>Ergebnis.</strong> Aus Chaos entsteht ein kleiner nächster Schritt statt ein unkontrollierter Agenten-Schwarm.</p>
+        </aside>
       </div>
     </section>
 
-    <section aria-labelledby="timeline">
-      <h2 id="timeline">Timeline: vom Handoff zur Sanduhr</h2>
-      <div class="timeline">
-        <div class="step">
-          <div class="dot">1</div>
-          <div class="card">
-            <h3>Luis-Handoff</h3>
-            <p>Das Ausgangsmaterial beschreibt HAI als menschlich geführtes Agenten-/Workflow-System, aber noch nicht als einfach sichtbaren Kontrollmechanismus.</p>
+    <section class="section" id="timeline" data-section="04 · Timeline">
+      <div class="wrap grid">
+        <div class="rail meta">03 / Timeline</div>
+        <div class="main">
+          <div class="section-head">
+            <h2>Timeline: vom Handoff zur Sanduhr</h2>
           </div>
+          <ol class="components" role="list">
+            <li>
+              <span class="num" aria-hidden="true">01</span>
+              <div>
+                <h3>Luis-Handoff</h3>
+                <p>Das Ausgangsmaterial beschreibt HAI als menschlich geführtes Agenten-/Workflow-System, aber noch nicht als einfach sichtbaren Kontrollmechanismus.</p>
+              </div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">02</span>
+              <div>
+                <h3>Audit-Kern</h3>
+                <p>Der Fokus verschiebt sich auf die Frage: Hat der Betreiber sein agentisches System wirklich im Griff — inklusive Guardrails, Abbruchstellen und menschlicher Freigaben?</p>
+              </div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">03</span>
+              <div>
+                <h3>HAI als Bedienlogik</h3>
+                <p>HAI wird erklärbar wie eine Maschine: Wunsch hinein, Scope-Gate, erlaubte Ausführung, Verifikation, Entscheidung zurück.</p>
+              </div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">04</span>
+              <div>
+                <h3>Sanduhr-Modell</h3>
+                <p>Die Sanduhr zeigt die Form: oben breit und diffus, in der Mitte eng und kontrolliert, unten konkret und prüfbar.</p>
+              </div>
+            </li>
+          </ol>
         </div>
-        <div class="step">
-          <div class="dot">2</div>
-          <div class="card">
-            <h3>Audit-Kern</h3>
-            <p>Der Fokus verschiebt sich auf die Frage: Hat der Betreiber sein agentisches System wirklich im Griff — inklusive Guardrails, Abbruchstellen und menschlicher Freigaben?</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="dot">3</div>
-          <div class="card">
-            <h3>HAI als Bedienlogik</h3>
-            <p>HAI wird erklärbar wie eine Maschine: Wunsch hinein, Scope-Gate, erlaubte Ausführung, Verifikation, Entscheidung zurück.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="dot">4</div>
-          <div class="card">
-            <h3>Sanduhr-Modell</h3>
-            <p>Die Sanduhr zeigt die Form: oben breit und diffus, in der Mitte eng und kontrolliert, unten konkret und prüfbar.</p>
-          </div>
-        </div>
+        <aside class="aside" aria-label="Form">
+          <p class="note"><strong>Form.</strong> Oben breit und diffus, in der Mitte eng und kontrolliert, unten konkret und prüfbar.</p>
+        </aside>
       </div>
     </section>
 
-    <section aria-labelledby="sanduhr-model">
-      <div class="sanduhr-wrap">
-        <div class="hourglass" aria-label="HAI Sanduhr Diagramm">
-          <div class="glass">
-            <div class="sand-top"></div>
-            <div class="flow"></div>
-            <div class="sand-bottom"></div>
-            <div class="glass-label top">Diffuse Wünsche, Material, Kontext</div>
-            <div class="glass-label middle">Scope-Gate + Entscheidung</div>
-            <div class="glass-label bottom">Ein geprüfter nächster Schritt</div>
+    <section class="section" id="sanduhr-model" data-section="05 · HAI Sanduhr shape">
+      <div class="wrap grid">
+        <div class="rail meta">04 / Sanduhr-Modell</div>
+        <div class="main">
+          <div class="section-head">
+            <h2>HAI Sanduhr shape</h2>
           </div>
+          <figure class="figure">
+            <svg viewBox="0 0 640 420" role="img" aria-label="HAI Sanduhr Diagramm">
+              <title>HAI Sanduhr: oben diffuse Wünsche, in der Mitte Scope-Gate und Entscheidung, unten ein geprüfter nächster Schritt.</title>
+              <rect x="1" y="1" width="638" height="418" fill="#f4f0e6" stroke="#d9d2c3"></rect>
+              <polygon points="120,24 520,24 366,186 274,186" fill="#ece6d8" stroke="#d9d2c3"></polygon>
+              <polygon points="274,234 366,234 520,396 120,396" fill="#ece6d8" stroke="#d9d2c3"></polygon>
+              <line x1="320" y1="186" x2="320" y2="234" stroke="#ab411d" stroke-width="2"></line>
+              <text x="320" y="70" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#14120f">Diffuse Wünsche,</text>
+              <text x="320" y="94" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#14120f">Material, Kontext</text>
+              <text x="320" y="215" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="#ab411d">Scope-Gate + Entscheidung</text>
+              <text x="320" y="320" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#14120f">Ein geprüfter</text>
+              <text x="320" y="344" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#14120f">nächster Schritt</text>
+              <text x="24" y="408" font-family="IBM Plex Mono, monospace" font-size="10" fill="#6b6459">HAI · SANDUHR</text>
+            </svg>
+            <figcaption>Die Sanduhr zeigt die Form: oben breit und diffus, in der Mitte eng und kontrolliert, unten konkret und prüfbar.</figcaption>
+          </figure>
+          <ol class="components" role="list">
+            <li>
+              <span class="num" aria-hidden="true">01</span>
+              <div>
+                <strong>Oben: alles darf sichtbar werden.</strong>
+                <span>Unsortierte Anliegen, Chat-Verläufe, Dateien, Website-Ideen, Luis-Kontext und Betreibergefühl werden gesammelt, ohne sofort Umsetzung zu erzwingen.</span>
+              </div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">02</span>
+              <div>
+                <strong>Mitte: das System muss eng werden.</strong>
+                <span>HAI prüft Scope, erlaubte Änderungen, verbotene Änderungen, offene Entscheidungen und Verifikation. Hier wird verhindert, dass Agenten einfach loslaufen.</span>
+              </div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">03</span>
+              <div>
+                <strong>Unten: nur ein ausführbarer Schritt fällt heraus.</strong>
+                <span>Der Output ist nicht „mach weiter“, sondern ein kleiner Task, ein Report oder eine menschliche Entscheidung. Genau dadurch bleibt die Maschine bedienbar.</span>
+              </div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">04</span>
+              <div>
+                <strong>Kontrolle: der Mensch bleibt Operator.</strong>
+                <span>Wenn etwas unklar, zu groß oder riskant ist, stoppt der Loop. Das ist kein Fehler, sondern die Schutzfunktion.</span>
+              </div>
+            </li>
+          </ol>
         </div>
-        <div class="legend">
-          <h2 id="sanduhr-model">HAI Sanduhr shape</h2>
-          <div class="legend-item">
-            <h3>Oben: alles darf sichtbar werden.</h3>
-            <p>Unsortierte Anliegen, Chat-Verläufe, Dateien, Website-Ideen, Luis-Kontext und Betreibergefühl werden gesammelt, ohne sofort Umsetzung zu erzwingen.</p>
-          </div>
-          <div class="legend-item">
-            <h3>Mitte: das System muss eng werden.</h3>
-            <p>HAI prüft Scope, erlaubte Änderungen, verbotene Änderungen, offene Entscheidungen und Verifikation. Hier wird verhindert, dass Agenten einfach loslaufen.</p>
-          </div>
-          <div class="legend-item">
-            <h3>Unten: nur ein ausführbarer Schritt fällt heraus.</h3>
-            <p>Der Output ist nicht „mach weiter“, sondern ein kleiner Task, ein Report oder eine menschliche Entscheidung. Genau dadurch bleibt die Maschine bedienbar.</p>
-          </div>
-          <div class="legend-item">
-            <h3>Kontrolle: der Mensch bleibt Operator.</h3>
-            <p>Wenn etwas unklar, zu groß oder riskant ist, stoppt der Loop. Das ist kein Fehler, sondern die Schutzfunktion.</p>
-          </div>
-        </div>
+        <aside class="aside" aria-label="Schutzfunktion">
+          <p class="note"><strong>Schutzfunktion.</strong> Wenn etwas unklar, zu groß oder riskant ist, stoppt der Loop. Das ist kein Fehler, sondern die Schutzfunktion.</p>
+        </aside>
       </div>
     </section>
 
-    <section class="note" aria-labelledby="luis-note">
-      <div class="grid three">
-        <div>
-          <h2 id="luis-note">Was Luis daran sehen soll</h2>
-        </div>
-        <div class="card">
-          <span class="label">Nicht nur Rollen</span>
-          <p>Opus, Codex, Verifier oder Commit-Agent sind nur Beschriftungen. Entscheidend ist, ob die Übergaben und Stopps kontrollierbar sind.</p>
-        </div>
-        <div class="card">
-          <span class="label">Nicht nur Website</span>
-          <p>Die Sanduhr ist zuerst ein Erklärmodell. Ob sie später auf die Homepage, in ein Audit-Angebot oder in eine Präsentation gehört, ist bewusst noch offen.</p>
-        </div>
-      </div>
-    </section>
-
-    <section aria-labelledby="next-decision">
-      <div class="next">
-        <div>
-          <h2 id="next-decision">Nächste Entscheidung nach Review</h2>
+    <section class="section" id="review" data-section="06 · Review">
+      <div class="wrap grid">
+        <div class="rail meta">05 / Review</div>
+        <div class="main">
+          <div class="section-head">
+            <h2>Was Luis daran sehen soll</h2>
+          </div>
+          <div class="entries">
+            <article class="entry">
+              <div class="num" aria-hidden="true">01</div>
+              <div>
+                <h3>Nicht nur Rollen</h3>
+                <p>Opus, Codex, Verifier oder Commit-Agent sind nur Beschriftungen. Entscheidend ist, ob die Übergaben und Stopps kontrollierbar sind.</p>
+              </div>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">02</div>
+              <div>
+                <h3>Nicht nur Website</h3>
+                <p>Die Sanduhr ist zuerst ein Erklärmodell. Ob sie später auf die Homepage, in ein Audit-Angebot oder in eine Präsentation gehört, ist bewusst noch offen.</p>
+              </div>
+            </article>
+          </div>
+          <h3>Nächste Entscheidung nach Review</h3>
           <p>Erst prüfen, ob dieses Standalone-Modell für Samuel und Luis trägt. Danach kann entschieden werden, ob und wo die Sanduhr integriert wird.</p>
+          <p><span class="status">Integration später · Review zuerst</span></p>
         </div>
-        <div class="pill">Integration später · Review zuerst</div>
+        <aside class="aside" aria-label="Offen">
+          <p class="note"><strong>Offen.</strong> Die Sanduhr ist zuerst ein Erklärmodell. Ob sie später auf die Homepage, in ein Audit-Angebot oder in eine Präsentation gehört, ist bewusst noch offen.</p>
+        </aside>
       </div>
     </section>
+
   </main>
+
+  
+
+  <script src="/assets/hai.js" defer></script>
 </body>
 </html>

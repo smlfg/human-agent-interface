@@ -5,76 +5,233 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HAI Versionspfad</title>
   <meta name="description" content="Lokaler visueller Explainer fuer die HAI-Versionen V1.0 bis V1.6.">
-  <link rel="stylesheet" href="./assets/styles.css">
+  <link rel="canonical" href="https://www.human-agent-interface.com/hai-versions/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Human Agent Interface (HAI)">
+  <meta property="og:title" content="HAI Versionspfad">
+  <meta property="og:description" content="Lokaler visueller Explainer fuer die HAI-Versionen V1.0 bis V1.6.">
+  <meta property="og:image" content="https://www.human-agent-interface.com/assets/og/hai-og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HAI — Agenten arbeiten. Du entscheidest.">
+  
+  <meta property="og:url" content="https://www.human-agent-interface.com/hai-versions/">
+  <meta property="og:locale" content="de_DE">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#f4f0e6">
+  <link rel="icon" href="/assets/favicon-64.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/newsreader-300_700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-300_700-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/hai.css">
 </head>
-<body>
-  <header class="topbar">
-    <div class="topbar-inner">
-      <a class="brand" href="./" aria-label="HAI Versionspfad">
-        <span class="brand-mark">HAI</span>
-        <span>Version Dossiers</span>
-      </a>
-      <nav class="nav" aria-label="Navigation">
-        <a href="#evolution">Evolution</a>
-        <a href="#matrix">Matrix</a>
-        <a href="./versions/v1-6/">V1.6</a>
-      </nav>
+<body data-page="legacy">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+  <div class="statusline" aria-hidden="true">
+    <div class="wrap">
+      <span>HAI · Protokoll 001</span>
+      <span>Abschnitt: <strong data-status-section>01</strong></span>
+      <span data-variant-label>Variante A · Protokoll</span>
     </div>
-  </header>
+  </div>
 
-  <main class="shell">
-    <section class="intro-board" aria-labelledby="page-title">
-      <div class="intro-copy">
-        <p class="eyebrow">Lokaler Review-Prototyp</p>
-        <h1 id="page-title">HAI Versionspfad</h1>
-        <p class="lead">
-          Der Pfad zeigt, wie HAI von Projekt-Verstehen zu kontrollierter
-          Ausfuehrung, sinnvollen Stops, engem Repair und begrenztem Pair-Modus gewachsen ist.
-        </p>
-      </div>
-      <div class="current-state" aria-label="Aktueller Stand">
-        <span class="status">V1.6: Pair-Modus Patchlinie</span>
-        <p>Zwei unabhaengige Lanes sind erlaubt, aber nur mit Scope-Beweis, Worktree-Isolation und Join nach Validator-ACCEPT.</p>
-      </div>
-    </section>
+  
 
-    <section class="section" id="evolution">
-      <div class="section-head">
-        <div>
-          <p class="label">Evolution Board</p>
-          <h2>Sieben Stufen, eine Prozesslinie.</h2>
+  <main id="main" tabindex="-1">
+
+    <section class="hero" data-section="01 · Versionspfad">
+      <div class="wrap grid">
+        <div class="rail meta">
+          <div>Lokaler Review-Prototyp</div>
+          <div>Version Dossiers</div>
+          <div>V1.0 – V1.6</div>
+          <div>Deutsch</div>
         </div>
-        <p class="section-note">
-          Jede Version beantwortet denselben Dossier-Satz: Skillstand,
-          Bruchstelle, Aenderung, Validierung und naechster Sprung.
-        </p>
+        <div class="main">
+          <h1>HAI <em>Versionspfad</em></h1>
+          <p class="lede">Der Pfad zeigt, wie HAI von Projekt-Verstehen zu kontrollierter Ausfuehrung, sinnvollen Stops, engem Repair und begrenztem Pair-Modus gewachsen ist.</p>
+          <div class="actions">
+            <a href="#evolution">Evolution</a>
+            <a href="#matrix">Matrix</a>
+            <a href="./versions/v1-6/">V1.6</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Aktueller Stand">
+          <span class="status">V1.6: Pair-Modus Patchlinie</span>
+          <p class="note">Zwei unabhaengige Lanes sind erlaubt, aber nur mit Scope-Beweis, Worktree-Isolation und Join nach Validator-ACCEPT.</p>
+        </aside>
       </div>
-      <div class="process-line" data-evolution></div>
     </section>
 
-    <section class="section" id="matrix">
-      <div class="section-head">
-        <div>
-          <p class="label">Vergleichsmatrix</p>
-          <h2>Was pro Version besser wurde.</h2>
+    <section class="section" id="evolution" data-section="02 · Evolution">
+      <div class="wrap grid">
+        <div class="rail meta">01 / Evolution</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Evolution Board</p>
+            <h2>Sieben Stufen, eine Prozesslinie.</h2>
+          </div>
+          <div class="entries">
+            <article class="entry">
+              <div class="num" aria-hidden="true">01</div>
+              <div>
+                <p class="meta">V1.0</p>
+                <h3><a href="./versions/v1-0/">Ordnungs-Agent mit menschlichem Gate</a></h3>
+                <p>V1.0 macht HAI erstmals wiederholbar: Projektlage, naechster Schritt und Ausfuehrung laufen durch ein menschliches Gate.</p>
+              </div>
+              <span class="status">gesicherter Snapshot</span>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">02</div>
+              <div>
+                <p class="meta">V1.1</p>
+                <h3><a href="./versions/v1-1/">Generalisierung statt Demo-Fit</a></h3>
+                <p>V1.1 loest HAI vom Demo-Fit: Projektabsicht wird breiter gelesen, PromptGarage bleibt read-only, Human Gate bleibt hart.</p>
+              </div>
+              <span class="status">PARTIAL, Richtung stimmt</span>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">03</div>
+              <div>
+                <p class="meta">V1.2</p>
+                <h3><a href="./versions/v1-2/">Von Projekt-Verstehen zu stabiler Ausfuehrung</a></h3>
+                <p>V1.2 verbessert Intent; die Bruchstelle wird Umsetzung.</p>
+              </div>
+              <span class="status">validierter Zwischenschritt</span>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">04</div>
+              <div>
+                <p class="meta">V1.3</p>
+                <h3><a href="./versions/v1-3/">Projekt-Sinn vor Agenten-Arbeit</a></h3>
+                <p>V1.3 fragt nicht nur, ob ein Schritt klein ist, sondern ob er fuer Samuel ueberhaupt Sinn macht.</p>
+              </div>
+              <span class="status">eingefrorene akzeptierte Baseline</span>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">05</div>
+              <div>
+                <p class="meta">V1.4</p>
+                <h3><a href="./versions/v1-4/">Proof-Run fuer V1.3</a></h3>
+                <p>V1.4 ist der Generalization-Proof: drei neue Projekte, drei Zustandslagen, kein neuer Agentenbau.</p>
+              </div>
+              <span class="status">Proof-Run, nicht installierbare Version</span>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">06</div>
+              <div>
+                <p class="meta">V1.5</p>
+                <h3><a href="./versions/v1-5/">Eskalieren, ohne Kontrolle abzugeben</a></h3>
+                <p>V1.5 bleibt eine testbare PM-Baseline: Gemini darf helfen, wenn ein Loop scheitert, aber nicht die Kontrolle uebernehmen.</p>
+              </div>
+              <span class="status">zufriedenstellender aktueller Stand</span>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">07</div>
+              <div>
+                <p class="meta">V1.6</p>
+                <h3><a href="./versions/v1-6/">Zwei Lanes, ein Owner</a></h3>
+                <p>V1.6 erlaubt maximal zwei unabhaengige EXECUTION_STEP-Lanes, aber nur wenn Scope, Worktrees und Join-Vertrag Samuels Ownership erhalten.</p>
+              </div>
+              <span class="status">Pair-Modus Patchlinie</span>
+            </article>
+          </div>
         </div>
-        <p class="section-note">
-          Die Matrix ist absichtlich grob: sie zeigt die Reife der HAI-Faehigkeit,
-          nicht interne Changelog-Details.
-        </p>
-      </div>
-      <div class="matrix-wrap">
-        <table class="comparison-matrix" data-matrix>
-          <caption>HAI Faehigkeiten von V1.0 bis V1.6</caption>
-        </table>
+        <aside class="aside" aria-label="Dossier-Satz">
+          <p class="note">Jede Version beantwortet denselben Dossier-Satz: Skillstand, Bruchstelle, Aenderung, Validierung und naechster Sprung.</p>
+        </aside>
       </div>
     </section>
+
+    <section class="section" id="matrix" data-section="03 · Matrix">
+      <div class="wrap grid">
+        <div class="rail meta">02 / Matrix</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Vergleichsmatrix</p>
+            <h2>Was pro Version besser wurde.</h2>
+          </div>
+          <table class="mesh-table">
+            <caption>HAI Faehigkeiten von V1.0 bis V1.6</caption>
+            <thead>
+              <tr>
+                <th scope="col">Faehigkeit</th>
+                <th scope="col">V1.0</th>
+                <th scope="col">V1.1</th>
+                <th scope="col">V1.2</th>
+                <th scope="col">V1.3</th>
+                <th scope="col">V1.4</th>
+                <th scope="col">V1.5</th>
+                <th scope="col">V1.6</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Faehigkeit">Verstehen</td>
+                <td data-label="V1.0"><strong>Artefakt-Kette</strong></td>
+                <td data-label="V1.1"><strong>breiter Intent</strong></td>
+                <td data-label="V1.2"><strong>85% grob</strong></td>
+                <td data-label="V1.3"><strong>Sinn statt nur klein</strong></td>
+                <td data-label="V1.4"><strong>Proof statt Feature</strong></td>
+                <td data-label="V1.5"><strong>PM-Baseline stabil</strong></td>
+                <td data-label="V1.6"><strong>Pair-Autonomie</strong></td>
+              </tr>
+              <tr>
+                <td data-label="Faehigkeit">Handoff</td>
+                <td data-label="V1.0"><strong>Briefing entsteht</strong></td>
+                <td data-label="V1.1"><strong>mehr Kontext</strong></td>
+                <td data-label="V1.2"><strong>Executor-Handoff</strong></td>
+                <td data-label="V1.3"><strong>NEXT_STEP refresh</strong></td>
+                <td data-label="V1.4"><strong>Baseline belegt</strong></td>
+                <td data-label="V1.5"><strong>Repair-Eskalation</strong></td>
+                <td data-label="V1.6"><strong>Lane A/B Handoff</strong></td>
+              </tr>
+              <tr>
+                <td data-label="Faehigkeit">Lifecycle-Stop</td>
+                <td data-label="V1.0"><strong>Validator</strong></td>
+                <td data-label="V1.1"><strong>manueller 3-Projekt-Test</strong></td>
+                <td data-label="V1.2"><strong>doctor + meta PASS</strong></td>
+                <td data-label="V1.3"><strong>V1.4 PASS</strong></td>
+                <td data-label="V1.4"><strong>3 reale Projekte</strong></td>
+                <td data-label="V1.5"><strong>36/39</strong></td>
+                <td data-label="V1.6"><strong>Stop-Fragen bleiben</strong></td>
+              </tr>
+              <tr>
+                <td data-label="Faehigkeit">Repair</td>
+                <td data-label="V1.0"><strong>kaum</strong></td>
+                <td data-label="V1.1"><strong>kaum</strong></td>
+                <td data-label="V1.2"><strong>Loop-Gates</strong></td>
+                <td data-label="V1.3"><strong>Blocken korrekt</strong></td>
+                <td data-label="V1.4"><strong>indirekt</strong></td>
+                <td data-label="V1.5"><strong>Gemini angelegt</strong></td>
+                <td data-label="V1.6"><strong>Gemini bleibt Failure-Repair</strong></td>
+              </tr>
+              <tr>
+                <td data-label="Faehigkeit">Human Gate</td>
+                <td data-label="V1.0"><strong>hartes Execution-Gate</strong></td>
+                <td data-label="V1.1"><strong>Human Gate bleibt</strong></td>
+                <td data-label="V1.2"><strong>weiter hart</strong></td>
+                <td data-label="V1.3"><strong>stark</strong></td>
+                <td data-label="V1.4"><strong>entscheidet vor Deploy</strong></td>
+                <td data-label="V1.5"><strong>bleibt fuehrend</strong></td>
+                <td data-label="V1.6"><strong>Owner vor Durchsatz</strong></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="footnotes">
+            <p>Lokaler Prototyp: /home/smlflg/Projekte/HAI/hai-version-explainers</p>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Zur Matrix">
+          <p class="note">Die Matrix ist absichtlich grob: sie zeigt die Reife der HAI-Faehigkeit, nicht interne Changelog-Details.</p>
+        </aside>
+      </div>
+    </section>
+
   </main>
 
-  <footer class="footer">
-    Lokaler Prototyp: /home/smlflg/Projekte/HAI/hai-version-explainers
-  </footer>
+  
 
-  <script src="./assets/app.js"></script>
+  <script src="/assets/hai.js" defer></script>
 </body>
 </html>

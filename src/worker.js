@@ -80,6 +80,32 @@ const SITE_EVENT_TARGETS = [
 ];
 const VIEWPORT_CLASSES = ["mobile", "tablet", "desktop"];
 
+const PROTOCOL_EXPERIMENT_ID = "redesign-protocol-2026-10-30";
+const PROTOCOL_VARIANTS = ["A", "B", "C"];
+const PROTOCOL_EVENTS = ["page_view", "variant_switch", "gate_approve", "gate_deny", "outbound_click", "nav_click"];
+const PROTOCOL_TARGETS = [
+  "home",
+  "what-is-hai",
+  "proof",
+  "mesh",
+  "gate_read",
+  "gate_write",
+  "gate_send",
+  "penecho",
+  "hai-mcp",
+  "plaud",
+  "github",
+  "agentfaehig",
+  "contact",
+  "lang_en",
+  "lang_de",
+  "what-is-hai-page",
+  "proof-page",
+  "mesh-page",
+  "archive",
+  "legacy",
+];
+
 const HARNESS_PROFILES = {
   claude: {
     label: "Claude Code",
@@ -157,10 +183,6 @@ export default {
       return handleSiteEvent(request, env);
     }
 
-    if (request.method === "GET" && (url.pathname === "/" || url.pathname === "/index.html")) {
-      return handleHomepage(request, env);
-    }
-
     if (request.method === "GET" && (url.pathname === "/intake" || url.pathname.startsWith("/intake/"))) {
       return serveIntakeAsset(request, env, url);
     }
@@ -168,40 +190,6 @@ export default {
     return env.ASSETS.fetch(request);
   },
 };
-
-async function handleHomepage(request, env) {
-  const url = new URL(request.url);
-  const previewVariant = url.searchParams.get("hero_variant");
-  // Keine Cookies und kein sonstiger Speicher: Die Hero-Variante wird pro Aufruf
-  // zufaellig gewaehlt (oder per ?hero_variant= fuer die Vorschau erzwungen).
-  const variant = HERO_VARIANTS.includes(previewVariant)
-    ? previewVariant
-    : HERO_VARIANTS[cryptoRandomIndex(HERO_VARIANTS.length)];
-
-  const response = await env.ASSETS.fetch(request);
-  const headers = new Headers(response.headers);
-
-  const contentType = headers.get("content-type") || "";
-  if (!contentType.toLowerCase().includes("text/html")) {
-    return new Response(response.body, {
-      status: response.status,
-      statusText: response.statusText,
-      headers,
-    });
-  }
-
-  const html = await response.text();
-  const injected = html.replace(
-    "<html lang=\"en\">",
-    `<html lang="en" data-hero-experiment="${HERO_EXPERIMENT_ID}" data-hero-variant="${variant}">`,
-  );
-
-  return new Response(injected, {
-    status: response.status,
-    statusText: response.statusText,
-    headers,
-  });
-}
 
 function serveIntakeAsset(request, env, url) {
   let assetPath = url.pathname;
@@ -427,19 +415,25 @@ function normalizeSiteEvent(payload) {
   const language = normalizeLanguage(payload?.language);
   const viewportClass = trimMax(payload?.viewport_class, 20);
 
-  if (experimentId !== HERO_EXPERIMENT_ID) {
+  const isProtocol = experimentId === PROTOCOL_EXPERIMENT_ID;
+  const isLegacy = experimentId === HERO_EXPERIMENT_ID;
+  if (!isProtocol && !isLegacy) {
     return { ok: false, error: "Unknown experiment." };
   }
 
-  if (!HERO_VARIANTS.includes(variant)) {
+  const variants = isProtocol ? PROTOCOL_VARIANTS : HERO_VARIANTS;
+  const events = isProtocol ? PROTOCOL_EVENTS : SITE_EVENTS;
+  const targets = isProtocol ? PROTOCOL_TARGETS : SITE_EVENT_TARGETS;
+
+  if (!variants.includes(variant)) {
     return { ok: false, error: "Unknown variant." };
   }
 
-  if (!SITE_EVENTS.includes(event)) {
+  if (!events.includes(event)) {
     return { ok: false, error: "Unknown event." };
   }
 
-  if (!SITE_EVENT_TARGETS.includes(target)) {
+  if (!targets.includes(target)) {
     return { ok: false, error: "Unknown event target." };
   }
 
@@ -700,12 +694,6 @@ function corsHeaders() {
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
   };
-}
-
-function cryptoRandomIndex(length) {
-  const bytes = new Uint32Array(1);
-  crypto.getRandomValues(bytes);
-  return bytes[0] % length;
 }
 
 function readText(form, key) {

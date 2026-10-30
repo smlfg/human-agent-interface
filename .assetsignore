@@ -65,3 +65,6 @@ Münztelfon/requirements.txt
 hai-versions/tests/**
 samuel/why-hai-matters/grid-bedeutung.md
 what_it_is/deep-dive/index.md
+
+# Internal reports (never deploy)
+docs/**

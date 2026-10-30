@@ -3,788 +3,255 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f0e6">
+  <link rel="canonical" href="https://www.human-agent-interface.com/samuel/computer-day-audit-2026/">
   <title>Computer Day Audit 2026</title>
+  <meta name="description" content="Visible file changes by project, day by day. Dot paths are excluded from file counts. Hermes, Codex, Claude Code, and OpenCode are metadata-only activity layers.">
+  <link rel="icon" href="/assets/favicon-64.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/newsreader-300_700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-300_700-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/hai.css">
   <script src="data/activity-2026.js"></script>
   <style>
+    /* Functional styles for the interactive audit timeline and its panels. */
     :root {
-      --paper: #f8f7f2;
-      --ink: #151512;
-      --muted: #67645d;
-      --line: #d9d3c4;
-      --panel: #ffffff;
-      --panel-2: #efebe1;
-      --green: #10a66a;
-      --green-dark: #086b46;
-      --amber: #d58a00;
-      --red: #c84b31;
-      --cyan: #1596a3;
+      --day-count: 1;
+      --cell: 13px;
+      --row-h: 22px;
+      --green: #1e5b3f;
+      --green-dark: #14402d;
+      --amber: #a8641a;
+      --red: #ab411d;
+      --cyan: #2f6d70;
       --codex: #315fdc;
       --claude: #b6532d;
       --opencode: #087f5b;
-      --black: #0e0f0c;
-      --cell: 13px;
-      --row-h: 22px;
-      font-family: ui-sans-serif, "Aptos", "Segoe UI", sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background:
-        linear-gradient(90deg, rgba(21, 21, 18, 0.035) 1px, transparent 1px),
-        linear-gradient(rgba(21, 21, 18, 0.035) 1px, transparent 1px),
-        var(--paper);
-      background-size: 24px 24px;
-      color: var(--ink);
-      min-width: 320px;
-    }
-
-    button,
-    select {
-      font: inherit;
-    }
-
-    .shell {
-      width: min(1760px, calc(100vw - 28px));
-      margin: 0 auto;
-      padding: 18px 0 32px;
-    }
-
-    .topbar {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 18px;
-      align-items: end;
-      border-bottom: 2px solid var(--black);
-      padding-bottom: 14px;
-    }
-
-    h1 {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(2rem, 4vw, 4.8rem);
-      line-height: 0.9;
-      letter-spacing: 0;
-    }
-
-    .subtitle {
-      margin-top: 10px;
-      max-width: 900px;
-      color: var(--muted);
-      font-size: 0.98rem;
-      line-height: 1.45;
-    }
-
-    .stamp {
-      justify-self: end;
-      min-width: 240px;
-      border: 2px solid var(--black);
-      background: var(--panel);
-      padding: 12px;
-      text-align: right;
-      box-shadow: 5px 5px 0 var(--black);
-    }
-
-    .stamp strong {
-      display: block;
-      font-size: 1.55rem;
-      line-height: 1;
-    }
-
-    .stamp span {
-      display: block;
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 0.84rem;
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(8, minmax(112px, 1fr));
-      gap: 10px;
-      margin: 18px 0;
-    }
-
-    .metric {
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.84);
-      padding: 12px;
-      min-height: 84px;
-    }
-
-    .metric label {
-      display: block;
-      color: var(--muted);
-      font-size: 0.76rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .metric b {
-      display: block;
-      margin-top: 8px;
-      font-size: clamp(1.4rem, 2.4vw, 2.5rem);
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .tokscale-proof {
-      margin: 0 0 18px;
-    }
-
-    .tokscale-proof h2 {
-      margin: 0 0 10px;
-      color: var(--muted);
-      font-size: 0.76rem;
-      font-weight: 400;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .tokscale-proof a {
-      display: block;
-      max-width: 640px;
-    }
-
-    .tokscale-proof img {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      padding: 12px 0;
-      margin-bottom: 14px;
-    }
-
-    .control {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      padding: 8px 10px;
-    }
-
-    .control span {
-      color: var(--muted);
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .control select,
-    .control input {
-      border: 0;
-      background: transparent;
-      color: var(--ink);
-      outline: none;
-    }
-
-    .control input {
-      width: 190px;
-    }
-
-    .source-toggle {
-      gap: 6px;
-      padding-right: 12px;
-    }
-
-    .source-toggle input {
-      width: auto;
-      accent-color: var(--black);
-    }
-
-    .source-dot {
-      width: 9px;
-      height: 9px;
-      display: inline-block;
-      background: var(--dot);
-      border: 1px solid rgba(14, 15, 12, 0.35);
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 390px;
-      gap: 16px;
-      align-items: start;
-    }
-
-    .visual-column,
-    .detail-column {
-      min-width: 0;
-    }
-
-    .section-title {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 12px;
-      margin: 18px 0 8px;
-    }
-
-    .section-title h2 {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 1.38rem;
-      letter-spacing: 0;
-    }
-
-    .section-title span {
-      color: var(--muted);
-      font-size: 0.86rem;
-    }
-
-    .timeline-wrap,
-    .market-panel,
-    .detail-panel,
-    .rank-panel {
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.9);
-    }
-
-    .timeline-wrap {
-      overflow: auto;
-      position: relative;
-      max-height: calc(100vh - 252px);
-      min-height: 420px;
-    }
-
-    .timeline {
-      display: grid;
-      grid-template-columns: 174px repeat(var(--day-count), var(--cell));
-      min-width: max-content;
-      background: var(--panel);
-    }
-
-    .corner,
-    .month-cell,
-    .axis-label,
-    .row-label,
-    .cell,
-    .hermes-cell,
-    .total-cell {
-      border-right: 1px solid rgba(21, 21, 18, 0.08);
-      border-bottom: 1px solid rgba(21, 21, 18, 0.08);
-    }
-
-    .corner {
-      position: sticky;
-      left: 0;
-      z-index: 6;
-      background: var(--black);
-      color: #fff;
-      padding: 8px 10px;
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .month-cell {
-      height: 30px;
-      background: var(--black);
-      color: #fff;
-      font-size: 0.69rem;
-      line-height: 30px;
-      text-align: center;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    .axis-label,
-    .row-label {
-      position: sticky;
-      left: 0;
-      z-index: 5;
-      height: var(--row-h);
-      background: #fbfaf6;
-      padding: 3px 8px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      border-right: 2px solid var(--black);
-      white-space: nowrap;
-    }
-
-    .axis-label {
-      font-size: 0.78rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      background: #eee8db;
-    }
-
-    .row-label {
-      font-size: 0.82rem;
-    }
-
-    .row-label .rank {
-      color: var(--muted);
-      font-size: 0.72rem;
-      width: 24px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .row-label .name {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      min-width: 0;
-    }
-
-    .row-label .rank-agents {
-      margin-left: auto;
-      display: flex;
-      gap: 3px;
-      max-width: 48px;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-
-    .row-label .source-badge {
-      width: 8px;
-      height: 8px;
-      margin: 0;
-      gap: 0;
-      font-size: 0;
-    }
-
-    .row-label .source-badge::before {
-      width: 8px;
-      height: 8px;
-    }
-
-    .cell,
-    .hermes-cell,
-    .agent-cell,
-    .total-cell {
-      width: var(--cell);
-      height: var(--row-h);
-      cursor: crosshair;
-      transition: transform 120ms ease, outline-color 120ms ease;
-    }
-
-    .cell:hover,
-    .hermes-cell:hover,
-    .agent-cell:hover,
-    .total-cell:hover {
-      outline: 2px solid var(--black);
-      outline-offset: -2px;
-      transform: scale(1.12);
-      z-index: 10;
-    }
-
-    .axis-row {
-      display: contents;
-    }
-
-    .project-row {
-      display: contents;
-    }
-
-    .selected-cell {
-      outline: 2px solid var(--black);
-      outline-offset: -2px;
-    }
-
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      color: var(--muted);
-      font-size: 0.82rem;
-      margin: 10px 0 0;
-    }
-
-    .ramp {
-      display: inline-grid;
-      grid-template-columns: repeat(7, 24px);
-      height: 12px;
-      border: 1px solid var(--line);
-    }
-
-    .ramp span {
-      display: block;
-    }
-
-    .detail-column {
-      position: sticky;
-      top: 12px;
-    }
-
-    .detail-panel,
-    .market-panel,
-    .rank-panel {
-      padding: 14px;
-      margin-bottom: 14px;
-    }
-
-    .detail-panel h2,
-    .market-panel h2,
-    .rank-panel h2 {
-      margin: 0 0 10px;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 1.26rem;
-    }
-
-    .day-readout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .mini-stat {
-      background: var(--panel-2);
-      padding: 9px;
-      min-height: 58px;
-    }
-
-    .mini-stat span {
-      color: var(--muted);
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .mini-stat b {
-      display: block;
-      margin-top: 5px;
-      font-size: 1.35rem;
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .agent-breakdown {
-      display: grid;
-      gap: 7px;
-      margin-top: 12px;
-    }
-
-    .agent-row {
-      display: grid;
-      grid-template-columns: 78px 1fr auto;
-      gap: 8px;
-      align-items: center;
-      font-size: 0.82rem;
-    }
-
-    .agent-track {
-      height: 8px;
-      background: rgba(21, 21, 18, 0.08);
-      overflow: hidden;
-    }
-
-    .agent-fill {
-      height: 100%;
-      width: var(--w);
-      background: var(--source-color);
-    }
-
-    .session-list {
-      display: grid;
-      gap: 6px;
-      margin-top: 12px;
-      max-height: 245px;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-
-    .session-item {
-      border-top: 1px solid var(--line);
-      padding-top: 7px;
-      display: grid;
-      grid-template-columns: 72px minmax(0, 1fr) auto;
-      gap: 8px;
-      align-items: start;
-      font-size: 0.78rem;
-    }
-
-    .session-item strong {
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .session-item small {
-      color: var(--muted);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .session-item > small {
-      max-width: 66px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      text-align: right;
-    }
-
-    .source-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      margin-right: 4px;
-      color: var(--ink);
-      font-size: 0.68rem;
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .source-badge::before {
-      content: "";
-      width: 7px;
-      height: 7px;
-      background: var(--source-color);
-      border: 1px solid rgba(14, 15, 12, 0.25);
-    }
-
-    .tile-agents,
-    .rank-agents {
-      margin-top: 7px;
-      min-height: 12px;
-    }
-
-    .rank-item .rank-agents .source-badge {
-      width: auto;
-      height: auto;
-      font-size: 0.68rem;
-      gap: 4px;
-      margin-right: 4px;
-    }
-
-    .market-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    .market-tile {
-      border: 1px solid rgba(21, 21, 18, 0.14);
-      min-height: 70px;
-      padding: 9px;
-      background: var(--panel-2);
-      overflow: hidden;
-    }
-
-    .market-tile strong {
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: 0.88rem;
-    }
-
-    .market-tile span {
-      display: block;
-      margin-top: 8px;
-      font-size: 1.42rem;
-      line-height: 1;
-      font-weight: 800;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .rank-list {
-      display: grid;
-      gap: 7px;
-      max-height: 360px;
-      overflow: auto;
-    }
-
-    .rank-item {
-      display: grid;
-      grid-template-columns: 30px 1fr auto;
-      gap: 8px;
-      align-items: center;
-      padding: 7px 0;
-      border-bottom: 1px solid var(--line);
-      cursor: pointer;
-    }
-
-    .rank-item:hover {
-      color: var(--green-dark);
-    }
-
-    .rank-item .bar {
-      height: 7px;
-      margin-top: 5px;
-      background: linear-gradient(90deg, var(--green), var(--amber));
-      transform-origin: left;
-    }
-
-    .rank-item small {
-      color: var(--muted);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .tooltip {
-      position: fixed;
-      pointer-events: none;
-      z-index: 50;
-      display: none;
-      background: var(--black);
-      color: #fff;
-      padding: 8px 9px;
-      max-width: 280px;
-      font-size: 0.78rem;
-      line-height: 1.35;
-      box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.22);
-    }
-
-    .notice {
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 0.82rem;
-      line-height: 1.45;
-    }
-
-    @media (max-width: 1120px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      .detail-column {
-        position: static;
-      }
-
-      .metrics {
-        grid-template-columns: repeat(2, minmax(120px, 1fr));
-      }
-    }
-
-    @media (max-width: 720px) {
-      .shell {
-        width: min(100vw - 16px, 1760px);
-      }
-
-      .topbar {
-        grid-template-columns: 1fr;
-      }
-
-      .stamp {
-        justify-self: stretch;
-        text-align: left;
-      }
-
-      .metrics {
-        grid-template-columns: 1fr;
-      }
-
-      .timeline {
-        grid-template-columns: 136px repeat(var(--day-count), 12px);
-      }
-
-      :root {
-        --cell: 12px;
-      }
+      --black: #14120f;
+    }
+    .toolbar { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); padding:.75rem 0; margin-bottom:1rem; }
+    .control { display:inline-flex; align-items:center; gap:.5rem; border:1px solid var(--rule); background:var(--paper-2); padding:.4rem .55rem; font-family:var(--font-mono); font-size:.66rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+    .control select, .control input { border:0; background:transparent; color:var(--ink); font:inherit; letter-spacing:0; text-transform:none; outline:none; }
+    .control input { width:11rem; }
+    .source-toggle { gap:.35rem; padding-right:.7rem; }
+    .source-toggle input { width:auto; accent-color:var(--ink); }
+    .source-dot { width:.5rem; height:.5rem; display:inline-block; background:var(--dot); border:1px solid var(--rule); }
+    .layout { display:grid; grid-template-columns:minmax(0,1fr) 24rem; gap:1.5rem; align-items:start; }
+    .visual-column, .detail-column { min-width:0; }
+    .timeline-wrap, .detail-panel, .market-panel, .rank-panel { border:1px solid var(--rule); background:var(--paper-2); }
+    .timeline-wrap { overflow:auto; position:relative; max-height:calc(100vh - 15rem); min-height:26rem; }
+    .timeline { display:grid; grid-template-columns:10.5rem repeat(var(--day-count), var(--cell)); min-width:max-content; background:var(--paper); }
+    .corner, .month-cell, .axis-label, .row-label, .cell, .hermes-cell, .agent-cell, .total-cell { border-right:1px solid var(--rule); border-bottom:1px solid var(--rule); }
+    .corner { position:sticky; left:0; z-index:6; background:var(--ink); color:var(--paper); padding:.45rem .55rem; font-family:var(--font-mono); font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; }
+    .month-cell { height:1.9rem; background:var(--ink); color:var(--paper); font-family:var(--font-mono); font-size:.6rem; line-height:1.9rem; text-align:center; overflow:hidden; white-space:nowrap; }
+    .axis-label, .row-label { position:sticky; left:0; z-index:5; height:var(--row-h); background:var(--paper); padding:.15rem .5rem; display:flex; align-items:center; gap:.4rem; border-right:2px solid var(--ink); white-space:nowrap; }
+    .axis-label { font-family:var(--font-mono); font-size:.58rem; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; background:var(--paper-2); }
+    .row-label { font-size:.76rem; }
+    .row-label .rank { color:var(--muted); font-family:var(--font-mono); font-size:.6rem; width:1.5rem; font-variant-numeric:tabular-nums; }
+    .row-label .name { overflow:hidden; text-overflow:ellipsis; min-width:0; }
+    .row-label .rank-agents { margin-left:auto; display:flex; gap:2px; max-width:3rem; overflow:hidden; flex-shrink:0; }
+    .row-label .source-badge { width:.5rem; height:.5rem; margin:0; gap:0; font-size:0; }
+    .row-label .source-badge::before { width:.5rem; height:.5rem; }
+    .cell, .hermes-cell, .agent-cell, .total-cell { width:var(--cell); height:var(--row-h); cursor:crosshair; transition:transform 120ms ease, outline-color 120ms ease; }
+    .cell:hover, .hermes-cell:hover, .agent-cell:hover, .total-cell:hover { outline:2px solid var(--ink); outline-offset:-2px; transform:scale(1.12); z-index:10; }
+    .axis-row, .project-row { display:contents; }
+    .selected-cell { outline:2px solid var(--ink); outline-offset:-2px; }
+    .legend { display:flex; flex-wrap:wrap; gap:.75rem; align-items:center; color:var(--muted); font-family:var(--font-mono); font-size:.62rem; letter-spacing:.06em; margin:.7rem 0 0; }
+    .ramp { display:inline-grid; grid-template-columns:repeat(7,1.4rem); height:.7rem; border:1px solid var(--rule); }
+    .ramp span { display:block; }
+    .detail-column { position:sticky; top:1rem; }
+    .detail-panel, .market-panel, .rank-panel { padding:.9rem; margin-bottom:.9rem; }
+    .detail-panel h2, .market-panel h2, .rank-panel h2 { margin:0 0 .6rem; font-family:var(--font-display); font-size:1.1rem; }
+    .day-readout { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; margin-top:.6rem; }
+    .mini-stat { background:var(--paper); padding:.55rem; min-height:3.6rem; }
+    .mini-stat span { color:var(--muted); font-family:var(--font-mono); font-size:.56rem; text-transform:uppercase; letter-spacing:.08em; }
+    .mini-stat b { display:block; margin-top:.3rem; font-size:1.2rem; line-height:1; font-variant-numeric:tabular-nums; }
+    .agent-breakdown { display:grid; gap:.45rem; margin-top:.75rem; }
+    .agent-row { display:grid; grid-template-columns:4.9rem 1fr auto; gap:.5rem; align-items:center; font-size:.76rem; }
+    .agent-track { height:.5rem; background:var(--rule); overflow:hidden; }
+    .agent-fill { height:100%; width:var(--w); background:var(--source-color); }
+    .session-list { display:grid; gap:.4rem; margin-top:.75rem; max-height:15rem; overflow-y:auto; overflow-x:hidden; }
+    .session-item { border-top:1px solid var(--rule); padding-top:.45rem; display:grid; grid-template-columns:4.5rem minmax(0,1fr) auto; gap:.5rem; align-items:start; font-size:.72rem; }
+    .session-item strong { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .session-item small { color:var(--muted); font-variant-numeric:tabular-nums; }
+    .session-item > small { max-width:4.2rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:right; }
+    .source-badge { display:inline-flex; align-items:center; gap:.25rem; margin-right:.25rem; color:var(--ink); font-family:var(--font-mono); font-size:.56rem; line-height:1; font-variant-numeric:tabular-nums; }
+    .source-badge::before { content:""; width:.45rem; height:.45rem; background:var(--source-color); border:1px solid var(--rule); }
+    .tile-agents, .rank-agents { margin-top:.45rem; min-height:.75rem; }
+    .rank-item .rank-agents .source-badge { width:auto; height:auto; font-size:.56rem; gap:.25rem; margin-right:.25rem; }
+    .market-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.5rem; }
+    .market-tile { border:1px solid var(--rule); min-height:4.4rem; padding:.55rem; background:var(--paper); overflow:hidden; }
+    .market-tile strong { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:.8rem; }
+    .market-tile span { display:block; margin-top:.5rem; font-size:1.25rem; line-height:1; font-weight:800; font-variant-numeric:tabular-nums; }
+    .rank-list { display:grid; gap:.45rem; max-height:22rem; overflow:auto; }
+    .rank-item { display:grid; grid-template-columns:1.9rem 1fr auto; gap:.5rem; align-items:center; padding:.45rem 0; border-bottom:1px solid var(--rule); cursor:pointer; }
+    .rank-item:hover { color:var(--signal); }
+    .rank-item .bar { height:.45rem; margin-top:.3rem; background:linear-gradient(90deg,var(--green),var(--amber)); transform-origin:left; }
+    .rank-item small { color:var(--muted); font-variant-numeric:tabular-nums; }
+    .tooltip { position:fixed; pointer-events:none; z-index:50; display:none; background:var(--ink); color:var(--paper); padding:.5rem .6rem; max-width:17rem; font-size:.72rem; line-height:1.35; box-shadow:4px 4px 0 rgba(0,0,0,.18); }
+    .notice { margin-top:.7rem; color:var(--muted); font-size:.75rem; line-height:1.45; max-width:none; }
+    @media (max-width:1120px) {
+      .layout { grid-template-columns:1fr; }
+      .detail-column { position:static; }
+    }
+    @media (max-width:720px) {
+      .timeline { grid-template-columns:8.5rem repeat(var(--day-count),12px); }
+      :root { --cell:12px; }
+      .control input { width:8rem; }
     }
   </style>
 </head>
-<body>
-  <main class="shell">
-    <header class="topbar">
-      <div>
-        <h1>Computer Day Audit 2026</h1>
-        <p class="subtitle">Visible file changes by project, day by day. Dot paths are excluded from file counts. Hermes, Codex, Claude Code, and OpenCode are metadata-only activity layers.</p>
-      </div>
-      <aside class="stamp">
-        <strong id="rangeStamp">2026</strong>
-        <span id="generatedStamp"></span>
-      </aside>
-    </header>
+<body data-page="legacy">
+  <a class="skip-link" href="#main">Skip to content</a>
 
-    <section class="metrics" aria-label="Summary metrics">
-      <div class="metric"><label>Visible project files</label><b id="metricProjectFiles">0</b></div>
-      <div class="metric"><label>Active projects</label><b id="metricProjects">0</b></div>
-      <div class="metric"><label>Active days</label><b id="metricDays">0</b></div>
-      <div class="metric"><label>Hermes sessions</label><b id="metricHermes">0</b></div>
-      <div class="metric"><label>Agent sessions</label><b id="metricAgents">0</b></div>
-      <div class="metric"><label>Codex sessions</label><b id="metricCodex">0</b></div>
-      <div class="metric"><label>Claude sessions</label><b id="metricClaude">0</b></div>
-      <div class="metric"><label>OpenCode sessions</label><b id="metricOpenCode">0</b></div>
-      <div class="metric"><label>Current terminals</label><b id="metricTerminals">0</b></div>
-    </section>
+  <div class="statusline" aria-hidden="true">
+    <div class="wrap">
+      <span>HAI · Record 001</span>
+      <span>Section: <strong data-status-section>01</strong></span>
+      <span data-variant-label>Variant A · Protocol</span>
+    </div>
+  </div>
 
-    <section class="tokscale-proof" aria-labelledby="tokscaleTitle">
-      <h2 id="tokscaleTitle">Public token usage · Tokscale</h2>
-      <a href="https://tokscale.ai/u/smlfg" target="_blank" rel="noopener noreferrer">
-        <img
-          src="https://tokscale.ai/api/embed/smlfg/svg?view=3d"
-          alt="Tokscale Stats for @smlfg"
-          loading="lazy"
-          decoding="async"
-        >
-      </a>
-    </section>
+  
 
-    <section class="toolbar" aria-label="Display controls">
-      <label class="control"><span>Rows</span><select id="rowLimit"><option value="25">Top 25</option><option value="50">Top 50</option><option value="100">Top 100</option><option value="all">All</option></select></label>
-      <label class="control"><span>Search</span><input id="projectSearch" type="search" placeholder="Project name"></label>
-      <label class="control"><span>Scale</span><select id="scaleMode"><option value="sqrt">Market sqrt</option><option value="linear">Linear</option></select></label>
-      <label class="control source-toggle"><input type="checkbox" data-source-toggle="files" checked><i class="source-dot" style="--dot: var(--green)"></i><span>Files</span></label>
-      <label class="control source-toggle"><input type="checkbox" data-source-toggle="hermes" checked><i class="source-dot" style="--dot: var(--cyan)"></i><span>Hermes</span></label>
-      <label class="control source-toggle"><input type="checkbox" data-source-toggle="codex" checked><i class="source-dot" style="--dot: var(--codex)"></i><span>Codex</span></label>
-      <label class="control source-toggle"><input type="checkbox" data-source-toggle="claude" checked><i class="source-dot" style="--dot: var(--claude)"></i><span>Claude</span></label>
-      <label class="control source-toggle"><input type="checkbox" data-source-toggle="opencode" checked><i class="source-dot" style="--dot: var(--opencode)"></i><span>OpenCode</span></label>
-      <button class="control" id="latestButton" type="button"><span>Jump</span> Latest active day</button>
-    </section>
+  <main id="main" tabindex="-1">
 
-    <section class="layout">
-      <div class="visual-column">
-        <div class="section-title">
-          <h2>Project Timeline</h2>
-          <span id="timelineCaption"></span>
+    <section class="hero" data-section="01 · Computer Day Audit">
+      <div class="wrap grid">
+        <div class="rail meta">
+          <div>Protokoll 001</div>
+          <div>Version 001</div>
+          <div>English</div>
         </div>
-        <div class="timeline-wrap" id="timelineWrap">
-          <div class="timeline" id="timeline"></div>
-        </div>
-        <div class="legend">
-          <span>Files per project/day</span>
-          <span class="ramp" id="legendRamp"></span>
-          <span>Hermes tape uses cyan/orange intensity</span>
-        </div>
-        <p class="notice" id="methodNotice"></p>
-      </div>
-
-      <aside class="detail-column">
-        <section class="detail-panel">
-          <h2 id="selectedDate">Select a day</h2>
-          <div class="day-readout">
-            <div class="mini-stat"><span>Project files</span><b id="dayFiles">0</b></div>
-            <div class="mini-stat"><span>Hermes sessions</span><b id="dayHermes">0</b></div>
-            <div class="mini-stat"><span>Codex</span><b id="dayCodex">0</b></div>
-            <div class="mini-stat"><span>Claude</span><b id="dayClaude">0</b></div>
-            <div class="mini-stat"><span>OpenCode</span><b id="dayOpenCode">0</b></div>
-            <div class="mini-stat"><span>Agent events</span><b id="dayAgentEvents">0</b></div>
+        <div class="main">
+          <h1>Computer Day Audit 2026</h1>
+          <p class="lede">Visible file changes by project, day by day. Dot paths are excluded from file counts. Hermes, Codex, Claude Code, and OpenCode are metadata-only activity layers.</p>
+          <div class="actions">
+            <a href="/" data-target="home">Human Agent Interface</a>
+            <a href="/archiv/" data-target="archive">Archiv</a>
+            <a href="/samuel/" data-target="samuel">Samuel Fleig</a>
           </div>
-          <div class="agent-breakdown" id="agentBreakdown"></div>
-          <div class="session-list" id="sessionList"></div>
-        </section>
-
-        <section class="market-panel">
-          <h2>Day Market Map</h2>
-          <div class="market-grid" id="marketGrid"></div>
-        </section>
-
-        <section class="rank-panel">
-          <h2>Project Leaders</h2>
-          <div class="rank-list" id="rankList"></div>
-        </section>
-      </aside>
+        </div>
+        <aside class="aside" aria-label="Audit range">
+          <span class="stamp" id="rangeStamp">2026</span>
+          <p class="note" id="generatedStamp" style="margin-top:1.5rem"></p>
+        </aside>
+      </div>
     </section>
+
+    <section class="section" id="summary" data-section="02 · Summary">
+      <div class="wrap grid">
+        <div class="rail meta">01 / Summary</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Summary metrics</p>
+          </div>
+          <table class="mesh-table" aria-label="Summary metrics">
+            <thead>
+              <tr><th scope="col">Metric</th><th scope="col">Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td data-label="Metric">Visible project files</td><td data-label="Value"><b id="metricProjectFiles">0</b></td></tr>
+              <tr><td data-label="Metric">Active projects</td><td data-label="Value"><b id="metricProjects">0</b></td></tr>
+              <tr><td data-label="Metric">Active days</td><td data-label="Value"><b id="metricDays">0</b></td></tr>
+              <tr><td data-label="Metric">Hermes sessions</td><td data-label="Value"><b id="metricHermes">0</b></td></tr>
+              <tr><td data-label="Metric">Agent sessions</td><td data-label="Value"><b id="metricAgents">0</b></td></tr>
+              <tr><td data-label="Metric">Codex sessions</td><td data-label="Value"><b id="metricCodex">0</b></td></tr>
+              <tr><td data-label="Metric">Claude sessions</td><td data-label="Value"><b id="metricClaude">0</b></td></tr>
+              <tr><td data-label="Metric">OpenCode sessions</td><td data-label="Value"><b id="metricOpenCode">0</b></td></tr>
+              <tr><td data-label="Metric">Current terminals</td><td data-label="Value"><b id="metricTerminals">0</b></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <aside class="aside" aria-label="Hinweis: Zählung">
+          <p class="note"><strong>Metadata-only.</strong> Hermes, Codex, Claude Code, and OpenCode are activity layers, not file counts.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="tokscale" data-section="03 · Tokscale">
+      <div class="wrap grid">
+        <div class="rail meta">02 / Tokscale</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Proof</p>
+            <h2 id="tokscaleTitle">Public token usage · Tokscale</h2>
+          </div>
+          <a href="https://tokscale.ai/u/smlfg" target="_blank" rel="noopener noreferrer">
+            <img src="https://tokscale.ai/api/embed/smlfg/svg?view=3d" alt="Tokscale Stats for @smlfg" loading="lazy" decoding="async">
+          </a>
+        </div>
+        <aside class="aside" aria-label="Hinweis: Quelle">
+          <p class="note"><strong>Tokscale:</strong> public agent usage for <a href="https://tokscale.ai/u/smlfg" target="_blank" rel="noopener noreferrer">@smlfg</a>.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="project-timeline" data-section="04 · Timeline">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="meta">Audit view</p>
+          <h2>Project Timeline</h2>
+          <p class="meta" id="timelineCaption"></p>
+        </div>
+
+        <div class="toolbar" aria-label="Display controls">
+          <label class="control"><span>Rows</span><select id="rowLimit"><option value="25">Top 25</option><option value="50">Top 50</option><option value="100">Top 100</option><option value="all">All</option></select></label>
+          <label class="control"><span>Search</span><input id="projectSearch" type="search" placeholder="Project name"></label>
+          <label class="control"><span>Scale</span><select id="scaleMode"><option value="sqrt">Market sqrt</option><option value="linear">Linear</option></select></label>
+          <label class="control source-toggle"><input type="checkbox" data-source-toggle="files" checked><i class="source-dot" style="--dot: var(--green)"></i><span>Files</span></label>
+          <label class="control source-toggle"><input type="checkbox" data-source-toggle="hermes" checked><i class="source-dot" style="--dot: var(--cyan)"></i><span>Hermes</span></label>
+          <label class="control source-toggle"><input type="checkbox" data-source-toggle="codex" checked><i class="source-dot" style="--dot: var(--codex)"></i><span>Codex</span></label>
+          <label class="control source-toggle"><input type="checkbox" data-source-toggle="claude" checked><i class="source-dot" style="--dot: var(--claude)"></i><span>Claude</span></label>
+          <label class="control source-toggle"><input type="checkbox" data-source-toggle="opencode" checked><i class="source-dot" style="--dot: var(--opencode)"></i><span>OpenCode</span></label>
+          <button class="control" id="latestButton" type="button"><span>Jump</span> Latest active day</button>
+        </div>
+
+        <div class="layout">
+          <div class="visual-column">
+            <div class="timeline-wrap" id="timelineWrap">
+              <div class="timeline" id="timeline"></div>
+            </div>
+            <div class="legend">
+              <span>Files per project/day</span>
+              <span class="ramp" id="legendRamp"></span>
+              <span>Hermes tape uses cyan/orange intensity</span>
+            </div>
+            <p class="notice" id="methodNotice"></p>
+          </div>
+
+          <aside class="detail-column" aria-label="Day detail">
+            <section class="detail-panel">
+              <h2 id="selectedDate">Select a day</h2>
+              <div class="day-readout">
+                <div class="mini-stat"><span>Project files</span><b id="dayFiles">0</b></div>
+                <div class="mini-stat"><span>Hermes sessions</span><b id="dayHermes">0</b></div>
+                <div class="mini-stat"><span>Codex</span><b id="dayCodex">0</b></div>
+                <div class="mini-stat"><span>Claude</span><b id="dayClaude">0</b></div>
+                <div class="mini-stat"><span>OpenCode</span><b id="dayOpenCode">0</b></div>
+                <div class="mini-stat"><span>Agent events</span><b id="dayAgentEvents">0</b></div>
+              </div>
+              <div class="agent-breakdown" id="agentBreakdown"></div>
+              <div class="session-list" id="sessionList"></div>
+            </section>
+
+            <section class="market-panel">
+              <h2>Day Market Map</h2>
+              <div class="market-grid" id="marketGrid"></div>
+            </section>
+
+            <section class="rank-panel">
+              <h2>Project Leaders</h2>
+              <div class="rank-list" id="rankList"></div>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </section>
+
   </main>
   <div class="tooltip" id="tooltip"></div>
 
-  <script>
+    <script>
     const data = window.ACTIVITY_2026_DATA;
     const dayByDate = new Map(data.days.map((day) => [day.date, day]));
     const agentSources = ["codex", "claude", "opencode"];
@@ -1240,5 +707,9 @@
     selectedDate = latestActiveDay();
     renderTimeline();
   </script>
+
+  
+
+  <script src="/assets/hai.js" defer></script>
 </body>
 </html>

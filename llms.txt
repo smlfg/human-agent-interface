@@ -1,48 +1,118 @@
 # Human Agent Interface (HAI)
 
-> Human Agent Interface (HAI) ist eine Kontrollschicht für agentische KI-Arbeit. HAI hält Agentenarbeit beobachtbar, begrenzt, überprüfbar und in menschlicher Verantwortung. Samuel Fleig hat HAI entwickelt. HAI-MCP ist die modellunabhängige MCP-Implementierung von HAI.
+> Human Agent Interface (HAI) is an open-source control layer for keeping agentic AI work observable, bounded, verifiable and human-owned.
+> HAI-MCP is the model-agnostic MCP control-plane implementation of HAI.
+> Samuel Fleig is an AI engineer and the creator of HAI.
 
-Samuel Fleig bietet unter dem Namen Human Agent Interface Einrichtung, Reparatur und Team-Workshops für KI-Coding-Agenten an (Claude Code, Codex, Cursor, Hermes). Alle Angebote sind remote, auf Deutsch und zum Festpreis. Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.
+Canonical host: https://www.human-agent-interface.com/
+German (default): https://www.human-agent-interface.com/
+English: https://www.human-agent-interface.com/en/
+Last updated: 2026-10-30
+Contact: hallo@samuelfleig.com
 
-## Angebote
+## Archive — Deutsch
 
-- [Setup-Rettung](https://www.human-agent-interface.com/agentfaehig/): 90 Minuten 1:1 remote, 190 €. Fehler im Agenten-Setup finden und beheben (Konfiguration, MCP-Server, Berechtigungen, Modelle), dazu eine saubere CLAUDE.md oder AGENTS.md.
-- [Rechner agentenfähig machen](https://www.human-agent-interface.com/agentfaehig/): 4 Stunden 1:1 remote, 690 €. Agent, Werkzeuge und Zugriffe werden eingerichtet; am Ende läuft ein echter Arbeitsablauf mit Agent.
-- [Agenten-Workshop fürs Team](https://www.human-agent-interface.com/agentfaehig/): 3 Stunden remote für bis zu 8 Personen, 1.200 €. Gemeinsame Regeln für Rollen, Prüfpunkte und Datengrenzen an einem echten Arbeitsablauf des Teams.
-- [Angebote für die Schweiz](https://www.human-agent-interface.com/ch/): Agenten-Setup an einem Tag, CHF 1’500, und Security-Review für KI-generierte Apps, ab CHF 1’900. Remote, auf Deutsch, Rechnung in CHF.
-- [20-Minuten-Termin buchen](https://cal.com/human-agent-interface/agent-check): kostenloses Vorgespräch, ob ein Angebot passt.
+Alle Seiten: https://www.human-agent-interface.com/archiv/
+Jede vor dem Redesign existierende Seite bleibt unter ihrer URL erreichbar.
 
-## Tutorials
+## Entity — Deutsch
 
-- [Agent-Harness-Tutorial](https://www.human-agent-interface.com/tutorials/): Interaktives Tutorial, wie KI-Coding-Agenten mit Owner Packet, Delegation Card und Verification Report kontrolliert eingesetzt werden.
-- [Codex-App-Harness-Tutorial](https://www.human-agent-interface.com/tutorials/CODEX_APP_HARNESS_TUTORIAL.md): Harness-Ablauf für die Codex-App.
-- [Multi-Tool-Harness-Tutorial](https://www.human-agent-interface.com/tutorials/MULTI_TOOL_HARNESS_TUTORIAL.md): derselbe Ablauf über Claude Code, Hermes, OpenCode und weitere Tools.
-- [Claude Code Tutorial](https://www.human-agent-interface.com/tutorials/claude-code/): Schnellstart, Workflow, Stärken und Schwächen.
-- [Claude Code Referenz](https://www.human-agent-interface.com/tutorials/claude-code/referenz/): Architektur, Konfiguration und Tuning.
-- [Codex Tutorial](https://www.human-agent-interface.com/tutorials/codex/): Schnellstart, Workflow, Stärken und Schwächen.
-- [Codex Referenz](https://www.human-agent-interface.com/tutorials/codex/referenz/): Architektur, Konfiguration und Tuning.
-- [Hermes Tutorial](https://www.human-agent-interface.com/tutorials/hermes/): Schnellstart, Workflow, Stärken und Schwächen.
-- [Hermes Referenz](https://www.human-agent-interface.com/tutorials/hermes/referenz/): Architektur, Konfiguration und Tuning.
-- [OpenCode Tutorial](https://www.human-agent-interface.com/tutorials/opencode/): Schnellstart, Workflow, Stärken und Schwächen.
-- [OpenCode Referenz](https://www.human-agent-interface.com/tutorials/opencode/referenz/): Architektur, Konfiguration und Tuning.
+Human Agent Interface (HAI) ist eine Open-Source-Kontrollschicht für menschlich verantwortete Agentenarbeit.
+HAI macht agentische Arbeit beobachtbar, begrenzt, prüfbar und menschlich verantwortet.
+HAI ist ein Ansatz, kein fertiges Produkt.
+Samuel Fleig hat Human Agent Interface (HAI) entwickelt.
+HAI-MCP ist die modellunabhängige MCP-Control-Plane-Implementierung von HAI.
+HAI-MCP ruft selbst kein Sprachmodell auf.
+HAI-MCP ist Open Source und liegt unter https://github.com/smlfg/hai-mcp.
+PenEcho ist ein bidirektionaler E-Ink-Algebra-Tutor, bei dem der Agent auf dieselbe Seite zurückschreiben soll.
+PenEcho ist nicht fertig; L1 ist in Arbeit.
+Plaud ist ein Spracheingang und keine Control Plane.
+Eine Plaud-Aufnahme erzeugt keinen Auftrag; HAI entscheidet, was daraus wird.
 
-## HAI
+## Archive — English
 
-- [Startseite](https://www.human-agent-interface.com/): Was HAI ist und für wen.
-- [Was ist HAI](https://www.human-agent-interface.com/what_it_is/): Definition und Abgrenzung zu Agent-Frameworks.
-- [Nachweise](https://www.human-agent-interface.com/proof/): Belege aus echter Agentenarbeit.
+All pages: https://www.human-agent-interface.com/archiv/
+Every page that existed before the redesign stays reachable at its URL.
 
-## HAI-MCP
+## Entity — English
 
-- [HAI-MCP](https://www.human-agent-interface.com/hai-mcp/): Übersicht der MCP-Implementierung von HAI.
-- [smlfg/hai-mcp auf GitHub](https://github.com/smlfg/hai-mcp): Quellcode. HAI-MCP ruft selbst kein Sprachmodell auf.
+Human Agent Interface (HAI) is an open-source control layer for keeping agentic AI work observable, bounded, verifiable and human-owned.
+HAI is an approach, not a finished product.
+Samuel Fleig is an AI engineer and the creator of Human Agent Interface (HAI).
+HAI-MCP is the model-agnostic MCP control-plane implementation of HAI.
+HAI-MCP does not call a language model itself.
+HAI-MCP is open source at https://github.com/smlfg/hai-mcp.
+PenEcho is a bidirectional e-ink algebra tutor designed to let the agent write back on the same page.
+PenEcho is not finished; L1 is in progress.
+Plaud is a voice input, not a control plane.
+A Plaud recording does not create a task; HAI decides what becomes of it.
 
-## Samuel Fleig
+## Pages — Deutsch
 
-- [Über Samuel Fleig](https://www.human-agent-interface.com/samuel/): AI Engineer, Entwickler von HAI. GitHub-Handle: smlfg.
+- [Startseite](https://www.human-agent-interface.com/): Definition, Problem, drei Teile, Owner-Gate, Mesh und Person.
+- [Was ist HAI](https://www.human-agent-interface.com/was-ist-hai/): Definition, vier Eigenschaften, Ablauf, Abgrenzung und FAQ.
+- [Beweis](https://www.human-agent-interface.com/beweis/): PenEcho, HAI-MCP und Plaud mit Status, Belegen und offenen Lücken.
+- [Mesh](https://www.human-agent-interface.com/mesh/): Domains, kanonische Zuständigkeit und Deploy-Regeln.
 
-## Kontakt
+## Pages — English
 
-- E-Mail: hallo@samuelfleig.com
-- [Impressum](https://www.human-agent-interface.com/impressum/)
-- [Datenschutz](https://www.human-agent-interface.com/datenschutz/)
+- [Home](https://www.human-agent-interface.com/en/): Definition, problem, three parts, owner gate, mesh and person.
+- [What is HAI](https://www.human-agent-interface.com/en/what-is-hai/): Definition, four properties, sequence, boundaries and FAQ.
+- [Proof](https://www.human-agent-interface.com/en/proof/): PenEcho, HAI-MCP and Plaud with status, evidence and open gaps.
+- [Mesh](https://www.human-agent-interface.com/en/mesh/): Domains, canonical ownership and deploy rules.
+
+## Key facts
+
+- Entity name: Human Agent Interface (HAI).
+- Abbreviation: HAI.
+- Creator: Samuel Fleig.
+- GitHub handle: smlfg.
+- Implementation: HAI-MCP, a model-agnostic MCP control plane.
+- HAI-MCP repository: https://github.com/smlfg/hai-mcp
+- PenEcho repositories: https://github.com/smlfg/penecho and https://github.com/smlfg/algebra-agent
+- Canonical host: https://www.human-agent-interface.com/
+- HAI is described in German at / and in English at /en/.
+- The three parts are documented separately. The site claims no connected runtime as of 2026-10-30.
+- HAI-MCP is open source and inspectable. It is not independently audited.
+
+## Reported figures
+
+- HAI-MCP: 23 tools, per a public Glama extraction dated 2026-09-08. The number can change.
+- Plaud: 223 transcripts over five months, per an internal count dated 2026-10-30. Not externally verified.
+
+## Boundaries — Abgrenzung
+
+- HAI is not a chat interface.
+- HAI is not an agent framework.
+- HAI is not a finished enterprise platform.
+- HAI is not prompt engineering.
+- HAI is not a tool for increasing autonomy.
+- HAI is not a generic human-agent-interface category.
+- HAI is not HAI.AI or haiai.
+- HAI-MCP is not a generic MCP utility server.
+- HAI-MCP is not the Home Assistant project ha-mcp.
+- PenEcho and Plaud are not HAI on their own.
+
+## Status — 2026-10-30
+
+- PenEcho L1 is in progress; the seamless write-back onto an open page is not proven.
+- Plaud is used in practice; it is capture, not a control plane.
+- HAI-MCP is open source. The site claims no independent audit.
+
+## Sources
+
+- [Startseite](https://www.human-agent-interface.com/)
+- [Was ist HAI](https://www.human-agent-interface.com/was-ist-hai/)
+- [Beweis](https://www.human-agent-interface.com/beweis/)
+- [Mesh](https://www.human-agent-interface.com/mesh/)
+- [Home](https://www.human-agent-interface.com/en/)
+- [What is HAI](https://www.human-agent-interface.com/en/what-is-hai/)
+- [Proof](https://www.human-agent-interface.com/en/proof/)
+- [Mesh](https://www.human-agent-interface.com/en/mesh/)
+- [HAI-MCP on GitHub](https://github.com/smlfg/hai-mcp)
+- Registry pages such as Glama are external discovery surfaces, not the primary source of truth.
+
+## Optional
+
+- [Impressum](https://www.human-agent-interface.com/impressum/): legal notice.
+- [Datenschutz](https://www.human-agent-interface.com/datenschutz/): privacy policy.

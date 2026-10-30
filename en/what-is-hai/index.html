@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What is HAI? — Definition, problem and boundaries</title>
+  <meta name="description" content="Human Agent Interface (HAI) is the control layer between humans and autonomous AI agents: observable, bounded, verifiable, human-owned.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/en/what-is-hai/">
+  <link rel="alternate" hreflang="de" href="https://www.human-agent-interface.com/was-ist-hai/">
+  <link rel="alternate" hreflang="en" href="https://www.human-agent-interface.com/en/what-is-hai/">
+  <link rel="alternate" hreflang="x-default" href="https://www.human-agent-interface.com/was-ist-hai/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Human Agent Interface (HAI)">
+  <meta property="og:title" content="What is HAI? — Definition, problem and boundaries">
+  <meta property="og:description" content="The control layer between humans and autonomous AI agents: observable, bounded, verifiable, human-owned.">
+  <meta property="og:image" content="https://www.human-agent-interface.com/assets/og/hai-og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HAI — Agents do the work. You keep the call.">
+  
+  <meta property="og:url" content="https://www.human-agent-interface.com/en/what-is-hai/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#f4f0e6">
+  <link rel="icon" href="/assets/favicon-64.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/newsreader-300_700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-300_700-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/hai.css">
+  <style>
+    /* Page-scoped reading polish. Global CSS, classes and tokens stay untouched. */
+    .section-head h2,
+    .entry h3 { text-wrap: balance; }
+    .main > p,
+    .entry p,
+    .footnotes li { text-wrap: pretty; }
+    .main > p + p { margin-top: 1.15em; }
+    .components li > div > span { max-width: 62ch; }
+    .aside .note { font-size: var(--step--1); }
+    sup { line-height: 0; }
+    .footnotes { font-size: var(--step--1); line-height: 1.65; }
+    .footnotes li { max-width: 54ch; }
+    .footnotes a[href^="#ref"] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.75rem;
+      min-height: 1.75rem;
+      margin-left: 0.15rem;
+      vertical-align: middle;
+    }
+    [id^="fn"], [id^="ref"] { scroll-margin-top: 3.5rem; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.human-agent-interface.com/#website",
+        "url": "https://www.human-agent-interface.com/",
+        "name": "Human Agent Interface (HAI)",
+        "inLanguage": ["de", "en"]
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.human-agent-interface.com/en/what-is-hai/#webpage",
+        "url": "https://www.human-agent-interface.com/en/what-is-hai/",
+        "name": "What is HAI?",
+        "description": "HAI is the control layer between humans and autonomous AI agents: observable, bounded, verifiable, human-owned.",
+        "inLanguage": "en",
+        "isPartOf": { "@id": "https://www.human-agent-interface.com/#website" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.human-agent-interface.com/en/what-is-hai/#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.human-agent-interface.com/en/" },
+          { "@type": "ListItem", "position": 2, "name": "What is HAI", "item": "https://www.human-agent-interface.com/en/what-is-hai/" }
+        ]
+      },
+      {
+        "@type": "DefinedTerm",
+        "@id": "https://www.human-agent-interface.com/#hai",
+        "name": "Human Agent Interface (HAI)",
+        "description": "HAI is the control layer between humans and autonomous AI agents: it makes agentic work observable, bounded, verifiable and human-owned.",
+        "url": "https://www.human-agent-interface.com/en/what-is-hai/"
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.human-agent-interface.com/#samuel-fleig",
+        "name": "Samuel Fleig",
+        "url": "https://samuelfleig.com/",
+        "sameAs": ["https://github.com/smlfg"]
+      }
+    ]
+  }
+  </script>
+</head>
+<body data-page="what-is-hai">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="statusline" aria-hidden="true">
+    <div class="wrap">
+      <span>HAI · Record 001</span>
+      <span>Section: <strong data-status-section>01</strong></span>
+      <span data-variant-label>Variant A · Protocol</span>
+    </div>
+  </div>
+
+  <header class="site-head">
+    <div class="wrap">
+      <a class="brand" href="/en/"><strong>HAI</strong> · Human Agent Interface</a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="/en/what-is-hai/" data-target="what-is-hai" aria-current="page">What is HAI</a>
+        <a href="/en/proof/" data-target="proof">Proof</a>
+        <a href="/en/mesh/" data-target="mesh">Mesh</a>
+        <a href="/archiv/" data-target="archive">Archive</a>
+        <a href="/was-ist-hai/" lang="de" hreflang="de" data-target="lang_de">DE</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <section class="hero" data-section="01 · What is HAI">
+      <div class="wrap grid">
+        <div class="rail meta">
+          <div>Record 001</div>
+          <div>Version 001</div>
+          <div>English</div>
+        </div>
+        <div class="main">
+          <h1>What is <em>HAI?</em></h1>
+          <p class="lede">HAI stands for Human Agent Interface. It is the control layer between people and autonomous AI agents: it keeps agentic work observable, bounded, verifiable, and human-owned.</p>
+          <div class="actions">
+            <a href="#definition">The definition</a>
+            <a href="/en/proof/" data-target="proof">See the proof</a>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Sequence">
+          <span class="stamp">Checked · Human</span>
+          <figure class="figure" style="margin-top:1.5rem;padding:.75rem">
+            <svg viewBox="0 0 180 220" role="img" aria-label="Sketch: five steps from intent to decision, connected by a vertical line.">
+              <rect x="1" y="1" width="178" height="218" fill="#f4f0e6" stroke="#d9d2c3"></rect>
+              <line x1="26" y1="34" x2="26" y2="170" stroke="#d9d2c3" stroke-width="1"></line>
+              <circle cx="26" cy="34" r="3" fill="#14120f"></circle>
+              <text x="40" y="38" font-family="Georgia, serif" font-size="11" fill="#14120f">Intent</text>
+              <text x="40" y="51" font-family="monospace" font-size="7" fill="#6b6459">Purpose</text>
+              <circle cx="26" cy="68" r="3" fill="#14120f"></circle>
+              <text x="40" y="72" font-family="Georgia, serif" font-size="11" fill="#14120f">Contract</text>
+              <text x="40" y="85" font-family="monospace" font-size="7" fill="#6b6459">Limits</text>
+              <circle cx="26" cy="102" r="3" fill="#14120f"></circle>
+              <text x="40" y="106" font-family="Georgia, serif" font-size="11" fill="#14120f">Execution</text>
+              <text x="40" y="119" font-family="monospace" font-size="7" fill="#6b6459">Scope</text>
+              <circle cx="26" cy="136" r="3" fill="#14120f"></circle>
+              <text x="40" y="140" font-family="Georgia, serif" font-size="11" fill="#14120f">Evidence</text>
+              <text x="40" y="153" font-family="monospace" font-size="7" fill="#6b6459">Proof</text>
+              <circle cx="26" cy="170" r="3.5" fill="#b4451f"></circle>
+              <text x="40" y="174" font-family="Georgia, serif" font-size="11" fill="#b4451f">Decision</text>
+              <text x="40" y="187" font-family="monospace" font-size="7" fill="#6b6459">Person</text>
+              <text x="14" y="206" font-family="monospace" font-size="8" fill="#6b6459">HAI · SEQUENCE</text>
+            </svg>
+            <figcaption>Five steps. The decision stays with the person.</figcaption>
+          </figure>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="definition" data-section="02 · Definition">
+      <div class="wrap grid">
+        <div class="rail meta">01 / Definition</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Definition</p>
+            <h2>A control layer, not a chat window.</h2>
+          </div>
+          <p><strong>Human Agent Interface (HAI) is an open-source control layer for keeping agentic AI work observable, bounded, verifiable, and human-owned.</strong><sup><a href="#fn1" id="ref1" aria-label="Footnote 1">1</a></sup></p>
+          <p>HAI does not answer how an agent is built. It answers who owns the task, what the agent may do, when it must stop, and which evidence supports a result. The four properties hold together.</p>
+          <ol class="components" role="list">
+            <li>
+              <span class="num" aria-hidden="true">01</span>
+              <div><strong>Observable</strong><span>You see what the agent does, with which tools, and why.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">02</span>
+              <div><strong>Bounded</strong><span>Every task has scope, permissions, and stop rules. Work outside the contract does not run.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">03</span>
+              <div><strong>Verifiable</strong><span>Results need evidence: sources, diffs, test results. Plausibility is not proof.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">04</span>
+              <div><strong>Human-owned</strong><span>A named person reviews and decides. Responsibility is not delegated to the system.</span></div>
+            </li>
+          </ol>
+        </div>
+        <aside class="aside" aria-label="Canonical">
+          <p class="note"><strong>Canonical.</strong> The four properties are conditions, not product features. If one is missing, the work is not human-owned.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="03 · Problem">
+      <div class="wrap grid">
+        <div class="rail meta">02 / Problem</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Why HAI is needed</p>
+            <h2>The problem is loss of control.</h2>
+          </div>
+          <p>Once several agents plan, execute, delegate, or prepare results, questions stay open: Who owns the task? What may the agent do? Which limits apply?</p>
+          <p>What evidence exists? When must it stop? Who reviews and decides?</p>
+          <p>Without a control layer, agentic work becomes invisible, hard to verify, and organizationally unaccountable. The problem is not the speed of agents. It is the gap between execution and responsibility.<sup><a href="#fn2" id="ref2" aria-label="Footnote 2">2</a></sup></p>
+        </div>
+        <aside class="aside" aria-label="Without HAI">
+          <p class="note"><strong>Without HAI.</strong> The work is fast. The responsibility is invisible.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="04 · Sequence">
+      <div class="wrap grid">
+        <div class="rail meta">03 / Sequence</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">How it works</p>
+            <h2>Five steps, one decision.</h2>
+          </div>
+          <p>HAI describes a sequence that starts before execution and does not end after it. The steps are ordered; a later step does not replace an earlier one.</p>
+          <ol class="components" role="list">
+            <li>
+              <span class="num" aria-hidden="true">01</span>
+              <div><strong>Intent</strong><span>A person states the task and its purpose. The agent may sharpen the wording but does not set the goal.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">02</span>
+              <div><strong>Contract</strong><span>Scope, permissions, stop rules, and completion criteria are fixed before execution. The contract is the boundary the agent works within.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">03</span>
+              <div><strong>Execution</strong><span>The agent works inside the contract. Every tool call stays attributable to a task and an owner.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">04</span>
+              <div><strong>Evidence</strong><span>The result arrives with proof: sources, changes, checks, open points. A summary is not evidence.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">05</span>
+              <div><strong>Decision</strong><span>A named person accepts, rejects, or narrows the result. The decision is recorded with date and reason.</span></div>
+            </li>
+          </ol>
+        </div>
+        <aside class="aside" aria-label="Order">
+          <p class="note"><strong>Order.</strong> Intent and contract are not paperwork. They decide whether execution stays verifiable.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="05 · Boundaries">
+      <div class="wrap grid">
+        <div class="rail meta">04 / Boundaries</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">What HAI is not</p>
+            <h2>Four boundaries.</h2>
+          </div>
+          <p>The boundary is part of the definition. Without it, HAI becomes a label for anything involving agents.</p>
+          <ol class="components" role="list">
+            <li>
+              <span class="num" aria-hidden="true">01</span>
+              <div><strong>Not a chat interface</strong><span>HAI is not a surface you type into. The control layer sits above execution, not in its place.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">02</span>
+              <div><strong>Not prompt engineering</strong><span>HAI does not optimize wording. It governs permissions, limits, evidence, and decisions.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">03</span>
+              <div><strong>Not a finished enterprise platform</strong><span>HAI is an approach. HAI-MCP is an open-source implementation; this page claims no finished product.</span></div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">04</span>
+              <div><strong>Not autonomy without limits</strong><span>HAI is not a tool for increasing autonomy. It makes limits visible and records who may move them.</span></div>
+            </li>
+          </ol>
+        </div>
+        <aside class="aside" aria-label="Boundary">
+          <p class="note"><strong>Boundary.</strong> HAI is not a chat interface and not a finished enterprise platform. HAI is an approach and a control layer for human-owned agentic work.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="06 · Terms">
+      <div class="wrap grid">
+        <div class="rail meta">05 / Terms</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">Related terms</p>
+            <h2>Four terms, one relation.</h2>
+          </div>
+          <div class="entries">
+            <article class="entry">
+              <div class="num" aria-hidden="true">01</div>
+              <div>
+                <h3>HAI-MCP</h3>
+                <p>The model-agnostic MCP control plane of HAI. It provides missions, contracts, leases, owner gates, and audit; the server itself does not call a model. <a href="/en/proof/#hai-mcp">To the control plane</a></p>
+              </div>
+              <span class="status">MCP</span>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">02</div>
+              <div>
+                <h3>PenEcho</h3>
+                <p>A channel where the agent writes back on the page a person is working on: pen and e-ink instead of a chat window. <a href="/en/proof/">To the proof</a></p>
+              </div>
+              <span class="status">Pen · E-ink</span>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">03</div>
+              <div>
+                <h3>Plaud</h3>
+                <p>A voice input. Recordings become transcripts; a session decides what becomes a task and what stays parked. <a href="/en/proof/">To the proof</a></p>
+              </div>
+              <span class="status">Voice</span>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">04</div>
+              <div>
+                <h3>Human-owned agentic work</h3>
+                <p>Agentic work where a named person owns the task and carries the decision. HAI makes that assignment explicit. <a href="/en/#layer">To the definition</a></p>
+              </div>
+              <span class="status">Principle</span>
+            </article>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Relation">
+          <p class="note"><strong>Relation.</strong> HAI is the approach. HAI-MCP is an implementation. PenEcho and Plaud are channels. None of these parts is HAI on its own.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" data-section="07 · FAQ">
+      <div class="wrap grid">
+        <div class="rail meta">06 / FAQ</div>
+        <div class="main">
+          <div class="section-head">
+            <p class="meta">FAQ</p>
+            <h2>Four questions.</h2>
+          </div>
+          <div class="entries">
+            <article class="entry">
+              <div class="num" aria-hidden="true">01</div>
+              <div>
+                <h3>Is HAI a product?</h3>
+                <p>No. HAI is an approach and a control layer. HAI-MCP is an open-source implementation that exposes the approach through MCP.</p>
+              </div>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">02</div>
+              <div>
+                <h3>Do you need HAI-MCP?</h3>
+                <p>No. The control layer can be described independently of an implementation. HAI-MCP is one way to bring it into compatible agent and tool systems.</p>
+              </div>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">03</div>
+              <div>
+                <h3>Who is HAI for?</h3>
+                <p>For people and teams that use agentic work and need ownership, limits, evidence, and stop rules. Not for the question of how to build an agent.</p>
+              </div>
+            </article>
+            <article class="entry">
+              <div class="num" aria-hidden="true">04</div>
+              <div>
+                <h3>How is HAI different from agent frameworks?</h3>
+                <p>Frameworks answer how an agent is built and executed. HAI answers how that work stays observable, bounded, verifiable, and human-owned. HAI does not replace a framework; it sits above or beside it.<sup><a href="#fn3" id="ref3" aria-label="Footnote 3">3</a></sup></p>
+              </div>
+            </article>
+          </div>
+        </div>
+        <aside class="aside" aria-label="Test question">
+          <p class="note"><strong>Test question.</strong> If the answer is “more autonomy”, it is not HAI.</p>
+        </aside>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <div class="footnotes" role="group" aria-label="Footnotes">
+        <ol>
+          <li id="fn1">Canonical definition: “Human Agent Interface (HAI) is an open-source control layer for keeping agentic AI work observable, bounded, verifiable and human-owned.” Source: canonical description “What is HAI?”, 30 Oct 2026. <a href="#ref1" aria-label="Footnote 1: back to the text">↩</a></li>
+          <li id="fn2">Loss of control in agentic work: when several agents plan, execute, and delegate, ownership, limits, evidence, and stop rules are missing. HAI makes that layer explicit. <a href="#ref2" aria-label="Footnote 2: back to the text">↩</a></li>
+          <li id="fn3">Difference from agent frameworks: frameworks answer how agents are built and executed. HAI answers how agentic work stays controllable. HAI does not replace a framework. <a href="#ref3" aria-label="Footnote 3: back to the text">↩</a></li>
+          <li>Source note: The definitions on this page follow the project's canonical descriptions (30 Oct 2026). This page claims no measurements, clients, or results.</li>
+        </ol>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <div class="foot-links">
+        <a href="/impressum/" lang="de">Impressum</a>
+        <a href="/datenschutz/">Privacy</a>
+        <a href="https://github.com/smlfg" rel="me">GitHub</a>
+        <a href="/was-ist-hai/" lang="de" hreflang="de">Deutsch</a>
+      </div>
+      <div class="variants" role="group" aria-label="Test variants">
+        <span>Variant</span>
+        <a href="?v=A" data-variant-link="A" aria-label="Variante A">A</a>
+        <a href="?v=B" data-variant-link="B" aria-label="Variante B">B</a>
+        <a href="?v=C" data-variant-link="C" aria-label="Variante C">C</a>
+      </div>
+      <div>Record 001</div>
+    </div>
+  </footer>
+
+  <script src="/assets/hai.js" defer></script>
+</body>
+</html>

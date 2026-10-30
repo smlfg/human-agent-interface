@@ -1,665 +1,585 @@
 <!doctype html>
 <html lang="de">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="noindex">
-    <meta name="theme-color" content="#090a08">
-    <title>Datenschutzerklärung — Human Agent Interface (HAI)</title>
-    <style>
-      :root {
-        color-scheme: dark;
-        --ink: #f7f1df;
-        --muted: #b7ad97;
-        --dim: #756d5e;
-        --void: #090a08;
-        --panel: rgba(247, 241, 223, 0.065);
-        --panel-strong: rgba(247, 241, 223, 0.13);
-        --line: rgba(247, 241, 223, 0.18);
-        --line-soft: rgba(247, 241, 223, 0.1);
-        --signal: #a7ff4f;
-        --copper: #ff9f5f;
-        --red: #ff4d4d;
-        --cyan: #7dd8ff;
-        --max: 1160px;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        margin: 0;
-        min-width: 320px;
-        color: var(--ink);
-        background:
-          radial-gradient(circle at 20% 10%, rgba(167, 255, 79, 0.12), transparent 26rem),
-          radial-gradient(circle at 80% 18%, rgba(255, 159, 95, 0.1), transparent 22rem),
-          linear-gradient(180deg, #090a08 0%, #11100d 48%, #070806 100%);
-        font-family: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
-        line-height: 1.5;
-        overflow-x: hidden;
-      }
-
-      a {
-        color: inherit;
-      }
-
-      .wrap {
-        width: 100%;
-        max-width: 72ch;
-        margin: 0 auto;
-        padding: 0 clamp(18px, 4vw, 40px);
-      }
-
-      .page-head {
-        padding: 22px 0;
-        border-bottom: 1px solid var(--line-soft);
-      }
-
-      .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.82rem;
-        text-transform: uppercase;
-        color: var(--muted);
-        text-decoration: none;
-      }
-
-      .brand-mark {
-        width: 38px;
-        height: 38px;
-        display: grid;
-        place-items: center;
-        border: 1px solid var(--line);
-        background: rgba(247, 241, 223, 0.04);
-        color: var(--signal);
-      }
-
-      .brand:hover,
-      .brand:focus-visible {
-        color: var(--ink);
-      }
-
-      main {
-        padding: 40px 0 64px;
-      }
-
-      .notice {
-        margin: 0 0 36px;
-        padding: 14px 16px;
-        border-left: 3px solid var(--copper);
-        background: rgba(255, 159, 95, 0.1);
-        color: var(--ink);
-        font-size: 0.95rem;
-      }
-
-      h1 {
-        margin: 0 0 18px;
-        font-family: Georgia, "Times New Roman", serif;
-        font-weight: 500;
-        font-size: clamp(2rem, 5vw, 3rem);
-        line-height: 1.02;
-      }
-
-      h2 {
-        scroll-margin-top: 16px;
-        margin: 40px 0 10px;
-        font-family: Georgia, "Times New Roman", serif;
-        font-weight: 500;
-        font-size: clamp(1.3rem, 2.6vw, 1.75rem);
-        line-height: 1.15;
-      }
-
-      p,
-      li {
-        color: var(--muted);
-        font-size: 1rem;
-      }
-
-      p {
-        margin: 0 0 14px;
-      }
-
-      ul {
-        margin: 0 0 14px;
-        padding-left: 1.2em;
-      }
-
-      li {
-        margin-bottom: 6px;
-      }
-
-      strong {
-        color: var(--ink);
-      }
-
-      code {
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.86em;
-        color: var(--ink);
-        background: var(--panel);
-        padding: 0.05em 0.3em;
-      }
-
-      main a {
-        color: var(--cyan);
-        text-decoration: underline;
-        text-underline-offset: 2px;
-        word-break: break-word;
-      }
-
-      .todo {
-        background: #ffd400;
-        color: #1a1400;
-        font-weight: 700;
-        padding: 0 0.22em;
-        border-radius: 2px;
-        -webkit-box-decoration-break: clone;
-        box-decoration-break: clone;
-      }
-
-      .meta {
-        margin: 0 0 14px;
-      }
-
-      footer {
-        padding: 28px 0;
-        border-top: 1px solid var(--line-soft);
-        color: var(--dim);
-        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-        font-size: 0.72rem;
-        text-transform: uppercase;
-      }
-
-      footer .wrap {
-        display: flex;
-        justify-content: space-between;
-        gap: 14px;
-        flex-wrap: wrap;
-      }
-
-      .footer-links {
-        display: inline-flex;
-        gap: 14px;
-        flex-wrap: wrap;
-      }
-
-      .footer-links a {
-        color: inherit;
-        text-decoration: underline;
-        text-underline-offset: 3px;
-      }
-
-      .footer-links a:hover,
-      .footer-links a:focus-visible {
-        color: var(--ink);
-      }
-
-      @media (max-width: 620px) {
-        .brand span:not(.brand-mark) {
-          display: none;
-        }
-      }
-    </style>
-    <script src="/mail-fallback.js" defer></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Datenschutzerklärung — Human Agent Interface (HAI)</title>
+  <meta name="theme-color" content="#f4f0e6">
+  <link rel="icon" href="/assets/favicon-64.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/newsreader-300_700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-300_700-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/hai.css">
 </head>
-  <body>
-    <header class="page-head">
-      <div class="wrap">
-        <a class="brand" href="../" aria-label="Human Agent Interface home">
-          <span class="brand-mark">HAI</span>
-          <span>Human Agent Interface</span>
-        </a>
+<body data-page="legacy">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+  <div class="statusline" aria-hidden="true">
+    <div class="wrap">
+      <span>HAI · Protokoll 001</span>
+      <span>Abschnitt: <strong data-status-section>01</strong></span>
+      <span data-variant-label>Variante A · Protokoll</span>
+    </div>
+  </div>
+
+  
+
+  <main id="main" tabindex="-1">
+
+    <section class="section" data-section="01 · Datenschutz">
+      <div class="wrap grid">
+        <div class="rail meta">
+          <div>Datenschutz</div>
+          <div>Oktober 2026</div>
+          <div>Deutsch</div>
+        </div>
+        <div class="main">
+          <div class="section-head">
+            <h1 style="font-size:clamp(2.25rem, 4.6vw, 4.25rem); hyphens:auto; overflow-wrap:break-word">Datenschutzerklärung</h1>
+          </div>
+          <p>
+          Diese Erklärung informiert Sie nach Art. 13 DSGVO und, für Personen in der Schweiz, nach Art. 19 DSG (siehe Abschnitt 12) darüber, welche personenbezogenen Daten beim Besuch meiner Websites und
+          bei der Nutzung ihrer Funktionen verarbeitet werden. Sie gilt für:
+          </p>
+          <ul>
+          <li>www.human-agent-interface.com</li>
+          <li>humanagentinterface.de</li>
+          <li>humanagentcontrol.com</li>
+          <li>samuelfleig.com</li>
+          <li>agentfähig.de (xn--agentfhig-02a.de)</li>
+          </ul>
+          <p>
+          Nicht jede Funktion gibt es auf jeder Seite. Die Angaben wurden aus dem tatsächlichen technischen Aufbau abgeleitet.
+          </p>
+
+        </div>
+        <aside class="aside" aria-label="Stand">
+          <span class="stamp">Oktober 2026</span>
+        </aside>
       </div>
-    </header>
+    </section>
 
-    <main class="wrap">
-      <h1>Datenschutzerklärung</h1>
-      <p>
-        Diese Erklärung informiert Sie nach Art. 13 DSGVO und, für Personen in der Schweiz, nach Art. 19 DSG (siehe Abschnitt 12) darüber, welche personenbezogenen Daten beim Besuch meiner Websites und
-        bei der Nutzung ihrer Funktionen verarbeitet werden. Sie gilt für:
-      </p>
-      <ul>
-        <li>www.human-agent-interface.com</li>
-        <li>humanagentinterface.de</li>
-        <li>humanagentcontrol.com</li>
-        <li>samuelfleig.com</li>
-        <li>agentfähig.de (xn--agentfhig-02a.de)</li>
-      </ul>
-      <p>
-        Nicht jede Funktion gibt es auf jeder Seite. Die Angaben wurden aus dem tatsächlichen technischen Aufbau abgeleitet.
-      </p>
+    <section class="section" data-section="02 · Verantwortlicher">
+      <div class="wrap grid">
+        <div class="rail meta">01</div>
+        <div class="main">
+          <h2>1. Verantwortlicher</h2>
+          <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist:</p>
+          <p>
+          Samuel David Fleig<br>
+          Ahornweg 8<br>
+          69256 Mauer<br>
+          Deutschland<br>
+          E-Mail: <a href="mailto:hallo@samuelfleig.com">hallo@samuelfleig.com</a>
+          </p>
 
-      <h2>1. Verantwortlicher</h2>
-      <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist:</p>
-      <p>
-        Samuel David Fleig<br>
-        Ahornweg 8<br>
-        69256 Mauer<br>
-        Deutschland<br>
-        E-Mail: <a href="mailto:hallo@samuelfleig.com">hallo@samuelfleig.com</a>
-      </p>
+        </div>
+      </div>
+    </section>
 
-      <h2>2. Hosting und Auslieferung über Cloudflare</h2>
-      <p>
-        Alle oben genannten Websites werden über Cloudflare ausgeliefert. Sie laufen als Cloudflare Workers mit statischen
-        Dateien. Anbieter ist die Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA.
-      </p>
-      <p>Beim Aufruf verarbeitet Cloudflare technisch notwendige Verbindungsdaten. Dazu gehören insbesondere:</p>
-      <ul>
-        <li>IP-Adresse des zugreifenden Geräts,</li>
-        <li>Datum und Uhrzeit des Zugriffs,</li>
-        <li>angeforderte URL und HTTP-Statuscode,</li>
-        <li>übertragene Datenmenge,</li>
-        <li>Browser- und Geräteangaben (User-Agent).</li>
-      </ul>
-      <p>
-        Diese Verarbeitung ist zur Auslieferung der Inhalte, zum sicheren und stabilen Betrieb und zur Abwehr von Angriffen
-        erforderlich.
-      </p>
-      <p>
-        Für alle oben genannten Websites sind zusätzlich Cloudflare-Worker-Protokolle (Workers Logs) aktiviert. Sie erfassen zu
-        jedem Aufruf die genannten Daten einschließlich der Anfrage-Header. Cloudflare löscht diese Protokolle automatisch nach
-        spätestens 7 Tagen.
-      </p>
-      <p class="meta">
-        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an sicherem, stabilem und
-        performantem Betrieb).<br>
-        <strong>Empfänger:</strong> Cloudflare, Inc., als Auftragsverarbeiter nach Art. 28 DSGVO (Cloudflare Data Processing
-        Addendum).<br>
-        <strong>Drittland:</strong> Cloudflare betreibt ein weltweites Netz. Eine Verarbeitung außerhalb der EU, insbesondere in
-        den USA, ist möglich. Grundlage ist das EU-U.S. Data Privacy Framework (Art. 45 DSGVO), hilfsweise sind es die
-        EU-Standardvertragsklauseln (Art. 46 DSGVO).<br>
-        <strong>Speicherdauer:</strong> Worker-Protokolle werden nach spätestens 7 Tagen automatisch gelöscht.
-      </p>
+    <section class="section" data-section="03 · Hosting">
+      <div class="wrap grid">
+        <div class="rail meta">02</div>
+        <div class="main">
+          <h2>2. Hosting und Auslieferung über Cloudflare</h2>
+          <p>
+          Alle oben genannten Websites werden über Cloudflare ausgeliefert. Sie laufen als Cloudflare Workers mit statischen
+          Dateien. Anbieter ist die Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA.
+          </p>
+          <p>Beim Aufruf verarbeitet Cloudflare technisch notwendige Verbindungsdaten. Dazu gehören insbesondere:</p>
+          <ul>
+          <li>IP-Adresse des zugreifenden Geräts,</li>
+          <li>Datum und Uhrzeit des Zugriffs,</li>
+          <li>angeforderte URL und HTTP-Statuscode,</li>
+          <li>übertragene Datenmenge,</li>
+          <li>Browser- und Geräteangaben (User-Agent).</li>
+          </ul>
+          <p>
+          Diese Verarbeitung ist zur Auslieferung der Inhalte, zum sicheren und stabilen Betrieb und zur Abwehr von Angriffen
+          erforderlich.
+          </p>
+          <p>
+          Für alle oben genannten Websites sind zusätzlich Cloudflare-Worker-Protokolle (Workers Logs) aktiviert. Sie erfassen zu
+          jedem Aufruf die genannten Daten einschließlich der Anfrage-Header. Cloudflare löscht diese Protokolle automatisch nach
+          spätestens 7 Tagen.
+          </p>
+          <p>
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an sicherem, stabilem und
+          performantem Betrieb).<br>
+          <strong>Empfänger:</strong> Cloudflare, Inc., als Auftragsverarbeiter nach Art. 28 DSGVO (Cloudflare Data Processing
+          Addendum).<br>
+          <strong>Drittland:</strong> Cloudflare betreibt ein weltweites Netz. Eine Verarbeitung außerhalb der EU, insbesondere in
+          den USA, ist möglich. Grundlage ist das EU-U.S. Data Privacy Framework (Art. 45 DSGVO), hilfsweise sind es die
+          EU-Standardvertragsklauseln (Art. 46 DSGVO).<br>
+          <strong>Speicherdauer:</strong> Worker-Protokolle werden nach spätestens 7 Tagen automatisch gelöscht.
+          </p>
 
-      <h2>3. Cloudflare Web Analytics</h2>
-      <p>
-        Auf allen oben genannten Websites ist Cloudflare Web Analytics aktiv. Das von Cloudflare eingefügte Beacon unter <code>/cdn-cgi/rum</code>
-        erhebt aggregierte Nutzungsdaten (zum Beispiel aufgerufene Seite, Ladezeiten, Herkunftsland, verweisende Seite). Nach
-        Angaben von Cloudflare arbeitet dieses Verfahren ohne Cookies und ohne websiteübergreifende Wiedererkennung.
-      </p>
-      <p class="meta">
-        <strong>Zweck:</strong> Reichweitenmessung und Verbesserung der Website.<br>
-        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO.<br>
-        <strong>Empfänger:</strong> Cloudflare, Inc.<br>
-        <strong>Drittland:</strong> Übermittlung in die USA, gestützt auf das EU-U.S. Data Privacy Framework.<br>
-        <strong>Speicherdauer:</strong> Cloudflare hält die Rohdaten 7 Tage vor. Danach werden sie zusammengefasst (Stichprobe).
-        Ich kann die Auswertungen höchstens für die letzten 6 Monate einsehen.
-      </p>
+        </div>
+      </div>
+    </section>
 
-      <h2>4. Eigene Klick-Messung über /api/site-event</h2>
-      <p>
-        Nur auf www.human-agent-interface.com: Die Seite sendet bei bestimmten Interaktionen (Seitenaufruf, Klick auf einen Handlungsaufruf) ein Ereignis an den eigenen
-        Endpunkt <code>/api/site-event</code>. Der Worker schreibt dabei einen Datensatz in das Cloudflare-Analytics-Engine-Dataset
-        <code>hai_site_events</code> (Funktion <code>handleSiteEvent</code> in <code>src/worker.js</code>, Aufruf <code>writeDataPoint</code>). Gespeichert werden
-        ausschließlich:
-      </p>
-      <ul>
-        <li>Index: die Experiment-ID (immer <code>homepage-hero-2026-05-23</code>),</li>
-        <li>
+    <section class="section" data-section="04 · Web Analytics">
+      <div class="wrap grid">
+        <div class="rail meta">03</div>
+        <div class="main">
+          <h2>3. Cloudflare Web Analytics</h2>
+          <p>
+          Auf allen oben genannten Websites ist Cloudflare Web Analytics aktiv. Das von Cloudflare eingefügte Beacon unter <code>/cdn-cgi/rum</code>
+          erhebt aggregierte Nutzungsdaten (zum Beispiel aufgerufene Seite, Ladezeiten, Herkunftsland, verweisende Seite). Nach
+          Angaben von Cloudflare arbeitet dieses Verfahren ohne Cookies und ohne websiteübergreifende Wiedererkennung.
+          </p>
+          <p>
+          <strong>Zweck:</strong> Reichweitenmessung und Verbesserung der Website.<br>
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO.<br>
+          <strong>Empfänger:</strong> Cloudflare, Inc.<br>
+          <strong>Drittland:</strong> Übermittlung in die USA, gestützt auf das EU-U.S. Data Privacy Framework.<br>
+          <strong>Speicherdauer:</strong> Cloudflare hält die Rohdaten 7 Tage vor. Danach werden sie zusammengefasst (Stichprobe).
+          Ich kann die Auswertungen höchstens für die letzten 6 Monate einsehen.
+          </p>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-section="05 · Klick-Messung">
+      <div class="wrap grid">
+        <div class="rail meta">04</div>
+        <div class="main">
+          <h2>4. Eigene Klick-Messung über /api/site-event</h2>
+          <p>
+          Nur auf www.human-agent-interface.com: Die Seite sendet bei bestimmten Interaktionen (Seitenaufruf, Klick auf einen Handlungsaufruf) ein Ereignis an den eigenen
+          Endpunkt <code>/api/site-event</code>. Der Worker schreibt dabei einen Datensatz in das Cloudflare-Analytics-Engine-Dataset
+          <code>hai_site_events</code> (Funktion <code>handleSiteEvent</code> in <code>src/worker.js</code>, Aufruf <code>writeDataPoint</code>). Gespeichert werden
+          ausschließlich:
+          </p>
+          <ul>
+          <li>Index: die Experiment-ID (immer <code>homepage-hero-2026-05-23</code>),</li>
+          <li>
           Blobs: Variante (<code>A_control</code>, <code>B_offer_first</code>, <code>C_proof_first</code>), Ereignis
           (<code>hero_impression</code>, <code>hero_cta_click</code>, <code>cta_click</code>), Ziel, Pfad, Sprache und
           Viewport-Klasse,
-        </li>
-        <li>Double: ein Zeitstempel (Millisekunden seit Epoche).</li>
-      </ul>
-      <p>
-        <strong>Es werden keine IP-Adresse, kein User-Agent, kein Cookie-Wert und keine sonstige Kennung in das Dataset
-        geschrieben.</strong> Die Daten lassen keinen unmittelbaren Rückschluss auf eine Person zu.
-      </p>
-      <p>
-        Für die Hero-Variante werden <strong>keine Cookies und keine sonstige Speicherung im Browser</strong> verwendet: Die
-        Variante wird ohne Wiedererkennung des Browsers festgelegt (Funktion <code>handleHomepage</code> in
-        <code>src/worker.js</code>). Unabhängig davon speichert die Seite die gewählte Sprache lokal im Browser (<code>localStorage</code>-Schlüssel
-        <code>haiLang</code>); dieser Wert wird nicht an den Server übertragen.
-      </p>
-      <p class="meta">
-        <strong>Zweck:</strong> Auswertung und Verbesserung des Seitenaufbaus.<br>
-        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO.<br>
-        <strong>Empfänger:</strong> Cloudflare, Inc. (Analytics Engine).<br>
-        <strong>Drittland:</strong> Übermittlung in die USA, gestützt auf das EU-U.S. Data Privacy Framework.<br>
-        <strong>Speicherdauer:</strong> Cloudflare löscht Einträge im Analytics-Engine-Dataset automatisch nach 3 Monaten.
-      </p>
+          </li>
+          <li>Double: ein Zeitstempel (Millisekunden seit Epoche).</li>
+          </ul>
+          <p>
+          <strong>Es werden keine IP-Adresse, kein User-Agent, kein Cookie-Wert und keine sonstige Kennung in das Dataset
+          geschrieben.</strong> Die Daten lassen keinen unmittelbaren Rückschluss auf eine Person zu.
+          </p>
+          <p>
+          Für die Hero-Variante werden <strong>keine Cookies und keine sonstige Speicherung im Browser</strong> verwendet: Die
+          Variante wird ohne Wiedererkennung des Browsers festgelegt (Funktion <code>handleHomepage</code> in
+          <code>src/worker.js</code>). Unabhängig davon speichert die Seite die gewählte Sprache lokal im Browser (<code>localStorage</code>-Schlüssel
+          <code>haiLang</code>); dieser Wert wird nicht an den Server übertragen.
+          </p>
+          <p>
+          <strong>Zweck:</strong> Auswertung und Verbesserung des Seitenaufbaus.<br>
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO.<br>
+          <strong>Empfänger:</strong> Cloudflare, Inc. (Analytics Engine).<br>
+          <strong>Drittland:</strong> Übermittlung in die USA, gestützt auf das EU-U.S. Data Privacy Framework.<br>
+          <strong>Speicherdauer:</strong> Cloudflare löscht Einträge im Analytics-Engine-Dataset automatisch nach 3 Monaten.
+          </p>
 
-      <h2>5. Kontakt per E-Mail</h2>
-      <p>
-        Wenn Sie mich per E-Mail kontaktieren (<a href="mailto:hallo@samuelfleig.com">hallo@samuelfleig.com</a>), verarbeite ich die von Ihnen übermittelten Angaben (E-Mail-Adresse, Name, Inhalt der Nachricht) zur Beantwortung der
-        Anfrage.
-      </p>
-      <p class="meta">
-        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Beantwortung von Anfragen);
-        soweit die Anfrage auf den Abschluss eines Vertrags gerichtet ist, Art. 6 Abs. 1 lit. b DSGVO.<br>
-        <strong>Empfänger:</strong> Cloudflare, Inc. (Cloudflare Email Routing), das eingehende Nachrichten weiterleitet, ohne ihren
-        Inhalt zu speichern, und Google (Gmail), das das Postfach betreibt, in dem die Nachrichten eingehen.<br>
-        <strong>Drittland:</strong> Eine Übermittlung in die USA ist möglich. Grundlage ist das EU-U.S. Data Privacy Framework
-        (Art. 45 DSGVO).<br>
-        <strong>Speicherdauer:</strong> Anfragen werden so lange gespeichert, wie es zur Bearbeitung und zur Erfüllung gesetzlicher Aufbewahrungsfristen (in der Regel bis zu 10 Jahre für Geschäftsbriefe nach § 257 HGB / § 147 AO) erforderlich ist; gesetzliche Aufbewahrungsfristen bleiben unberührt.
-      </p>
+        </div>
+      </div>
+    </section>
 
-      <h2>6. Terminbuchung über Cal.com</h2>
-      <p>
-        Für einen Fit-Call können Sie alternativ zur E-Mail einen Termin über den Buchungsdienst Cal.com vereinbaren. Anbieter ist
-        die Cal.com, Inc., USA. Die Buchungsseite ist nur verlinkt und nicht in diese Website eingebettet: Beim bloßen Besuch dieser
-        Website werden keine Daten an Cal.com übertragen. Erst wenn Sie den Link „Fit-Call buchen“ anklicken, gelangen Sie auf die
-        Seite von Cal.com, für die deren eigene Datenschutzhinweise gelten
-        (<a href="https://cal.com/privacy">cal.com/privacy</a>).
-      </p>
-      <p>
-        Bei einer Buchung verarbeiten Cal.com und ich die von Ihnen eingegebenen Angaben (Name, E-Mail-Adresse, gewählter Termin,
-        optionale Notizen) zur Vereinbarung und Durchführung des Gesprächs. Der Termin wird in meinen Kalender (Google Calendar)
-        übernommen; für das Gespräch wird ein Videokonferenz-Link des im Termin angegebenen Dienstes erzeugt.
-      </p>
-      <p class="meta">
-        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Durchführung vorvertraglicher Maßnahmen auf Ihre Anfrage)
-        sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer einfachen Terminvereinbarung).<br>
-        <strong>Empfänger:</strong> Cal.com, Inc. (Buchung), Google Ireland Limited / Google LLC (Kalender und ggf. Videokonferenz).
-        Dabei kann eine Übermittlung in die USA stattfinden; sie erfolgt auf Grundlage der von den Anbietern eingesetzten
-        Garantien nach Art. 44 ff. DSGVO (EU-US Data Privacy Framework bzw. EU-Standardvertragsklauseln).<br>
-        <strong>Speicherdauer:</strong> Buchungsdaten werden gelöscht, sobald sie für die Terminabwicklung und eine etwaige
-        Zusammenarbeit nicht mehr erforderlich sind; gesetzliche Aufbewahrungsfristen bleiben unberührt.
-      </p>
+    <section class="section" data-section="06 · Kontakt">
+      <div class="wrap grid">
+        <div class="rail meta">05</div>
+        <div class="main">
+          <h2>5. Kontakt per E-Mail</h2>
+          <p>
+          Wenn Sie mich per E-Mail kontaktieren (<a href="mailto:hallo@samuelfleig.com">hallo@samuelfleig.com</a>), verarbeite ich die von Ihnen übermittelten Angaben (E-Mail-Adresse, Name, Inhalt der Nachricht) zur Beantwortung der
+          Anfrage.
+          </p>
+          <p>
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Beantwortung von Anfragen);
+          soweit die Anfrage auf den Abschluss eines Vertrags gerichtet ist, Art. 6 Abs. 1 lit. b DSGVO.<br>
+          <strong>Empfänger:</strong> Cloudflare, Inc. (Cloudflare Email Routing), das eingehende Nachrichten weiterleitet, ohne ihren
+          Inhalt zu speichern, und Google (Gmail), das das Postfach betreibt, in dem die Nachrichten eingehen.<br>
+          <strong>Drittland:</strong> Eine Übermittlung in die USA ist möglich. Grundlage ist das EU-U.S. Data Privacy Framework
+          (Art. 45 DSGVO).<br>
+          <strong>Speicherdauer:</strong> Anfragen werden so lange gespeichert, wie es zur Bearbeitung und zur Erfüllung gesetzlicher Aufbewahrungsfristen (in der Regel bis zu 10 Jahre für Geschäftsbriefe nach § 257 HGB / § 147 AO) erforderlich ist; gesetzliche Aufbewahrungsfristen bleiben unberührt.
+          </p>
 
-      <h2>7. Client-Handoff-Upload (/api/client-handoff-upload)</h2>
-      <p>
-        Im Rahmen der Vorbereitung eines angenommenen Falls können Sie über <code>/api/client-handoff-upload</code> eine
-        Markdown-Datei mit Kontext hochladen. Die Datei und die Formularangaben werden im Cloudflare-R2-Bucket
-        <code>hai-client-handoffs</code> gespeichert (Funktion <code>handleClientHandoffUpload</code> in <code>src/worker.js</code>). Gespeichert werden:
-      </p>
-      <ul>
-        <li>Fall-ID (<code>caseId</code>),</li>
-        <li>Name (<code>customerName</code>),</li>
-        <li>E-Mail-Adresse (<code>customerEmail</code>),</li>
-        <li>freier Kontexttext (<code>contextNote</code>, bis 1.000 Zeichen),</li>
-        <li>Einwilligung und Einwilligungsversion (<code>consent</code>, <code>consentVersion</code>),</li>
-        <li>genau eine Markdown-Datei (<code>handoffFile</code>, <code>.md</code>, maximal 1 MB),</li>
-        <li>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-section="07 · Terminbuchung">
+      <div class="wrap grid">
+        <div class="rail meta">06</div>
+        <div class="main">
+          <h2>6. Terminbuchung über Cal.com</h2>
+          <p>
+          Für einen Fit-Call können Sie alternativ zur E-Mail einen Termin über den Buchungsdienst Cal.com vereinbaren. Anbieter ist
+          die Cal.com, Inc., USA. Die Buchungsseite ist nur verlinkt und nicht in diese Website eingebettet: Beim bloßen Besuch dieser
+          Website werden keine Daten an Cal.com übertragen. Erst wenn Sie den Link „Fit-Call buchen“ anklicken, gelangen Sie auf die
+          Seite von Cal.com, für die deren eigene Datenschutzhinweise gelten
+          (<a href="https://cal.com/privacy">cal.com/privacy</a>).
+          </p>
+          <p>
+          Bei einer Buchung verarbeiten Cal.com und ich die von Ihnen eingegebenen Angaben (Name, E-Mail-Adresse, gewählter Termin,
+          optionale Notizen) zur Vereinbarung und Durchführung des Gesprächs. Der Termin wird in meinen Kalender (Google Calendar)
+          übernommen; für das Gespräch wird ein Videokonferenz-Link des im Termin angegebenen Dienstes erzeugt.
+          </p>
+          <p>
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Durchführung vorvertraglicher Maßnahmen auf Ihre Anfrage)
+          sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer einfachen Terminvereinbarung).<br>
+          <strong>Empfänger:</strong> Cal.com, Inc. (Buchung), Google Ireland Limited / Google LLC (Kalender und ggf. Videokonferenz).
+          Dabei kann eine Übermittlung in die USA stattfinden; sie erfolgt auf Grundlage der von den Anbietern eingesetzten
+          Garantien nach Art. 44 ff. DSGVO (EU-US Data Privacy Framework bzw. EU-Standardvertragsklauseln).<br>
+          <strong>Speicherdauer:</strong> Buchungsdaten werden gelöscht, sobald sie für die Terminabwicklung und eine etwaige
+          Zusammenarbeit nicht mehr erforderlich sind; gesetzliche Aufbewahrungsfristen bleiben unberührt.
+          </p>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-section="08 · Handoff-Upload">
+      <div class="wrap grid">
+        <div class="rail meta">07</div>
+        <div class="main">
+          <h2>7. Client-Handoff-Upload (/api/client-handoff-upload)</h2>
+          <p>
+          Im Rahmen der Vorbereitung eines angenommenen Falls können Sie über <code>/api/client-handoff-upload</code> eine
+          Markdown-Datei mit Kontext hochladen. Die Datei und die Formularangaben werden im Cloudflare-R2-Bucket
+          <code>hai-client-handoffs</code> gespeichert (Funktion <code>handleClientHandoffUpload</code> in <code>src/worker.js</code>). Gespeichert werden:
+          </p>
+          <ul>
+          <li>Fall-ID (<code>caseId</code>),</li>
+          <li>Name (<code>customerName</code>),</li>
+          <li>E-Mail-Adresse (<code>customerEmail</code>),</li>
+          <li>freier Kontexttext (<code>contextNote</code>, bis 1.000 Zeichen),</li>
+          <li>Einwilligung und Einwilligungsversion (<code>consent</code>, <code>consentVersion</code>),</li>
+          <li>genau eine Markdown-Datei (<code>handoffFile</code>, <code>.md</code>, maximal 1 MB),</li>
+          <li>
           technische Metadaten: Upload-ID, Zeitstempel, Original- und Speicherdateiname, Dateigröße, SHA-256-Prüfsumme sowie
           Zweck- und Grenzhinweise.
-        </li>
-      </ul>
-      <p>
-        Die Datei wird als R2-Objekt unter <code>accepted-cases/&lt;caseId&gt;/…</code> abgelegt; zusätzlich wird eine
-        Metadatendatei <code>…metadata.json</code> gespeichert.
-      </p>
-      <p class="meta">
-        <strong>Zweck:</strong> Vorbereitung eines angenommenen HAI-Falls.<br>
-        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen), ergänzt durch Ihre Einwilligung
-        nach Art. 6 Abs. 1 lit. a DSGVO.<br>
-        <strong>Empfänger:</strong> Cloudflare, Inc. (R2-Speicher), als Auftragsverarbeiter nach Art. 28 DSGVO.<br>
-        <strong>Speicherort:</strong> Der Bucket ist mit EU-Jurisdiktion angelegt; die Dateien werden in Rechenzentren in der EU
-        gespeichert.<br>
-        <strong>Drittland:</strong> Cloudflare, Inc. hat ihren Sitz in den USA. Ein Zugriff aus den USA, etwa für Betrieb und
-        Support, ist daher nicht ausgeschlossen; er stützt sich auf das EU-U.S. Data Privacy Framework.<br>
-        <strong>Speicherdauer:</strong> Handoff-Uploads werden 12 Monate nach Abschluss des jeweiligen Falls gelöscht; bei Zurückweisung oder Abbruch spätestens 90 Tage nach Eingang.
-      </p>
+          </li>
+          </ul>
+          <p>
+          Die Datei wird als R2-Objekt unter <code>accepted-cases/&lt;caseId&gt;/…</code> abgelegt; zusätzlich wird eine
+          Metadatendatei <code>…metadata.json</code> gespeichert.
+          </p>
+          <p>
+          <strong>Zweck:</strong> Vorbereitung eines angenommenen HAI-Falls.<br>
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen), ergänzt durch Ihre Einwilligung
+          nach Art. 6 Abs. 1 lit. a DSGVO.<br>
+          <strong>Empfänger:</strong> Cloudflare, Inc. (R2-Speicher), als Auftragsverarbeiter nach Art. 28 DSGVO.<br>
+          <strong>Speicherort:</strong> Der Bucket ist mit EU-Jurisdiktion angelegt; die Dateien werden in Rechenzentren in der EU
+          gespeichert.<br>
+          <strong>Drittland:</strong> Cloudflare, Inc. hat ihren Sitz in den USA. Ein Zugriff aus den USA, etwa für Betrieb und
+          Support, ist daher nicht ausgeschlossen; er stützt sich auf das EU-U.S. Data Privacy Framework.<br>
+          <strong>Speicherdauer:</strong> Handoff-Uploads werden 12 Monate nach Abschluss des jeweiligen Falls gelöscht; bei Zurückweisung oder Abbruch spätestens 90 Tage nach Eingang.
+          </p>
 
-      <h2>8. Harness-Check-Chat über die OpenAI-API (/api/harness-check/chat)</h2>
-      <p>
-        <strong>Derzeit deaktiviert:</strong> Der Harness-Check-Chat ist vorübergehend abgeschaltet. Der Endpunkt
-        <code>/api/harness-check/chat</code> antwortet nur mit einem Hinweis; Ihre Eingaben werden <strong>nicht</strong> an
-        OpenAI übermittelt. Es findet lediglich die in Abschnitt 2 beschriebene Verarbeitung von Verbindungsdaten durch
-        Cloudflare statt.
-      </p>
-      <p>
-        Die folgenden Angaben gelten erst, wenn der Chat nach Abschluss eines Auftragsverarbeitungsvertrags wieder aktiviert
-        wird: Dann sendet der Worker Ihre Eingaben an die OpenAI-API (<code>https://api.openai.com/v1/responses</code>,
-        Funktion <code>handleHarnessCheckChat</code> in <code>src/worker.js</code>). Übermittelt werden:
-      </p>
-      <ul>
-        <li>gewählter Harness, Level, Problembeschreibung, Ziel und Grenzen,</li>
-        <li>die Anzahl der Nutzer-Nachrichten,</li>
-        <li>das Transkript der letzten bis zu 12 Nachrichten (je bis 900 Zeichen),</li>
-        <li>systemseitige Anweisungen an das Modell.</li>
-      </ul>
-      <p>
-        Eingaben, die wie ein Secret, Token, Passwort oder API-Key aussehen, werden bereits im Worker erkannt und
-        <strong>nicht</strong> an OpenAI weitergegeben (Funktion <code>hasSecretLikeText</code> in <code>src/worker.js</code>). Die Anfrage wird mit
-        <code>store: false</code> gesendet, sodass die Antwort nicht im Antwortverlauf gespeichert wird.
-      </p>
-      <p class="meta">
-        <strong>Zweck:</strong> Durchführung des freiwilligen Harness-Checks als vorvertragliche Beratung.<br>
-        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen).<br>
-        <strong>Empfänger:</strong> OpenAI (USA).<br>
-        <strong>Drittland:</strong> Übermittlung in die USA. Es ist ein Auftragsverarbeitungsvertrag mit OpenAI erforderlich: ein solcher AVV wird vor produktiver Nutzung des Harness-Check-Chats abgeschlossen (Stand: in Vorbereitung). Bis dahin ist der Chat deaktiviert und es werden über diesen Endpunkt keine Daten an OpenAI übermittelt. Grundlage des Drittlandtransfers ist das EU-U.S. Data Privacy Framework bzw. die Standardvertragsklauseln.<br>
-        <strong>Speicherdauer:</strong> Anfragen werden mit <code>store: false</code> gesendet, sodass Inhalte nicht im OpenAI-Antwortverlauf gespeichert werden. Nach Angaben von OpenAI werden Anfragen und Antworten jedoch zur Erkennung von Missbrauch bis zu 30 Tage aufbewahrt und danach gelöscht, sofern nicht eine längere Speicherung gesetzlich vorgeschrieben ist.
-      </p>
+        </div>
+      </div>
+    </section>
 
-      <h2 id="ki-chat">9. KI-Erklär-Agent (Chat)</h2>
-      <p>Auf den folgenden Seiten können Sie einem KI-Chat Fragen zur jeweiligen Seite stellen:</p>
-      <ul>
-        <li>www.human-agent-interface.com</li>
-        <li>agentfähig.de</li>
-        <li>humanagentinterface.de</li>
-        <li>samuelfleig.com</li>
-        <li>humanagentcontrol.com (englischsprachig)</li>
-      </ul>
-      <p>
-        Der Chat antwortet nur auf Grundlage der Inhalte der jeweiligen Seite. <strong>Sie sprechen dabei mit einer KI, nicht mit
-        einem Menschen.</strong> Die Antworten werden automatisch erzeugt und können falsch sein. Verbindlich sind nur die Angaben
-        auf der Website und meine eigenen Aussagen.
-      </p>
-      <p>
-        Die Nutzung ist freiwillig. Der Chat startet erst, wenn Sie ihn selbst öffnen und starten. Ohne Start werden keine
-        Chat-Daten verarbeitet. Alle fünf Seiten nutzen denselben technischen Chat-Dienst. Er läuft als eigener Cloudflare Worker
-        und wird von den Seiten intern über die Adresse <code>/api/explain/</code> angesprochen.
-      </p>
-      <p><strong>Welche Daten verarbeitet werden</strong></p>
-      <ul>
-        <li>
+    <section class="section" data-section="09 · Harness-Check">
+      <div class="wrap grid">
+        <div class="rail meta">08</div>
+        <div class="main">
+          <h2>8. Harness-Check-Chat über die OpenAI-API (/api/harness-check/chat)</h2>
+          <p>
+          <strong>Derzeit deaktiviert:</strong> Der Harness-Check-Chat ist vorübergehend abgeschaltet. Der Endpunkt
+          <code>/api/harness-check/chat</code> antwortet nur mit einem Hinweis; Ihre Eingaben werden <strong>nicht</strong> an
+          OpenAI übermittelt. Es findet lediglich die in Abschnitt 2 beschriebene Verarbeitung von Verbindungsdaten durch
+          Cloudflare statt.
+          </p>
+          <p>
+          Die folgenden Angaben gelten erst, wenn der Chat nach Abschluss eines Auftragsverarbeitungsvertrags wieder aktiviert
+          wird: Dann sendet der Worker Ihre Eingaben an die OpenAI-API (<code style="overflow-wrap:anywhere">https://api.openai.com/v1/responses</code>,
+          Funktion <code>handleHarnessCheckChat</code> in <code>src/worker.js</code>). Übermittelt werden:
+          </p>
+          <ul>
+          <li>gewählter Harness, Level, Problembeschreibung, Ziel und Grenzen,</li>
+          <li>die Anzahl der Nutzer-Nachrichten,</li>
+          <li>das Transkript der letzten bis zu 12 Nachrichten (je bis 900 Zeichen),</li>
+          <li>systemseitige Anweisungen an das Modell.</li>
+          </ul>
+          <p>
+          Eingaben, die wie ein Secret, Token, Passwort oder API-Key aussehen, werden bereits im Worker erkannt und
+          <strong>nicht</strong> an OpenAI weitergegeben (Funktion <code>hasSecretLikeText</code> in <code>src/worker.js</code>). Die Anfrage wird mit
+          <code>store: false</code> gesendet, sodass die Antwort nicht im Antwortverlauf gespeichert wird.
+          </p>
+          <p>
+          <strong>Zweck:</strong> Durchführung des freiwilligen Harness-Checks als vorvertragliche Beratung.<br>
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen).<br>
+          <strong>Empfänger:</strong> OpenAI (USA).<br>
+          <strong>Drittland:</strong> Übermittlung in die USA. Es ist ein Auftragsverarbeitungsvertrag mit OpenAI erforderlich: ein solcher AVV wird vor produktiver Nutzung des Harness-Check-Chats abgeschlossen (Stand: in Vorbereitung). Bis dahin ist der Chat deaktiviert und es werden über diesen Endpunkt keine Daten an OpenAI übermittelt. Grundlage des Drittlandtransfers ist das EU-U.S. Data Privacy Framework bzw. die Standardvertragsklauseln.<br>
+          <strong>Speicherdauer:</strong> Anfragen werden mit <code>store: false</code> gesendet, sodass Inhalte nicht im OpenAI-Antwortverlauf gespeichert werden. Nach Angaben von OpenAI werden Anfragen und Antworten jedoch zur Erkennung von Missbrauch bis zu 30 Tage aufbewahrt und danach gelöscht, sofern nicht eine längere Speicherung gesetzlich vorgeschrieben ist.
+          </p>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-section="10 · KI-Chat">
+      <div class="wrap grid">
+        <div class="rail meta">09</div>
+        <div class="main">
+          <h2 id="ki-chat">9. KI-Erklär-Agent (Chat)</h2>
+          <p>Auf den folgenden Seiten können Sie einem KI-Chat Fragen zur jeweiligen Seite stellen:</p>
+          <ul>
+          <li>www.human-agent-interface.com</li>
+          <li>agentfähig.de</li>
+          <li>humanagentinterface.de</li>
+          <li>samuelfleig.com</li>
+          <li>humanagentcontrol.com (englischsprachig)</li>
+          </ul>
+          <p>
+          Der Chat antwortet nur auf Grundlage der Inhalte der jeweiligen Seite. <strong>Sie sprechen dabei mit einer KI, nicht mit
+          einem Menschen.</strong> Die Antworten werden automatisch erzeugt und können falsch sein. Verbindlich sind nur die Angaben
+          auf der Website und meine eigenen Aussagen.
+          </p>
+          <p>
+          Die Nutzung ist freiwillig. Der Chat startet erst, wenn Sie ihn selbst öffnen und starten. Ohne Start werden keine
+          Chat-Daten verarbeitet. Alle fünf Seiten nutzen denselben technischen Chat-Dienst. Er läuft als eigener Cloudflare Worker
+          und wird von den Seiten intern über die Adresse <code>/api/explain/</code> angesprochen.
+          </p>
+          <p><strong>Welche Daten verarbeitet werden</strong></p>
+          <ul>
+          <li>
           <strong>Ihre Fragen und die Antworten des Chats.</strong> Pro Frage sind bis zu 500 Zeichen möglich. Pro Sitzung können
           Sie bis zu 4 Fragen stellen, die Sitzung dauert höchstens 5 Minuten.
-        </li>
-        <li>
+          </li>
+          <li>
           <strong>Sitzungsdaten.</strong> Dazu gehören eine zufällige Sitzungskennung, die Seite, auf der der Chat lief, Beginn und
           Ende der Sitzung, Zähler für Fragen und Rechenaufwand und ein Prüfwert (Hash) des Sitzungsschlüssels. Der Schlüssel selbst
           wird nicht gespeichert. Die Sitzungsdaten enthalten keine IP-Adresse und keine Chat-Inhalte.
-        </li>
-        <li>
+          </li>
+          <li>
           <strong>Ihre IP-Adresse, nur als Prüfwert.</strong> Zur Missbrauchsabwehr wird gezählt, wie oft ein Anschluss den Chat
           startet. Erlaubt sind höchstens 3 Chats pro Tag und 10 Startversuche pro Minute. Außerdem ist die Zahl der Chats pro Seite
           und Tag insgesamt begrenzt. Für diese Zählung wird die IP-Adresse nicht gespeichert. Gespeichert wird nur ein Prüfwert,
           der aus der IP-Adresse, dem Datum und einem geheimen Schlüssel gebildet wird (gesalzener Hash, HMAC-SHA-256). Der Prüfwert
           wechselt täglich und lässt sich ohne den geheimen Schlüssel nicht auf die IP-Adresse zurückführen.
-        </li>
-        <li><strong>Technische Verbindungsdaten</strong>, wie bei jedem Seitenaufruf (siehe Abschnitt 2).</li>
-      </ul>
-      <p>
-        Ich frage weder Ihren Namen noch ein Konto ab. <strong>Bitte geben Sie im Chat keine persönlichen oder vertraulichen Daten
-        ein.</strong> Nachrichten, die wie Passwörter, API-Schlüssel oder Zugangs-Token aussehen, werden automatisch abgelehnt. Sie
-        werden dann weder gespeichert noch an das KI-Modell weitergegeben.
-      </p>
-      <p><strong>Was das KI-Modell erhält</strong></p>
-      <p>
-        Die Antworten erzeugt auf allen fünf Seiten das Sprachmodell „Llama 3.3 70B Instruct“ (Variante fp8-fast), das über
-        Cloudflare Workers AI betrieben wird. Das Modell läuft auf Servern von Cloudflare. Meta als Hersteller des Modells erhält
-        keine Daten. An das Modell gehen nur:
-      </p>
-      <ul>
-        <li>feste Anweisungen,</li>
-        <li>die Inhalte der jeweiligen Seite,</li>
-        <li>die bisherigen Fragen und Antworten Ihrer Sitzung und Ihre aktuelle Frage.</li>
-      </ul>
-      <p>
-        Ihre IP-Adresse und Ihr Cookie gehen nicht an das Modell. Nach Angaben von Cloudflare werden Ein- und Ausgaben bei Workers
-        AI nicht zum Training von Modellen verwendet und anderen Kunden nicht zugänglich gemacht. Es findet keine automatisierte
-        Entscheidung im Sinne von Art. 22 DSGVO statt.
-      </p>
-      <p><strong>Cookie</strong></p>
-      <p>
-        Beim Start des Chats wird das technisch notwendige Cookie <code>explain_session</code> gesetzt. Es enthält die zufällige
-        Sitzungskennung und einen zufälligen Sitzungsschlüssel. Damit erkennt der Server, dass die Fragen zu Ihrer Sitzung gehören.
-        Das Cookie ist 15 Minuten gültig und wird nur an die Chat-Adresse <code>/api/explain/</code> der jeweiligen Seite gesendet,
-        nicht bei normalen Seitenaufrufen. Es ist für Skripte nicht lesbar (HttpOnly), wird nur verschlüsselt übertragen (Secure)
-        und nicht an fremde Websites gesendet (SameSite=Lax).
-      </p>
-      <p><strong>Speicherdauer</strong></p>
-      <ul>
-        <li>
+          </li>
+          <li><strong>Technische Verbindungsdaten</strong>, wie bei jedem Seitenaufruf (siehe Abschnitt 2).</li>
+          </ul>
+          <p>
+          Ich frage weder Ihren Namen noch ein Konto ab. <strong>Bitte geben Sie im Chat keine persönlichen oder vertraulichen Daten
+          ein.</strong> Nachrichten, die wie Passwörter, API-Schlüssel oder Zugangs-Token aussehen, werden automatisch abgelehnt. Sie
+          werden dann weder gespeichert noch an das KI-Modell weitergegeben.
+          </p>
+          <p><strong>Was das KI-Modell erhält</strong></p>
+          <p>
+          Die Antworten erzeugt auf allen fünf Seiten das Sprachmodell „Llama 3.3 70B Instruct“ (Variante fp8-fast), das über
+          Cloudflare Workers AI betrieben wird. Das Modell läuft auf Servern von Cloudflare. Meta als Hersteller des Modells erhält
+          keine Daten. An das Modell gehen nur:
+          </p>
+          <ul>
+          <li>feste Anweisungen,</li>
+          <li>die Inhalte der jeweiligen Seite,</li>
+          <li>die bisherigen Fragen und Antworten Ihrer Sitzung und Ihre aktuelle Frage.</li>
+          </ul>
+          <p>
+          Ihre IP-Adresse und Ihr Cookie gehen nicht an das Modell. Nach Angaben von Cloudflare werden Ein- und Ausgaben bei Workers
+          AI nicht zum Training von Modellen verwendet und anderen Kunden nicht zugänglich gemacht. Es findet keine automatisierte
+          Entscheidung im Sinne von Art. 22 DSGVO statt.
+          </p>
+          <p><strong>Cookie</strong></p>
+          <p>
+          Beim Start des Chats wird das technisch notwendige Cookie <code>explain_session</code> gesetzt. Es enthält die zufällige
+          Sitzungskennung und einen zufälligen Sitzungsschlüssel. Damit erkennt der Server, dass die Fragen zu Ihrer Sitzung gehören.
+          Das Cookie ist 15 Minuten gültig und wird nur an die Chat-Adresse <code>/api/explain/</code> der jeweiligen Seite gesendet,
+          nicht bei normalen Seitenaufrufen. Es ist für Skripte nicht lesbar (HttpOnly), wird nur verschlüsselt übertragen (Secure)
+          und nicht an fremde Websites gesendet (SameSite=Lax).
+          </p>
+          <p><strong>Speicherdauer</strong></p>
+          <ul>
+          <li>
           <strong>Chatverlauf</strong> (Ihre Fragen und die Antworten): wird automatisch gelöscht, wenn die Sitzung abläuft
           (5 Minuten nach dem Start), oder 5 Minuten nachdem die letzte mögliche Frage beantwortet wurde. In jedem Fall ist er
           spätestens 10 Minuten nach dem Start gelöscht.
-        </li>
-        <li><strong>Sitzungsdaten</strong> (ohne Inhalte): werden 30 Tage nach Beginn der Sitzung automatisch gelöscht.</li>
-        <li>
+          </li>
+          <li><strong>Sitzungsdaten</strong> (ohne Inhalte): werden 30 Tage nach Beginn der Sitzung automatisch gelöscht.</li>
+          <li>
           <strong>Prüfwert der IP-Adresse:</strong> wird spätestens nach 48 Stunden automatisch gelöscht. Der Zähler für
           Startversuche pro Minute wird nach Ablauf der Minute gelöscht.
-        </li>
-        <li>
+          </li>
+          <li>
           <strong>Protokolle:</strong> Die Worker-Protokolle der oben genannten Seiten (siehe Abschnitt 2) erfassen auch Aufrufe des
           Chats mit technischen Anfragedaten wie Adresse, Zeitpunkt, Statuscode und Anfrage-Header. Dazu können Ihre IP-Adresse und
           das Chat-Cookie gehören, nicht aber der Text Ihrer Fragen. Cloudflare löscht diese Protokolle automatisch nach spätestens
           7 Tagen. Für den Chat-Dienst selbst sind keine Worker-Protokolle aktiviert.
-        </li>
-      </ul>
-      <p><strong>Empfänger und Ort der Verarbeitung</strong></p>
-      <p>
-        Empfänger ist Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA, als mein Auftragsverarbeiter nach Art. 28
-        DSGVO (Cloudflare Data Processing Addendum). Die Antworten des KI-Modells werden in Rechenzentren von Cloudflares weltweitem
-        Netz erzeugt; eine Verarbeitung nur in der EU ist dafür technisch nicht festgelegt. Chatverlauf, Sitzungsdaten und Zähler
-        liegen in Cloudflare Durable Objects. Diese werden in der Regel in der Nähe des ersten Zugriffs angelegt, für Besucher aus
-        Europa also meist in Europa; garantiert ist das nicht.
-      </p>
-      <p>
-        Eine Übermittlung in die USA oder andere Drittländer ist daher möglich. Für die USA stützt sie sich auf die Zertifizierung
-        von Cloudflare, Inc. unter dem EU-U.S. Data Privacy Framework (Art. 45 DSGVO). Für andere Drittländer, und falls die
-        Zertifizierung entfällt, gelten die EU-Standardvertragsklauseln aus dem Data Processing Addendum (Art. 46 DSGVO).
-      </p>
-      <p class="meta">
-        <strong>Rechtsgrundlage Chat-Inhalte:</strong> Art. 6 Abs. 1 lit. f DSGVO. Mein berechtigtes Interesse ist, Besuchern
-        Fragen zu meinen Seiten und Angeboten schnell zu beantworten. Wenn Ihre Frage der Anbahnung eines Auftrags dient, gilt
-        Art. 6 Abs. 1 lit. b DSGVO.<br>
-        <strong>Rechtsgrundlage Prüfwert der IP-Adresse und Begrenzungen:</strong> Art. 6 Abs. 1 lit. f DSGVO. Mein berechtigtes
-        Interesse ist der Schutz vor Missbrauch und vor Kosten durch automatisierte Massenanfragen.<br>
-        <strong>Cookie:</strong> § 25 Abs. 2 Nr. 2 TDDDG. Das Cookie ist unbedingt erforderlich, damit der von Ihnen ausdrücklich
-        gestartete Chat funktioniert; eine Einwilligung ist daher nicht nötig. Die anschließende Verarbeitung stützt sich auf
-        Art. 6 Abs. 1 lit. f DSGVO.
-      </p>
-      <p>
-        Sie können der Verarbeitung nach Art. 21 DSGVO widersprechen (siehe Abschnitt 11). Am einfachsten verzichten Sie auf den
-        Chat und schreiben mir stattdessen eine E-Mail.
-      </p>
+          </li>
+          </ul>
+          <p><strong>Empfänger und Ort der Verarbeitung</strong></p>
+          <p>
+          Empfänger ist Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA, als mein Auftragsverarbeiter nach Art. 28
+          DSGVO (Cloudflare Data Processing Addendum). Die Antworten des KI-Modells werden in Rechenzentren von Cloudflares weltweitem
+          Netz erzeugt; eine Verarbeitung nur in der EU ist dafür technisch nicht festgelegt. Chatverlauf, Sitzungsdaten und Zähler
+          liegen in Cloudflare Durable Objects. Diese werden in der Regel in der Nähe des ersten Zugriffs angelegt, für Besucher aus
+          Europa also meist in Europa; garantiert ist das nicht.
+          </p>
+          <p>
+          Eine Übermittlung in die USA oder andere Drittländer ist daher möglich. Für die USA stützt sie sich auf die Zertifizierung
+          von Cloudflare, Inc. unter dem EU-U.S. Data Privacy Framework (Art. 45 DSGVO). Für andere Drittländer, und falls die
+          Zertifizierung entfällt, gelten die EU-Standardvertragsklauseln aus dem Data Processing Addendum (Art. 46 DSGVO).
+          </p>
+          <p>
+          <strong>Rechtsgrundlage Chat-Inhalte:</strong> Art. 6 Abs. 1 lit. f DSGVO. Mein berechtigtes Interesse ist, Besuchern
+          Fragen zu meinen Seiten und Angeboten schnell zu beantworten. Wenn Ihre Frage der Anbahnung eines Auftrags dient, gilt
+          Art. 6 Abs. 1 lit. b DSGVO.<br>
+          <strong>Rechtsgrundlage Prüfwert der IP-Adresse und Begrenzungen:</strong> Art. 6 Abs. 1 lit. f DSGVO. Mein berechtigtes
+          Interesse ist der Schutz vor Missbrauch und vor Kosten durch automatisierte Massenanfragen.<br>
+          <strong>Cookie:</strong> § 25 Abs. 2 Nr. 2 TDDDG. Das Cookie ist unbedingt erforderlich, damit der von Ihnen ausdrücklich
+          gestartete Chat funktioniert; eine Einwilligung ist daher nicht nötig. Die anschließende Verarbeitung stützt sich auf
+          Art. 6 Abs. 1 lit. f DSGVO.
+          </p>
+          <p>
+          Sie können der Verarbeitung nach Art. 21 DSGVO widersprechen (siehe Abschnitt 11). Am einfachsten verzichten Sie auf den
+          Chat und schreiben mir stattdessen eine E-Mail.
+          </p>
 
-      <h2>10. Cookies, lokale Speicherung und externe Ressourcen</h2>
-      <p>
-        Es werden <strong>keine Cookies zu Werbe- oder websiteübergreifenden Tracking-Zwecken</strong> gesetzt. Es gibt nur ein
-        technisch notwendiges Erstanbieter-Cookie:
-      </p>
-      <ul>
-        <li>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-section="11 · Cookies">
+      <div class="wrap grid">
+        <div class="rail meta">10</div>
+        <div class="main">
+          <h2>10. Cookies, lokale Speicherung und externe Ressourcen</h2>
+          <p>
+          Es werden <strong>keine Cookies zu Werbe- oder websiteübergreifenden Tracking-Zwecken</strong> gesetzt. Es gibt nur ein
+          technisch notwendiges Erstanbieter-Cookie:
+          </p>
+          <ul>
+          <li>
           <code>explain_session</code> (alle oben genannten Websites): wird nur gesetzt, wenn Sie den KI-Chat starten. Laufzeit
           15 Minuten, nur für die Chat-Adresse <code>/api/explain/</code> (siehe Abschnitt 9).
-        </li>
-      </ul>
-      <p>
-        Die Startseiten-Variante (Abschnitt 4) wird ohne Cookie und ohne lokale Speicherung gewählt. Die Sprachwahl auf
-        www.human-agent-interface.com wird lokal im Browser gespeichert (<code>localStorage</code>-Schlüssel
-        <code>haiLang</code>) und nicht an den Server übertragen.
-      </p>
-      <p>
-        Die Seiten laden <strong>keine externen Schriftarten, Schriftbibliotheken oder Skripte von Drittanbietern</strong>.
-        Einziges serverseitig von Cloudflare eingefügtes Skript ist das Analytics-Beacon <code>/cdn-cgi/rum</code> (siehe
-        Abschnitt 3).
-      </p>
-      <p>
-        Ausnahme: Auf einzelnen Seiten von www.human-agent-interface.com (u. a. Startseite und <code>/samuel/</code>) wird eine
-        Nutzungsstatistik als Bild direkt von <code>tokscale.ai</code> geladen. Dabei übermittelt Ihr Browser technisch bedingt
-        Ihre IP-Adresse, Datum und Uhrzeit sowie Browserangaben an den Betreiber von tokscale.ai; dieser kann sich auch außerhalb
-        der EU befinden. Auf die dortige Verarbeitung habe ich keinen Einfluss. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO
-        (berechtigtes Interesse an der Darstellung meiner Arbeitsnachweise).
-      </p>
+          </li>
+          </ul>
+          <p>
+          Die Startseiten-Variante (Abschnitt 4) wird ohne Cookie und ohne lokale Speicherung gewählt. Die Sprachwahl auf
+          www.human-agent-interface.com wird lokal im Browser gespeichert (<code>localStorage</code>-Schlüssel
+          <code>haiLang</code>) und nicht an den Server übertragen.
+          </p>
+          <p>
+          Die Seiten laden <strong>keine externen Schriftarten, Schriftbibliotheken oder Skripte von Drittanbietern</strong>.
+          Einziges serverseitig von Cloudflare eingefügtes Skript ist das Analytics-Beacon <code>/cdn-cgi/rum</code> (siehe
+          Abschnitt 3).
+          </p>
+          <p>
+          Ausnahme: Auf einzelnen Seiten von www.human-agent-interface.com (u. a. Startseite und <code>/samuel/</code>) wird eine
+          Nutzungsstatistik als Bild direkt von <code>tokscale.ai</code> geladen. Dabei übermittelt Ihr Browser technisch bedingt
+          Ihre IP-Adresse, Datum und Uhrzeit sowie Browserangaben an den Betreiber von tokscale.ai; dieser kann sich auch außerhalb
+          der EU befinden. Auf die dortige Verarbeitung habe ich keinen Einfluss. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO
+          (berechtigtes Interesse an der Darstellung meiner Arbeitsnachweise).
+          </p>
 
-      <h2>11. Ihre Rechte</h2>
-      <p>Sie haben mir gegenüber folgende Rechte hinsichtlich Ihrer personenbezogenen Daten:</p>
-      <ul>
-        <li>Recht auf Auskunft (Art. 15 DSGVO),</li>
-        <li>Recht auf Berichtigung (Art. 16 DSGVO),</li>
-        <li>Recht auf Löschung (Art. 17 DSGVO),</li>
-        <li>Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO),</li>
-        <li>Recht auf Datenübertragbarkeit (Art. 20 DSGVO),</li>
-        <li>Recht auf Widerspruch gegen die Verarbeitung (Art. 21 DSGVO),</li>
-        <li>Recht auf Widerruf einer erteilten Einwilligung mit Wirkung für die Zukunft (Art. 7 Abs. 3 DSGVO).</li>
-      </ul>
-      <p>
-        Zur Ausübung Ihrer Rechte genügt eine Nachricht an
-        <a href="mailto:hallo@samuelfleig.com">hallo@samuelfleig.com</a>.
-      </p>
-      <p>
-        Außerdem haben Sie das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren (Art. 77 DSGVO). Zuständig ist
-        der Landesbeauftragte für den Datenschutz und die Informationsfreiheit Baden-Württemberg (LfDI BW),
-        Postfach 10 29 32, 70025 Stuttgart, <a href="https://www.baden-wuerttemberg.datenschutz.de">baden-wuerttemberg.datenschutz.de</a>.
-      </p>
+        </div>
+      </div>
+    </section>
 
-      <h2 id="schweiz">12. Hinweise für Personen in der Schweiz (revDSG)</h2>
-      <p>
-        Soweit ich Personendaten von Personen in der Schweiz bearbeite, etwa im Rahmen der Angebote unter
-        <a href="/ch/">/ch/</a>, gilt ergänzend das Schweizer Bundesgesetz über den Datenschutz (DSG) in der seit
-        1. September 2023 geltenden Fassung. Die in dieser Erklärung beschriebenen Bearbeitungen, Zwecke, Empfänger und
-        Speicherdauern gelten unverändert; dieser Abschnitt ergänzt die Angaben, die das DSG zusätzlich verlangt.
-      </p>
-      <p>
-        <strong>Verantwortlicher:</strong> Samuel David Fleig (siehe Abschnitt 1). Einen Vertreter in der Schweiz nach Art. 14 DSG
-        habe ich nicht bestellt, da die Voraussetzungen dafür (unter anderem umfangreiche Bearbeitung mit hohem Risiko) nicht
-        vorliegen.
-      </p>
-      <p>
-        <strong>Bekanntgabe ins Ausland (Art. 16 und 19 DSG):</strong> Personendaten werden in folgende Staaten bekanntgegeben:
-      </p>
-      <ul>
-        <li>
+    <section class="section" data-section="12 · Rechte">
+      <div class="wrap grid">
+        <div class="rail meta">11</div>
+        <div class="main">
+          <h2>11. Ihre Rechte</h2>
+          <p>Sie haben mir gegenüber folgende Rechte hinsichtlich Ihrer personenbezogenen Daten:</p>
+          <ul>
+          <li>Recht auf Auskunft (Art. 15 DSGVO),</li>
+          <li>Recht auf Berichtigung (Art. 16 DSGVO),</li>
+          <li>Recht auf Löschung (Art. 17 DSGVO),</li>
+          <li>Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO),</li>
+          <li>Recht auf Datenübertragbarkeit (Art. 20 DSGVO),</li>
+          <li>Recht auf Widerspruch gegen die Verarbeitung (Art. 21 DSGVO),</li>
+          <li>Recht auf Widerruf einer erteilten Einwilligung mit Wirkung für die Zukunft (Art. 7 Abs. 3 DSGVO).</li>
+          </ul>
+          <p>
+          Zur Ausübung Ihrer Rechte genügt eine Nachricht an
+          <a href="mailto:hallo@samuelfleig.com">hallo@samuelfleig.com</a>.
+          </p>
+          <p>
+          Außerdem haben Sie das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren (Art. 77 DSGVO). Zuständig ist
+          der Landesbeauftragte für den Datenschutz und die Informationsfreiheit Baden-Württemberg (LfDI BW),
+          Postfach 10 29 32, 70025 Stuttgart, <a href="https://www.baden-wuerttemberg.datenschutz.de">baden-wuerttemberg.datenschutz.de</a>.
+          </p>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-section="13 · Schweiz">
+      <div class="wrap grid">
+        <div class="rail meta">12</div>
+        <div class="main">
+          <h2 id="schweiz">12. Hinweise für Personen in der Schweiz (revDSG)</h2>
+          <p>
+          Soweit ich Personendaten von Personen in der Schweiz bearbeite, etwa im Rahmen der Angebote unter
+          <a href="/ch/">/ch/</a>, gilt ergänzend das Schweizer Bundesgesetz über den Datenschutz (DSG) in der seit
+          1. September 2023 geltenden Fassung. Die in dieser Erklärung beschriebenen Bearbeitungen, Zwecke, Empfänger und
+          Speicherdauern gelten unverändert; dieser Abschnitt ergänzt die Angaben, die das DSG zusätzlich verlangt.
+          </p>
+          <p>
+          <strong>Verantwortlicher:</strong> Samuel David Fleig (siehe Abschnitt 1). Einen Vertreter in der Schweiz nach Art. 14 DSG
+          habe ich nicht bestellt, da die Voraussetzungen dafür (unter anderem umfangreiche Bearbeitung mit hohem Risiko) nicht
+          vorliegen.
+          </p>
+          <p>
+          <strong>Bekanntgabe ins Ausland (Art. 16 und 19 DSG):</strong> Personendaten werden in folgende Staaten bekanntgegeben:
+          </p>
+          <ul>
+          <li>
           <strong>Deutschland und EU:</strong> Hier bin ich ansässig und bearbeite die Daten. Hochgeladene Übergabedateien
           (Abschnitt 7) liegen in einem Cloudflare-R2-Speicher mit EU-Jurisdiktion. Deutschland und die EU-Staaten gewährleisten
           nach Anhang 1 der Datenschutzverordnung (DSV) einen angemessenen Schutz.
-        </li>
-        <li>
+          </li>
+          <li>
           <strong>USA:</strong> Cloudflare (Abschnitte 2 bis 5, 7 und 9), Cal.com und Google (Abschnitt 6) sowie OpenAI
           (Abschnitt 8, derzeit deaktiviert) haben ihren Sitz in den USA oder können Daten dort bearbeiten. Die Bekanntgabe stützt sich auf das Swiss-U.S. Data
           Privacy Framework, soweit der Empfänger danach zertifiziert ist (Anhang 1 DSV), und im Übrigen auf
           Standardvertragsklauseln, die der Eidgenössische Datenschutz- und Öffentlichkeitsbeauftragte (EDÖB) anerkannt hat.
-        </li>
-        <li>
+          </li>
+          <li>
           <strong>Weltweit:</strong> Cloudflare liefert die Websites über ein weltweites Netz aus; technische Verbindungsdaten können
           dabei in dem Rechenzentrum bearbeitet werden, das Ihrem Standort am nächsten liegt. Für den in Abschnitt 10 genannten
           Bildabruf von tokscale.ai ist mir der Bearbeitungsort nicht bekannt.
-        </li>
-      </ul>
-      <p>
-        <strong>Bei Aufträgen:</strong> Bei Einrichtungs- und Review-Aufträgen arbeite ich per Bildschirmfreigabe auf Ihren
-        Systemen oder mit einem befristeten Lesezugriff, den Sie nach Abschluss entziehen. Dabei kopiere ich keine Personendaten
-        auf eigene Systeme, ausser Sie stellen mir Unterlagen ausdrücklich zur Verfügung. Soweit ich dabei Personendaten in Ihrem
-        Auftrag bearbeite, schliessen wir auf Wunsch einen Auftragsbearbeitungsvertrag nach Art. 9 DSG ab.
-      </p>
-      <p>
-        <strong>Ihre Rechte nach DSG:</strong> Sie haben insbesondere das Recht auf Auskunft (Art. 25 DSG), auf Herausgabe oder
-        Übertragung Ihrer Daten (Art. 28 DSG), auf Berichtigung unrichtiger Daten (Art. 32 Abs. 1 DSG) sowie das Recht, der
-        Bearbeitung zu widersprechen und die Löschung zu verlangen (Art. 30 und 32 Abs. 2 DSG). Eine Nachricht an
-        <a href="mailto:hallo@samuelfleig.com">hallo@samuelfleig.com</a> genügt. Automatisierte Einzelentscheidungen im Sinne von
-        Art. 21 DSG finden nicht statt.
-      </p>
-      <p>
-        <strong>Aufsichtsbehörde in der Schweiz:</strong> Eidgenössischer Datenschutz- und Öffentlichkeitsbeauftragter (EDÖB),
-        Feldeggweg 1, 3003 Bern, <a href="https://www.edoeb.admin.ch">edoeb.admin.ch</a>.
-      </p>
+          </li>
+          </ul>
+          <p>
+          <strong>Bei Aufträgen:</strong> Bei Einrichtungs- und Review-Aufträgen arbeite ich per Bildschirmfreigabe auf Ihren
+          Systemen oder mit einem befristeten Lesezugriff, den Sie nach Abschluss entziehen. Dabei kopiere ich keine Personendaten
+          auf eigene Systeme, ausser Sie stellen mir Unterlagen ausdrücklich zur Verfügung. Soweit ich dabei Personendaten in Ihrem
+          Auftrag bearbeite, schliessen wir auf Wunsch einen Auftragsbearbeitungsvertrag nach Art. 9 DSG ab.
+          </p>
+          <p>
+          <strong>Ihre Rechte nach DSG:</strong> Sie haben insbesondere das Recht auf Auskunft (Art. 25 DSG), auf Herausgabe oder
+          Übertragung Ihrer Daten (Art. 28 DSG), auf Berichtigung unrichtiger Daten (Art. 32 Abs. 1 DSG) sowie das Recht, der
+          Bearbeitung zu widersprechen und die Löschung zu verlangen (Art. 30 und 32 Abs. 2 DSG). Eine Nachricht an
+          <a href="mailto:hallo@samuelfleig.com">hallo@samuelfleig.com</a> genügt. Automatisierte Einzelentscheidungen im Sinne von
+          Art. 21 DSG finden nicht statt.
+          </p>
+          <p>
+          <strong>Aufsichtsbehörde in der Schweiz:</strong> Eidgenössischer Datenschutz- und Öffentlichkeitsbeauftragter (EDÖB),
+          Feldeggweg 1, 3003 Bern, <a href="https://www.edoeb.admin.ch">edoeb.admin.ch</a>.
+          </p>
 
-      <h2>13. Stand</h2>
-      <p>Stand dieser Datenschutzerklärung: Oktober 2026.</p>
-    </main>
-
-    <footer>
-      <div class="wrap">
-        <span>Human Agent Interface (HAI) by Samuel Fleig</span>
-        <span class="footer-links">
-          <a href="../impressum/">Impressum</a>
-          <a href="../datenschutz/">Datenschutz</a>
-        </span>
+        </div>
       </div>
-    </footer>
-  </body>
+    </section>
+
+    <section class="section" data-section="14 · Stand">
+      <div class="wrap grid">
+        <div class="rail meta">13</div>
+        <div class="main">
+          <h2>13. Stand</h2>
+          <p>Stand dieser Datenschutzerklärung: Oktober 2026.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  
+
+  <script src="/assets/hai.js" defer></script>
+</body>
 </html>
