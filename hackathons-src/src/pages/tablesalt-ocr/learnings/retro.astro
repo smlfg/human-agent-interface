@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Timeline from '../../../components/Timeline.astro';
+import EvidenceLegend from '../../../components/EvidenceLegend.astro';
+import RetroAudit from '../../../components/RetroAudit.astro';
+import { PAGES } from '../../../lib/pages';
+
+const page = PAGES.retro;
+---
+
+<BaseLayout
+  title={page.title}
+  lede={page.lede}
+  description="Die kritische Retrospektive des TableSalt OCR Hackathons: korrigiertes Gesamturteil, Generalisierungsgrenzen, negative Resultate, Mensch-Agenten-Teamdynamik, offene Widersprüche und die 6 Gebote."
+  accent={page.accent}
+  page="retro"
+  eyebrow="Learnings · Concluding chapter"
+>
+  <RetroAudit />
+  <EvidenceLegend />
+  <Timeline pageId="retro" />
+</BaseLayout>

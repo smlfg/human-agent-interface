@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Timeline from '../../components/Timeline.astro';
+import EvidenceLegend from '../../components/EvidenceLegend.astro';
+import { PAGES } from '../../lib/pages';
+
+const page = PAGES.tech;
+---
+
+<BaseLayout
+  title={page.title}
+  lede={page.lede}
+  description="The technical chronology of the TableSalt OCR hackathon: architectures, measurements, reversals and the numbers behind them."
+  accent={page.accent}
+  page="tech"
+  eyebrow="Perspective 01 — Technical"
+>
+  <EvidenceLegend />
+  <Timeline pageId="tech" />
+</BaseLayout>

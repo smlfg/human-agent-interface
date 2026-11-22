@@ -1,0 +1,1132 @@
+---
+import EvidenceBadge from './EvidenceBadge.astro';
+import { siteMeta } from '../content/events';
+
+interface ComparisonRow {
+  label: string;
+  dataset: string;
+  value: string;
+  status: 'measured-official' | 'measured-local' | 'reported';
+  note: string;
+}
+
+const BENCHMARK_ROWS: ComparisonRow[] = [
+  {
+    label: 'tablesalt/ CPU-Pipeline (M1–M7)',
+    dataset: 'dev (24, synthetisch)',
+    value: '0.9971 FINAL',
+    status: 'measured-official',
+    note: 'Offline im 520-MB-Container (grokbot-abgabe), 1.1–1.4 s/Tabelle.',
+  },
+  {
+    label: 'tablesalt/ CPU-Pipeline',
+    dataset: 'fresh96 (unseen gen.)',
+    value: '0.9931 FINAL',
+    status: 'measured-local',
+    note: 'Ungesehener Seed desselben synthetischen Generators.',
+  },
+  {
+    label: 'MinerU2.5 1.2B + P0–P5',
+    dataset: 'dev / val96 (adaptiv)',
+    value: '0.9862 / 0.9808',
+    status: 'measured-official',
+    note: 'MLX host-only (nicht containerfähig); dev+val96 adaptiv genutzt.',
+  },
+  {
+    label: 'Hidden-Set (Session-Bericht)',
+    dataset: 'hidden (~96)',
+    value: '0.882 TEDS / 0.759 QA',
+    status: 'reported',
+    note: 'Aus Gemini-Session übernommen, nicht lokal reproduziert, Artefakt unklar.',
+  },
+  {
+    label: 'Real-Eval: SciTSR-PD',
+    dataset: 'real (n=30)',
+    value: '0.517 TEDS',
+    status: 'measured-local',
+    note: 'ADR-017; Auswahl ≤16 Zeilen / ≤10 Spalten (Obergrenze).',
+  },
+  {
+    label: 'Real-Eval: OCRBench-v2',
+    dataset: 'real (n=24)',
+    value: '0.4774 TEDS',
+    status: 'measured-local',
+    note: 'Unabhängig reproduzierte OOD-Baseline (TEDS-S 0.6813, Cell-F1 0.1058).',
+  },
+  {
+    label: 'Real-Eval: FinTabNet',
+    dataset: 'real (n=30)',
+    value: '0.470 TEDS',
+    status: 'measured-local',
+    note: 'Reale Finanztabellen (ADR-017); Cell-F1 gesamt nur 0.07–0.18.',
+  },
+  {
+    label: 'Real-Eval: ICDAR-2013',
+    dataset: 'real (n=30)',
+    value: '0.319 TEDS',
+    status: 'measured-local',
+    note: 'Reale PDF-Tabellen (ADR-017).',
+  },
+  {
+    label: 'Real-Eval: PubTabNet',
+    dataset: 'real (n=30)',
+    value: '0.259 TEDS',
+    status: 'measured-local',
+    note: 'Reale wissenschaftliche Tabellen; 0 von 4 Text-GT-Sets erreichen 0.99.',
+  },
+];
+
+const COMMANDMENTS = [
+  {
+    num: '01',
+    title: 'Baseline früh einfrieren',
+    body: 'Vor Stunde 12 steht eine deploybare, getaggte Minimal-Pipeline im Ziel-Container — kein spätes Zusammenführen entkoppelter Parallel-Branches.',
+  },
+  {
+    num: '02',
+    title: 'Messweg vor Automatisierung',
+    body: 'Erst deterministischer Scorer, schneller lokaler Prüfpfad (quick_eval) und --network none Container-Test, danach Skripte oder Agenten-Loops.',
+  },
+  {
+    num: '03',
+    title: 'Eine Hypothese & Stop-Kriterium pro Sweep',
+    body: 'Keine offenen Explorations-Schleifen ohne klares Delta-Ziel, vorab gemessene Oracle-Decke und explizite Abbruch-Regel.',
+  },
+  {
+    num: '04',
+    title: 'Unberührten Holdout reservieren',
+    body: 'Ein versiegeltes Test-Set, das bis zur finalen Evaluation niemand — auch kein Postprocessing-Check — sieht oder zur Auswahl nutzt.',
+  },
+  {
+    num: '05',
+    title: 'Agentenarbeit verifizieren & verstehen',
+    body: 'Kein Commit und kein Merge ohne Zeile-für-Zeile-Verständnis, Review-Beleg und eigene lokale Reproduktion.',
+  },
+  {
+    num: '06',
+    title: 'Teamentscheidung dokumentieren',
+    body: 'Ein gemeinsamer Single Point of Truth für den aktiven Stand, das gewählte Abgabe-Artefakt und jede vereinbarte Schnittstelle.',
+  },
+];
+
+const TOC_ITEMS = [
+  { id: 'retro-01', num: '01', label: 'Gesamturteil' },
+  { id: 'retro-02', num: '02', label: 'Generalisierung' },
+  { id: 'retro-03', num: '03', label: 'Negative Resultate' },
+  { id: 'retro-04', num: '04', label: 'Mensch & Agenten' },
+  { id: 'retro-05', num: '05', label: 'Widersprüche' },
+  { id: 'retro-06', num: '06', label: 'Entwicklung' },
+  { id: 'retro-07', num: '07', label: '6 Gebote' },
+  { id: 'retro-08', num: '08', label: 'Forschungsfrage' },
+  { id: 'retro-timeline', num: '09', label: 'Chronologie' },
+];
+---
+
+<div class="retro" data-retro-audit>
+  <!-- Thesis & Audit Provenance Banner -->
+  <section class="retro-hero" aria-labelledby="retro-thesis-title">
+    <div class="retro-hero__top">
+      <div class="retro-hero__badges">
+        <span class="label retro-pill">Meta-Audit · Audits A–D</span>
+        <EvidenceBadge status="documented" />
+        <EvidenceBadge status="inferred" />
+      </div>
+      <p class="retro-hero__project mono">
+        lerrai / TableSalt OCR · Campus Founders Hackathon · 20.–22.11.2026 · Heilbronn ·{' '}
+        <a href={siteMeta.repository} rel="noopener noreferrer">GitHub ↗</a>
+      </p>
+    </div>
+
+    <p class="label retro-hero__kicker" id="retro-thesis-title">Zentrale Einsicht</p>
+    <blockquote class="retro-hero__quote">
+      „Das Hauptproblem war nicht einfach Scope Creep. Es war der Übergang von vielen parallelen
+      Experimenten zu einem gemeinsam verstandenen, unabhängig überprüften und tatsächlich
+      ausgelieferten System.“
+    </blockquote>
+
+    <p class="retro-hero__note" role="note">
+      <strong>Charakter dieser Notiz:</strong> Kritisches Feedback nach Durchsicht der Retrospektiven{' '}
+      <code>RETROSPECTIVE_FINAL.md</code>, <code>RETROSPEKTIVE.md</code> und der Audits{' '}
+      <code>A–D</code>. <em>„Berichtet“</em> bedeutet aus Artefakten übernommen, nicht vom Reviewer neu
+      gemessen.
+    </p>
+
+    <nav class="retro-toc" aria-label="Retrospective sections">
+      {
+        TOC_ITEMS.map((item) => (
+          <a class="retro-toc__link" href={`#${item.id}`}>
+            <span class="retro-toc__num mono">{item.num}</span>
+            <span class="retro-toc__label">{item.label}</span>
+          </a>
+        ))
+      }
+    </nav>
+  </section>
+
+  <!-- 01. Korrigiertes Gesamturteil -->
+  <section class="retro-section" id="retro-01" data-retro-section="1" aria-labelledby="retro-01-title">
+    <header class="retro-section__head">
+      <div class="retro-section__meta">
+        <span class="retro-section__num mono">01</span>
+        <span class="label">Korrigiertes Gesamturteil</span>
+        <EvidenceBadge status="documented" />
+        <EvidenceBadge status="inferred" />
+      </div>
+      <h2 class="retro-section__title" id="retro-01-title">
+        Stark in der Exploration, unreif in Integration und verifizierter Ownership
+      </h2>
+    </header>
+
+    <div class="retro-split">
+      <article class="retro-panel">
+        <p class="label retro-panel__tag retro-panel__tag--good">Was stark war</p>
+        <ul class="retro-list">
+          <li>
+            <strong>Problemformulierung vor Code:</strong> Die vor dem ersten Commit notierte
+            <code>2D → 1D</code>-Diagnose und die Frage nach OCR vs. Struktur vs. LLM trugen das gesamte
+            Projekt.
+          </li>
+          <li>
+            <strong>Forschungsneugier &amp; Systemvergleich:</strong> Ein faires 28-Modelle-Board unter
+            einem unveränderten offiziellen Scorer statt Bauchgefühl oder Einzel-Demos.
+          </li>
+          <li>
+            <strong>Experimenteller Erkenntnisgewinn:</strong> Null-Kalibrierung, Oracle-Test, bepreiste
+            Fehlertaxonomie und ehrliche Dokumentation negativer Resultate.
+          </li>
+        </ul>
+      </article>
+
+      <article class="retro-panel">
+        <p class="label retro-panel__tag retro-panel__tag--warn">Was weniger ausgereift war</p>
+        <ul class="retro-list">
+          <li>
+            <strong>Integration unter Zeitdruck:</strong> Sieben Branches, vier Worktrees und parallele
+            Agentenaufträge entwickelten sich schneller als die Entscheidung, welcher Stand gilt
+            (<code>origin/main</code> auf <code>973cc2d</code> vs. <code>grokbot-abgabe</code> vs.{' '}
+            <code>feat/vlm-ocr-bench</code>).
+          </li>
+          <li>
+            <strong>Gemeinsame Entscheidungsfindung:</strong> Konkurrierende Linien (VLM host-only vs.
+            CPU-Pipeline vs. CUDA-TATR) wurden erst nachträglich in ADRs begründet.
+          </li>
+          <li>
+            <strong>Von Delegation zu Kompetenz:</strong> Agentisch erzeugter Kerncode wurde gemessen,
+            aber nicht durchgängig in eigenständig reproduzierte Engineering-Tiefe überführt.
+          </li>
+        </ul>
+      </article>
+    </div>
+
+    <p class="retro-callout">
+      Die Breite der Experimente war anfangs produktiv; gegen Ende wurde dieselbe Breite zum
+      Integrationsrisiko.
+    </p>
+  </section>
+
+  <!-- 02. Technische Erkenntnis -->
+  <section class="retro-section" id="retro-02" data-retro-section="2" aria-labelledby="retro-02-title">
+    <header class="retro-section__head">
+      <div class="retro-section__meta">
+        <span class="retro-section__num mono">02</span>
+        <span class="label">Technische Erkenntnis</span>
+        <EvidenceBadge status="measured-official" />
+        <EvidenceBadge status="measured-local" />
+        <EvidenceBadge status="reported" />
+      </div>
+      <h2 class="retro-section__title" id="retro-02-title">
+        Benchmark-Erfolg ist kein Generalisierungsbeweis
+      </h2>
+      <p class="retro-section__lede">
+        Auf synthetischen Generator-Tabellen erreichte die Pipeline bis zu <code>0.9971</code> FINAL —
+        auf fünf realen öffentlichen Datensätzen fiel sie auf <code>0.259–0.517</code> TEDS ab.
+      </p>
+    </header>
+
+    <div class="retro-table-wrap">
+      <table class="retro-table">
+        <thead>
+          <tr>
+            <th>System / Linie</th>
+            <th>Datensatz</th>
+            <th>Wert</th>
+            <th>Evidenz</th>
+            <th>Einordnung</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            BENCHMARK_ROWS.map((row) => (
+              <tr>
+                <td class="retro-table__strong">{row.label}</td>
+                <td class="mono">{row.dataset}</td>
+                <td class="mono retro-table__val">{row.value}</td>
+                <td>
+                  <EvidenceBadge status={row.status} />
+                </td>
+                <td class="retro-table__note">{row.note}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="retro-cards-3">
+      <article class="retro-mini">
+        <p class="label retro-mini__kicker">1 · Generator-Bindung</p>
+        <h3 class="retro-mini__title">Annahmen der geschlossenen Welt</h3>
+        <p class="retro-mini__body">
+          Die hohen Scores hingen an Eigenschaften von <code>generate_dataset.py</code>: feste
+          Schriftgrößen (20 px) und Textabstände, rechtsbündige Zahlen, feste Wortlisten, ein
+          Zahlenformat pro Tabelle und starre Layoutregeln. Außerhalb dieser Welt kippte sogar das
+          Lexikon das Vorzeichen: <code>−0.032</code> auf vier synthetischen Seeds vs.{' '}
+          <code>+0.0067</code> TEDS auf <code>OCRBench-v2</code> (5 besser, 0 schlechter).
+        </p>
+      </article>
+
+      <article class="retro-mini">
+        <p class="label retro-mini__kicker">2 · Render-Drift</p>
+        <h3 class="retro-mini__title">2 Pixel bewegen 0.038 FINAL</h3>
+        <p class="retro-mini__body">
+          Identischer Seed <code>42</code> erzeugte identische JSON/HTML-Ground-Truth, aber durch
+          lokale Pillow/FreeType-Builds ca. <code>2 px</code> Breitenunterschied (<code>672</code> vs.{' '}
+          <code>670 px</code>). Das verschob den lokalen TATR+Tesseract-Score um{' '}
+          <strong>+0.0381</strong> (<code>0.6608 → 0.6989</code>) — das <strong>~7,6-Fache</strong> der
+          Relevanzschwelle <code>0.005</code>. Fixer Seed schützt keinen Renderer.
+        </p>
+      </article>
+
+      <article class="retro-mini">
+        <p class="label retro-mini__kicker">3 · Holdout-Erosion</p>
+        <h3 class="retro-mini__title">120 Tabellen als Trainingsset</h3>
+        <p class="retro-mini__body">
+          <code>postprocess.py</code> (P0–P5) wurde wiederholt gegen alle <code>120</code> Tabellen aus{' '}
+          <code>dev</code> und <code>val96</code> entwickelt und mit <code>0/120 GT harmed</code>{' '}
+          geprüft. Damit waren beide Datensätze keine echten unabhängigen Holdouts mehr, sondern
+          adaptive Plausibilitätsanker.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 03. Wissenschaftliche Stärke -->
+  <section class="retro-section" id="retro-03" data-retro-section="3" aria-labelledby="retro-03-title">
+    <header class="retro-section__head">
+      <div class="retro-section__meta">
+        <span class="retro-section__num mono">03</span>
+        <span class="label">Wissenschaftliche Stärke</span>
+        <EvidenceBadge status="measured-local" />
+        <EvidenceBadge status="measured-official" />
+      </div>
+      <h2 class="retro-section__title" id="retro-03-title">
+        Negative Resultate erhalten statt begraben
+      </h2>
+    </header>
+
+    <div class="retro-metric-strip">
+      <div class="retro-stat">
+        <span class="label">Bester Held-out Tree</span>
+        <span class="retro-stat__val mono">+0.00032</span>
+        <span class="retro-stat__sub mono">DT_depth3_gainweight · lab_r3302 (n=96)</span>
+      </div>
+      <div class="retro-stat">
+        <span class="label">95%-Konfidenzintervall</span>
+        <span class="retro-stat__val mono">[−0.00013, 0.00114]</span>
+        <span class="retro-stat__sub">Schließt Null ein · kein robuster Effekt</span>
+      </div>
+      <div class="retro-stat">
+        <span class="label">Oracle-Decke (5 Varianten)</span>
+        <span class="retro-stat__val mono">+0.00123 / +0.00132</span>
+        <span class="retro-stat__sub mono">Unter Schwelle 0.005 · auf MDE-Niveau (0.0013)</span>
+      </div>
+      <div class="retro-stat">
+        <span class="label">Random Forest Routing</span>
+        <span class="retro-stat__val mono">96 / 96 → Base</span>
+        <span class="retro-stat__sub mono">RF_100_depth3_unweighted · Δ = 0.0</span>
+      </div>
+    </div>
+
+    <div class="retro-split">
+      <article class="retro-panel">
+        <p class="label retro-panel__tag">Null-Experimente &amp; Taxonomie</p>
+        <p class="retro-panel__text">
+          Statt fehlgeschlagene Ideen zu löschen, hielt das Projekt Null-Experimente (gepaarte SE{' '}
+          <code>0.00054</code>, MDE <code>0.0013</code>), den TATR-Oracle-Kill (<code>0.9365</code>{' '}
+          TEDS_w unter VLM <code>0.9672</code>), verworfene T3-Filter und sieben bepreiste
+          Fehlerklassen in <code>ERRORS.md</code> fest — inkl. <code>collapsed-header-row</code> als
+          Ursache von <code>5/5</code> dev-QA- und <code>15/19</code> val96-QA-Fehlern.
+        </p>
+      </article>
+      <article class="retro-panel">
+        <p class="label retro-panel__tag">Konsequenter Abbruch &amp; Epistemik</p>
+        <p class="retro-panel__text">
+          Als der Baum-Router über fünf Tesseract-Varianten eine flache Oracle-Decke zeigte, wurde das
+          Verfahren sauber abgebrochen und dokumentiert. Genauso konsequent trennte die Dokumentation
+          zwischen <em>gemessen</em> (<code>official</code>/<code>local</code>),{' '}
+          <em>aus Agentensession berichtet</em> (<code>reported</code>), <em>Hypothese</em> und{' '}
+          <em>noch unbekannt</em>.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 04. Mensch, Agenten und Team -->
+  <section class="retro-section" id="retro-04" data-retro-section="4" aria-labelledby="retro-04-title">
+    <header class="retro-section__head">
+      <div class="retro-section__meta">
+        <span class="retro-section__num mono">04</span>
+        <span class="label">Mensch, Agenten und Team</span>
+        <EvidenceBadge status="documented" />
+        <EvidenceBadge status="reported" />
+        <EvidenceBadge status="inferred" />
+      </div>
+      <h2 class="retro-section__title" id="retro-04-title">
+        Drei Kooperationsebenen — getrennte Bilanz
+      </h2>
+    </header>
+
+    <div class="retro-cards-3">
+      <article class="retro-mini">
+        <p class="label retro-mini__kicker">Ebene 1 · Mensch ↔ Mensch</p>
+        <h3 class="retro-mini__title">Echte Schnittstelle jenseits von Git-Stats</h3>
+        <p class="retro-mini__body">
+          Enes’ unabhängiger <code>tableparser</code> (<code>0.9704</code> dev / <code>0.9336</code>{' '}
+          val96) plus Samuels Layer-1 Coherence-Layer (<code>0.9774</code> dev / <code>0.9551</code>{' '}
+          val96, <code>17/96</code> verbessert, <code>0</code> Regressionen, <code>&lt;1 ms</code>)
+          belegt echte menschliche Kooperation, die reine Commit-Zähler unterschätzen. Zugleich
+          liefen parallele Arbeitsstränge weitgehend getrennt voneinander.
+        </p>
+      </article>
+
+      <article class="retro-mini">
+        <p class="label retro-mini__kicker">Ebene 2 · Mensch ↔ Agent</p>
+        <h3 class="retro-mini__title">Geschwindigkeit vor Prüftiefe</h3>
+        <p class="retro-mini__body">
+          Hohe Umsetzungsgeschwindigkeit: Das Kernpaket <code>tablesalt/</code>, PR #1 und sechs
+          Abgabe-Commits („via Agent“, inkl. nachträglich rekonstruierter ADRs) stammen wesentlich aus
+          Agenten-Läufen. Wo kein unabhängiges Zeile-für-Zeile-Review belegt ist, bleibt die
+          intellektuelle Ownership unscharf.
+        </p>
+      </article>
+
+      <article class="retro-mini">
+        <p class="label retro-mini__kicker">Ebene 3 · Agent ↔ Agent</p>
+        <h3 class="retro-mini__title">CORAL Autoresearch: 0 Zyklen</h3>
+        <p class="retro-mini__body">
+          Stark spezifizierte Labor-Infrastruktur (3 disjunkte Achsen, versteckter Grader, Bootstrap +
+          Holm-Gate, <code>sandbox-exec</code>-Shim) — aber <strong>0 vollständige Läufe</strong>,{' '}
+          <strong>0 Promotions</strong>, <strong>0 Integrationen</strong> (<code>experiments.jsonl</code>{' '}
+          = 0 Zeilen) wegen erschöpfter LLM-Kontingente und fehlendem lokalem Schnellpfad.
+        </p>
+      </article>
+    </div>
+
+    <p class="retro-callout">
+      Offene Teamfrage: Wurden Artefakte gemeinsam besprochen, entschieden und integriert — oder
+      lediglich geteilt?
+    </p>
+  </section>
+
+  <!-- 05. Widersprüche offen lassen -->
+  <section class="retro-section" id="retro-05" data-retro-section="5" aria-labelledby="retro-05-title">
+    <header class="retro-section__head">
+      <div class="retro-section__meta">
+        <span class="retro-section__num mono">05</span>
+        <span class="label">Epistemische Redlichkeit</span>
+        <EvidenceBadge status="reported" />
+        <EvidenceBadge status="inferred" />
+      </div>
+      <h2 class="retro-section__title" id="retro-05-title">
+        Wissenschaftliche &amp; historische Widersprüche offen lassen
+      </h2>
+      <p class="retro-section__lede">
+        Widersprüche in den Projektartefakten werden im Audit nicht nachträglich geglättet, sondern
+        als unaufgelöste Evidenzlücken stehen gelassen.
+      </p>
+    </header>
+
+    <ul class="retro-contradictions">
+      <li>
+        <span class="retro-contradictions__tag mono">Artefakt vs. Container</span>
+        <div>
+          <strong>TATR-Container (0.7124) vs. klassische CPU-Pipeline (0.9971):</strong> Auf{' '}
+          <code>feat/vlm-ocr-bench</code> liegt der CUDA-TATR-Container (5.7 GB), auf{' '}
+          <code>grokbot-abgabe</code> die 520-MB-CPU-Abgabe (PR #2 als offener Draft), während{' '}
+          <code>origin/main</code> auf <code>973cc2d</code> steht. Welchem Artefakt die{' '}
+          <code>reported</code> Hidden-Zahl (<code>0.882 / 0.759</code>) gehört, ist nicht belegt.
+        </div>
+      </li>
+      <li>
+        <span class="retro-contradictions__tag mono">Audit-Methode</span>
+        <div>
+          <strong>Worker-Audits vs. Lead-Selbstanalysen:</strong> Alle vier geplanten unabhängigen
+          Subagenten-Audits scheiterten an Provider-Kontingenten. Die Audits A–D wurden vom
+          Lead-Agenten selbst gegen dieselben Quellen geführt — ohne unabhängige Zweitprüfung.
+        </div>
+      </li>
+      <li>
+        <span class="retro-contradictions__tag mono">Gedächtnis vs. Log</span>
+        <div>
+          <strong>Mündliche Interviewfassung vs. Git-Historie:</strong> Subjektiv produktivste Arbeit
+          war der VLM/TATR-Track, während das eingereichte Artefakt aus einer klassischen CPU-Linie
+          stammte; die 17 ADRs in PR #2 wurden nachträglich rekonstruiert, und exakte Zeitanteile oder
+          offizielles Organizer-Feedback fehlen im Repo.
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- 06. Was daraus folgt -->
+  <section class="retro-section" id="retro-06" data-retro-section="6" aria-labelledby="retro-06-title">
+    <header class="retro-section__head">
+      <div class="retro-section__meta">
+        <span class="retro-section__num mono">06</span>
+        <span class="label">Persönliche Konsequenzen</span>
+        <EvidenceBadge status="documented" />
+      </div>
+      <h2 class="retro-section__title" id="retro-06-title">
+        Was daraus für meine Entwicklung folgt
+      </h2>
+    </header>
+
+    <div class="retro-split">
+      <article class="retro-panel">
+        <p class="label retro-panel__tag">1 · Tiefe ohne LLM-Codegenerierung nachweisen</p>
+        <p class="retro-panel__text">
+          Mindestens ein komplexes Kernmodul (z. B. Perspektivkorrektur / Homographie, Span-DP oder
+          Coherence-Layer) von Grund auf selbst herleiten, implementieren und gegen die Baseline messen
+          — und statistische Verfahren wie das Null-Experiment und den gepaarten Bootstrap einmal von
+          Hand nachrechnen.
+        </p>
+      </article>
+      <article class="retro-panel">
+        <p class="label retro-panel__tag">2 · Architektursteuerung vs. Code-Erzeugung</p>
+        <p class="retro-panel__text">
+          Agenten dürfen als schnelle Ausführer für Exploration, Test-Harnesses und Ablationen
+          arbeiten — aber der Mensch muss jede ausgelieferte Codezeile im Schlaf erklären, verifizieren
+          und debuggen können. Delegierter Code ohne eigenes Review gilt als ungeprüfte Hypothese.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 07. Die 6 Gebote -->
+  <section class="retro-section" id="retro-07" data-retro-section="7" aria-labelledby="retro-07-title">
+    <header class="retro-section__head">
+      <div class="retro-section__meta">
+        <span class="retro-section__num mono">07</span>
+        <span class="label">Regeln für den nächsten Hackathon</span>
+        <EvidenceBadge status="documented" />
+      </div>
+      <h2 class="retro-section__title" id="retro-07-title">Die 6 Gebote</h2>
+    </header>
+
+    <ol class="retro-rules">
+      {
+        COMMANDMENTS.map((rule) => (
+          <li class="retro-rule">
+            <span class="retro-rule__num mono">{rule.num}</span>
+            <h3 class="retro-rule__title">{rule.title}</h3>
+            <p class="retro-rule__body">{rule.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- 08. Nächste Forschungsfrage & Schlussfolgerung -->
+  <section class="retro-section" id="retro-08" data-retro-section="8" aria-labelledby="retro-08-title">
+    <header class="retro-section__head">
+      <div class="retro-section__meta">
+        <span class="retro-section__num mono">08</span>
+        <span class="label">Nächste Forschungsfrage &amp; Fazit</span>
+        <EvidenceBadge status="hypothesis" />
+      </div>
+      <h2 class="retro-section__title" id="retro-08-title">
+        Erst Experten-Komplementarität auf echten Daten messen
+      </h2>
+    </header>
+
+    <div class="retro-panel retro-panel--research">
+      <p class="retro-panel__text">
+        Bevor komplexe Classifier-Router oder Mixture-of-Experts-Systeme gebaut werden, muss die{' '}
+        <strong>Komplementarität genuin unterschiedlicher Experten</strong> (<code>Tesseract</code>,{' '}
+        <code>TATR</code>, <code>MinerU2.5</code> / <code>Docling</code>) systematisch auf{' '}
+        <strong>echten Dokumenten</strong> gemessen werden — per Oracle-Decke über reale Tabellen
+        statt über fünf Parametervarianten einer einzigen OCR-Engine, ergänzt um isolierte Ablation
+        einzelner Generator-Annahmen.
+      </p>
+    </div>
+
+    <aside class="retro-conclusion" aria-label="Schlussfolgerung">
+      <p class="label retro-conclusion__label">Schlussfolgerung</p>
+      <p class="retro-conclusion__text">
+        Die eigentliche Engstelle war nicht Ideenmangel oder Scope Creep, sondern das Überführen von
+        Exploration in verifizierte Erkenntnis, persönliche Engineering-Kompetenz und ein gemeinsam
+        verantwortetes, ausgeliefertes Artefakt.
+      </p>
+    </aside>
+  </section>
+
+  <div id="retro-timeline" class="retro-timeline-heading">
+    <p class="label retro-timeline-heading__eyebrow">Chronological Audit Trail</p>
+    <h2 class="retro-timeline-heading__title">
+      Die dokumentierten Ereignisse im Licht des kritischen Audits
+    </h2>
+    <p class="retro-timeline-heading__lede">
+      Dieselben 37 Ereignisse wie in Tech, Learnings und Story — ergänzt um die retrospektive
+      Einordnung an den Wendepunkten.
+    </p>
+  </div>
+</div>
+
+<style>
+  .retro {
+    --retro-soft: rgba(185, 167, 224, 0.12);
+    --retro-line: rgba(185, 167, 224, 0.36);
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    min-width: 0;
+    margin-bottom: 2.75rem;
+  }
+
+  .retro > * {
+    min-width: 0;
+  }
+
+  .retro-hero {
+    padding: 1.45rem 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--retro-line);
+    border-radius: 4px;
+    box-shadow: inset 3px 0 0 #b9a7e0;
+  }
+
+  .retro-hero__top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.6rem 1.2rem;
+    padding-bottom: 0.9rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .retro-hero__badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .retro-pill {
+    color: #b9a7e0;
+  }
+
+  .retro-hero__project {
+    font-size: 0.72rem;
+    color: var(--text-3);
+  }
+
+  .retro-hero__project a {
+    color: #b9a7e0;
+    text-decoration: none;
+  }
+
+  .retro-hero__project a:hover {
+    text-decoration: underline;
+  }
+
+  .retro-hero__kicker {
+    color: #b9a7e0;
+  }
+
+  .retro-hero__quote {
+    margin: 0.55rem 0 0;
+    max-width: 62ch;
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2.4vw, 1.625rem);
+    line-height: 1.38;
+    color: var(--text-1);
+  }
+
+  .retro-hero__note {
+    margin-top: 1rem;
+    padding: 0.75rem 0.9rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    font-size: 0.84rem;
+    line-height: 1.55;
+    color: var(--text-2);
+  }
+
+  .retro-hero__note code {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-1);
+  }
+
+  .retro-toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1.1rem;
+    padding-top: 0.95rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .retro-toc__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.24rem 0.55rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    text-decoration: none;
+    font-size: 0.75rem;
+    color: var(--text-2);
+    transition: border-color 140ms ease, color 140ms ease;
+  }
+
+  .retro-toc__link:hover {
+    border-color: var(--retro-line);
+    color: var(--text-1);
+  }
+
+  .retro-toc__num {
+    font-size: 0.6875rem;
+    color: #b9a7e0;
+  }
+
+  .retro-section {
+    scroll-margin-top: 84px;
+    padding: 1.45rem 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+  }
+
+  .retro-section__head {
+    margin-bottom: 1.1rem;
+  }
+
+  .retro-section__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem 0.65rem;
+  }
+
+  .retro-section__num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.75rem;
+    padding: 0.12rem 0.35rem;
+    background: var(--retro-soft);
+    border: 1px solid var(--retro-line);
+    border-radius: 2px;
+    font-size: 0.72rem;
+    color: #b9a7e0;
+  }
+
+  .retro-section__title {
+    margin-top: 0.55rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+    line-height: 1.25;
+    color: var(--text-1);
+  }
+
+  .retro-section__lede {
+    margin-top: 0.5rem;
+    max-width: var(--measure);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--text-2);
+  }
+
+  .retro-section__lede code,
+  .retro-panel code,
+  .retro-mini code,
+  .retro-contradictions code {
+    font-family: var(--font-mono);
+    font-size: 0.82em;
+    color: var(--text-1);
+  }
+
+  .retro-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  @media (min-width: 760px) {
+    .retro-split {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .retro-panel {
+    padding: 1rem 1.1rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+
+  .retro-panel__tag {
+    margin-bottom: 0.6rem;
+    color: #b9a7e0;
+  }
+
+  .retro-panel__tag--good {
+    color: #86cfa3;
+  }
+
+  .retro-panel__tag--warn {
+    color: #e88c8c;
+  }
+
+  .retro-panel__text {
+    font-size: 0.9rem;
+    line-height: 1.62;
+    color: var(--text-2);
+  }
+
+  .retro-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .retro-list li {
+    position: relative;
+    padding-left: 0.95rem;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--text-2);
+  }
+
+  .retro-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--text-faint);
+  }
+
+  .retro-list strong {
+    color: var(--text-1);
+    font-weight: 600;
+  }
+
+  .retro-callout {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    border-left: 2px solid #b9a7e0;
+    background: var(--retro-soft);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--text-1);
+  }
+
+  .retro-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--surface);
+    margin-bottom: 1rem;
+  }
+
+  .retro-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.825rem;
+    text-align: left;
+  }
+
+  .retro-table th,
+  .retro-table td {
+    padding: 0.62rem 0.75rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: middle;
+  }
+
+  .retro-table thead th {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .retro-table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .retro-table__strong {
+    font-weight: 600;
+    color: var(--text-1);
+  }
+
+  .retro-table__val {
+    white-space: nowrap;
+    color: var(--text-1);
+  }
+
+  .retro-table__note {
+    color: var(--text-3);
+    line-height: 1.45;
+  }
+
+  .retro-cards-3 {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  @media (min-width: 820px) {
+    .retro-cards-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .retro-mini {
+    padding: 1rem 1.05rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+
+  .retro-mini__kicker {
+    color: #b9a7e0;
+  }
+
+  .retro-mini__title {
+    margin-top: 0.35rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    line-height: 1.28;
+    color: var(--text-1);
+  }
+
+  .retro-mini__body {
+    margin-top: 0.45rem;
+    font-size: 0.85rem;
+    line-height: 1.58;
+    color: var(--text-2);
+  }
+
+  .retro-mini__body strong {
+    color: var(--text-1);
+  }
+
+  .retro-metric-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+
+  .retro-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.28rem;
+    padding: 0.85rem 0.95rem;
+    background: var(--surface);
+  }
+
+  .retro-stat__val {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--text-1);
+  }
+
+  .retro-stat__sub {
+    font-size: 0.7rem;
+    color: var(--text-3);
+    line-height: 1.4;
+  }
+
+  .retro-contradictions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .retro-contradictions li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.45rem 1rem;
+    padding: 0.9rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    font-size: 0.875rem;
+    line-height: 1.58;
+    color: var(--text-2);
+  }
+
+  .retro-contradictions strong {
+    color: var(--text-1);
+  }
+
+  .retro-contradictions__tag {
+    align-self: start;
+    justify-self: start;
+    padding: 0.14rem 0.45rem;
+    border: 1px solid var(--retro-line);
+    border-radius: 2px;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #b9a7e0;
+  }
+
+  @media (min-width: 720px) {
+    .retro-contradictions li {
+      grid-template-columns: 11.5rem minmax(0, 1fr);
+    }
+  }
+
+  .retro-rules {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.85rem;
+  }
+
+  @media (min-width: 720px) {
+    .retro-rules {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 980px) {
+    .retro-rules {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .retro-rule {
+    padding: 1rem 1.05rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+
+  .retro-rule__num {
+    display: inline-block;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    color: #b9a7e0;
+  }
+
+  .retro-rule__title {
+    margin-top: 0.35rem;
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    line-height: 1.25;
+    color: var(--text-1);
+  }
+
+  .retro-rule__body {
+    margin-top: 0.45rem;
+    font-size: 0.85rem;
+    line-height: 1.56;
+    color: var(--text-2);
+  }
+
+  .retro-conclusion {
+    margin-top: 1rem;
+    padding: 1.15rem 1.25rem;
+    background: var(--retro-soft);
+    border: 1px solid var(--retro-line);
+    border-radius: 3px;
+  }
+
+  .retro-conclusion__label {
+    color: #b9a7e0;
+  }
+
+  .retro-conclusion__text {
+    margin-top: 0.4rem;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    line-height: 1.5;
+    color: var(--text-1);
+  }
+
+  .retro-timeline-heading {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--rule-strong);
+    scroll-margin-top: 84px;
+  }
+
+  .retro-timeline-heading__eyebrow {
+    color: #b9a7e0;
+  }
+
+  .retro-timeline-heading__title {
+    margin-top: 0.4rem;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--text-1);
+  }
+
+  .retro-timeline-heading__lede {
+    margin-top: 0.4rem;
+    max-width: var(--measure);
+    font-size: 0.9rem;
+    color: var(--text-2);
+  }
+
+  @media (max-width: 680px) {
+    .retro-table thead {
+      display: none;
+    }
+
+    .retro-table,
+    .retro-table tbody,
+    .retro-table tr,
+    .retro-table td {
+      display: block;
+      width: 100%;
+    }
+
+    .retro-table tr {
+      padding: 0.7rem 0.75rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .retro-table tr:last-child {
+      border-bottom: 0;
+    }
+
+    .retro-table td {
+      padding: 0.14rem 0;
+      border-bottom: 0;
+    }
+
+    .retro-table__val {
+      white-space: normal;
+      font-size: 0.9rem;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .retro-hero,
+    .retro-section {
+      padding: 1.05rem 0.95rem;
+    }
+  }
+</style>

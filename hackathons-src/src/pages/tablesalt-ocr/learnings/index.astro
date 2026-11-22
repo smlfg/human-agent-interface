@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Timeline from '../../../components/Timeline.astro';
+import EvidenceLegend from '../../../components/EvidenceLegend.astro';
+import { PAGES, pageHref } from '../../../lib/pages';
+
+const page = PAGES.learnings;
+---
+
+<BaseLayout
+  title={page.title}
+  lede={page.lede}
+  description="The learning record of the TableSalt OCR hackathon: what was assumed, what the measurement showed, and what stayed open."
+  accent={page.accent}
+  page="learnings"
+  eyebrow="Perspective 02 — Learnings"
+>
+  <EvidenceLegend />
+  <Timeline pageId="learnings" />
+  <aside class="closing" aria-labelledby="closing-title">
+    <p class="label closing__label">Concluding chapter</p>
+    <h2 class="closing__title" id="closing-title">What the Benchmark Couldn’t Measure</h2>
+    <p class="closing__body">
+      The final retrospective separates project output, agent output, human collaboration and
+      independently demonstrated understanding — and says where the benchmark stops being evidence.
+    </p>
+    <a class="closing__cta" href={pageHref('retro')}>Read the retrospective <span aria-hidden="true">→</span></a>
+  </aside>
+</BaseLayout>
+
+<style>
+  .closing {
+    margin-top: 3.5rem;
+    padding: 1.6rem 1.5rem;
+    border: 1px solid var(--accent-line);
+    background: var(--accent-soft);
+    border-radius: 4px;
+    max-width: 64ch;
+  }
+  .closing__label { color: var(--accent); }
+  .closing__title {
+    margin-top: 0.4rem;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    line-height: 1.2;
+    color: var(--text-1);
+  }
+  .closing__body { margin-top: 0.6rem; color: var(--text-2); line-height: 1.6; font-size: 0.9375rem; }
+  .closing__cta {
+    display: inline-block;
+    margin-top: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-1);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+  }
+</style>

@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Timeline from '../../components/Timeline.astro';
+import EvidenceLegend from '../../components/EvidenceLegend.astro';
+import { PAGES } from '../../lib/pages';
+
+const page = PAGES.story;
+---
+
+<BaseLayout
+  title={page.title}
+  lede={page.lede}
+  description="The narrative of the TableSalt OCR hackathon: three days in order, from the first commit to the handover."
+  accent={page.accent}
+  page="story"
+  eyebrow="Perspective 03 — Narrative"
+  narrow={true}
+>
+  <EvidenceLegend />
+  <div class="story">
+    <Timeline pageId="story" />
+  </div>
+</BaseLayout>
+
+<style>
+  .story :global(.tl-chapter) {
+    margin-bottom: 4.5rem;
+  }
+
+  .story :global(.tl-event) {
+    padding-bottom: 1.9rem;
+  }
+
+  .story :global(.card) {
+    padding: 1.25rem 1.4rem 1.15rem;
+  }
+</style>

@@ -1,0 +1,139 @@
+---
+import type { PageId } from '../content/schema';
+import '../styles/global.css';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import { DOC_BASE } from '../lib/paths';
+
+interface Props {
+  /** The visible page title — becomes the single <h1>. */
+  title: string;
+  /** Short framing paragraph under the title. */
+  lede?: string;
+  /** Meta description. */
+  description: string;
+  /** Page accent colour (hex). */
+  accent: string;
+  /** Which perspective is active, for nav aria-current. */
+  page?: PageId | null;
+  /** Eyebrow label above the title. */
+  eyebrow?: string;
+  /** Narrow the reading column (used by the story page). */
+  narrow?: boolean;
+}
+
+const {
+  title,
+  lede,
+  description,
+  accent,
+  page = null,
+  eyebrow,
+  narrow = false,
+} = Astro.props;
+
+function hexToRgba(hex: string, alpha: number): string | null {
+  const m = /^#?([0-9a-fA-F]{6})$/.exec(hex.trim());
+  if (!m) return null;
+  const n = parseInt(m[1], 16);
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+const accentSoft = hexToRgba(accent, 0.14) ?? 'rgba(127, 212, 232, 0.14)';
+const accentLine = hexToRgba(accent, 0.38) ?? 'rgba(127, 212, 232, 0.38)';
+---
+
+<!doctype html>
+<html
+  lang="en"
+  style={`--accent:${accent};--accent-soft:${accentSoft};--accent-line:${accentLine};`}
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="dark" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} · TableSalt OCR · Samuel Fleig</title>
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Samuel Fleig — Hackathons" />
+    <meta property="og:title" content={`${title} · TableSalt OCR`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.svg`} type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <SiteHeader current={page} />
+    <main id="main" class="main" tabindex="-1">
+      <div class:list={['shell', 'main__inner', { 'main__inner--narrow': narrow }]}>
+        <div class="page-head">
+          {eyebrow ? <p class="page-head__eyebrow label">{eyebrow}</p> : null}
+          <h1 class="page-head__title">{title}</h1>
+          {lede ? <p class="page-head__lede">{lede}</p> : null}
+        </div>
+        <slot />
+      </div>
+    </main>
+    <SiteFooter />
+  </body>
+</html>
+
+<script>
+  import '../scripts/timeline';
+</script>
+
+<style>
+  .main {
+    padding-top: 2.25rem;
+    padding-bottom: 1rem;
+  }
+
+  .main__inner--narrow {
+    max-width: 900px;
+  }
+
+  .page-head {
+    max-width: 64ch;
+    margin-bottom: 2.25rem;
+  }
+
+  .page-head__eyebrow {
+    color: var(--accent);
+  }
+
+  .page-head__title {
+    margin-top: 0.55rem;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5.2vw, 3.15rem);
+    line-height: 1.08;
+    letter-spacing: -0.018em;
+    color: var(--text-1);
+  }
+
+  .page-head__lede {
+    margin-top: 0.9rem;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--text-2);
+  }
+
+  @media (max-width: 600px) {
+    .main {
+      padding-top: 1.5rem;
+    }
+
+    .page-head {
+      margin-bottom: 1.6rem;
+    }
+
+    .page-head__lede {
+      font-size: 0.9375rem;
+    }
+  }
+</style>

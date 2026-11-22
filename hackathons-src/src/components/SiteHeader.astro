@@ -1,0 +1,210 @@
+---
+import type { PageId } from '../content/schema';
+import { siteMeta } from '../content/events';
+import { NAV_IDS, PAGES, pageHref, pagePath } from '../lib/pages';
+import { archiveHref, docHref, HOME_HREF } from '../lib/paths';
+
+interface Props {
+  current?: PageId | null;
+}
+
+const { current = null } = Astro.props;
+---
+
+<header class="site">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <div class="shell crumbs__inner">
+      <a href={HOME_HREF}>Samuel Fleig</a>
+      <span aria-hidden="true">/</span>
+      <a href={archiveHref()}>Hackathons</a>
+      <span aria-hidden="true">/</span>
+      <a href={docHref()} aria-current={current === null ? 'page' : undefined}>TableSalt OCR</a>
+    </div>
+  </nav>
+  <div class="site__bar">
+    <div class="shell site__bar-inner">
+      <a class="brand" href={docHref()}>
+        <span class="brand__name">{siteMeta.title}</span>
+        <span class="brand__tag label">OCR documentary</span>
+      </a>
+      <nav class="nav" aria-label="Perspectives">
+        <ul class="nav__list">
+          {
+            NAV_IDS.map((id) => (
+              <li>
+                <a
+                  class="nav__link"
+                  href={pageHref(id)}
+                  aria-current={(current === id || (id === 'learnings' && current === 'retro')) ? 'page' : undefined}
+                  data-perspective-link
+                  data-page={id}
+                  data-path={pagePath(id)}
+                >
+                  {PAGES[id].nav}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="site__meta">
+    <div class="shell site__meta-inner">
+      <span class="site__meta-item">{siteMeta.event}</span>
+      <span class="site__meta-item">{siteMeta.location}</span>
+      <span class="site__meta-item">{siteMeta.dates}</span>
+      <span class="site__meta-item">{siteMeta.author}</span>
+      <a class="site__meta-item site__meta-link" href={siteMeta.repository} rel="noopener noreferrer">
+        repository ↗
+      </a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .crumbs {
+    border-bottom: 1px solid var(--rule);
+    background: var(--surface);
+  }
+
+  .crumbs__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.6rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+  }
+
+  .crumbs a {
+    color: var(--text-3);
+    text-decoration: none;
+  }
+
+  .crumbs a:hover {
+    color: var(--text-1);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .crumbs a[aria-current='page'] {
+    color: var(--text-1);
+  }
+
+  .site {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .site__bar {
+    padding: 1.15rem 0 0.9rem;
+  }
+
+  .site__bar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+    text-decoration: none;
+  }
+
+  .brand__name {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    letter-spacing: -0.01em;
+    color: var(--text-1);
+  }
+
+  .brand__tag {
+    color: var(--text-faint);
+  }
+
+  .nav__list {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .nav__link {
+    display: inline-block;
+    padding: 0.32rem 0.7rem;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--text-3);
+    transition: color 140ms ease, border-color 140ms ease;
+  }
+
+  .nav__link:hover {
+    color: var(--text-1);
+    border-color: var(--rule-strong);
+  }
+
+  .nav__link[aria-current='page'] {
+    color: var(--accent);
+    border-color: var(--accent-line);
+    background: var(--accent-soft);
+  }
+
+  .site__meta {
+    border-top: 1px solid var(--rule);
+  }
+
+  .site__meta-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.15rem;
+    padding-top: 0.6rem;
+    padding-bottom: 0.65rem;
+  }
+
+  .site__meta-item {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.07em;
+    color: var(--text-3);
+  }
+
+  .site__meta-link {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .site__meta-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 600px) {
+    .site__bar-inner {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .nav__list {
+      width: 100%;
+    }
+
+    .nav__link {
+      flex: 1;
+      text-align: center;
+      padding: 0.4rem 0.5rem;
+    }
+  }
+</style>

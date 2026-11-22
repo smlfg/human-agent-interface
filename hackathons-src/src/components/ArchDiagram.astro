@@ -1,0 +1,240 @@
+---
+import type { ArchDiagram as ArchDiagramData } from '../content/schema';
+import { layoutDiagram } from '../lib/diagram';
+
+interface Props {
+  diagram: ArchDiagramData;
+  /** Unique id prefix so several diagrams can live on one page. */
+  idBase: string;
+}
+
+const { diagram, idBase } = Astro.props;
+const layout = layoutDiagram(diagram);
+const titleId = `${idBase}-title`;
+const descId = `${idBase}-desc`;
+
+const KIND_LABEL: Record<ArchDiagramData['kind'], string> = {
+  architecture: 'Architecture',
+  'decision-tree': 'Decision tree',
+  'dataset-shift': 'Dataset shift',
+  'layer-stack': 'Layer stack',
+};
+---
+
+<figure class="diagram" data-kind={diagram.kind}>
+  <div
+    class="diagram__viewport"
+    tabindex="0"
+    role="region"
+    aria-label={`${diagram.title} — ${KIND_LABEL[diagram.kind]} diagram, scrollable`}
+  >
+    <svg
+      class="diagram__svg"
+      viewBox={`0 0 ${layout.width} ${layout.height}`}
+      width={layout.width}
+      height={layout.height}
+      role="img"
+      aria-labelledby={titleId}
+      aria-describedby={descId}
+    >
+      <title id={titleId}>{diagram.title}</title>
+      <desc id={descId}>{diagram.caption ?? diagram.title}</desc>
+
+      <g class="diagram__edges" fill="none">
+        {
+          layout.edges.map((edge) => (
+            <Fragment>
+              <path class="edge" d={edge.path} />
+              {edge.label ? (
+                <g class="edge__label">
+                  <rect
+                    x={edge.labelX - edge.label.length * 3.1 - 5}
+                    y={edge.labelY - 9}
+                    width={edge.label.length * 6.2 + 10}
+                    height={15}
+                    rx={2}
+                  />
+                  <text x={edge.labelX} y={edge.labelY + 2}>
+                    {edge.label}
+                  </text>
+                </g>
+              ) : null}
+            </Fragment>
+          ))
+        }
+      </g>
+
+      <g class="diagram__nodes">
+        {
+          layout.nodes.map((item) => (
+            <g
+              class="node"
+              data-kind={item.node.kind ?? 'process'}
+              data-changed={item.node.changed ? 'true' : 'false'}
+            >
+              {item.node.detail ? <title>{item.node.detail}</title> : null}
+              <rect
+                class="node__box"
+                x={item.x}
+                y={item.y}
+                width={item.w}
+                height={item.h}
+                rx={9}
+              />
+              {item.node.changed ? (
+                <text class="node__flag" x={item.x + item.w - 8} y={item.y + 13} text-anchor="end">
+                  new
+                </text>
+              ) : null}
+              <text class="node__label" x={item.cx} y={item.y + 26} text-anchor="middle">
+                {item.lines.map((line, index) => (
+                  <tspan x={item.cx} dy={index === 0 ? 0 : 16}>
+                    {line}
+                  </tspan>
+                ))}
+              </text>
+            </g>
+          ))
+        }
+      </g>
+    </svg>
+  </div>
+  <figcaption class="diagram__caption">
+    <span class="label">{KIND_LABEL[diagram.kind]}</span>
+    <p class="diagram__text">{diagram.caption ?? diagram.title}</p>
+    <p class="diagram__scrollhint" aria-hidden="true">scroll →</p>
+  </figcaption>
+</figure>
+
+<style>
+  .diagram {
+    margin: 1.6rem 0;
+    padding: 1rem 1rem 0.85rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .diagram__viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+    padding-bottom: 0.35rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .diagram__viewport:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .diagram__svg {
+    min-width: 520px;
+    width: 100%;
+    height: auto;
+  }
+
+  .edge {
+    stroke: var(--rule-strong);
+    stroke-width: 1.15;
+  }
+
+  .edge__label rect {
+    fill: var(--surface);
+  }
+
+  .edge__label text {
+    fill: var(--text-3);
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .node__box {
+    fill: var(--card);
+    stroke: var(--rule-strong);
+    stroke-width: 1;
+  }
+
+  .node[data-kind='decision'] .node__box {
+    fill: var(--surface);
+    stroke-dasharray: 4 3;
+  }
+
+  .node[data-kind='metric'] .node__box {
+    fill: var(--surface);
+    stroke-dasharray: 1.5 2.5;
+  }
+
+  .node[data-kind='output'] .node__box {
+    stroke: var(--text-3);
+  }
+
+  .node[data-changed='true'] .node__box {
+    fill: var(--accent-soft);
+    stroke: var(--accent);
+    stroke-width: 1.2;
+  }
+
+  .node__label {
+    fill: var(--text-1);
+    font-family: var(--font-ui);
+    font-size: 12.5px;
+    letter-spacing: 0.01em;
+  }
+
+  .node__flag {
+    fill: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .diagram__caption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem 0.85rem;
+    margin-top: 0.85rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .diagram__text {
+    flex: 1 1 32ch;
+    min-width: 0;
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--text-2);
+  }
+
+  .diagram__scrollhint {
+    display: none;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+
+  @media (max-width: 600px) {
+    .diagram {
+      padding: 0.75rem 0.75rem 0.7rem;
+    }
+
+    .diagram__svg {
+      min-width: 460px;
+    }
+
+    .diagram__scrollhint {
+      display: block;
+      order: 3;
+      width: 100%;
+    }
+  }
+</style>

@@ -1,0 +1,128 @@
+---
+import type { LearningFrame } from '../content/schema';
+
+interface Props {
+  frame: LearningFrame;
+}
+
+const { frame } = Astro.props;
+
+const STEPS = [
+  { key: 'thought', label: 'I thought', tone: 'muted' },
+  { key: 'observed', label: 'I observed', tone: 'accent' },
+  { key: 'understood', label: 'I understood', tone: 'accent-strong' },
+  { key: 'question', label: 'I now question', tone: 'open' },
+] as const;
+---
+
+<ol class="frame">
+  {
+    STEPS.map((step, index) => (
+      <li class="frame__step" data-tone={step.tone}>
+        <div class="frame__marker">
+          <span class="frame__index mono">{String(index + 1).padStart(2, '0')}</span>
+        </div>
+        <div class="frame__body">
+          <p class="frame__label label">{step.label}</p>
+          <p class="frame__text">{frame[step.key]}</p>
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .frame {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    counter-reset: none;
+  }
+
+  .frame__step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.2rem minmax(0, 1fr);
+    gap: 0 0.9rem;
+    padding-bottom: 1.05rem;
+  }
+
+  .frame__step:last-child {
+    padding-bottom: 0;
+  }
+
+  /* The progression line — one continuous amber thread through the four steps. */
+  .frame__step::before {
+    content: '';
+    position: absolute;
+    left: 0.42rem;
+    top: 1.05rem;
+    bottom: -0.15rem;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent-line), var(--rule));
+  }
+
+  .frame__step:last-child::before {
+    display: none;
+  }
+
+  .frame__marker {
+    display: flex;
+    justify-content: center;
+    padding-top: 0.1rem;
+  }
+
+  .frame__index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 0.9rem;
+    height: 0.9rem;
+    margin-top: 0.25rem;
+    font-size: 0.5625rem;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+    border: 1px solid var(--rule-strong);
+    border-radius: 50%;
+    background: var(--surface);
+  }
+
+  .frame__step[data-tone='accent'] .frame__index,
+  .frame__step[data-tone='accent-strong'] .frame__index {
+    color: var(--accent);
+    border-color: var(--accent-line);
+  }
+
+  .frame__step[data-tone='open'] .frame__index {
+    color: var(--text-2);
+    border-style: dashed;
+    border-color: var(--rule-strong);
+  }
+
+  .frame__label {
+    color: var(--text-3);
+    font-size: 0.625rem;
+  }
+
+  .frame__step[data-tone='accent'] .frame__label,
+  .frame__step[data-tone='accent-strong'] .frame__label {
+    color: var(--accent);
+  }
+
+  .frame__text {
+    margin-top: 0.3rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--text-1);
+    max-width: 64ch;
+  }
+
+  .frame__step[data-tone='muted'] .frame__text {
+    color: var(--text-2);
+  }
+
+  .frame__step[data-tone='open'] .frame__text {
+    color: var(--text-2);
+    font-style: italic;
+  }
+</style>
