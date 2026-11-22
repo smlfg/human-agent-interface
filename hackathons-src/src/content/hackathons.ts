@@ -28,6 +28,44 @@ export interface HackathonEntry {
 
 export const hackathons: HackathonEntry[] = [
   {
+    slug: 'founder-hackathon-stuttgart',
+    name: 'Cursor x Sandbox Founder Hackathon Stuttgart',
+    project: 'FiCo',
+    dates: '7 November 2026',
+    isoDate: '2026-11-07',
+    location: 'Stuttgart',
+    organizer: 'Cursor x Sandbox (per my own repository title; not independently confirmed)',
+    challenge: 'No official challenge text is recorded. I built FiCo, a gamified personal-finance product.',
+    role: 'I built FiCo. Team and exact role are not recorded here.',
+    collaborators: 'Not named in the project record, so not listed here.',
+    technologies: ['TypeScript', 'Node', 'Docker', 'Gamification'],
+    outcome:
+      'FiCo, a gamified personal-finance product, with a five-slide pitch and a recorded demo. No result or placement is recorded, so none is claimed here.',
+    evidenceStatus:
+      'Based on the project files and day-of recordings; the repository is private, so it is not linked.',
+    keyLearning:
+      'The product was built for an outside audience but kept private, and an insight from the day stayed in a voice note. Next time: a public repository and a short post soon after the event.',
+  },
+  {
+    slug: 'green-city-hackathon',
+    name: 'Green City Hackathon Heilbronn',
+    project: 'Green City data kit and mobility layers',
+    dates: '27–28 October 2026',
+    isoDate: '2026-10-27',
+    location: 'Heilbronn',
+    organizer: 'Not named in the records; data source: greencity.hn.',
+    challenge:
+      'Build on the open citizen-science data of Heilbronn as Green Capital of Europe 2027: street segments, bike sensors, bird-feeder visits and air measurements.',
+    role: 'Team member in a six-person team. My commits covered the data layer: data kit, mobility data loader, sensor and tree-cadastre data, and an architecture diagram.',
+    technologies: ['Python', 'Open data', 'Bike sensor data', 'GitHub branches and pull requests'],
+    outcome: 'No result or placement is recorded, so none is claimed here.',
+    evidenceStatus:
+      'Based on the team repository history (29 commits, 13 of them mine) and my own notes from the day. The repository is on another participant\'s account, so it is not linked.',
+    keyLearning:
+      'First real team workflow on GitHub with branches and merges. Shared data work is easy to give away: next time I would publish the data core under my own name and link it from the team repository.',
+    links: [{ label: 'Data source: greencity.hn', href: 'https://greencity.hn' }],
+  },
+  {
     slug: 'tablesalt-ocr',
     name: 'lerrai TableSalt OCR Challenge — Campus Founders Batch #9',
     project: 'TableSalt OCR',
