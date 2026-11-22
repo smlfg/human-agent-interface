@@ -99,7 +99,7 @@ const jsonLd = {
                       <a class="button" href={`${base}${e.href}learnings/`}>Learnings</a>
                     </>
                   )}
-                  {(e.links ?? []).map((l) => <a class="button" href={l.href} rel="noopener noreferrer">{l.label} ↗</a>)}
+                  {(e.links ?? []).map((l) => <a class={l.primary ? 'button primary' : 'button'} href={l.href} rel="noopener noreferrer">{l.label} ↗</a>)}
                 </p>
               </article>
             </li>
