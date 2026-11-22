@@ -1,0 +1,531 @@
+---
+/**
+ * Interactive demonstration (b): "Dataset shift: synthetic vs real-world"
+ * Attached to `ev-2026-11-21-lexicon-sign-flip` on `/learnings/`.
+ * All numbers come directly from:
+ * - challenge/autoresearch/PILOT_REPORT.md
+ * - challenge/autoresearch/runs/tree_adapter_report.json
+ */
+interface AblationRow {
+  component: string;
+  syntheticDelta: number;
+  syntheticLabel: string;
+  syntheticNote: string;
+  oodDelta: number;
+  oodLabel: string;
+  oodNote: string;
+  flipsSign: boolean;
+}
+
+const ABLATIONS: AblationRow[] = [
+  {
+    component: 'Lexicon OFF',
+    syntheticDelta: -0.032,
+    syntheticLabel: '-0.032',
+    syntheticNote: '4/4 seeds drop when removed → helps synthetic',
+    oodDelta: 0.0067,
+    oodLabel: '+0.0067',
+    oodNote: '5 better, 0 worse when removed → hurts OOD',
+    flipsSign: true,
+  },
+  {
+    component: 'Perspective OFF',
+    syntheticDelta: -0.016,
+    syntheticLabel: '-0.016',
+    syntheticNote: 'sd 0.012, dataset-dependent',
+    oodDelta: -0.0005,
+    oodLabel: '-0.0005',
+    oodNote: 'near-zero on OOD',
+    flipsSign: false,
+  },
+  {
+    component: '3-read vote OFF',
+    syntheticDelta: -0.0012,
+    syntheticLabel: '-0.0012',
+    syntheticNote: 'stable across seeds',
+    oodDelta: 0,
+    oodLabel: '±0',
+    oodNote: 'no measured OOD effect',
+    flipsSign: false,
+  },
+  {
+    component: 'Median denoise OFF',
+    syntheticDelta: -0.0009,
+    syntheticLabel: '-0.0009',
+    syntheticNote: 'within paired MDE (0.0013)',
+    oodDelta: -0.0011,
+    oodLabel: '-0.0011',
+    oodNote: 'small drop when removed',
+    flipsSign: false,
+  },
+];
+
+const MAX_MAG = 0.032;
+---
+
+<section
+  class="shift"
+  aria-label="Interactive example: Dataset shift synthetic vs real-world"
+  data-demo-shift
+  data-mode="compare"
+>
+  <div class="shift__head">
+    <div class="shift__eyebrow-row">
+      <span class="label shift__eyebrow">Interactive example · Component sign flip</span>
+      <span class="shift__badge mono">PILOT_REPORT.md</span>
+    </div>
+    <h4 class="shift__title">Dataset shift: synthetic vs real-world</h4>
+    <p class="shift__desc">
+      Switching off the generator-derived lexicon drops synthetic score by <code>-0.032</code>,
+      but raises real-world <code>OCRBench-v2</code> score by <code>+0.0067</code>.
+    </p>
+  </div>
+
+  <p class="shift__caveat" role="note">
+    <span class="label">Scale warning</span>
+    <span>
+      Different datasets and metrics (<code>FINAL</code> on synthetic generator splits vs{' '}
+      <code>TEDS</code> on <code>OCRBench-v2</code>) — not directly comparable as equivalent
+      scores. Compare the direction and magnitude of paired ablations within each split.
+    </span>
+  </p>
+
+  <div class="shift__controls" role="group" aria-label="Distribution view">
+    <button type="button" class="shift__btn" data-shift-mode="compare" aria-pressed="true">
+      Compare sign flip
+    </button>
+    <button type="button" class="shift__btn" data-shift-mode="synthetic" aria-pressed="false">
+      Synthetic (val200 / r3301 / r3302)
+    </button>
+    <button type="button" class="shift__btn" data-shift-mode="ood" aria-pressed="false">
+      Real-world OOD (OCRBench-v2)
+    </button>
+  </div>
+
+  <div class="shift__baselines">
+    <article class="shift__dist" data-dist="synthetic">
+      <p class="label shift__dist-tag">Synthetic generator distribution · FINAL</p>
+      <dl class="shift__kpis">
+        <div>
+          <dt>val200</dt>
+          <dd class="mono">0.9957</dd>
+        </div>
+        <div>
+          <dt>r3301</dt>
+          <dd class="mono">0.99681</dd>
+        </div>
+        <div>
+          <dt>r3302</dt>
+          <dd class="mono">0.99583</dd>
+        </div>
+        <div>
+          <dt>9 seeds</dt>
+          <dd class="mono">0.9940–0.9985</dd>
+        </div>
+      </dl>
+    </article>
+
+    <article class="shift__dist" data-dist="ood">
+      <p class="label shift__dist-tag">Real-world out-of-distribution · TEDS</p>
+      <dl class="shift__kpis">
+        <div>
+          <dt>OCRBench-v2 baseline</dt>
+          <dd class="mono">0.4774</dd>
+        </div>
+        <div>
+          <dt>Tables</dt>
+          <dd class="mono">n = 24</dd>
+        </div>
+        <div>
+          <dt>Lexicon OFF</dt>
+          <dd class="mono shift__pos">+0.0067 (5 better, 0 worse)</dd>
+        </div>
+      </dl>
+    </article>
+  </div>
+
+  <div class="shift__bars">
+    <p class="shift__bars-caption label">
+      Effect of turning component OFF (negative = component helped · positive = component hurt)
+    </p>
+    {
+      ABLATIONS.map((row) => {
+        const synPct = Math.round((Math.abs(row.syntheticDelta) / MAX_MAG) * 100);
+        const oodPct = Math.round((Math.abs(row.oodDelta) / MAX_MAG) * 100);
+        return (
+          <div class:list={['shift__row', { 'shift__row--flip': row.flipsSign }]}>
+            <div class="shift__row-head">
+              <span class="shift__comp">{row.component}</span>
+              {row.flipsSign ? <span class="shift__flip-tag mono">sign flip</span> : null}
+            </div>
+
+            <div class="shift__tracks">
+              <div class="shift__track" data-dist-track="synthetic">
+                <span class="shift__split label">Synthetic</span>
+                <div class="shift__meter" aria-hidden="true">
+                  <span class="shift__axis" />
+                  <span
+                    class="shift__fill shift__fill--neg"
+                    style={`width: ${Math.max(synPct, row.syntheticDelta === 0 ? 0 : 4)}%`}
+                  />
+                </div>
+                <span class="shift__val mono shift__neg">{row.syntheticLabel}</span>
+                <span class="shift__note">{row.syntheticNote}</span>
+              </div>
+
+              <div class="shift__track" data-dist-track="ood">
+                <span class="shift__split label">OCRBench-v2</span>
+                <div class="shift__meter" aria-hidden="true">
+                  <span class="shift__axis" />
+                  <span
+                    class:list={[
+                      'shift__fill',
+                      row.oodDelta > 0 ? 'shift__fill--pos' : 'shift__fill--neg',
+                    ]}
+                    style={`width: ${Math.max(oodPct, row.oodDelta === 0 ? 0 : 4)}%`}
+                  />
+                </div>
+                <span
+                  class:list={[
+                    'shift__val mono',
+                    row.oodDelta > 0 ? 'shift__pos' : row.oodDelta < 0 ? 'shift__neg' : '',
+                  ]}
+                >
+                  {row.oodLabel}
+                </span>
+                <span class="shift__note">{row.oodNote}</span>
+              </div>
+            </div>
+          </div>
+        );
+      })
+    }
+  </div>
+</section>
+
+<script>
+  function initDatasetShiftDemos(): void {
+    const roots = document.querySelectorAll<HTMLElement>('[data-demo-shift]');
+    for (const root of roots) {
+      if (root.dataset.wired === 'true') continue;
+      root.dataset.wired = 'true';
+
+      const buttons = root.querySelectorAll<HTMLButtonElement>('[data-shift-mode]');
+      const distCards = root.querySelectorAll<HTMLElement>('[data-dist]');
+      const tracks = root.querySelectorAll<HTMLElement>('[data-dist-track]');
+
+      const setMode = (mode: 'compare' | 'synthetic' | 'ood') => {
+        root.dataset.mode = mode;
+        for (const btn of buttons) {
+          btn.setAttribute('aria-pressed', btn.dataset.shiftMode === mode ? 'true' : 'false');
+        }
+        for (const card of distCards) {
+          const show = mode === 'compare' || card.dataset.dist === mode;
+          card.hidden = !show;
+        }
+        for (const track of tracks) {
+          const show = mode === 'compare' || track.dataset.distTrack === mode;
+          track.hidden = !show;
+        }
+      };
+
+      for (const btn of buttons) {
+        btn.addEventListener('click', () => {
+          const mode = btn.dataset.shiftMode;
+          if (mode === 'synthetic' || mode === 'ood' || mode === 'compare') {
+            setMode(mode);
+          }
+        });
+      }
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDatasetShiftDemos, { once: true });
+  } else {
+    initDatasetShiftDemos();
+  }
+</script>
+
+<style>
+  .shift {
+    margin-top: 1rem;
+    padding: 0.95rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--rule-strong);
+    border-left: 2px solid var(--accent);
+    border-radius: 4px;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .shift__head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .shift__eyebrow-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+  }
+
+  .shift__eyebrow {
+    color: var(--accent);
+  }
+
+  .shift__badge {
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    color: var(--text-3);
+  }
+
+  .shift__title {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    color: var(--text-1);
+  }
+
+  .shift__desc {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--text-2);
+    max-width: 64ch;
+  }
+
+  .shift__desc code,
+  .shift__caveat code {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-1);
+  }
+
+  .shift__caveat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    background: rgba(232, 184, 127, 0.08);
+    border: 1px dashed var(--accent-line);
+    border-radius: 3px;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--text-2);
+  }
+
+  .shift__caveat .label {
+    color: var(--accent);
+  }
+
+  .shift__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 0.85rem;
+  }
+
+  .shift__btn {
+    padding: 0.35rem 0.65rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    background: var(--card);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.07em;
+    color: var(--text-2);
+    transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+  }
+
+  .shift__btn:hover {
+    border-color: var(--accent-line);
+    color: var(--text-1);
+  }
+
+  .shift__btn[aria-pressed='true'] {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .shift__baselines {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.65rem;
+    margin-top: 0.85rem;
+  }
+
+  .shift__dist {
+    padding: 0.65rem 0.75rem;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+
+  .shift__dist[hidden] {
+    display: none;
+  }
+
+  .shift__dist-tag {
+    color: var(--text-3);
+    margin-bottom: 0.45rem;
+  }
+
+  .shift__kpis {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 1rem;
+    margin: 0;
+  }
+
+  .shift__kpis dt {
+    font-size: 0.6875rem;
+    color: var(--text-3);
+  }
+
+  .shift__kpis dd {
+    margin: 0.1rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--text-1);
+  }
+
+  .shift__bars {
+    margin-top: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .shift__bars-caption {
+    color: var(--text-3);
+  }
+
+  .shift__row {
+    padding: 0.6rem 0.75rem;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+
+  .shift__row--flip {
+    border-color: var(--accent-line);
+  }
+
+  .shift__row-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .shift__comp {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-1);
+  }
+
+  .shift__flip-tag {
+    padding: 0.08rem 0.38rem;
+    border: 1px solid var(--accent-line);
+    border-radius: 2px;
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .shift__tracks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .shift__track {
+    display: grid;
+    grid-template-columns: 6.2rem 1fr 4.4rem;
+    gap: 0.15rem 0.6rem;
+    align-items: center;
+  }
+
+  .shift__track[hidden] {
+    display: none;
+  }
+
+  .shift__split {
+    font-size: 0.625rem;
+    color: var(--text-3);
+  }
+
+  .shift__meter {
+    position: relative;
+    height: 8px;
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .shift__fill {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 1px;
+  }
+
+  .shift__fill--neg {
+    background: rgba(232, 140, 140, 0.72);
+  }
+
+  .shift__fill--pos {
+    background: rgba(134, 207, 163, 0.85);
+  }
+
+  .shift__val {
+    font-size: 0.75rem;
+    text-align: right;
+  }
+
+  .shift__neg {
+    color: #e88c8c;
+  }
+
+  .shift__pos {
+    color: #86cfa3;
+  }
+
+  .shift__note {
+    grid-column: 2 / -1;
+    font-size: 0.72rem;
+    color: var(--text-3);
+  }
+
+  @media (max-width: 600px) {
+    .shift {
+      padding: 0.8rem 0.75rem;
+    }
+
+    .shift__track {
+      grid-template-columns: 1fr auto;
+    }
+
+    .shift__meter {
+      grid-column: 1 / -1;
+      order: 3;
+    }
+
+    .shift__note {
+      grid-column: 1 / -1;
+      order: 4;
+    }
+  }
+</style>

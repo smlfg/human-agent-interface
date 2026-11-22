@@ -1,0 +1,494 @@
+---
+/**
+ * Interactive demonstration (a): "Correct characters, wrong table"
+ * Attached to `ev-2026-11-21-collapsed-header` on `/learnings/`.
+ * All cells and metrics come directly from:
+ * - challenge/collapsed_header_cases/dev_table_016.json
+ * - challenge/collapsed_header_cases/README.md
+ */
+interface CellSpec {
+  text: string;
+  rs?: number;
+  cs?: number;
+  header?: boolean;
+  fused?: boolean;
+}
+
+const GT_ROWS: CellSpec[][] = [
+  [
+    { text: '', rs: 2, header: true },
+    { text: 'Plan', header: true },
+    { text: 'Delta', header: true },
+    { text: 'Reported', header: true },
+  ],
+  [
+    { text: 'Q1', header: true },
+    { text: 'Q2', header: true },
+    { text: 'Q3', header: true },
+  ],
+  [{ text: 'Oracle' }, { text: '85 421' }, { text: '62 026' }, { text: '34 327' }],
+  [{ text: 'Majority' }, { text: '33 537' }, { text: '—', cs: 2 }],
+  [{ text: 'Baseline' }, { text: '88 672 €' }, { text: '20 838' }, { text: '85 578' }],
+  [{ text: 'Human' }, { text: '80 839' }, { text: '10 673' }, { text: '73 543' }],
+  [{ text: 'Ours (large)' }, { text: '7 487' }, { text: '–' }, { text: '–' }],
+  [{ text: 'Prior SOTA' }, { text: '67 509' }, { text: 'n/a' }, { text: '39 071' }],
+  [{ text: 'Ours (base)' }, { text: '27 867' }, { text: '' }, { text: '13 575' }],
+  [{ text: 'Ablation 3' }, { text: '61 674' }, { text: '65 041' }, { text: '78 094' }],
+];
+
+const PRED_ROWS: CellSpec[][] = [
+  [
+    { text: '', fused: true },
+    { text: 'Plan Q1', fused: true },
+    { text: 'Delta Q2', fused: true },
+    { text: 'Reported Q3', fused: true },
+  ],
+  [{ text: 'Oracle' }, { text: '85 421' }, { text: '62 026' }, { text: '34 327' }],
+  [{ text: 'Majority' }, { text: '33 537' }, { text: '—', cs: 2 }],
+  [{ text: 'Baseline' }, { text: '88 672 €' }, { text: '20 838' }, { text: '85 578' }],
+  [{ text: 'Human' }, { text: '80 839' }, { text: '10 673' }, { text: '73 543' }],
+  [{ text: 'Ours (large)' }, { text: '7 487' }, { text: '—' }, { text: '—' }],
+  [{ text: 'Prior SOTA' }, { text: '67 509' }, { text: 'n/a' }, { text: '39 071' }],
+  [{ text: 'Ours (base)' }, { text: '27 867' }, { text: '' }, { text: '13 575' }],
+  [{ text: 'Ablation 3' }, { text: '61 674' }, { text: '65 041' }, { text: '78 094' }],
+];
+---
+
+<section
+  class="demo"
+  aria-label="Interactive example: Correct characters, wrong table"
+  data-demo-collapsed
+  data-view="pred"
+>
+  <div class="demo__head">
+    <div class="demo__eyebrow-row">
+      <span class="label demo__eyebrow">Interactive example · dev_table_016</span>
+      <span class="demo__badge mono">MinerU2.5 1.2B</span>
+    </div>
+    <h4 class="demo__title">Correct characters, wrong table</h4>
+    <p class="demo__desc">
+      Toggle between the 10-row ground truth and the 9-row prediction. Every letter and digit is read
+      accurately, yet fusing the two borderless header rows breaks every QA lookup.
+    </p>
+  </div>
+
+  <div class="demo__controls" role="group" aria-label="Table view mode">
+    <button
+      type="button"
+      class="demo__btn"
+      data-collapsed-mode="gt"
+      aria-pressed="false"
+    >
+      Ground Truth (10 rows)
+    </button>
+    <button
+      type="button"
+      class="demo__btn"
+      data-collapsed-mode="pred"
+      aria-pressed="true"
+    >
+      Prediction (9 rows · fused header)
+    </button>
+  </div>
+
+  <dl class="demo__stats" aria-live="polite">
+    <div class="demo__stat">
+      <dt>Rows</dt>
+      <dd class="mono" data-stat-rows>9 (expected 10)</dd>
+    </div>
+    <div class="demo__stat">
+      <dt>Header levels</dt>
+      <dd class="mono" data-stat-headers>1 fused row (&lt;td&gt;)</dd>
+    </div>
+    <div class="demo__stat">
+      <dt>TEDS</dt>
+      <dd class="mono" data-stat-teds>0.8352</dd>
+    </div>
+    <div class="demo__stat">
+      <dt>QA score</dt>
+      <dd class="mono demo__stat--warn" data-stat-qa>0 / 5</dd>
+    </div>
+  </dl>
+
+  <div class="demo__table-wrap" tabindex="0" role="region" aria-label="dev_table_016 cell structure">
+    <table class="demo__table" data-table-view="gt" hidden>
+      <thead>
+        {
+          GT_ROWS.slice(0, 2).map((row, rIdx) => (
+            <tr class="demo__row demo__row--header">
+              <th class="demo__ridx mono" scope="row">r{rIdx}</th>
+              {row.map((cell) => (
+                <th
+                  rowspan={cell.rs}
+                  colspan={cell.cs}
+                  class="demo__cell demo__cell--th"
+                >
+                  {cell.text === '' ? <span class="demo__empty">∅</span> : cell.text}
+                </th>
+              ))}
+            </tr>
+          ))
+        }
+      </thead>
+      <tbody>
+        {
+          GT_ROWS.slice(2).map((row, rIdx) => (
+            <tr class="demo__row">
+              <th class="demo__ridx mono" scope="row">r{rIdx + 2}</th>
+              {row.map((cell) => (
+                <td colspan={cell.cs} class="demo__cell">
+                  {cell.text === '' ? <span class="demo__empty">∅</span> : cell.text}
+                </td>
+              ))}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+
+    <table class="demo__table" data-table-view="pred">
+      <tbody>
+        {
+          PRED_ROWS.map((row, rIdx) => (
+            <tr class:list={['demo__row', { 'demo__row--fused': rIdx === 0 }]}>
+              <th class="demo__ridx mono" scope="row">r{rIdx}</th>
+              {row.map((cell) => (
+                <td
+                  colspan={cell.cs}
+                  class:list={['demo__cell', { 'demo__cell--fused': cell.fused }]}
+                >
+                  {cell.text === '' ? <span class="demo__empty">∅</span> : cell.text}
+                </td>
+              ))}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="demo__qa" aria-live="polite">
+    <p class="demo__qa-q">
+      <span class="label">eval_qa.py</span>
+      <span>What is the value for "Human" in column "Q3"?</span>
+    </p>
+    <p class="demo__qa-a mono" data-qa-result>
+      got "" — column "Q3" not found (header cell is "Reported Q3") · expected "73 543"
+    </p>
+  </div>
+
+  <p class="demo__note">
+    Same mechanism in <code>val96_table_070</code> (12→11 rows, TEDS 0.8522, QA 1/5) and{' '}
+    <code>val96_table_094</code> (11→10 rows, TEDS 0.8472, QA 1/5): 5/5 dev QA misses and 15/19
+    val96 QA misses.
+  </p>
+</section>
+
+<script>
+  function initCollapsedDemos(): void {
+    const roots = document.querySelectorAll<HTMLElement>('[data-demo-collapsed]');
+    for (const root of roots) {
+      if (root.dataset.wired === 'true') continue;
+      root.dataset.wired = 'true';
+
+      const buttons = root.querySelectorAll<HTMLButtonElement>('[data-collapsed-mode]');
+      const gtTable = root.querySelector<HTMLElement>('[data-table-view="gt"]');
+      const predTable = root.querySelector<HTMLElement>('[data-table-view="pred"]');
+      const rowsEl = root.querySelector<HTMLElement>('[data-stat-rows]');
+      const headersEl = root.querySelector<HTMLElement>('[data-stat-headers]');
+      const tedsEl = root.querySelector<HTMLElement>('[data-stat-teds]');
+      const qaEl = root.querySelector<HTMLElement>('[data-stat-qa]');
+      const qaResultEl = root.querySelector<HTMLElement>('[data-qa-result]');
+
+      const setMode = (mode: 'gt' | 'pred') => {
+        root.dataset.view = mode;
+        for (const btn of buttons) {
+          const active = btn.dataset.collapsedMode === mode;
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        }
+        if (gtTable) gtTable.hidden = mode !== 'gt';
+        if (predTable) predTable.hidden = mode !== 'pred';
+
+        if (mode === 'gt') {
+          if (rowsEl) rowsEl.textContent = '10 (ground truth)';
+          if (headersEl) headersEl.textContent = '2 separated <th> rows';
+          if (tedsEl) tedsEl.textContent = '1.0000 (reference)';
+          if (qaEl) {
+            qaEl.textContent = '5 / 5 resolvable';
+            qaEl.classList.remove('demo__stat--warn');
+            qaEl.classList.add('demo__stat--ok');
+          }
+          if (qaResultEl) {
+            qaResultEl.textContent = 'resolved column "Q3" at row r1 → "73 543" (matches expected)';
+          }
+        } else {
+          if (rowsEl) rowsEl.textContent = '9 (expected 10)';
+          if (headersEl) headersEl.textContent = '1 fused row (<td>)';
+          if (tedsEl) tedsEl.textContent = '0.8352';
+          if (qaEl) {
+            qaEl.textContent = '0 / 5';
+            qaEl.classList.remove('demo__stat--ok');
+            qaEl.classList.add('demo__stat--warn');
+          }
+          if (qaResultEl) {
+            qaResultEl.textContent =
+              'got "" — column "Q3" not found (header cell is "Reported Q3") · expected "73 543"';
+          }
+        }
+      };
+
+      for (const btn of buttons) {
+        btn.addEventListener('click', () => {
+          const mode = btn.dataset.collapsedMode === 'gt' ? 'gt' : 'pred';
+          setMode(mode);
+        });
+      }
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCollapsedDemos, { once: true });
+  } else {
+    initCollapsedDemos();
+  }
+</script>
+
+<style>
+  .demo {
+    margin-top: 1rem;
+    padding: 0.95rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--rule-strong);
+    border-left: 2px solid var(--accent);
+    border-radius: 4px;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .demo__head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .demo__eyebrow-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+  }
+
+  .demo__eyebrow {
+    color: var(--accent);
+  }
+
+  .demo__badge {
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    color: var(--text-3);
+  }
+
+  .demo__title {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    color: var(--text-1);
+  }
+
+  .demo__desc {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--text-2);
+    max-width: 64ch;
+  }
+
+  .demo__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 0.85rem;
+  }
+
+  .demo__btn {
+    padding: 0.35rem 0.65rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    background: var(--card);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    color: var(--text-2);
+    transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+  }
+
+  .demo__btn:hover {
+    border-color: var(--accent-line);
+    color: var(--text-1);
+  }
+
+  .demo__btn[aria-pressed='true'] {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .demo__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.5rem;
+    margin: 0.85rem 0 0;
+    padding: 0.65rem 0.75rem;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+
+  .demo__stat dt {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+
+  .demo__stat dd {
+    margin: 0.15rem 0 0;
+    font-size: 0.75rem;
+    color: var(--text-1);
+  }
+
+  .demo__stat--warn {
+    color: #e88c8c !important;
+  }
+
+  .demo__stat--ok {
+    color: #86cfa3 !important;
+  }
+
+  .demo__table-wrap {
+    margin-top: 0.85rem;
+    overflow-x: auto;
+    max-width: 100%;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--bg);
+  }
+
+  .demo__table {
+    width: 100%;
+    min-width: 340px;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+  }
+
+  .demo__table[hidden] {
+    display: none;
+  }
+
+  .demo__ridx {
+    width: 2.2rem;
+    padding: 0.3rem 0.45rem;
+    text-align: left;
+    font-weight: 400;
+    color: var(--text-faint);
+    border-bottom: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+    background: var(--surface);
+  }
+
+  .demo__cell {
+    padding: 0.3rem 0.55rem;
+    text-align: left;
+    color: var(--text-2);
+    border-bottom: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+
+  .demo__cell:last-child {
+    border-right: 0;
+  }
+
+  .demo__cell--th {
+    color: #86cfa3;
+    background: rgba(134, 207, 163, 0.08);
+    font-weight: 600;
+  }
+
+  .demo__cell--fused {
+    color: #e88c8c;
+    background: rgba(232, 140, 140, 0.11);
+    font-weight: 600;
+  }
+
+  .demo__row--fused .demo__ridx {
+    color: #e88c8c;
+  }
+
+  .demo__empty {
+    color: var(--text-faint);
+  }
+
+  .demo__qa {
+    margin-top: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .demo__qa-q {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.45rem;
+    font-size: 0.75rem;
+    color: var(--text-1);
+  }
+
+  .demo__qa-a {
+    font-size: 0.6875rem;
+    line-height: 1.5;
+    color: var(--text-2);
+    overflow-wrap: anywhere;
+  }
+
+  [data-view='pred'] .demo__qa-a {
+    color: #e88c8c;
+  }
+
+  [data-view='gt'] .demo__qa-a {
+    color: #86cfa3;
+  }
+
+  .demo__note {
+    margin-top: 0.65rem;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--text-3);
+  }
+
+  .demo__note code {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--text-2);
+  }
+
+  @media (max-width: 600px) {
+    .demo {
+      padding: 0.8rem 0.75rem;
+    }
+
+    .demo__btn {
+      flex: 1 1 auto;
+      text-align: center;
+    }
+  }
+</style>

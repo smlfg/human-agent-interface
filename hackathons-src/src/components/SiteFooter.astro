@@ -1,0 +1,82 @@
+---
+import { siteMeta } from '../content/events';
+---
+
+<footer class="foot">
+  <div class="shell foot__inner">
+    <p class="foot__claim">
+      This site documents a hackathon project — {siteMeta.event}, {siteMeta.location}, {siteMeta.dates}.
+      It is a record of what was tried, measured and believed at the time, not a product page.
+    </p>
+    <p class="foot__caveat">
+      Some numbers here are <strong>reported</strong> rather than reproduced. They come from a parallel
+      session and could not be re-verified inside this repository, and they are marked as such. Every
+      measurement on this site carries an evidence badge — the legend at the top of each page explains
+      what each badge allows a number to mean.
+    </p>
+    <p class="foot__meta">
+      <span>{siteMeta.author}</span>
+      <span aria-hidden="true">·</span>
+      <a href={siteMeta.repository} rel="noopener noreferrer">github.com/smlfg/CFHackathon_OCR_2026</a>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    margin-top: 4rem;
+    border-top: 1px solid var(--rule);
+    background: var(--surface);
+  }
+
+  .foot__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding-top: 2rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .foot__claim {
+    max-width: 68ch;
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--text-1);
+  }
+
+  .foot__caveat {
+    max-width: 72ch;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text-3);
+  }
+
+  .foot__caveat strong {
+    color: #e8b87f;
+    font-weight: 600;
+  }
+
+  .foot__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.7rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+  }
+
+  .foot__meta a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .foot__meta a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

@@ -1,0 +1,21 @@
+{
+  "name": "tablesalt-doc-site",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interactive documentary site for the TableSalt OCR hackathon project.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build && rm -f ../samuel/hackathons/content-*.mjs",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "astro": "^5.6.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.8.3"
+  }
+}

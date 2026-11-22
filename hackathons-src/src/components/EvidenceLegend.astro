@@ -1,0 +1,121 @@
+---
+import { badgeFor, EVIDENCE_ORDER } from '../lib/evidence';
+---
+
+<aside class="legend" aria-labelledby="evidence-legend-title">
+  <div class="legend__head">
+    <p class="label" id="evidence-legend-title">Evidence vocabulary</p>
+    <p class="legend__note">
+      Every number on this site carries one of these six labels. They are not decoration — they say how
+      much the number is allowed to weigh.
+    </p>
+  </div>
+  <ul class="legend__list">
+    {
+      EVIDENCE_ORDER.map((status) => {
+        const badge = badgeFor(status);
+        return (
+          <li class="legend__item" data-badge={badge.key}>
+            <span class="legend__dot" aria-hidden="true" />
+            <div class="legend__text">
+              <p class="legend__label">{badge.label}</p>
+              <p class="legend__desc">{badge.description}</p>
+            </div>
+          </li>
+        );
+      })
+    }
+  </ul>
+</aside>
+
+<style>
+  .legend {
+    margin: 0 0 2.75rem;
+    padding: 1.15rem 1.25rem 1.35rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+  }
+
+  .legend__head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding-bottom: 0.85rem;
+    margin-bottom: 0.9rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .legend__note {
+    max-width: 72ch;
+    font-size: 0.8125rem;
+    color: var(--text-2);
+    line-height: 1.55;
+  }
+
+  .legend__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 0.85rem 1.75rem;
+  }
+
+  .legend__item {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+
+  .legend__dot {
+    width: 7px;
+    height: 7px;
+    margin-top: 0.5rem;
+    border-radius: 50%;
+    flex: none;
+    background: var(--text-3);
+  }
+
+  .legend__item[data-badge='official'] .legend__dot {
+    background: #86cfa3;
+  }
+
+  .legend__item[data-badge='local'] .legend__dot {
+    background: #8fb8dc;
+  }
+
+  .legend__item[data-badge='documented'] .legend__dot {
+    background: #b9a7e0;
+  }
+
+  .legend__item[data-badge='reported'] .legend__dot {
+    background: #e8b87f;
+  }
+
+  .legend__item[data-badge='hypothesis'] .legend__dot {
+    background: #b9a7e0;
+  }
+
+  .legend__item[data-badge='inferred'] .legend__dot {
+    background: var(--text-3);
+  }
+
+  .legend__label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-1);
+  }
+
+  .legend__desc {
+    margin-top: 0.2rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--text-3);
+  }
+
+  @media (max-width: 600px) {
+    .legend {
+      padding: 1rem;
+    }
+  }
+</style>

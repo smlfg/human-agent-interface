@@ -1,0 +1,263 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EvidenceLegend from '../../components/EvidenceLegend.astro';
+import { chapters, datasets, events, siteMeta } from '../../content/events';
+import { NAV_IDS, PAGES, pageHref } from '../../lib/pages';
+
+const perspectives = NAV_IDS.map((id) => PAGES[id]);
+const measured = events.filter((event) => event.evidence === 'measured-official').length;
+---
+
+<BaseLayout
+  title={siteMeta.title}
+  lede={siteMeta.subtitle}
+  description={siteMeta.thesis}
+  accent="#b8b2a8"
+>
+  <section class="thesis" aria-labelledby="thesis-title">
+    <h2 class="thesis__title" id="thesis-title">{siteMeta.thesis}</h2>
+    <p class="thesis__body">
+      This is the working record of a three-day OCR hackathon: {events.length} events across {chapters.length}
+      chapters, {measured} of them backed by the organiser’s own scorer. One chronology, three readings —
+      how it happened, what was built, and what changed in my understanding, closing with a critical
+      retrospective. Pick a perspective; the same moments are waiting under all three.
+    </p>
+  </section>
+
+  <nav class="perspectives" aria-label="Choose a perspective">
+    {
+      perspectives.map((page, index) => (
+        <a class="perspective" href={pageHref(page.id)} data-page={page.id}>
+          <p class="perspective__index label">
+            {String(index + 1).padStart(2, '0')} — {page.nav}
+          </p>
+          <h3 class="perspective__title">{page.title}</h3>
+          <p class="perspective__lede">{page.lede}</p>
+          <span class="perspective__cta">
+            Open the timeline{' '}
+            <span aria-hidden="true">→</span>
+          </span>
+        </a>
+      ))
+    }
+  </nav>
+
+  <section class="record" aria-labelledby="record-title">
+    <h2 class="record__title label" id="record-title">The record</h2>
+    <dl class="record__grid">
+      <div class="record__cell">
+        <dt>Events</dt>
+        <dd>{events.length}</dd>
+      </div>
+      <div class="record__cell">
+        <dt>Chapters</dt>
+        <dd>{chapters.length}</dd>
+      </div>
+      <div class="record__cell">
+        <dt>Datasets</dt>
+        <dd>{datasets.length}</dd>
+      </div>
+      <div class="record__cell">
+        <dt>Measured officially</dt>
+        <dd>{measured}</dd>
+      </div>
+    </dl>
+
+    <ul class="datasets">
+      {
+        datasets.map((dataset) => (
+          <li class="dataset">
+            <span class="dataset__name mono">{dataset.name}</span>
+            <span class="dataset__size mono">{dataset.size}</span>
+            <span class="dataset__role">{dataset.role}</span>
+            <span class="dataset__gt label">GT: {dataset.gtVisible}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <EvidenceLegend />
+</BaseLayout>
+
+<style>
+  .thesis {
+    max-width: 60ch;
+    margin-bottom: 2.75rem;
+  }
+
+  .thesis__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+    line-height: 1.28;
+    letter-spacing: -0.012em;
+    color: var(--text-1);
+  }
+
+  .thesis__body {
+    margin-top: 1rem;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--text-2);
+  }
+
+  .perspectives {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 3rem;
+  }
+
+  @media (min-width: 720px) {
+    .perspectives {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .perspective {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 1.5rem 1.35rem 1.35rem;
+    background: var(--card);
+    text-decoration: none;
+    transition: background 180ms ease;
+  }
+
+  .perspective:hover {
+    background: var(--surface);
+  }
+
+  .perspective__index {
+    color: var(--text-3);
+  }
+
+  .perspective[data-page='tech'] .perspective__index {
+    color: #7fd4e8;
+  }
+
+  .perspective[data-page='learnings'] .perspective__index {
+    color: #e8b87f;
+  }
+
+  .perspective[data-page='story'] .perspective__index {
+    color: #e88c8c;
+  }
+
+  .perspective[data-page='retro'] .perspective__index {
+    color: #b9a7e0;
+  }
+
+  .perspective__title {
+    font-family: var(--font-display);
+    font-size: 1.3125rem;
+    line-height: 1.2;
+    color: var(--text-1);
+  }
+
+  .perspective__lede {
+    flex: 1;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text-2);
+  }
+
+  .perspective__cta {
+    margin-top: 0.35rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+
+  .perspective:hover .perspective__cta {
+    color: var(--text-1);
+  }
+
+  .record {
+    margin-bottom: 3rem;
+  }
+
+  .record__title {
+    margin-bottom: 0.85rem;
+  }
+
+  .record__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0 0 1.75rem;
+  }
+
+  .record__cell {
+    padding: 1rem 1.1rem;
+    background: var(--card);
+  }
+
+  .record__cell dt {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+
+  .record__cell dd {
+    margin: 0.3rem 0 0;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    line-height: 1.1;
+    color: var(--text-1);
+  }
+
+  .datasets {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--rule);
+  }
+
+  .dataset {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.15rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .dataset__name {
+    font-size: 0.8125rem;
+    color: var(--text-1);
+  }
+
+  .dataset__size {
+    font-size: 0.6875rem;
+    color: var(--text-3);
+  }
+
+  .dataset__role {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--text-2);
+  }
+
+  .dataset__gt {
+    color: var(--text-faint);
+  }
+
+  @media (min-width: 760px) {
+    .dataset {
+      grid-template-columns: 9rem 11rem minmax(0, 1fr) 13rem;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+  }
+</style>

@@ -1,0 +1,541 @@
+---
+/**
+ * Interactive demonstration (c): "Decision-tree routing explorer"
+ * Attached to `ev-2026-11-21-decision-tree-result` on `/learnings/`.
+ * All numbers come directly from:
+ * - challenge/autoresearch/runs/tree_adapter_report.json
+ * - challenge/autoresearch/runs/tree_adapter_eval.py
+ */
+
+interface ExpertData {
+  id: 'Base' | 'K1_4reads' | 'K2_5reads' | 'K3_psm8' | 'K4_margin0';
+  label: string;
+  configNote: string;
+  r3301Final: string;
+  r3301Qa: string;
+  r3302Final: string;
+  r3302Qa: string;
+  oodTeds: string;
+  oodDelta: string;
+  treePath: string;
+  modelSource: string;
+}
+
+const EXPERTS: ExpertData[] = [
+  {
+    id: 'Base',
+    label: 'Base',
+    configNote: 'Default pipeline (3 reads, standard margin)',
+    r3301Final: '0.99681',
+    r3301Qa: '474/480',
+    r3302Final: '0.99583',
+    r3302Qa: '471/480',
+    oodTeds: '0.47743',
+    oodDelta: '0.0 (baseline)',
+    treePath: 'speckle_rate <= 0.03 (or 0.03..0.05 & height > 651 px)',
+    modelSource: 'DT_depth3_gainweight · also 100% of RF_100_depth3_unweighted',
+  },
+  {
+    id: 'K1_4reads',
+    label: 'K1_4reads',
+    configNote: '4 OCR read variants',
+    r3301Final: '0.99706',
+    r3301Qa: '475/480',
+    r3302Final: '0.99575',
+    r3302Qa: '471/480',
+    oodTeds: '0.47652',
+    oodDelta: '-0.0009 (4 better, 2 worse)',
+    treePath: 'speckle_rate > 0.05',
+    modelSource: 'DT_depth3_gainweight (7/96 r3302 · 19/24 OOD)',
+  },
+  {
+    id: 'K2_5reads',
+    label: 'K2_5reads',
+    configNote: '5 OCR read variants',
+    r3301Final: '0.99757',
+    r3301Qa: '476/480',
+    r3302Final: '0.99593',
+    r3302Qa: '471/480',
+    oodTeds: '0.47994',
+    oodDelta: '+0.00251 (7 better, 1 worse)',
+    treePath: 'speckle_rate > 0.05 (unweighted) or width > 662 & h_line_max <= 0.24 & aspect_ratio <= 1.26',
+    modelSource: 'DT_depth2_unweighted (7/96 r3302 · 19/24 OOD) · DT_depth4_balanced',
+  },
+  {
+    id: 'K3_psm8',
+    label: 'K3_psm8',
+    configNote: 'Tesseract PSM 8 variant',
+    r3301Final: '0.99735',
+    r3301Qa: '476/480',
+    r3302Final: '0.99533',
+    r3302Qa: '470/480',
+    oodTeds: '0.47824',
+    oodDelta: '+0.00082 (6 better, 3 worse)',
+    treePath: '0.03 < speckle_rate <= 0.05 & height <= 651.00 px',
+    modelSource: 'DT_depth3_gainweight (6/96 r3302 · 1/24 OOD)',
+  },
+  {
+    id: 'K4_margin0',
+    label: 'K4_margin0',
+    configNote: 'Margin 0 crop variant',
+    r3301Final: '0.99698',
+    r3301Qa: '474/480',
+    r3302Final: '0.99548',
+    r3302Qa: '470/480',
+    oodTeds: '0.47840',
+    oodDelta: '+0.00097 (6 better, 3 worse)',
+    treePath: 'p5 > 185.50 & 0.03 < speckle_rate <= 0.04',
+    modelSource: 'DT_depth4_balanced (1/96 r3302)',
+  },
+];
+
+interface PathPreset {
+  id: string;
+  condition: string;
+  detail: string;
+  expertId: ExpertData['id'];
+}
+
+const PATH_PRESETS: PathPreset[] = [
+  {
+    id: 'clean',
+    condition: 'speckle_rate ≤ 0.03',
+    detail: 'Clean image (83/96 in DT_depth3_gainweight)',
+    expertId: 'Base',
+  },
+  {
+    id: 'mod-short',
+    condition: '0.03 < speckle_rate ≤ 0.05 · height ≤ 651',
+    detail: 'Moderate speckle, shorter crop',
+    expertId: 'K3_psm8',
+  },
+  {
+    id: 'mod-bright',
+    condition: 'p5 > 185.5 · 0.03 < speckle_rate ≤ 0.04',
+    detail: 'Bright 5th percentile (DT_depth4_balanced)',
+    expertId: 'K4_margin0',
+  },
+  {
+    id: 'noisy-gw',
+    condition: 'speckle_rate > 0.05 (gain-weighted)',
+    detail: 'High speckle → DT_depth3_gainweight leaf',
+    expertId: 'K1_4reads',
+  },
+  {
+    id: 'noisy-uw',
+    condition: 'speckle_rate > 0.05 (unweighted)',
+    detail: 'High speckle → DT_depth2_unweighted leaf',
+    expertId: 'K2_5reads',
+  },
+];
+---
+
+<section
+  class="router"
+  aria-label="Interactive example: Decision-tree routing explorer"
+  data-demo-router
+  data-selected-expert="Base"
+>
+  <div class="router__head">
+    <div class="router__eyebrow-row">
+      <span class="label router__eyebrow">Interactive example · 14 image features → 5 experts</span>
+      <span class="router__badge mono">tree_adapter_report.json</span>
+    </div>
+    <h4 class="router__title">Decision-tree routing explorer</h4>
+    <p class="router__desc">
+      Click an image-feature condition from the trained trees to inspect the expert it routes to
+      and the measured ceiling behind the negative result.
+    </p>
+  </div>
+
+  <div class="router__paths" role="group" aria-label="Image feature conditions">
+    {
+      PATH_PRESETS.map((preset, idx) => (
+        <button
+          type="button"
+          class="router__path-btn"
+          data-route-preset={preset.id}
+          data-expert-target={preset.expertId}
+          aria-pressed={idx === 0 ? 'true' : 'false'}
+        >
+          <span class="router__path-cond mono">{preset.condition}</span>
+          <span class="router__path-arrow mono" aria-hidden="true">
+            → {preset.expertId}
+          </span>
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="router__experts" role="group" aria-label="Measured experts">
+    {
+      EXPERTS.map((expert, idx) => (
+        <button
+          type="button"
+          class="router__expert-chip mono"
+          data-expert-select={expert.id}
+          aria-pressed={idx === 0 ? 'true' : 'false'}
+        >
+          {expert.label}
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="router__panels" aria-live="polite">
+    {
+      EXPERTS.map((expert, idx) => (
+        <article
+          class="router__panel"
+          data-expert-panel={expert.id}
+          hidden={idx !== 0}
+        >
+          <header class="router__panel-head">
+            <div>
+              <p class="label router__panel-label">Routed expert</p>
+              <h5 class="router__panel-name mono">{expert.label}</h5>
+            </div>
+            <p class="router__panel-note">{expert.configNote}</p>
+          </header>
+
+          <p class="router__rule mono">
+            <span class="label">Tree condition:</span> {expert.treePath}
+          </p>
+          <p class="router__source">{expert.modelSource}</p>
+
+          <dl class="router__metrics">
+            <div class="router__metric">
+              <dt>r3301 (train, n=96)</dt>
+              <dd class="mono">{expert.r3301Final} FINAL</dd>
+              <dd class="router__sub mono">QA {expert.r3301Qa}</dd>
+            </div>
+            <div class="router__metric">
+              <dt>r3302 (held-out, n=96)</dt>
+              <dd class="mono">{expert.r3302Final} FINAL</dd>
+              <dd class="router__sub mono">QA {expert.r3302Qa}</dd>
+            </div>
+            <div class="router__metric">
+              <dt>OCRBench-v2 (OOD, n=24)</dt>
+              <dd class="mono">{expert.oodTeds} TEDS</dd>
+              <dd class="router__sub mono">Δ vs Base: {expert.oodDelta}</dd>
+            </div>
+          </dl>
+        </article>
+      ))
+    }
+  </div>
+
+  <div class="router__summary">
+    <div class="router__bench">
+      <span class="label">Oracle ceiling (theoretical max)</span>
+      <span class="mono router__bench-val">
+        +0.00132 r3301 · +0.00123 r3302 · +0.00379 OOD
+      </span>
+    </div>
+    <div class="router__bench">
+      <span class="label">Best learned tree (DT_depth3_gainweight)</span>
+      <span class="mono router__bench-val">
+        +0.00032 r3302 · 95% CI [-0.00013, 0.00114] (contains 0)
+      </span>
+    </div>
+    <div class="router__bench">
+      <span class="label">Random Forest (RF_100_depth3_unweighted)</span>
+      <span class="mono router__bench-val">
+        100% routed to Base (96/96 r3302 · 24/24 OOD · Δ = 0.0)
+      </span>
+    </div>
+  </div>
+</section>
+
+<script>
+  function initRouterExplorers(): void {
+    const roots = document.querySelectorAll<HTMLElement>('[data-demo-router]');
+    for (const root of roots) {
+      if (root.dataset.wired === 'true') continue;
+      root.dataset.wired = 'true';
+
+      const pathBtns = root.querySelectorAll<HTMLButtonElement>('[data-route-preset]');
+      const expertBtns = root.querySelectorAll<HTMLButtonElement>('[data-expert-select]');
+      const panels = root.querySelectorAll<HTMLElement>('[data-expert-panel]');
+
+      const selectExpert = (expertId: string) => {
+        root.dataset.selectedExpert = expertId;
+        for (const btn of pathBtns) {
+          btn.setAttribute('aria-pressed', btn.dataset.expertTarget === expertId ? 'true' : 'false');
+        }
+        for (const btn of expertBtns) {
+          btn.setAttribute('aria-pressed', btn.dataset.expertSelect === expertId ? 'true' : 'false');
+        }
+        for (const panel of panels) {
+          panel.hidden = panel.dataset.expertPanel !== expertId;
+        }
+      };
+
+      for (const btn of pathBtns) {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.expertTarget;
+          if (target) selectExpert(target);
+        });
+      }
+
+      for (const btn of expertBtns) {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.expertSelect;
+          if (target) selectExpert(target);
+        });
+      }
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRouterExplorers, { once: true });
+  } else {
+    initRouterExplorers();
+  }
+</script>
+
+<style>
+  .router {
+    margin-top: 1rem;
+    padding: 0.95rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--rule-strong);
+    border-left: 2px solid var(--accent);
+    border-radius: 4px;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .router__head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .router__eyebrow-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+  }
+
+  .router__eyebrow {
+    color: var(--accent);
+  }
+
+  .router__badge {
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    color: var(--text-3);
+  }
+
+  .router__title {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    color: var(--text-1);
+  }
+
+  .router__desc {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--text-2);
+    max-width: 64ch;
+  }
+
+  .router__paths {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-top: 0.85rem;
+  }
+
+  .router__path-btn {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 0.65rem;
+    width: 100%;
+    text-align: left;
+    padding: 0.42rem 0.65rem;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    transition: border-color 140ms ease, background 140ms ease;
+  }
+
+  .router__path-btn:hover {
+    border-color: var(--accent-line);
+  }
+
+  .router__path-btn[aria-pressed='true'] {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .router__path-cond {
+    font-size: 0.72rem;
+    color: var(--text-1);
+    overflow-wrap: anywhere;
+  }
+
+  .router__path-arrow {
+    font-size: 0.6875rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .router__experts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.7rem;
+  }
+
+  .router__expert-chip {
+    padding: 0.22rem 0.55rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    background: var(--card);
+    font-size: 0.6875rem;
+    color: var(--text-2);
+    transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+  }
+
+  .router__expert-chip:hover {
+    border-color: var(--accent-line);
+    color: var(--text-1);
+  }
+
+  .router__expert-chip[aria-pressed='true'] {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .router__panels {
+    margin-top: 0.75rem;
+  }
+
+  .router__panel {
+    padding: 0.75rem 0.85rem;
+    background: var(--card);
+    border: 1px solid var(--rule-strong);
+    border-radius: 3px;
+  }
+
+  .router__panel[hidden] {
+    display: none;
+  }
+
+  .router__panel-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.35rem 0.8rem;
+  }
+
+  .router__panel-label {
+    color: var(--accent);
+    font-size: 0.5625rem;
+  }
+
+  .router__panel-name {
+    margin-top: 0.15rem;
+    font-size: 1rem;
+    color: var(--text-1);
+  }
+
+  .router__panel-note {
+    font-size: 0.75rem;
+    color: var(--text-2);
+  }
+
+  .router__rule {
+    margin-top: 0.55rem;
+    padding: 0.4rem 0.55rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    font-size: 0.6875rem;
+    line-height: 1.5;
+    color: var(--text-1);
+    overflow-wrap: anywhere;
+  }
+
+  .router__source {
+    margin-top: 0.35rem;
+    font-size: 0.72rem;
+    color: var(--text-3);
+  }
+
+  .router__metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.55rem;
+    margin: 0.7rem 0 0;
+  }
+
+  .router__metric {
+    padding: 0.5rem 0.6rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+  }
+
+  .router__metric dt {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+
+  .router__metric dd {
+    margin: 0.15rem 0 0;
+    font-size: 0.78rem;
+    color: var(--text-1);
+  }
+
+  .router__sub {
+    font-size: 0.6875rem !important;
+    color: var(--text-3) !important;
+  }
+
+  .router__summary {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .router__bench {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.2rem 0.8rem;
+  }
+
+  .router__bench-val {
+    font-size: 0.72rem;
+    color: var(--text-2);
+  }
+
+  @media (max-width: 600px) {
+    .router {
+      padding: 0.8rem 0.75rem;
+    }
+
+    .router__bench {
+      flex-direction: column;
+    }
+  }
+</style>

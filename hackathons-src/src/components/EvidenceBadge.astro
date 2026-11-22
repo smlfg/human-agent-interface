@@ -1,0 +1,69 @@
+---
+import type { EvidenceStatus } from '../content/schema';
+import { badgeFor } from '../lib/evidence';
+
+interface Props {
+  status: EvidenceStatus;
+  /** Render the full badge word (true) or a bare dot (false). */
+  verbose?: boolean;
+}
+
+const { status, verbose = true } = Astro.props;
+const badge = badgeFor(status);
+---
+
+<span class="badge" data-badge={badge.key} title={badge.title}>
+  {verbose ? <span class="badge__text">{badge.label}</span> : null}
+  <span class="sr-only">Evidence: {badge.title}</span>
+</span>
+
+<style>
+  .badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.16rem 0.42rem;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+
+  .badge::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    flex: none;
+  }
+
+  .badge[data-badge='official'] {
+    color: #86cfa3;
+  }
+
+  .badge[data-badge='local'] {
+    color: #8fb8dc;
+  }
+
+  .badge[data-badge='documented'] {
+    color: #b9a7e0;
+  }
+
+  .badge[data-badge='reported'] {
+    color: #e8b87f;
+  }
+
+  .badge[data-badge='hypothesis'] {
+    color: #b9a7e0;
+  }
+
+  .badge[data-badge='inferred'] {
+    color: var(--text-3);
+  }
+</style>

@@ -1,0 +1,268 @@
+---
+import type { EvidenceStatus, Metric } from '../content/schema';
+import { badgeFor } from '../lib/evidence';
+import { metricEvidence } from '../lib/timeline';
+
+interface Props {
+  metrics: Metric[];
+  eventStatus: EvidenceStatus;
+}
+
+const { metrics, eventStatus } = Astro.props;
+
+function formatValue(value: number | string): string {
+  if (typeof value === 'string') return value;
+  if (!Number.isFinite(value)) return String(value);
+  const fixed = value.toFixed(4);
+  return fixed.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
+}
+
+function formatDelta(value: number | string): string {
+  if (typeof value === 'string') return value;
+  if (!Number.isFinite(value)) return String(value);
+  const sign = value > 0 ? '+' : '';
+  return `${sign}${formatValue(value)}`;
+}
+
+const DIRECTION_MARK: Record<string, string> = { up: '▲', down: '▼', neutral: '■' };
+---
+
+<ul class="metrics">
+  {
+    metrics.map((metric) => {
+      const status = metricEvidence(metric, eventStatus);
+      const badge = badgeFor(status);
+      const hasBaseline = metric.baseline !== undefined;
+      return (
+        <li class="metric" data-badge={badge.key}>
+          <div class="metric__row">
+            <span class="metric__label">{metric.label}</span>
+            <span class="metric__value mono">
+              {formatValue(metric.value)}
+              {metric.unit ? <span class="metric__unit">{metric.unit}</span> : null}
+            </span>
+          </div>
+          <div class="metric__row metric__row--meta">
+            <span class="metric__chips">
+              {metric.dataset ? <span class="chip chip--dataset">{metric.dataset}</span> : null}
+              {metric.tier ? <span class="chip chip--tier">{metric.tier}</span> : null}
+              <span class="badge" data-badge={badge.key} title={badge.title}>
+                {badge.label}
+              </span>
+            </span>
+            {hasBaseline ? (
+              <span class="metric__delta mono">
+                <span class="metric__base">{formatValue(metric.baseline as number | string)}</span>
+                {metric.delta !== undefined ? (
+                  <span class="metric__arrow" aria-hidden="true">
+                    →
+                  </span>
+                ) : null}
+                {metric.delta !== undefined ? (
+                  <span class="metric__change" data-direction={metric.direction ?? 'neutral'}>
+                    {metric.direction ? DIRECTION_MARK[metric.direction] : ''} {formatDelta(metric.delta)}
+                  </span>
+                ) : null}
+                <span class="sr-only">baseline {formatValue(metric.baseline as number | string)}</span>
+              </span>
+            ) : null}
+          </div>
+          {metric.caveat ? <p class="metric__caveat">{metric.caveat}</p> : null}
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  .metrics {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--rule);
+  }
+
+  .metric {
+    padding: 0.7rem 0 0.75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .metric__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+  }
+
+  .metric__row--meta {
+    margin-top: 0.35rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .metric__label {
+    font-size: 0.875rem;
+    color: var(--text-1);
+    line-height: 1.4;
+  }
+
+  .metric__value {
+    font-size: 0.9375rem;
+    color: var(--text-1);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .metric__unit {
+    margin-left: 0.35em;
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+    text-transform: uppercase;
+  }
+
+  .metric__chips {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .chip {
+    display: inline-block;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    white-space: nowrap;
+  }
+
+  .chip--dataset {
+    color: var(--text-2);
+    border-color: var(--rule-strong);
+  }
+
+  .chip--tier {
+    color: var(--text-3);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .badge::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    flex: none;
+  }
+
+  .badge[data-badge='official'] {
+    color: #86cfa3;
+  }
+
+  .badge[data-badge='local'] {
+    color: #8fb8dc;
+  }
+
+  .badge[data-badge='documented'] {
+    color: #b9a7e0;
+  }
+
+  .badge[data-badge='reported'] {
+    color: #e8b87f;
+  }
+
+  .badge[data-badge='hypothesis'] {
+    color: #b9a7e0;
+  }
+
+  .badge[data-badge='inferred'] {
+    color: var(--text-3);
+  }
+
+  .metric__delta {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--text-3);
+  }
+
+  .metric__arrow {
+    color: var(--text-faint);
+  }
+
+  .metric__change[data-direction='up'] {
+    color: #86cfa3;
+  }
+
+  .metric__change[data-direction='down'] {
+    color: #e88c8c;
+  }
+
+  .metric__change[data-direction='neutral'] {
+    color: var(--text-3);
+  }
+
+  .metric__caveat {
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--text-3);
+    font-style: italic;
+  }
+
+  /* A reported number must never carry the weight of a measured one. */
+  .metric[data-badge='reported'] .metric__value {
+    color: var(--text-2);
+    text-decoration: underline dotted var(--text-faint);
+    text-underline-offset: 4px;
+  }
+
+  .metric[data-badge='hypothesis'] .metric__value {
+    color: var(--text-2);
+    font-style: italic;
+  }
+
+  .metric[data-badge='inferred'] .metric__value {
+    color: var(--text-2);
+  }
+
+  .metric[data-badge='documented'] .metric__value {
+    color: var(--text-2);
+  }
+
+  .metric[data-badge='local'] .metric__value {
+    color: var(--text-1);
+  }
+
+  @media (max-width: 600px) {
+    .metric__row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+    }
+
+    .metric__row--meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.4rem;
+    }
+  }
+</style>

@@ -1,0 +1,81 @@
+---
+import type { SourceRef } from '../content/schema';
+
+interface Props {
+  sources: SourceRef[];
+  compact?: boolean;
+}
+
+const { sources, compact = false } = Astro.props;
+---
+
+<ul class="sources" data-compact={compact ? 'true' : 'false'}>
+  {
+    sources.map((source) => (
+      <li class="source" data-kind={source.kind}>
+        <span class="source__kind mono">{source.kind}</span>
+        <span class="source__ref mono">{source.ref}</span>
+        <span class="source__label">
+          {source.label}
+          {source.note ? <span class="source__note"> — {source.note}</span> : null}
+        </span>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .sources {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .source {
+    display: grid;
+    grid-template-columns: 4.6rem minmax(0, 1fr);
+    gap: 0.15rem 0.85rem;
+    align-items: baseline;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+
+  .source__kind {
+    grid-row: span 2;
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    padding-top: 0.1rem;
+  }
+
+  .source__ref {
+    font-size: 0.75rem;
+    color: var(--text-2);
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .source__label {
+    color: var(--text-2);
+  }
+
+  .source__note {
+    color: var(--text-3);
+  }
+
+  .sources[data-compact='true'] .source {
+    grid-template-columns: 4.6rem minmax(0, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    .source {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.1rem;
+    }
+
+    .source__kind {
+      grid-row: auto;
+    }
+  }
+</style>
