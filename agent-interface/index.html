@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090a08">
+  <title>What is an agent interface? A signup form example</title>
+  <meta name="description" content="Follow a signup form fix from a chat request to a terminal diff and a human decision about whether to merge it.">
+  <link rel="canonical" href="https://www.human-agent-interface.com/agent-interface/">
+  <style>
+    :root { color-scheme: dark; --ink:#f7f1df; --muted:#b7ad97; --bg:#090a08; --line:rgba(247,241,223,.18); --signal:#a7ff4f; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:Aptos,Segoe UI,sans-serif; line-height:1.6; }
+    main { max-width:840px; margin:0 auto; padding:72px 22px; }
+    a { color:var(--signal); }
+    h1 { font-size:clamp(2.2rem,7vw,4.8rem); line-height:.98; margin:12px 0 24px; }
+    h2 { margin-top:44px; border-top:1px solid var(--line); padding-top:24px; }
+    .lead { font-size:1.25rem; color:#fff8e6; }
+    code { background:rgba(247,241,223,.08); padding:.15em .35em; }
+    nav.site-nav { position: sticky; top: 0; z-index: 60; display:flex; flex-wrap:wrap; gap:14px; align-items:center; padding:18px 22px; background:rgba(9,10,8,.88); backdrop-filter:saturate(150%) blur(14px); -webkit-backdrop-filter:saturate(150%) blur(14px); border-bottom:1px solid rgba(247,241,223,.18); font-size:.92rem; }
+    nav.site-nav a { color:#f7f1df; text-decoration:none; }
+    nav.site-nav a:hover { color:#a7ff4f; }
+    nav.site-nav a.nav-primary { margin-left:auto; color:#a7ff4f; border:1px solid #a7ff4f; padding:8px 14px; }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 200; padding: 12px 18px; background: #090a08; color: #f7f1df; border: 1px solid #a7ff4f; text-decoration: none; }
+    .skip-link:focus { left: 10px; top: 10px; }
+    [id] { scroll-margin-top: 88px; }
+    main p { max-width:68ch; }
+    pre { white-space:pre-wrap; overflow-wrap:anywhere; padding:1rem; border:1px solid var(--line); }
+    pre code { background:transparent; padding:0; }
+    a:focus-visible { outline:2px solid var(--signal); outline-offset:3px; }
+    @media (max-width:48rem), (max-height:32rem) {
+      nav.site-nav { position:static; }
+      main { padding-top:36px; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav class="site-nav" aria-label="Site navigation">
+    <a href="../index.html">Home</a>
+    <a href="../what_it_is/">Method</a>
+    <a href="../product/">Offer</a>
+    <a href="../fit/" data-site-event="cta_click" data-event-target="nav_fit">Fit</a>
+    <a href="../proof/">Proof</a>
+    <a href="../samuel/">Samuel</a>
+    <a class="nav-primary" href="../fit/" data-site-event="cta_click" data-event-target="nav_fit">Check fit</a>
+  </nav>
+  <main id="main">
+    <h1>What is an agent interface?</h1>
+    <p class="lead">An agent interface is how you give an AI agent a task, see what it does, and decide when it may go further. One task can take you through a chat, a terminal, and a code review.</p>
+
+    <h2>Describe the bug in chat</h2>
+    <p>Imagine a signup form where typing three spaces in the name field lets you continue. An empty field already shows “Enter your name.” You want the same message when someone enters only spaces.</p>
+    <p>You tell the agent, “Change the name check in the signup form and add a test for spaces. Keep accepting names like Mary Ann. Show me the patch before merging.” That gives the agent a place to work, an example to test, and a point to stop.</p>
+
+    <h2>Inspect the change in the terminal</h2>
+    <p>The agent can use the terminal to edit the form and run its tests. In this example, the relevant part of the diff would be one line removed and one added.</p>
+    <pre aria-label="Example change to the name check"><code>- if (name === "") return "Enter your name";
++ if (name.trim() === "") return "Enter your name";</code></pre>
+    <p>The check now ignores spaces at either end when deciding whether the field is empty. It leaves the name itself alone, including the space in “Mary Ann.”</p>
+    <p>To see whether the patch fixes the bug, run the new test against the old check first. Submitting three spaces should reproduce the failure. Run it again with the patch and look for the form to block submission and show “Enter your name.” A separate case should still let “Mary Ann” through.</p>
+
+    <h2>Decide whether to merge</h2>
+    <p>At review, you need the full diff and the output from those test runs. Check which files changed and which cases actually ran. If the report only says “all tests passed,” ask to see the spaces-only case before you approve the merge.</p>
+    <p>These interfaces overlap. The agent can bring terminal output back into chat, and you can review the diff there. The <a href="/what_it_is/">Human Agent Interface (HAI) method</a> focuses on how you keep control across those steps. Here, you set the scope, inspect the evidence, and decide whether the change goes in.</p>
+  </main>
+</body>
+</html>
