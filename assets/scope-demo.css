@@ -1,0 +1,66 @@
+.scope-demo {
+  border-block: 1px solid var(--line);
+  background: radial-gradient(ellipse at 8% 48%, #22271b 0%, transparent 60%), #10120f;
+  padding-block: clamp(44px, 6vw, 88px);
+}
+.scope-demo h2 { font-size: clamp(2.35rem, 5vw, 4.75rem); text-wrap: balance; }
+.scope-console {
+  margin-top: clamp(22px, 3vw, 36px);
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  border: 1px solid #414535;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 14px 40px #0003;
+}
+.scope-dialog, .scope-record { padding: clamp(20px, 3.6vw, 46px); }
+.scope-dialog { background: linear-gradient(130deg, #21271e, #191d17); }
+.scope-speaker, .scope-caption, .scope-fixture, .scope-test strong {
+  font: 0.8rem/1.5 "SFMono-Regular", Consolas, monospace;
+}
+.scope-speaker, .scope-caption { letter-spacing: .08em; text-transform: uppercase; }
+.scope-speaker { display: flex; align-items: center; gap: 14px; color: var(--signal); }
+.scope-eyes { display: inline-flex; gap: 4px; align-items: center; }
+.scope-eyes i {
+  display: grid; place-items: center; width: 23px; height: 18px; border-radius: 54% 47% 53% 46%;
+  background: radial-gradient(at 35% 30%, #fbffe5, #bacda6);
+  box-shadow: 0 0 12px #c7ff9940; transition: transform .22s ease;
+}
+.scope-eyes i + i { transform: rotate(-9deg) scaleY(.82); }
+.scope-eyes i::after {
+  content: ""; width: 11px; height: 11px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 29%, #fff 0 10%, transparent 14%), radial-gradient(circle, #111a0d 38%, #74964d 45%, #394d2b 76%);
+  transition: transform .22s ease;
+}
+[data-scope="form"] .scope-eyes i { transform: scaleY(.82); }
+[data-scope="form"] .scope-eyes i::after { transform: translate(-3px, 2px); }
+[data-scope="both"] .scope-eyes i { transform: scaleY(1.13); }
+[data-scope="both"] .scope-eyes i::after { transform: translate(4px, 1px); }
+.scope-dialog p { margin: 18px 0 24px; font-size: clamp(1.14rem, 1.75vw, 1.45rem); line-height: 1.4; }
+.scope-options, .scope-footer { display: flex; flex-wrap: wrap; gap: 8px; }
+.scope-demo button { font: inherit; cursor: pointer; min-height: 44px; }
+.scope-options button {
+  border: 1px solid #889179; border-radius: 5px; padding: 8px 15px;
+  color: var(--ink); background: #20271c; font-weight: 600;
+}
+.scope-options button:hover { border-color: var(--signal); }
+.scope-options button[aria-pressed="true"] { background: var(--signal); color: #142005; border-color: var(--signal); }
+.scope-demo :is(button, a):focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+.scope-record { border-left: 1px solid #414535; background: #111510; }
+.scope-caption { margin: 0; color: var(--copper); }
+.scope-record h3 { margin: 7px 0 17px; font: 500 clamp(1.35rem, 2.5vw, 2rem)/1.15 Georgia, serif; }
+.scope-test { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 12px; padding: 9px 0; border-top: 1px solid var(--line); }
+.scope-test strong, .scope-fixture { color: var(--muted); }
+.scope-test [data-result="pass"] { color: var(--signal); }
+.scope-fixture { margin: 12px 0 0; }
+.scope-fixture code { color: var(--ink); margin-left: 6px; }
+.scope-footer { align-items: center; justify-content: space-between; margin-top: 7px; font-size: .88rem; color: var(--muted); }
+.scope-footer a, .scope-footer button { padding-block: 12px; text-underline-offset: 4px; }
+.scope-footer button { background: none; color: var(--ink); border: 0; }
+@media (max-width: 760px) {
+  .scope-console { grid-template-columns: minmax(0, 1fr); }
+  .scope-record { border-left: 0; border-top: 1px solid #414535; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scope-eyes i, .scope-eyes i::after { transition: none; }
+}

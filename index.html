@@ -1780,6 +1780,8 @@
         }
       }
     </style>
+    <link rel="stylesheet" href="./assets/scope-demo.css">
+    <script src="./assets/scope-demo.js" defer></script>
     <script src="/mail-fallback.js" defer></script>
 </head>
   <body>
@@ -2250,6 +2252,37 @@
                 <span class="lang-copy" data-lang-copy="de">Angebot ansehen</span>
               </a>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section scope-demo" id="scope-demo" aria-labelledby="scope-title" hidden>
+        <div class="section-inner">
+          <p class="kicker"><span class="lang-copy" data-lang-copy="en">Interactive example · 20 seconds</span> <span class="lang-copy" data-lang-copy="de">Interaktives Beispiel · 20 Sekunden</span></p>
+          <h2 id="scope-title"><span class="lang-copy" data-lang-copy="en">How far should the fix go?</span> <span class="lang-copy" data-lang-copy="de">Wie weit soll der Fix gehen?</span></h2>
+          <div class="scope-console">
+            <div class="scope-dialog">
+              <div class="scope-speaker">
+                <span class="scope-eyes" aria-hidden="true"><i></i><i></i></span>
+                <span class="lang-copy" data-lang-copy="en">Coding agent</span> <span class="lang-copy" data-lang-copy="de">Coding-Agent</span>
+              </div>
+              <p><span class="lang-copy" data-lang-copy="en">I’m fixing the signup form. It accepts empty names. The CSV import does too. Should I fix both?</span> <span class="lang-copy" data-lang-copy="de">Ich behebe einen Fehler im Anmeldeformular. Es akzeptiert leere Namen. Beim CSV-Import passiert das auch. Soll ich beides korrigieren?</span></p>
+              <div class="scope-options">
+                <button type="button" data-choice="form" aria-pressed="false"><span class="lang-copy" data-lang-copy="en">Only the form</span> <span class="lang-copy" data-lang-copy="de">Nur das Formular</span></button>
+                <button type="button" data-choice="both" aria-pressed="false"><span class="lang-copy" data-lang-copy="en">Include the import</span> <span class="lang-copy" data-lang-copy="de">Import einbeziehen</span></button>
+              </div>
+            </div>
+            <div class="scope-record" aria-live="polite" aria-atomic="true">
+              <p class="scope-caption"><span class="lang-copy" data-lang-copy="en">Authorized scope</span> <span class="lang-copy" data-lang-copy="de">Freigegebener Umfang</span></p>
+              <h3 data-scope-summary></h3>
+              <div class="scope-test"><span><span class="lang-copy" data-lang-copy="en">Signup form</span> <span class="lang-copy" data-lang-copy="de">Anmeldeformular</span></span><strong data-check="form"></strong></div>
+              <div class="scope-test"><span class="lang-copy" data-lang-copy="en">CSV import</span> <span class="lang-copy" data-lang-copy="de">CSV-Import</span><strong data-check="import"></strong></div>
+              <p class="scope-fixture"><span class="lang-copy" data-lang-copy="en">Test input</span> <span class="lang-copy" data-lang-copy="de">Testeingabe</span> <code>name = ""</code></p>
+            </div>
+          </div>
+          <div class="scope-footer">
+            <a href="https://www.xn--agentfhig-02a.de/"><span class="lang-copy" data-lang-copy="en">Explore the eyes at Agentfähig</span> <span class="lang-copy" data-lang-copy="de">Die Augen bei Agentfähig erleben</span> <span aria-hidden="true">↗</span></a>
+            <button type="button" data-scope-reset hidden><span class="lang-copy" data-lang-copy="en">Start again</span> <span class="lang-copy" data-lang-copy="de">Neu starten</span> <span aria-hidden="true">↺</span></button>
           </div>
         </div>
       </section>
