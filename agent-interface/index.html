@@ -59,6 +59,8 @@
     <p>The check now ignores spaces at either end when deciding whether the field is empty. It leaves the name itself alone, including the space in “Mary Ann.”</p>
     <p>To see whether the patch fixes the bug, run the new test against the old check first. Submitting three spaces should reproduce the failure. Run it again with the patch and look for the form to block submission and show “Enter your name.” A separate case should still let “Mary Ann” through.</p>
 
+    <p>For a visual example, follow a <a href="/gui-agent/">GUI agent observing, acting and verifying a draft</a>.</p>
+
     <h2>Decide whether to merge</h2>
     <p>At review, you need the full diff and the output from those test runs. Check which files changed and which cases actually ran. If the report only says “all tests passed,” ask to see the spaces-only case before you approve the merge.</p>
     <p>These interfaces overlap. The agent can bring terminal output back into chat, and you can review the diff there. The <a href="/what_it_is/">Human Agent Interface (HAI) method</a> focuses on how you keep control across those steps. Here, you set the scope, inspect the evidence, and decide whether the change goes in.</p>

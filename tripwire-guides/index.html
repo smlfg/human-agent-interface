@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090a08">
+<title>How to write a tripwire — Human Agent Interface</title>
+<meta name="description" content="Build and test a practical tripwire using a trigger, an action and an owner, with two worked scope decisions.">
+<link rel="canonical" href="https://www.human-agent-interface.com/tripwire-guides/">
+<link rel="stylesheet" href="/hai-agent/editorial.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Site navigation"><a href="/">Home</a><a href="/what_it_is/">What is HAI?</a><a href="/tripwire-map/">Tripwire map</a><a href="/proof/">Proof</a></nav>
+<main id="main">
+<h1>How to write a tripwire</h1>
+<p class="lead">A tripwire turns a boundary into a decision rule: when a visible condition occurs, someone must change what happens next.</p>
+<h2>Build the rule</h2>
+<ol>
+<li><strong>Choose the boundary.</strong> For example, permit edits inside <code>docs/guide/</code>; anything outside needs approval.</li>
+<li><strong>Name the trigger.</strong> The proposed edit requires a file outside that directory.</li>
+<li><strong>Specify the action.</strong> Pause before editing outside the boundary and show the proposed file and reason.</li>
+<li><strong>Name the actor.</strong> The agent pauses and asks; the human decides whether to expand the scope.</li>
+</ol>
+<blockquote>If an edit requires a file outside <code>docs/guide/</code>, the agent pauses before that edit and asks the human for approval, naming the file and reason. The human decides whether to expand the scope.</blockquote>
+<p>Edit this rule in thought for your own task: replace the directory, trigger, response and decision-maker. Make the trigger observable and say what happens before the boundary is crossed. The <a href="/tripwire-map/">tripwire map</a> explains the broader trigger, action and actor model.</p>
+<h2>Try two inputs</h2>
+<ul>
+<li><strong>Input:</strong> Fix a broken link in <code>docs/guide/start.html</code>. <strong>Decision:</strong> The file is inside the agreed directory, so this scope tripwire does not fire; the agent may proceed under the other agreed rules and report the change.</li>
+<li><strong>Input:</strong> Fixing the link also appears to require editing <code>config/routes.json</code>. <strong>Decision:</strong> That file is outside the directory. The agent pauses before editing it, identifies the proposed change and asks the human to approve or decline the expansion.</li>
+</ul>
+<h2>Test it on paper</h2>
+<p>Write the rule at the top of a page. Under it, list each input, whether the trigger fires, who acts next and what they do. Check that the in-scope case can continue and the expansion pauses before the outside edit. If two readers cannot make the same call, revise the boundary or trigger and run both cases again. Add an unclear path as a third case: the agent should ask rather than assume it is in scope.</p>
+</main>
+<footer><a href="/">Human Agent Interface</a></footer>
+</body>
+</html>

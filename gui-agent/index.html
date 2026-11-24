@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090a08">
+<title>How a GUI agent works — Human Agent Interface</title>
+<meta name="description" content="Follow a fictional GUI agent through observing, acting, verifying and stopping during a bounded interface task.">
+<link rel="canonical" href="https://www.human-agent-interface.com/gui-agent/">
+<link rel="stylesheet" href="/hai-agent/editorial.css">
+<style>
+.sequence{list-style:none;padding:0;display:grid;gap:1rem}.sequence li{max-width:none;margin:0;padding:1.25rem;border:1px solid var(--line);background:rgba(247,241,223,.04)}.mock{margin:1rem 0;padding:1rem;border:1px solid #857c69;background:#171914;color:#f7f1df}.mock-bar{border-bottom:1px solid #857c69;padding-bottom:.5rem;margin-bottom:.75rem;color:#c8bea9}.mock-button{display:inline-block;border:1px solid #a7ff4f;padding:.2rem .7rem;color:#a7ff4f}.step{color:var(--signal);font-weight:700}.sequence p{margin:.7rem 0 0}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Site navigation"><a href="/">Home</a><a href="/what_it_is/">What is HAI?</a><a href="/agent-interface/">Agent interfaces</a><a href="/proof/">Proof</a></nav>
+<main id="main">
+<h1>How a GUI agent works</h1>
+<p class="lead">A GUI agent works through a visible interface: it observes a screen, chooses an action and checks what changed. Each step can return control to a person.</p>
+<h2>A fictional task: save a draft</h2>
+<p>A person asks an agent to create a draft note titled “Team agenda” in a fictional notes app. The boundary is to save a draft only. The agent must stop before sharing or publishing it. The panels below are illustrations, not a recording or a live interface.</p>
+<ol class="sequence" aria-label="Illustrated sequence for saving a draft">
+<li><span class="step">01 · Observe</span><div class="mock"><div class="mock-bar">Notes / New note</div><div>Title: empty</div><div>Content: empty</div><div class="mock-button">Save draft</div></div><p>The agent sees an empty note editor and a Save draft control. It checks that the visible page matches the requested task.</p></li>
+<li><span class="step">02 · Act</span><div class="mock"><div class="mock-bar">Notes / New note</div><div>Title: Team agenda</div><div>Content: empty</div><div class="mock-button">Save draft</div></div><p>The agent enters the requested title and selects Save draft. It does not select a share or publish action.</p></li>
+<li><span class="step">03 · Verify</span><div class="mock"><div class="mock-bar">Notes / Drafts</div><div>Team agenda — Draft</div><div>Saved</div></div><p>The agent observes the draft listed with its title and saved status. That visible result supports the claim that the draft was saved in this example.</p></li>
+<li><span class="step">04 · Stop</span><div class="mock"><div class="mock-bar">Notes / Drafts</div><div>Team agenda — Draft</div><div>Next decision: share or keep private?</div></div><p>The agent reports the observed result and stops. Sharing would require a separate human decision; if the saved status were missing, it would report uncertainty instead of claiming success.</p></li>
+</ol>
+<h2>Across interfaces</h2>
+<p>A graphical screen is one way to work with an agent. Explore the <a href="/agent-interface/">agent interface guide</a> for a task moving between chat, terminal and review.</p>
+</main>
+<footer><a href="/">Human Agent Interface</a></footer>
+</body>
+</html>
