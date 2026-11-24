@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090a08">
+<title>OpenCode Subagents: Eine Recherche durchspielen — Human Agent Interface</title>
+<meta name="description" content="Ein begrenzter Rechercheauftrag für den Explore-Subagenten, vom Briefing bis zur Prüfung der Fundstellen.">
+<link rel="canonical" href="https://www.human-agent-interface.com/opencode-subagents/">
+<link rel="stylesheet" href="/hai-agent/editorial.css">
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt</a>
+<nav aria-label="Navigation"><a href="/">Home</a><a href="/tutorials/opencode/">OpenCode-Tutorial</a><a href="/what_it_is/">Method</a><a href="/proof/">Proof</a></nav>
+<main id="main"><h1>OpenCode Subagents: Eine Recherche durchspielen</h1>
+<p class="lead">Ein Subagent bekommt einen abgegrenzten Auftrag und gibt dem übergeordneten Agenten einen Bericht zurück. Die Entscheidung und Prüfung bleiben im Hauptgespräch sichtbar.</p><h2>Aufgabe und Briefing</h2><p>Illustratives Szenario: In einem Projekt sollst du herausfinden, wo die Fehlermeldung für ein leeres E-Mail-Feld entsteht. Du möchtest zunächst nichts ändern. Bitte deinen primären Agenten sinngemäß:</p><blockquote>Nutze den Explore-Subagenten, um die Stelle für die Fehlermeldung eines leeren E-Mail-Felds zu finden. Lies nur die relevanten Projektdateien. Nenne Dateipfade und passende Stellen sowie offene Fragen. Ändere keine Dateien. Wenn du die Stelle nicht sicher zuordnen kannst, melde das.</blockquote><h2>Ergebnis prüfen</h2><p>Angenommen, der Bericht nennt eine Formular-Komponente und eine Validierungsfunktion. Öffne beide Fundstellen und prüfe, ob sie tatsächlich zusammengehören und die leere Eingabe behandeln. Fehlt eine eindeutige Stelle, bleibt das Ergebnis offen; ein plausibler Dateiname ist noch kein Nachweis.</p><p>Erst danach formulierst du gegebenenfalls einen eigenen Änderungsauftrag mit Ziel, Grenzen und erwarteter Prüfung. Der Recherchebericht selbst ist keine implementierte Änderung.</p><h2>Was OpenCode dazu bereitstellt</h2><p>Die <a href="https://opencode.ai/docs/agents/">offizielle Dokumentation</a> beschreibt Explore als Subagenten zum Suchen und Lesen sowie separate Kind-Sessions. Ob der Start und die benötigten Zugriffe erlaubt sind, hängt von den konfigurierten Berechtigungen ab; prüfe insbesondere die Regeln für den Start und die Zugriffe des Subagenten.</p><p>Zur <a href="/opencode-agents/">Rollenwahl</a> oder zum <a href="/tutorials/opencode/">OpenCode-Tutorial</a>.</p>
+</main>
+<footer><a href="/">Human Agent Interface</a></footer>
+</body>
+</html>

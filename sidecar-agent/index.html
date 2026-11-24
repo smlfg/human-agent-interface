@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090a08">
+<title>What does a sidecar agent observe? — Human Agent Interface</title>
+<meta name="description" content="Learn what a sidecar can compare, what it cannot infer, and how an illustrative scope warning reaches a person.">
+<link rel="canonical" href="https://www.human-agent-interface.com/sidecar-agent/">
+<link rel="stylesheet" href="/hai-agent/editorial.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav aria-label="Site navigation"><a href="/">Home</a><a href="/sidecar/">Sidecar</a><a href="/what_it_is/">Method</a><a href="/proof/">Proof</a></nav>
+<main id="main"><h1>What does a sidecar agent observe?</h1>
+<p class="lead">A sidecar agent sits alongside a workflow and observes signals made available to it. What it can notice depends on the inputs and rules it has actually been given; a separate handoff carries the relevant context to the next reviewer.</p><h2>Useful signals</h2><p>A sidecar might compare an agreed file boundary with a proposed file change, a requested check with a reported result, or a stop condition with an event. It can surface a mismatch for review. It cannot infer intent or prove an unseen action happened merely because a report says so.</p><h2>Walk through a scope warning</h2><p>In this invented example, the agreement permits edits to a signup form. The agent proposes changes to the form and to account policy. A sidecar that receives both the agreement and the proposed file list can flag the policy file as outside scope. It presents the relevant boundary and file to the person.</p><p>The person may narrow the patch, explicitly expand the task, or reject it. If the sidecar never receives the file list, it cannot make that comparison; absence of a warning is not proof that the work stayed within scope.</p><h2>Observation needs a next action</h2><p>A good warning includes the signal, the rule it may conflict with, the evidence available and who can decide. It should distinguish a proposal from an action already taken.</p><p>Explore the <a href="/sidecar/">Sidecar overview</a>, then use the <a href="/agent-sidecar/">practical handoff checklist</a>. For the wider idea, see <a href="/human-agent-interfaces/">human + agent interfaces</a>.</p>
+</main>
+<footer><a href="/">Human Agent Interface</a></footer>
+</body>
+</html>

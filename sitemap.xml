@@ -36,4 +36,11 @@
     <loc>https://www.human-agent-interface.com/proof/uni-agenten/</loc>
     <lastmod>2026-10-19</lastmod>
   </url>
+  <url><loc>https://www.human-agent-interface.com/hai-agent/</loc></url>
+  <url><loc>https://www.human-agent-interface.com/agent-hai/</loc></url>
+  <url><loc>https://www.human-agent-interface.com/human-agent-interfaces/</loc></url>
+  <url><loc>https://www.human-agent-interface.com/sidecar-agent/</loc></url>
+  <url><loc>https://www.human-agent-interface.com/agent-sidecar/</loc></url>
+  <url><loc>https://www.human-agent-interface.com/opencode-agents/</loc></url>
+  <url><loc>https://www.human-agent-interface.com/opencode-subagents/</loc></url>
 </urlset>
